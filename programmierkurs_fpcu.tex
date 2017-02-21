@@ -199,7 +199,7 @@ beendet.
 Die Ausgangs und Eingangsparameter eines Funkcions sind Variablen.
 Ein Variable ist ein Konzept, der eine Name im Quelltext, und eine Addresse im Speicher deiner Maschine hat. 
 Im Quelltext das Variable ist identifiziert bei ihrem Name. In \ref{typ_1} das int vor dem Name der eingangsparameter
-ist ihre Typ. Hier unter siehst du unsere erste Variable definition, deklaration. In der dritten Reihe wir haben einen Variable
+ist ihre Typ. Hier unter siehst du unsere erste Variable definition. In der dritten Reihe wir haben einen Variable
 nennt $n$ als ein int (ganze Zahl) definiert. 
 \begin{lstlisting}{Erste Variable definition}
 #include<stido.h>
@@ -209,8 +209,7 @@ int main( int argc, char *argv[]){
 }
 \end{lstlisting}
 
-Es gibt ein bisschen unterschied zwischen definiering und deklaration einer Variable.
-
+Wir verstehen unter definiert, das wir haben Speicher zugewiesen. Für das Typ int wir brauchen $4$ byte Speichern.
 Natürlich alle Variable haben ihre eigenen Sichtbarkeitsbereit und Lebensdauer. Mann kann nicht anderen Variablen mit dem gleichen Namen 
 im derseblen Blocken definieren. Wenn du eine Variable mit dem gleichen namen deklarierts in einem Block, denn der Andere wird nicht
 sichtbar in der inneren Block. Variable, das wir in einem Funckion definiert haben, lebt in diesem Funkcion. Man kann diesen Variablen als 
@@ -219,7 +218,7 @@ muss mann sie außerhalb der Funkcionen definieren. Deise Variablen kann man bez
 Ihren Wert ist erreichbar für allen Funkcion im Quelltext. Es gibt zwei verschiedene möglichkeiten zum definiering
 eine globale Variable.
 \begin{enumerate}
-\item Stichwort static: In diesem Fall mann kann nutzten die Variable in gleichem File, wo es definiert war. Anderen
+\item Stichwort static: In diesem Fall mann kann nutzten die Variable in ganzen File, wo es definiert war. Anderen
 Files in unserem Code kann natürlich nutzten eine andere Variable mit dem gleichen Name.
 \item Stichwort extern: In diesem Fall mann kann nutzten die Variable in dem ganzen Programm. Aber das
 variable muss deklariert werden in allen Files, wo wir ihn nutzten wollen.
@@ -292,11 +291,44 @@ gleichen Namen in verschiedenen Funkcionen nutzten, wenn wir definieren sie als 
 \caption{\label{sicht} Sichtbarkeitbereich der Variablen}
 \end{figure}
 
-
-
-Die Variablen haben Wert und Typ. Warum ist das Typ der Variable wichtig? Es hängt vom Typ ab, was für ein Wert eine Variable haben
+Die Variablen haben Wert und Typ. Das Typ der Variable ist sehr wichtig. Es hängt vom Typ ab, was für ein Wert eine Variable haben
 kann. Das Typ entscheid also die Grösse des Arbeitspeicher zu deine Variable. Mann kann nun solche Funkcionen und Operatoren nutzen, das
-genanue Datentype hat. Es gibt elementare data Typen mit dem wir spielen können. Sie sind
+genanue Datentype hat. Es gibt elementare data Typen mit dem wir spielen können. Wir haben im Tabellen \ref{tabelle1} alle elementare
+Datatypen gelistet.
+
+
+\begin{table}[h]
+\caption{Elementare Daten Typen\label{tabelle1}}  % title name of the table
+\centering
+  % centering table
+\begin{tabular}{l c c rrrrrrr}
+  % creating 10 columns
+\hline
+\hline                     
+  % inserting double-line Audio &Audibility & Decision & \multicolumn{7}{c}{Sum of Extracted Bits} 
+\\[0.5ex]   
+\hline % inserts single-line % Entering 1 st row
+                       & & int &4 & $-2,147,483,648$ & $2,147,483,647$ \\[-0.0ex]
+                       & & short & 2 & $-32,768$ & $32,767$ \\[-0.0ex]
+\raisebox{1ex}{int}  & & unsigned short& 2 & $0$ & $65535$ \\[-0.0ex]
+                       & &unsigned& 4 & $0$ & $ +4,294,967,295$ \\[1ex]
+                       & &long& 4 &  $-2,147,483,648$ & $2,147,483,647$ \\
+\hline
+% Entering 2nd row
+                            & &signed & 1 & $-128$ & $127$ \\[-1ex]
+\raisebox{1.5ex}{Char} &    & unsigned &1 & $0$ & $255$  \\[1ex]
+\hline
+% Entering 3rd row
+float & & & 4 &  &  \\
+double& & & 8 &  &  \\
+long double& & &8 &  &  \\[1ex]
+
+% [1ex] adds vertical space
+\hline                          % inserts single-line
+\end{tabular}
+\label{tab:PPer}
+\end{table}
+ 
 \pagebreak
 
 
