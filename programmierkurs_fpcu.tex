@@ -524,10 +524,10 @@ $[ ]$     & Array-Index     & links  \\
 \end{tabular}
 \end{table}
 
-\subsubsection{Statements}
+\subsubsection{Kontrollstrukturen}
 
-Wir haben einfachste Anweisungen kennen gelernt, die nacheinander ausgeführen waren. In diesem Teil werden wir wie kann mann die Reihenfolge 
-der Ausführung ändern. Zum Bespiel wenn wir möchten das Absolutwert  eines Zahlen herausfinden, wir die Anweisung wird von dem Aktuellen Wert
+Wir haben einfachste Anweisungen kennen gelernt, die nacheinander ausgeführen waren. In diesem Teil werden wir lernen wie mann die Reihenfolge 
+der Ausführung ändern kann. Zum Bespiel wenn wir möchten das Absolutwert  eines Zahlen herausfinden, wir die Anweisung wird von dem Aktuellen Wert
 der Variable abhängen. In diesem Fall wir können nutzten das sogennante $if~then~else$ Statement. Die korrekte Verwendung siehts du unter im
 kleinen Quelltext:
 \begin{lstlisting}
@@ -548,11 +548,12 @@ int main(){
 In der dritten  Reihe wir haben Variable $a$ als eine ganze Zahl definiert mit Anfangswert vier. In der vierten Reihe wir haben eine
 Variable für das Ergebnis definiert. In der fünften Reihe kommt das Selektion Anweisung mit dem Stichwort $if ()$. In dem 
 Klammerung muss ein Logikalische Ausdrückung stehen. Wir sind schon bereit für die Verwendung der Vergleichs operatoren (Tabelle \ref{vergoper}). 
-Die Größer operator steht zwischen zwei Ganzen Zahl: das Ergebnis der Ausführung $a$ und $0$. Natürlich wissen wir das in diesem Fall das
+Die Größer operator steht zwischen zwei Ganzen Zahl: das Ergebnis der Ausführung von $a$ und $0$. Natürlich wissen wir das in diesem Fall das
 Ergebnis in der Klammerung wird wahr sein, und die  Anweisungen  zwischen  der geschweiften Klammern von der der sechsten bis der
 achten Reihe werden ausführen. In diesem Fall es gibt nur eine Anweisung, aber man kann mehrere Anweisungen haben. Wenn das
-Wert der Variable $a$ Negativ gewesen wäre, wäre die Anweisungen in der Block nach $else$ durchgefahren. Hier wir zeigen auch 
-die Allgemeine Verwendung des if then else Statements.
+Wert der Variable $a$ Negativ gewesen wäre, wäre die Anweisungen in der Block nach $else$ durchgefahren. In der Bedingung
+0 wird als Falsch erwertet, alle anderen Zahlen werden recht. Wenn wir möchten, wir
+können die ganze else Block entfallen. Hier wir zeigen auch die Allgemeine Verwendung des if then else Statements.
 
 \begin{lstlisting}{if then else Statement}
 if ( logikalische Ausdruckung )
@@ -568,7 +569,75 @@ else
    ...;
 }
 \end{lstlisting}
+Wir können auch Gesschachtelte if und else Statements nutzten. Zum Beispiel Anweisungwahr1 kann auch if und else Statement sein.
 
+Wenn mann mehrfache Alternativen haben will kann mann auch die Switch Anweisung nutzten. In diesem Fall wir müssen 
+alle Möglichkeiten für der Bedingungen bei der Kompilierung wissen. Wir lesen zum Beispiel in dem unteren Quelltext eine
+ganze Zahl von Standard Eingang, und machen einige Testen um ihre Wert.
+\begin{lstlisting}
+#include<stdio.h>
+int main(){
+  int n=0;
+  scanf("%d",&n);
+  switch ( n ) {
+     case 0: 
+         printf("Der Wert is 0\n");
+         break;
+     case 1:
+         printf("Der Wert is 1\n");
+     case 2:
+         printf("Der Wert kann auch 1 oder 2 sein\n");
+         break;
+     case 3:
+         printf("Der Wert is 3\n");
+         break;
+     default:
+         printf("Ich weiss es nicht\n");
+     
+  }
+}
+\end{lstlisting}
+In der vierten Reihe mit der scanf Funkcion, wir lesen ein Ganze Zahl vom Tastatur. Wir werden gleich mehr erzählen über die
+scanf Funkcion. In der fünften Reihe beginnt der bedingte Anweisung. Jede Möglichkeiten beginnt mit dem Strichwort $case$.
+Zum Beispiel wenn wir 0 typen, dann wird die siebten Reihe ausführen. In der achten Reihe der Strichwort $break$ bedeutet, dass
+das Ausführung wird nachdem $switch$ Blocke fortsetzen. Wenn wir 1 typen, dann die Bedingung in der Reihe neun wird wahr sein, und
+die Befehle in der zehnten und zwölften Reihen werden verarbeitet. Die Anweisungen werden verarbeitet bis den nächsten $break$ 
+Strichwort. Wenn keine der Möglichkeiten passt, dann wird die Anweisungen nach $default$ verarbeitet.  Wir zeigen die allgemeine
+Verwendung unter:
+
+\begin{lstlisting}
+  switch ( Variable mit Ganze Zahl Wert )
+  {
+     case Wert1:
+         Anweisung1;
+         .... ;
+         break; /* Optionall */
+     case Wert2:
+         Anweisung2;
+         ....; 
+         break; /*Optional */
+     ....
+     default:
+         Anweisung3;
+
+  }
+\end{lstlisting}
+
+Es ist auch wichtig die gleiche Anweisung auf unterschiedlichen Data ausführen. Zum Beispiel wir wollen die Summe der ersten
+$n$ ganzen Zahl kalkulieren. In diesem Fall müssen wir Schleifen verwenden. 
+\begin{lstlisting}
+#include<stdio.h>
+int main(){
+   int i,n;
+   int sum;
+   scanf("%d\n", &n);
+   for (i=0; i<n; ++i){
+     sum += i; 
+   }
+   printf("Summe von ersten %d ganze Zahlen ist %d\n", n, sum);
+}
+\end{lstlisting}
+Die Kontrollstrukture ist bezeichnet als $for$. 
 \pagebreak
 
 
