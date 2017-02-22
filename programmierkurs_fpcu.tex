@@ -48,6 +48,7 @@
   tabsize=2,	                   % sets default tabsize to 2 spaces
   title=\lstname                   % show the filename of files included with \lstinputlisting; also try caption instead of title
 }
+%--------
 %\usepackage[magyar]{babel}
 \title{C Programmierkurs}
 \begin{document}
@@ -301,10 +302,10 @@ Datatypen gelistet.
 \caption{Elementare Daten Typen\label{tabelle1}}  % title name of the table
 \centering
   % centering table
-\begin{tabular}{l c c rrrrrrr}
+\begin{tabular}{|l c c rrr|}
   % creating 10 columns
 \hline
-\hline                     
+Name & & Varianten & Größe in Byte & Minimal Wert & Maximal Wert
   % inserting double-line Audio &Audibility & Decision & \multicolumn{7}{c}{Sum of Extracted Bits} 
 \\[0.5ex]   
 \hline % inserts single-line % Entering 1 st row
@@ -328,18 +329,262 @@ long double& & &8 &  &  \\[1ex]
 \end{tabular}
 \label{tab:PPer}
 \end{table}
- 
+
+Wir habe unseren ersten Variable im Bespiel als $n$ genennt. Es gibt einige Regeln, wie mann das Variable nennen kann. Zum Beispiel
+wir dürfen nicht das Name mit einem Zahl beginnen. Wir dürfen Kapital und Klein Buchstabe nutzten. Wir dürfen auch Zahlen nutzten, aber
+nicht als der erste Charakter. Das Unterstricht ist also erlaubt, aber wir nutzten sie nur für grösse Programmen.
+
+Im Beispiel wir haben ein Wert (4) zum $n$ zugewiesen. Das ist sehr wichtig, weil das Complier standardmäßig unsere Variablen nicht
+initializiert. Das ist eine der häufigste Fehler, das ein Programmierer machen kann. Im unter wir zeigen einige Richtige und Fals 
+Variable definitionen:
+
+\begin{lstlisting}
+int main(int argc, char *argv[]){
+   int m1=4, n1=5, l1=6; /* Richtig */
+   int m2=4, char n2='a', float m2=4. /*Falsch */
+   char m3='a'; double n3=18.9;/*Richtig*/
+   float 4m=1.; /*Falsh */
+}
+\end{lstlisting} 
+
+Wir können mehrere Variablen definierin in einer Anweisung, wenn die Variablen das gleiche Typ haben. Du kannst das sehen in dem zweiten Linie oben.
+Eine Anweisung muss mit mit dem Character ';' beenden. Nach jedem ';' beginnt eine neue Anweisung. Das Character ',' bedeutet Auflistung, was in 
+einem Anweisung mehrweise erscheinen darf. Wir illustrieren das falsche Weg in  dem dritten Linie, und das Rechte Weg zeigen wir in dem vierten Linie.
+Im fünften Linie illustrieren wir, dass das Name der Variable nicht mit einem Zahl beginnin darf. Eine practical Beratung ist initializerien
+alle Variables recht im Definition. Das Name der Variablen kann auch uns helfen, um das Programm verstehen zu können. Zum Beispiel im 
+Einfügesortieren es ist ratsam die Array als sortiert und unsortiert nennen.
+
+Jetzt werden wir sehen, was wir mit unseren Variablen machen kann. Wir können aus Variables mit Operatoren neue Werte herstellen.
+Wir können Expressions formen, die eine neue Wert ausdrücken. Es hängt vom typ ab, welche operatoren in der Expressions wir nutzten können.
+Es gibt drei verschieden Expressiontyp:
+\begin{itemize}
+\item Infix: Das operator steht zwischen den Variablen. Zum Bespiel: $a+b$. Diese Expression nimmt den Wert von $a$ und $b$, summ es und gibt das Ergebnis zurück.
+\item Präfix: Das operator steht vor dem Variable: Zum Bespiel: $++a$. Diese Expression zuerst inkrementiert $a$, und danach gibt das Wert vom $a$ zurück.
+\item Postfix: Das operator steht nach dem Variable: Zum Beispiel: $a--$. Diese Expression dekrementiert $a$, aber gibt das originale Wert vom $a$ zurück.
+\end{itemize}
+\begin{lstlisting}
+#include<stdio.h>
+int main(){
+    int a=2;
+    printf("%d\n", a++);
+    printf("%d\n", a);
+    printf("%d\n", ++a);
+    printf("%d\n", a);
+}
+\end{lstlisting}
+Im obenen Beispiel zuerst wir definieren eine Variable mit dem Anfangswert zwei. Danach drücken wir die wirkung des Postfix operators ($++$) auf $a$ aus 
+in der vierten Reihe. Das Ergebnis wird auch zwei sein, weil wir das Postfix operator genutzten haben. Aber wenn wir gleich danach im fünften Reihe
+das Wert von $a$ ausdrücken, das Ergebnis wird drei sein. In der sechsten Reihe wir drücken die wirkung des Präfix operators ($++$) auf $a$ aus, und 
+das Ergebnis wird vier sein, und als Nebeneffect, das Variable $a$ wird inkrementiert.
+
+Wir haben also drei Vershieden Operator Typen:
+\begin{itemize}
+\item binärer: Das operator hat zwei Argumente
+\item unärer: Das operator hat nur ein Argumente
+\item ternärer; Nur eine, der drei Argumente hat: $?:$
+\end{itemize} 
+
+Die operatoren könnten bitwise, oder logicalische sein. Die bitwise operator sind binäre operatoren. Sie ausführen die operation mit jedem bits der Arguments.
+Die Logical operatoren geben zurück Logical Wert: nein, oder falsh. In dem unteren Tabelle wir fassen zusammen die Wichtige operatoren der Sprache.
+
+\begin{table}
+\caption{Arithmetic operatoren \label{oper}}
+\centering
+\begin{tabular}{|l c c|}
+\hline
+Operator & Expression & Wert der Expression \\
+\hline
+Zuweisung & $a$ = $b$ & Werte von $b$ \\
+Addition & $a$ + $b$ & Summe von $a$ und $b$ \\
+Subraktion & $a$ - $b$ & Differenz von $a$ und $b$ \\
+Multiplikation & $a$ * $b$ & Produkt von $a$ und $b$ \\
+Division & $a$ / $b$ & Quotient von $a$ und $b$ \\
+Modulo & $a$ \% $b$ & Rest eine Ganzzahldivision von $a$ durch $b$ \\
+Inckrement & $++a$,$a++$ & Präfix: $a$+1, Postfix: $a$ \\
+Dekrement & $--a$, $a--$ & Präfix: $a$-1, Postfix: $a$ \\
+Positiver Vorzeichenoperator & $+a$ & Wert von $a$ \\
+Negativer Vorzeichenoperator & $-a$ & Wert von $a$ aber mit umgekehrte Vorzeichen \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}
+\caption{Vergleichs operatoren \label{vergoper}}
+\centering
+\begin{tabular}{|l c|}
+\hline
+Operator & Expression \\
+\hline
+Prüfen auf Gleichheit & $a == b$  \\
+Prüfen auf Ungleichheit & $a != b$ \\
+Prüfen, ob $a$ echt größer als $b$ ist & $a>b$ \\
+Prüfen, ob $a$ echt kleiner als $b$ ist & $a<b$ \\
+Prüfen, ob $a$ größer oder gleich $b$ ist & $a>=b$ \\
+Prüfen, ob $a$ kleiner oder gleich $b$ ist & $a<=b$ \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}
+\caption{Logischen operatoren \label{vergoper}}
+\centering
+\begin{tabular}{|l c c|}
+\hline
+Operator & Expression & Wert \\
+\hline
+                                                &                                &   Wenn $a$ und $b$ beide waren wahr, \\
+                                                &                                &   dann der Rückgabe ist wahr,  \\
+\raisebox{1.5ex}{Operator für das Logische UND} & \raisebox{1.5ex}{$a \&\& b$ }  &   in jeden anderen Fallen falsch \\
+\hline
+                                                &                                &   Wenn $a$ oder $b$ war wahr, \\
+                                                &                                &   dann der Rückgabe ist wahr, \\
+\raisebox{1.5ex}{Opatoren für das logische ODER}& \raisebox{1.5ex}{$a ||    b$}  &   in den anderen Fall  falsch \\
+\hline
+                                                &                                &   Wenn $a$ ist falsch, die Rückgabe is wahr, \\
+\raisebox{1.5ex}{Negationsopeator}              & \raisebox{1.5ex}{$!a$}         &   und umgekehrt \\
+\hline
+\end{tabular}
+\end{table}
+Ein Ausdrück (Expression) kann aus mehreren operatoren bestehen. In diesem Fall es ist wichtig, das regel des Reihenfolges
+zu wissen. Es muss festgelegt werden welche operator im Zweifelsfall Priorität hat. Für alle Operatoren wir haben die
+Prioritäten im Tabelle \ref{priortab} zusammen gefasst. Wenn zwei operatoren gleichem Prioriät haben, dann zum ersten 
+mal der linkste wird verarbeitet, and danach von links nach rechts\footnote{Hier gibt es ausnahme, wenn die Reihenfolge 
+ist umgekehrt. Siehst denn letzten Spalte im Tablellen \ref{priortab}}. Zum Bespiel sehen wir die untere einfache Programm:
+\begin{lstlisting}
+#include<stdio.h>
+int main(){
+  int a=3;
+  int b=4; 
+  int c=5;
+  printf( "%d\n", a -  b + c );
+  printf( "%d\n", a - (b + c));
+  printf( "%d\n", a + a++ ); /*Falsch*/
+}
+\end{lstlisting}
+In diesem Programm wir haben drei Variablen mit Wert von ganzen Zahlen definiert. In der fünften Reihe wir möchten das
+Ergebnis des Ausdrucks: $a-b+c$ ausdrücken. Das Subtraktion is linksassoziativ, darum wird die Ausdrücke von links nach
+rechts ausgewertet. Das Ergebnis wird vier sein. In der sechsten Reihe wir haben eine Klammerung eingeschlossen. Das wird
+wird die Reihenfolge ändern. Zuerst wird das Teil inner der Klammerung verarbeitet, and nur danach das Subtraktion. 
+Das Ergebnis wird -6 sein. Es ist wichtig zu erwähnen, das die Reihenfolge der Ausführung von den Teilen ist nicht definiert.
+Wir zeigen das in der siebten Linie. Hier wir wissen nicht voraus, ob $++a$ oder $a$ wird verarbeitet zuerst. Darum ist
+diese Ausdrücke undefiniert.
+
+
+
+\begin{table}
+\caption{Priorität tabelle für operatoren in der C Sprache\label{priortab}}
+\centering
+\begin{tabular}{| l c c|}
+\hline
+Operator & Beschreibung    & Associativity  \\
+\hline
+( )      & Funktionsaufruf & links  \\
+$[ ]$     & Array-Index     & links  \\
+-> .     & Memberzugriff   & links \\
+++ -- 	 & Postfix Inkrement, dekrement &rechts \\
+\hline
+++ --    & Präfix  Inkrement, dekrement &rechts \\
+! ~      & Negation (logisch, bitwise)  &rechts \\
++ -      & Vorzeichen (unär)            &rechts \\
+(Typename) & cast                       &rechts \\
+* \&       & Dereferenzierung, Adresse  &rechts \\
+\hline
+* /        & Multiplikation, Division     &links \\
+\%         & Modulo                       &links \\
+\hline
++ -        & Summe, Differenz (binär)     &links \\  
+\hline
+<<, >>     & Bitweise schieben            &links\\
+\hline
+< <=       & Vergleich: kleiner, kleiner-gleich      &links\\
+> >=       & Vergleich: Größer, größer-gleich        &links\\
+\hline
+== !=      &Gleichheit, Ungleichheit                 &links\\
+\hline
+\&         & Bitweises UND & links \\
+\hline
+\^{}         & bitweises Exlusives-ODER &links\\
+\hline
+|          & bitweises ODER           &links\\
+\hline
+\&\&       & logisches UND            &links\\
+\hline
+||         & logisches ODER           &links\\
+\hline
+?:         & Bedingte Ausertung       &rechts\\
+\hline
+=          & Wert Zuweisung           &rechts\\
+\hline
+-=, +=,*=,/=,   &                     &      \\
+\&=,|=,\%=,\^{}=&                     &      \\
+,<<=, >>=& \raisebox{1.5ex}{Kombinierte Zuweisungsoperator} & \raisebox{1.5ex}{rechts}\\
+\hline
+,                                   & Komma-operator                 & links \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsubsection{Statements}
+
+Wir haben einfachste Anweisungen kennen gelernt, die nacheinander ausgeführen waren. In diesem Teil werden wir wie kann mann die Reihenfolge 
+der Ausführung ändern. Zum Bespiel wenn wir möchten das Absolutwert  eines Zahlen herausfinden, wir die Anweisung wird von dem Aktuellen Wert
+der Variable abhängen. In diesem Fall wir können nutzten das sogennante $if~then~else$ Statement. Die korrekte Verwendung siehts du unter im
+kleinen Quelltext:
+\begin{lstlisting}
+#include<stdio.h>
+int main(){
+  int a=4;
+  int absolutevalue=0;
+  if ( a >  0 )
+  {
+     absolutevalue= a;
+  }
+  else
+  {
+     absolutvalue= -a;
+  }
+}
+\end{lstlisting}
+In der dritten  Reihe wir haben Variable $a$ als eine ganze Zahl definiert mit Anfangswert vier. In der vierten Reihe wir haben eine
+Variable für das Ergebnis definiert. In der fünften Reihe kommt das Selektion Anweisung mit dem Stichwort $if ()$. In dem 
+Klammerung muss ein Logikalische Ausdrückung stehen. Wir sind schon bereit für die Verwendung der Vergleichs operatoren (Tabelle \ref{vergoper}). 
+Die Größer operator steht zwischen zwei Ganzen Zahl: das Ergebnis der Ausführung $a$ und $0$. Natürlich wissen wir das in diesem Fall das
+Ergebnis in der Klammerung wird wahr sein, und die  Anweisungen  zwischen  der geschweiften Klammern von der der sechsten bis der
+achten Reihe werden ausführen. In diesem Fall es gibt nur eine Anweisung, aber man kann mehrere Anweisungen haben. Wenn das
+Wert der Variable $a$ Negativ gewesen wäre, wäre die Anweisungen in der Block nach $else$ durchgefahren. Hier wir zeigen auch 
+die Allgemeine Verwendung des if then else Statements.
+
+\begin{lstlisting}{if then else Statement}
+if ( logikalische Ausdruckung )
+{
+   Anweisungwahr1;
+   Anweisungwahr2;
+   ...;
+}
+else
+{
+   Anweisungfalsch1;
+   Anweisungfalsch2;
+   ...;
+}
+\end{lstlisting}
+
 \pagebreak
 
 
-Das Körper, das C code kannst du oben sehen. Alle C programm besteht aus Funkcionen. Wir nennen function ein part of the code, was eine
-bestimmte aufgabe erledigt.
-Du wirst es gleich finden, dass du muss zuerst lernenDu musst zuerst den einladen, was jemanden
-geschrieben hat. Zum beispiel, zu computer printen du sollst stdio.h einladen. Sie
-gehören nicht zu den sprache . Danach kommt deine arbeite. Zuerst du sollst andenken was für ein ergebnis deine aufgabe haben soll und
-wie viele eingangsparameter deine programm hat. Du sollst denen es variablen deklarieren. Jetzt kommt die wichtigsten Teil des Program, die
-Funktionen. Diese teil rechnet aus den eingangsparameter deine Ergebnis. Es gibt ein specielle function was jeden programm haben
-soll. Das nahme of diese funcktion ist main. Von diesem Punkt beginnt die Ausführung. Wir werden mehr um funckcionen später lernen.
+%as Körper, das C code kannst du oben sehen. Alle C programm besteht aus Funkcionen. Wir nennen function ein part of the code, was eine
+%estimmte aufgabe erledigt.
+%u wirst es gleich finden, dass du muss zuerst lernenDu musst zuerst den einladen, was jemanden
+%eschrieben hat. Zum beispiel, zu computer printen du sollst stdio.h einladen. Sie
+%ehören nicht zu den sprache . Danach kommt deine arbeite. Zuerst du sollst andenken was für ein ergebnis deine aufgabe haben soll und
+%ie viele eingangsparameter deine programm hat. Du sollst denen es variablen deklarieren. Jetzt kommt die wichtigsten Teil des Program, die
+%unktionen. Diese teil rechnet aus den eingangsparameter deine Ergebnis. Es gibt ein specielle function was jeden programm haben
+%oll. Das nahme of diese funcktion ist main. Von diesem Punkt beginnt die Ausführung. Wir werden mehr um funckcionen später lernen. 
+
+%Im fünften Linie illustrieren wir, dass das Name der Variable nicht mit einem Zahl beginnin darf. Eine practical Beratung ist initializerien
+%alle Variables recht im Definition. 
+%enn zwei operatoren gleichem Prioriät haben, dann zum ersten mal der linkste wird verarbeitet, and danach 
+%on links nach rechts\footnote{Hier gibt es ausnahme, wenn die Reihenfolge ist umgekehrt. Siehst denn letzten Spalte im Tablellen \ref{priortab}}. 
 
 
 \begin{lstlisting}{Einf\"ugesortieren in C: Körper }
