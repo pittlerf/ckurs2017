@@ -3,6 +3,9 @@
 \usepackage[T1]{fontenc}
 \usepackage[ngerman]{babel}
 
+\usepackage[dvipsnames]{xcolor}
+\usepackage{lipsum}
+
 \usepackage{amsfonts}
 \usepackage[intlimits]{amsmath}
 \usepackage{cite}
@@ -21,6 +24,12 @@
 \definecolor{mygreen}{rgb}{0,0.6,0}
 \definecolor{mygray}{rgb}{0.5,0.5,0.5}
 \definecolor{mymauve}{rgb}{0.58,0,0.82}
+\PassOptionsToPackage{svgnames}{xcolor}
+\usepackage{tcolorbox}
+\usepackage{lipsum}
+\tcbuselibrary{skins,breakable}
+\usetikzlibrary{shadings,shadows}
+
 \lstset{ %
   backgroundcolor=\color{white},   % choose the background color; you must add \usepackage{color} or \usepackage{xcolor}; should come as last argument
   basicstyle=\footnotesize,        % the size of the fonts that are used for the code
@@ -48,6 +57,23 @@
   tabsize=2,	                   % sets default tabsize to 2 spaces
   title=\lstname                   % show the filename of files included with \lstinputlisting; also try caption instead of title
 }
+
+
+\newenvironment{myexampleblock}[1]{%
+    \tcolorbox[beamer,%
+    noparskip,breakable,
+    colback=LimeGreen,colframe=ForestGreen,%
+    colbacklower=LimeGreen!75!YellowGreen,%
+    title=#1]}%
+    {\endtcolorbox}
+
+\newenvironment{myalertblock}[1]{%
+    \tcolorbox[beamer,%
+    noparskip,breakable,
+    colback=LightCoral,colframe=DarkRed,%
+    colbacklower=Tomato!75!LightCoral,%
+    title=#1]}%
+    {\endtcolorbox}
 %--------
 %\usepackage[magyar]{babel}
 \title{C Programmierkurs}
@@ -638,6 +664,12 @@ int main(){
 }
 \end{lstlisting}
 Die Kontrollstrukture ist bezeichnet als $for$. 
+
+\begin{myexampleblock}{Function definition \texttt{printf}}
+int printf();
+\end{myexampleblock}
+
+
 \pagebreak
 
 
