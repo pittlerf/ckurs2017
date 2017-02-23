@@ -62,16 +62,24 @@
 \newenvironment{myexampleblock}[1]{%
     \tcolorbox[beamer,%
     noparskip,breakable,
-    colback=LimeGreen,colframe=ForestGreen,%
-    colbacklower=LimeGreen!75!YellowGreen,%
+    colback=White,colframe=ForestGreen,%
+    colbacklower=LimeGreen!75!White,%
     title=#1]}%
     {\endtcolorbox}
 
 \newenvironment{myalertblock}[1]{%
     \tcolorbox[beamer,%
     noparskip,breakable,
-    colback=LightCoral,colframe=DarkRed,%
-    colbacklower=Tomato!75!LightCoral,%
+    colback=White,colframe=Bittersweet,%
+    colbacklower=Peach!75!White,%
+    title=#1]}%
+    {\endtcolorbox}
+
+\newenvironment{myblock}[1]{%
+    \tcolorbox[beamer,%
+    noparskip,breakable,
+    colback=White,colframe=RoyalBlue,%
+    colbacklower=TealBlue!75!White,%
     title=#1]}%
     {\endtcolorbox}
 %--------
@@ -655,18 +663,136 @@ $n$ ganzen Zahl kalkulieren. In diesem Fall müssen wir Schleifen verwenden.
 #include<stdio.h>
 int main(){
    int i,n;
-   int sum;
+   int summe;
    scanf("%d\n", &n);
    for (i=0; i<n; ++i){
-     sum += i; 
+     summe += i; 
    }
-   printf("Summe von ersten %d ganze Zahlen ist %d\n", n, sum);
+   printf("Summe von ersten %d ganze Zahlen ist %d\n", n, summe);
 }
 \end{lstlisting}
-Die Kontrollstrukture ist bezeichnet als $for$. 
+\begin{myalertblock}{For Kontrollstrukture}
+\begin{lstlisting}
+for ( Ausdruck_1; Ausdruck_2; Ausdruck_3) 
+{
+   Anweisungen;
+}
+\end{lstlisting}
+\vspace{-1cm}
+\begin{enumerate}
+\item Zuerst Ausdruck\_1 wird ausführen.
+\item Dann wird Ausdruck\_2 ausführen.
+\item Wenn das Ergebnis im zweiten Punkt Wahr ist, die Anweisungen 
+in dem Kern der Schleife werden Ausführen
+\item Ausdruck\_3 wird ausführen
+\item Die Ausführung wird weitermachen ab Punkt 2.
+\end{enumerate}
+\end{myalertblock}
+
+
+Die Kontrollstrukture ist bezeichnet als $for$. Die Schleife besteht aus drei verschiedenen Schritte.
+Initializierung die Schleifen Variable $i=0;$. Danach kommt die Ausführung der Schleifen Bedingung: $i<n$.
+Danach der Kern der Schleife wird ausführen, außerdem wir 0 getippt haben. Am ende des Schleifen Kerns,
+die Schleifenvariable ist ikrementiert und die Bedingung ($i<n$) wird testet nocheinmal und so weiter.
+Zusammenfassend der Schleifen Kern wird $n$ mal verarbeitet, und endlich in der Sum Variable wir 
+werden die Summe haben.
+
+Wir dürfen auch alle Ausdrucke entfallen,  aber wir müssen beachten um die Schleife nur Endliche mal 
+verarbeitet werden. Zum Beispiel die Initializierung kann auch vor der Schleife sein. Die Inkrementierung 
+der Schleife variable kann auch im Schleifen Kern inbegriffen. Wir können auch der Strichwort $break$ nutzen 
+in einem Selektion um die Schleife zu beenden. Wir zeigen unsere Beispiel mit diesen Änderungen unter:
+
+\begin{lstlisting}
+#include<stdio.h>
+int main(){
+  int n;
+  int summe:
+  int i;
+  scanf("%d", &n);
+  i=0;
+  for (;;){
+   if (i==n)
+     break;
+   summe += i;
+   i++;
+  }
+  printf("Summe von ersten %d ganze Zahlen ist %d\n", n, summe);
+}
+\end{lstlisting}
+C Sprache hat zwei anderen Kontrollstrukturen für die Schleife. Das sind $while;$ und $do; while$.
+Natürlich die diesen Schleifen können auch mit for ersetzen, aber manchmal es ist gut sie zu wissen.
+Sie werden often als vortester und nachtester Schleifen bezeichnet. Es gibt eine Große unterscied zwischen
+$while$ und $do~while$. Im $do~while$ der Kern wird mindestens einmal verarbeitet. 
+
+\begin{myalertblock}{While Kontrollstrukture}
+\begin{lstlisting}
+while ( Ausdruck_1 )
+{
+   Anweisungen;
+}
+\end{lstlisting}
+\vspace{-0.5cm}
+Bis der Wert von Ausdruck\_1 Wahr ist, die Anweisungen werden verarbeitet.
+\end{myalertblock}
+
+\begin{myalertblock}{Do While Kontrollstrukture}
+\begin{lstlisting}
+do
+{
+   Anweisungen;
+}
+while (Ausdruck_1)
+\end{lstlisting}
+\vspace{-0.5cm}
+Die Anweisungen werden verarbeiten bis der Wert von Ausdruck\_1 Wahr ist.
+\end{myalertblock}
+
+\subsubsection{Arrays und Pointers}
+
+Wir haben fast mit allem Operatoren im Tabelle \ref{prior} getroffen außer die Adresse und die Dereferenzierung.
+Die Adresse Operator gib die Adresse die Variable von ihrem Rechte Seite. Um diese Wert speichern zu können in 
+der linkste Seite muss ein Pointer stehen.  
+
+\begin{myblock}{Definition \texttt{Pointer}}
+Ist ein Variable, das Adresse von anderen Variablen speicher kann. Hat auch ein Typ.
+Das Pointer kann nur von solchen Variable Adresse speichern, die die gleichen Typ haben.
+\end{myblock}
+
+Wir können für alle Variable Pointer definieren. Aber warum komplizieren wir unseren Leben mit Pointers.
+Welche Vorteile werden wir haben, wenn wir ihnen verwenden können. Zum Beispiel, wir möchten 
+eine Funktion schreiben, das ihre Eingabe Parameter inkrementiert. Nehmen wir an, das unsere
+Funkcion zwei Parameter hat, und soll beide inkrementieren\footnote{Wenn du nur eine Parameter
+inkrementieren willst, du könntest auch die Rückgabewert deines Funkcion verwenden.}.
+Unsere erste Versuch für die Lösung kannst du unter sehen.
+
+\begin{lstlisting}
+#include<stdio.h>
+int inc( int a, int b){
+   a++;
+   b++;
+}
+int main(){
+  int a=2;
+  int b=3;
+  printf("Wert vor dem Funkcion a=%d, b=%d\n", a,b);
+  inc( a, b);
+  printf("Wert nach dem Funkcion a=%d, b=%d\n", a, b); 
+}
+\end{lstlisting}
+
+
+\subsubsection{Formattierte Eingabe und Ausgabe}
 
 \begin{myexampleblock}{Function definition \texttt{printf}}
-int printf();
+int printf(char * formattierung\_text, $\cdots$);
+\begin{itemize}
+\item Rückgabe Wert: Der Anzahl der ausgedrückten Zeichen
+\item Parameters:
+\begin{enumerate}
+\item formattierung\_text: Eine Zeichenkette, beendet mit dem \'{}\\0\'{} Zeichen, specifiziert wie mann die Daten
+audrücken will
+\end{enumerate}
+\end{itemize}
 \end{myexampleblock}
 
 
