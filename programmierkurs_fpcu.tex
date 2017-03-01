@@ -1732,6 +1732,114 @@ int main(){
   }
 }
 \end{lstlisting}
+
+\begin{myexampleprogram}{ Programme: \texttt{Die Warteschlange}}
+\begin{lstlisting}
+typedef struct queue {
+   struct queue* next;
+   int data;
+} queue;
+\end{lstlisting}
+\begin{lstlisting}
+queue * get_a_queue( int x ){
+   queue *q=(queue *)malloc(sizeof(queue));
+   q->data=x;
+   q->next=NULL;
+   return q;
+}
+\end{lstlisting}
+\begin{lstlisting}
+void queue_put( int x, queue ** first){
+   if ((*first) == NULL){
+       (*first)=get_a_queue(x);
+       return;
+   }
+   queue *temp=get_a_queue(x);
+   temp->next=(*first);
+   (*first)=temp;
+}
+\end{lstlisting}
+\begin{lstlisting}
+queue *queue_rem( queue **first){
+   queue *temp;
+   queue *ret;
+   ret = (queue *)malloc(sizeof(queue));
+   ret->next=NULL;
+   if ((*first) == NULL){
+     return NULL;
+     free(ret);
+   }
+   if ((*first)->next == NULL){
+     ret->data=(*first)->data;
+     free((*first));
+     (*first)=NULL;
+     return ret;
+   }
+   temp=(*first);
+   queue *prev;
+   while ( temp->next != NULL){
+      prev=temp;
+      temp=temp->next;
+   }
+   prev->next=NULL;
+   ret->data=temp->data;
+   free(temp);
+   return (ret);
+}
+\end{lstlisting}
+\begin{lstlisting}
+void free_queue( queue **first){
+   if ((*first)== NULL)
+     return;
+   queue *temp=(*first);
+   queue *temp2;
+   for(;;){
+     temp2=temp->next;
+     free(temp);
+     temp=temp2;
+     if (temp == NULL)
+       break;
+   }
+}
+\end{lstlisting}
+\begin{lstlisting}
+void print_queue( queue *first ){
+   queue *temp=(first);
+   if (temp == NULL){
+     printf("Wir haben keine Element in der Wertechlange\n");
+     return;
+   }
+   for (;;){
+     printf("%d\t", temp->data);
+     temp=temp->next;
+     if (temp == NULL)
+       break;
+   }
+   printf("\n");
+}
+\end{lstlisting}
+\begin{lstlisting}
+int main(){
+    queue *elso=NULL;
+    queue *temp;
+    queue_put(2, &elso);  print_queue(elso);
+    queue_put(4, &elso);  print_queue(elso);
+    queue_put(6, &elso);  print_queue(elso);
+    temp=queue_rem( &elso ); free(temp); print_queue(elso);
+    queue_put(8, &elso);  print_queue(elso);
+    temp=queue_rem( &elso ); free(temp); print_queue(elso);
+    free_queue( &elso );
+}
+\end{lstlisting}
+\begin{lstlisting}{Output}
+2	
+4	2	
+6	4	2	
+6	4	
+8	6	4	
+8	6	
+\end{lstlisting}
+\end{myexampleprogram}
 \subsubsection{Formattierte Eingabe und Ausgabe}
 \begin{myexampleblock}{Function definition \texttt{printf}}
 int printf(char * formattierung\_text, $\cdots$);
