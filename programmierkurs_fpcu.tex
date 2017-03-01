@@ -1922,8 +1922,8 @@ int heap_remove(heap** root) {
        return ret;
      }
      else {
+       ret=(*root)->val;
        (*root)->val = currentheap->val;
-       ret=(*root)->val; 
        currentheap = currentheap->parent;
        if(currentheap->right != NULL) {
           free(currentheap->right);
