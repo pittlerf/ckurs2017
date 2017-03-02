@@ -1441,16 +1441,20 @@ wir können es mit dem "<" operator erledigen.
 \end{myexampleprogram}
 
 \subsection{Dynamische Speicherverwaltung}
-Wir haben ein Sortieren geschrieben. Das ist Toll, aber wir können unsere Programme mindestens in zwei Richtungen
+Wir haben ein Sortieren geschrieben. Das ist Toll, aber wir können unsere Programme mindestens in drei Richtungen
 verbessern:
 \begin{enumerate}
-\item In allem Fall wir verwenden $MAXNUM$ int Variable von den Speichern. Es kann auch wenig sein (sieh unsere
+\item In allen Fallen wir verwenden $MAXNUM$ int Variable von den Speichern. Es kann auch wenig sein (sieh unsere
 Nachricht im read Funktion), aber es kann auch zu viel sein. Wenn wir zum Bespiel nur 100 Elementen haben, verschwenden
 wir 99\% der erfordelichen Speicherzellen. Wir können dies überholen mit Hilfe der dynamische Speicherverwaltung.
 \item
 Obwohl der Algoritmus vom Einfügesortieren sehr einfach zu verstehen ist, es ist nicht der schnellste. Wenn wir 
 $n$ Elementen sortieren wollen, die Zeit für die Sortierung skaliert quadratisch mit $n$. Wir können 
-eigene Datentypen machen und damit besser Algorithmen implementieren, um unseres Programm schneller zu machen.
+eigene Datentypen herstellen und damit besser Algorithmen implementieren, um unseres Programm schneller zu machen.
+\item
+Wir können auch das Input Teil verbessern. Zum Beispiel direkt aus einem Datein einlesen. Außerdem wir müssen
+die logische zusammenhörende Teilen, die mehr als ~100 Zeilen haben, in eigenen Datein schreiben, und das Linker
+verwenden in der Kompilirung verarbeiten.
 \end{enumerate}
 Zuerst werden wir kennenlernen, wie wir dynamische Speichern zugriffen können. Wir können das Memory in zwei Teile teilen:
 \begin{enumerate}
