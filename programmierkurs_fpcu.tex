@@ -1736,6 +1736,68 @@ int main(){
   }
 }
 \end{lstlisting}
+\section{Complex Datatypen}
+Wir haben gelernt, wie wir mehrere Objekte von dem gleichen Typ händeln
+können. Aber often das ist nicht genug. Wenn in unserem Problem
+wir zusammenhörende Variablen haben, müssen wir ihnen zusammen handeln
+als ein Stukture. In der C Sprache wir können neuen Datentypen aus
+den Elementaren herstellen, dafür müssen wir $struct$ Strichwort
+verwenden.
+\begin{myalertblock}{struct Typdefinierung}
+\begin{lstlisting}
+struct name
+{
+   Type1 typename1;
+   Type2 typename2;
+   Type3 typename3;
+   ...
+}
+\end{lstlisting}
+\vspace{-0.4cm}
+Verwendung, definieren Variable aus $name$ Typ:
+\begin{lstlisting}
+struct name variablename;
+\end{lstlisting}
+\vspace{-0.4cm} 
+Die Typen in einer Strukture können auch Strukture sein.
+Sie müssen geschlossen sein, was bedeutet, dass ihre Größe
+(wievielen Speicherzellen verwenden Sie) in der Kompilierung
+bekannt sein muss.
+\end{myalertblock}
+Ein Strukture besteht aus Objekten von verschidenen Typen. 
+Mann kann auch ein Objejt in einer Structure mit $Record$ 
+oder $Feld$ bezeichnet.
+
+Wir können mit dem Punktoperator (.) zu den eigenen Felden
+griffen. In dem unteren kleinen Quelltext wir zeigen ein Beispiel
+für Strukture Datatyp.
+\begin{lstlisting}
+#include<stdio.h>
+struct Student { 
+int matrikelnummer;
+char *name;
+char klasse[5];
+}
+int main(){
+    struct Student erste, zweite;
+    erste.matrikalnummer=99;
+    erste.name="Martin Pfeindrich";
+    erste.klasse="5a";
+    zweite={101,"Andrea Tabarrios","6b"};
+}
+\end{lstlisting}
+In diesem Beispiel wir haben das Student stukture definiert in der Zeilen zwischen 2-7.
+Das musst außerhalb des $main$ Funktions sein, um alle andere Funktionen zugriffen zu können.
+In der neuenten Zeile wir haben zwei Variable von Student Typ definiert. Sie sind 
+nicht initializiert noch. In der zehnten Ziele wir griffen zu den Recorden in der
+Student Strukture mit dem Punkt operator. Allgemeinen die Zuweisung hat der folgende Form:
+\begin{lstlisting}
+Variablename.structurenecodname = wert;
+\end{lstlisting}
+Natürlich die structurenrecordname oben kann also ein Struktured Typ sein, d.h wir können
+Strukturen schachteln.
+Natürlich wir können nicht alle Elementare operatoren auf Selbst
+erstellte Strukturen.
 
 \begin{myexampleprogram}{ Programme: \texttt{Die Warteschlange}}
 \begin{lstlisting}
