@@ -598,11 +598,284 @@ Student Strukture mit dem Punkt operator. Allgemeinen die Zuweisung hat der folg
 Variablename.structurenecodname = wert;
 \end{lstlisting}
 Natürlich die structurenrecordname oben kann also ein Struktured Typ sein, d.h wir können
-Strukturen schachteln.
-Natürlich wir können nicht alle Elementare operatoren auf Selbst
-erstellte Strukturen.
+Strukturen schachteln. Wir können auch nicht nur mit dem Punktoperator initializieren, sondern
+auch mit einer Aufzählung der Werten getrennt durch die (,) Operator.
 
-\begin{myexampleprogram}{ Programme: \texttt{Die Warteschlange}}
+Natürlich wir können nicht alle Elementare operatoren auf Selbst
+erstellte Strukturen verwenden. Wir können zwischen zwei Elementen zuweisung machen zum Beispiel.
+In diesem Fall die Werten von alle Speicherzellen, die die Strukture aufbauen werden in der
+anderen Strukturevariable copyieren. Wir können auch Arrays  Elementen von Strukturen typ, 
+und deswegen die Dereferenzierung und die adresse Operator verwendet werden.
+
+Strukuren sind hilfreich auch wenn ein Fuktion mehr ($n$) zusammenhörige Änderung machen soll. 
+Anstatt $n$ Eingabeparameter zu verwenden, genügt es, einen zu verwenden. Im Standardbibliothek
+C also hat Complex Stukture Datatypen. Zum Beispiel, die Funktions, die die Zeit verarbeiten.
+
+\begin{myexampleblock}{Definition: \texttt{struct tm}}
+\begin{lstlisting}
+struct tm{
+int tm_sec:  /*Sekundums im Minute*/
+int tm_min;  /*Minutes im Uhr*/
+int tm_hour; /*Uhr am Tag*/
+int tm_mday; /*Tag im Monat*/
+int tm_mon;  /*Monat im Jahr*/
+int tm_year; /*Jahren seit 1900*/
+int tm_wday; /*Tage seit Sonntag*/
+int tm_yday; /*Tage seit Januar 1*/
+int tm_isdst;/*Sommerzeit ist oder nicht*/
+}
+\end{lstlisting}
+Das Definition befindet sich im Standardbibliothek Funktion time.h.
+\end{myexampleblock}
+\begin{myexampleblock}{Funktion:\texttt{time}}
+\begin{lstlisting}
+time_t time(time_t *t)
+\end{lstlisting}
+\vspace{-0.4cm}
+Kehrt die Zeit in Sekundum seit (00:00:00, January 1, 1970) zurück.
+Eingabeparameter ist die Adresse ein Variable von long int Typ, in der
+das Ergebnis gespeichert wird, oder $NULL$ Pointer.
+\end{myexampleblock}
+\begin{myexampleblock}{Funktion:\texttt{localtime}}
+\begin{lstlisting}
+struct tm * localtime (time_t * timer);
+\end{lstlisting}
+\vspace{-0.4cm}
+Eingabeparameter :Adresse einer Variable von long int Typ (often die Rückgabeparameter vom Fuktion $time$).
+Mit den Werten von $timer$ füllt dieser Funktion die felder in der $tm$ Strukture aus, und kehrt ihn zurück.
+\end{myexampleblock}
+\begin{lstlisting}
+#include <time.h>
+#include <stdlib.h>
+#include <stdio.h>
+int main(void)
+{
+   time_t now;
+   struct tm *local_date_time;
+   char *tagarray[7]={"Sonntag","Montag","Dienstag","Mittwoch","Donnerstag","Freitag","Samstag"};
+   now = time(NULL);
+   local_date_time=localtime(&now);
+   printf ("Jahr ist: %d\n", local_date_time->tm_year+1900);/*Auch (*local_date_time).tm_year+1900 ist ok*/
+   printf ("Monat ist: %d\n", local_date_time->tm_mon);
+   printf ("Tage ist: %s\n", tagarray[local_date_time->tm_wday]);
+   printf ("Uhr ist: %d\n", local_date_time->tm_hour);
+   printf ("Min ist: %d\n", local_date_time->tm_min);
+   printf ("Sek ist: %d\n", local_date_time->tm_sec);
+}
+\end{lstlisting}
+In diesem Beispiel wir drücken das aktuellen Datum auf Monitor aus. Zuerst rufen wir den $time$ Funktion
+an damit wir  im $now$ das Datum als Sekunden in einem Long int Zahl haben. Danach graben wir von diesem Zahl 
+verständnisvoll Informationen aus mit dem $localtime$ Funktion. Ihre Rückgabe ist eine Pointer auf $tm$ Strukture. 
+Wir haben gelernt, wie wir zu den Strukture Elementen griffen können. Wir können auch Direkt vom Pointer
+zu den Elementen griffen mit dem $->$ Operator. Auch in der Achten Zeile wir haben ein Variable mit komplizierten
+Typ definiert als $tagarray$. Wie der Name schon sagt, das ist ein Array von Pointers auf "char". Wir verwenden
+die Struktureelement $tm\_wday$, als ein Index für diesen Array in der dreizehnten Zeile.
+\section{Datein verarbeiten}
+In Unix wir identifizieren ein Datein mit seinem Name. Wir können Funktionen aus dem Standardbibliothek verwenden, um
+detallierte Informationen zu erhalten. In diesem Fall die $C$ Sprache bietet uns den $stat$ Funktion und ihren Rückgabewert,
+ein $stat$ Strukture. 
+\begin{myexampleblock}{Definition: \texttt{struct stat}}
+\begin{lstlisting}
+struct tm{
+  _dev_t st_dev:  /*Laufwerksnummer*/
+  _ino_t st_ino;  /*Inode: eine grundlegende Datenstruktur zur Verwaltung von Dateisystemen mit unixartigen Betriebssystemen. */
+  unsigned short st_mode; /*Modus, Berechtigungen*/
+  short st_nlink; /**/
+  short st_uid;   /*USER-ID*/
+  short st_gid;   /*GROUP-ID*/
+  _dev_t st_rdev: /*Laufwerksnummer*/
+  _off_t st_size; /*Dateigroesse in Bytes */
+  time_t st_atime; /*Datum des letzten Zugriffes*/
+  time_t st_mtime; /*Datum des letzten Aenderung*/
+  time_t st_ctime; /*Erstelldatum*/
+}
+\end{lstlisting}
+\vspace{-0.4cm}
+Das Definition befindet sich im Standardbibliothek sys/stat.h.
+\end{myexampleblock}
+\begin{myexampleblock}{Definition: \texttt{struct passwd}}
+\begin{lstlisting}
+struct passwd {
+ char *pw_name; /*Anwaenders login Name*/
+ uid_t pw_uid; /* UID id*/
+ gid_t pw_gid; /* GID id*/
+ char *pw_dir; /*Login Direktory*/
+ ...
+}; 
+\end{lstlisting}
+\vspace{-0.4cm}
+Das Definition befindet sich im Standardbibliothek passwd.h
+\end{myexampleblock}
+\begin{myexampleblock}{Definition: \texttt{struct group}}
+\begin{lstlisting}
+struct group {
+  char *gr_name;
+  gid_t gr_gid;
+  char **gr_mem;
+  ...
+};
+\end{lstlisting}
+\vspace{-0.4cm}
+Das Definition befindet sich im grp.h
+\end{myexampleblock}
+\begin{myexampleblock}{Funktion: \texttt{stat}}
+\begin{lstlisting}
+int stat(char * path, struct stat * buf);
+\end{lstlisting}
+\vspace{-.4cm}
+Information erhalten über das Datein bennant als $path$. Die Informations werden im $buf$ gespeichert.
+Der Rückgabewert ist 0, wenn alles geklappt hat, und -1 bei einem Fehler.
+\end{myexampleblock}
+Bevor wir mit einem Datein arbeiten, müssen wir sicher sein, ob wir die entsprechende Rechte haben, um ihn zu 
+erstellen oder einlesen. Die Felden uid und gid in der stat Strukture geben Informationen über die Besitzer des Dateins.
+Der Supervisor hat immer $(0.0)$ als ($uid,gid$). Normalweise der erste Anwänder hat 1000 uid.
+Für die weitere Anwänders das uid wird um eins erhöht. 
+Wir können auch das uid mit einem Anwänder's Name verbunden. Dafür gibt es zum Bespiel der $getpwuid$ Funktion 
+im Standardbibliothek. Die Anwänders in den unixartigen Betriebsystemen haben außerdem ihre login Name auch eine
+Group Name. Wenn in einem Computer mehrere Programmierer arbeiten, Sie werden in Gruppen verteilen, um ihre
+Arbeit leicht zu teilen. Wir können das $GID$ mit einem Name mithilfe des $getgrgid$ Funktions verbunden.
+Es kann nötig sein zu prüfen, ob die Datein beschädigt ist, oder nicht. 
+zum Bespiel, wir können überprüfen ihre Größe. Nehmen wir an, dass wir die folgende Datei (example.txt) haben
+\begin{lstlisting}{example.txt}
+Hello world
+\end{lstlisting}
+Wir haben die folgende C Code geschrieben, um Informationen über diesen Datei erhalten:
+\begin{lstlisting}
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include <pwd.h>
+#include <grp.h>
+#include <sys/stat.h>
+int main(int argc, char *argv[])
+{
+   struct stat *sb;
+   struct passwd *pwuser;
+   struct group *grpnam;
+   int i;
+   if (argc < 2)
+   {
+       printf("Usage: %s: file ...\n", argv[0]);
+       exit(EXIT_FAILURE);
+   }
+   sb= (struct stat *)malloc(sizeof(struct stat));
+   for ( i = 1; i < argc; i++){
+      if (stat(argv[i], sb) == -1){
+          exit(EXIT_FAILURE);
+      }
+      if ( (pwuser = getpwuid(sb->st_uid)) == NULL )
+      {
+          exit(EXIT_FAILURE);
+      }
+      if ( (grpnam = getgrgid(sb->st_gid)) == NULL )
+      {
+          exit(EXIT_FAILURE);
+      }
+      printf("%s:\n", argv[i]);
+      printf("\tinode: %u\n", (int)sb->st_ino);
+      printf("\towner: %u (%s)\n", sb->st_uid, pwuser->pw_name);
+      printf("\tgroup: %u (%s)\n", sb->st_gid, grpnam->gr_name);
+      printf("\tperms: %o\n", sb->st_mode & (S_IRWXU | S_IRWXG | S_IRWXO));
+      printf("\tsize: %ld\n", sb->st_size);
+      printf("\tatime: %s", ctime(&(sb->st_atime)));
+      printf("\tmtime: %s", ctime(&(sb->st_mtime)));
+      printf("\tctime: %s", ctime(&(sb->st_ctime)));
+      printf("\n");
+   }
+   free(sb);
+   return 0;
+}
+\end{lstlisting}
+Diesen Beispiel gibt es viele Neueigkeiten für uns. Zum ersten Mal wir verwenden die Eingabeparameters unseres 
+Programms. Zur Erinnerung, der Wert vom $argc$ erhaltet die Anzahl der Parameter, und im $argv$ (Array von Pointers auf
+char Typ) sind die Parameter gespeichert. Standardmäßig das erste Parameter ist das Name des Programms, dann kommen
+die Parameter, die wir hinzufügen haben. In der 13-ten Zeile prüfen wir die Anzahl der eingegebenen Parameter. Wenn
+wir keinen Parameter eingegeben habe, beenden wir das Programm mit einer Gebrauchanweisung. Außerdem interpretieren 
+jeden Parameter als Dateiname und erhalten ihre Eigenschaften mithilfe des stat Funktion. Es ist wichtig in der 18-ten
+Zeile Speicher für sb reservieren. Der Funktion $stat$ geht davon aus, dass die Adresse, die sie bekommen habe, ist
+schon reserviert. In diesem Beispiel wir verwenden auch der $getpwuid$ Funktion, mit dem wir die UID mit einem login 
+Name verbunden. In unix Betriebsystemen wir können verschiedene Rechten für Anwänder, Gruppe von Anwändern, und für die
+Anderen. Für einem Datein gibt es Rechte für schreiben, lesen und Ausführen. Die drei können wir darstellen mit 3 bits.
+In dem 35 Zeile wir ziehen der Wert von diesen bits für der Anwänder, die Gruppe des Anwänders und für die Anderen heraus.
+Die Ausgabe unseres Programms ist die folgende:
+\begin{lstlisting}
+./a.out example.txt
+example.txt:
+  inode: 11931732
+  owner: 1000 (pittler)
+  group: 1000 (pittler)
+  perms: 664
+  size: 12
+  atime: Fri Mar  3 12:57:38 2017
+  mtime: Fri Mar  3 12:57:31 2017
+  ctime: Fri Mar  3 12:57:31 2017
+\end{lstlisting}
+Die Größe vom Datein kann überraschend sein, weil es nur aus 11 Zeichen besteht. Aber jeden Datein enthält die 
+$EOF$(Ende des Dateins) Zeichen. Mit diesem Byte die Größe des Dateins stimmt.
+\subsection{Das Stream Konzept}
+
+Obwohl die Sprache keine eingebaute Methode für Ein und Ausgabe hat, in der Standardbibliothek befindet sich
+mehrere wertvollen Ein und Ausgabe Funktionen. Ein wichtiges Konzept ist das $stream$. Das $stream$ ist ein Kanal, die
+eine Verbindung zwischen die Datein und deine Programm macht. Beispielweise hier Datein kann  Tastatur, 
+Monitor, oder Datein auf einem Kasetten bezeichnet. In jedem Fall wir haben das gleiche Kanal.
+Diese Universalität macht Ein und Ausgabe einfach zu handhaben. Zu jeden Kanalen gehören ein Pointer von FILE Typ,
+mit dem wir Sie verwenden können. Der Laufzeitsystem stellt automatisch für uns drei Kanale
+\begin{enumerate}
+\item stdin : Standard für Eingabe 
+\item stdout : Standard für Ausgabe
+\item stderr : Standard für Fehler
+\end{enumerate} zur Verfügung. Wir haben schon das Standard Ein und Ausgabe kennengelernt. Zur errinerung hier gibt es
+eine weitere Übung:
+\begin{myexampleprogram}{Programme: \texttt{Eingabe nach Ausgabe Kopieren}}
+\begin{lstlisting}
+#include<stdio.h>
+#include<stdlib.h>
+int main(){
+  char c;
+  while( (c=getchar()) !=EOF)
+   putchar(c);
+}
+\end{lstlisting}
+\end{myexampleprogram}
+\begin{myexampleblock}{Funktion: \texttt{getchar}}
+\begin{lstlisting}
+int getchar ( void );
+\end{lstlisting}
+\vspace{-0.4cm}
+Lest ein Zeichen von der Standard Eingabe. Rückgabewert ist das eingelesene Zeichen, wenn die Einlesung erfolgreich war, außerdem
+EOF.
+\end{myexampleblock}
+\begin{myexampleblock}{Funktion: \texttt{putchar}}
+\begin{lstlisting}
+int putchar (char c);
+\end{lstlisting}
+\vspace{-0.4cm}
+Drückt den Zeichen $c$ aus. Der Rückgabewert ist ein int Wert, der von unsigned char konvertiert wurde.
+\end{myexampleblock}
+In diesem einfachen Beispiel wir lesen die Zeichen ein bis zum Ende des Dateins in der fünften Zeile.
+Im Schleifenkern wir habe nur eine Anweisung, die der eingelesene Zeichen ausdrückt. Aber in diesem Beispiel
+bei der Ausführung wir müssen den Datein mit dem $<$ Operator zur Standard Eingabe ziehen. Um direkt aus
+einem Datein lesen zu können, wir müssen ein Kanal zum Datein eröffnen.
+\begin{myexampleblock}{Funktion: \texttt{fopen}}
+\begin{lstlisting}
+FILE *fopen( const char *filename, char mode);
+\end{lstlisting}
+\vspace{-0.4cm}
+Eröffnet ein Kanal zum Datein für Verarbeitung.
+\begin{itemize}
+\itemsep0.5ex
+\item "w": Datei zum Schreiben erzeugen, wenn es schon existiert, wird sie überschreiben
+\item "r": Öffnen einer Datei ausschließlich zum Lesen
+\item "{}a": Öffnen einer Datein zum Anfügen. Wenn is nicht existiert, wird sie erzeugen.
+\item "w+" Öffnen zum Schreiben und Lesen, wenn es schon existiert, wird sie überschreiben.
+\item "r+" Öffnen einer Datei zum Schreiben und Lesen.
+\item "{}a+" Öffnen einer Datei zum Lesen und Anfügen.
+\end{itemize}
+\end{myexampleblock}  
+In diesem Fall können wir das $fopen$ Funktion verwenden um einer Kanal zu eröffnen. Vordem
+wir mit einem Datei das Arbeit anfangen, müssen wir wissen ob es ein Binärdatei oder ein Asciidatei
+ist. Ein Asciidatei ist ein 
+\begin{myexampleprogram}{ Programme: \texttt{Die Warteschlange}}	
 \begin{lstlisting}
 typedef struct queue {
    struct queue* next;
