@@ -873,7 +873,18 @@ Eröffnet ein Kanal zum Datein für Verarbeitung.
 \end{myexampleblock}  
 In diesem Fall können wir das $fopen$ Funktion verwenden um einer Kanal zu eröffnen. Vordem
 wir mit einem Datei das Arbeit anfangen, müssen wir wissen ob es ein Binärdatei oder ein Asciidatei
-ist. Ein Asciidatei ist ein 
+ist. Ein Asciidatei ist ein Sequenz von Zeichen beenden mit $EOF$. In einem Binärdatei, wir müssen vorhand
+die Strukture des Inhalts von Datei wissen. Kann mann fragen, Warum wir bei allen Binärdateien verwenden?
+Das Antwort liegt in der Genauigkeit und im Speicherplatz. Wenn wir eine 8 byte größe Fließkommazahl in 
+ASCII speichern würde, brauchen wir $~40$-mal mehr speichern um die gleiche Genauigkeit zu erreichen. Zuerst 
+werden wir einlesen aus Einfache Asciidatei.
+\begin{myexampleblock}{Funktion: \texttt{fscanf}}
+\begin{lstlisting}
+int fscanf(FILE *kanal,char *formattierungtext, ....);
+\end{lstlisting}
+Formattierte Einlesung von einer Asciidatei, interpretiert von dem formattierungtext. Der Rückgabewert ist der
+Anzahl der Elemente von Argumentliste erfolgreich gefüllt.:
+\end{myexampleblock}
 \begin{myexampleprogram}{ Programme: \texttt{Die Warteschlange}}	
 \begin{lstlisting}
 typedef struct queue {
