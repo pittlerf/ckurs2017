@@ -1,78 +1,199 @@
-\section{Mein Erste C Programm}
-Dieses Buch (Kurz) handelt sich um eine programmier Sprache. Die programmier Sprache ist ein Werkzeug, mit dem wir unser
-Gedanken zum Computer versenden können. Zum beispiel wir möchten $n$ Zahlen sortieren. Wir wissen im Kopf,
-wie wir es machen werden. Wir wissen der Algorithmus der Sortierungs. Die einfachste ist der Einfügesortieren.
-Wir fassen zusammen in
-der unteren Auflistung:
-\begin{lstlisting}{Einf\"ugesortieren}
-1; Wir haben zwei Listen :
-     sortierte, unsortierte
-2; Am Anfang die sortierte Liste besteht aus dem ersten Zahl
-3; Alle andere Zahlen gehoren zum unsortierten Liste
-4; Wir machen eine Schleife uber allen Element der unsortierten Liste
-5; Fur jeder Elemente in der ursortierten Liste wir suchen
-     fur die angemessene Position in der sortierten Liste.
-6; Wir ziehen die Element um zu der sortierten Liste.
-\end{lstlisting}
-Das ist alles, aber das wird der Computer nicht verstehen. Wir müssen das übersetzten um der Computer
-verstehen zu können. Jede sprache hat eigene Sprachkonstrukte um diese Übersetztung zu erledigen.
+\section{Mein erstes C Programm}
 
-\subsection{Speichern}
-Wir handeln Zahlen im Computer mithilfe der Speichern. Die Größe der Speicher hängt von der Art von Zahlen
-ab. Zum Beispiel wir können Ganze Zahlen auf wenigen Platz speichern, als reelle Zahlen.
-Als Speicher man kann Registers, Memory oder Festpaletten verwenden.
+Ein wichtiger Schritt hin zu einem Programm ist die Formulierung des Verfahrens für die Lösung eines Problems als Algorithmus.\\
+Ein \textbf{Algorithmus} ist eine präzise Vorschrift, um aus vorgebenen
+Eingaben in endlich vielen Schritten eine bestimmte Ausgabe zu
+ermitteln.
 
-Alle speichern bestehen aus elementare Speicherzellen (mann nennt sie es Byte-s). Mann nennt diese zellen Elementare, obwohl es 8
-Bauteile (mann nennt es  bit) hat. Mann kann sagen elementare Speicherzelle auch, weil einigen
-bit kann nicht verändert werden. Ein Bit kann geladen or entladen werden, dabei hat es zwei zustände:
-0 (nein), 1 (ja). Auf diese Weise in einem Speicherzelle kann man 256 vershiedenen Zustände (verschiedenen Zahlen)
-speichern. Zu speichern mehreren Zustände es gibt verschiedene Möglichkeiten:
+Hat man dies geschafft, so muss der Algorithmus in die jeweilige Programmiersprache, hier also C, umgesezt werden.
+Betrachten wir als Beispiel folgendes Problem:
+Wir haben Daten $x_0, x_1,\ldots,x_{n-1}$ von einem Datentyp für den wir eine Operation größer-gleich (oder kleiner-gleich) und kleiner (größer) definiert haben.
+Man beachte, dass wir ab jetzt bei der Indizierung der C Konvention folgen und von $0$ bis $n-1$ indizieren.
+Die Aufgabe ist nun eine Permutation $\sigma(i)$, $i=0,...,n-1$ zu finden, so dass
+\[
+x_{\sigma(0)}\ \leq\ x_{\sigma(1)}\ \leq\ \ldots\ \leq\ x_{\sigma(n-1)}
+\]
+gilt.
+
+Ein einfacher Algorithmus, um dieses Problem zu lösen heißt \emph{Einfügesortieren}.
+Er kann in folgen Schritten formuliert werden:
+\begin{enumerate}
+\item Wir starten mit zwei Liste, eine sortierte S und eine unsortierte U\\
+  Am Anfang besteht U aus der zu sortierenden Liste und S ist leer.
+\item Nun verschieben wir jeweils das erste Element aus U nach S
+  wir fügen das Element dabei so in S ein, dass S immer sortiert ist
+ \item Wir wiederholen 2. so oft, bis U leer ist.
+\end{enumerate}
+Wahrscheinlich ist jedem klar, dass diese Vorschrift in $n$ Schritten das gewünschte Ergebnis liefern wird.
+Leider wird der Computer bzw. der C-Compiler den Algorithmus so nicht verstehen.
+Deswegen werden wir den Algorithmus jetzt in C übersetzen.
+
+\subsection{Daten- und Speichertypen}
+
+Bevor wir die C-Datentypen vorstellen, ist es hilfreich zu verstehen, wie Daten auf einem Rechner gespeichert werden.
+Speicher, egal ob Hauptspeicher oder Festplatte benutzt als kleinste Speicherzelle ein Element das entweder den Zustand 0 oder 1 annehmen kann.
+Ein solches Element nennt man Bit.
+Das heißt mit einem Bit kann man genau zwei Zustände darstellen.
+Fasst man 8 Bits zu einem Byte zusammen, so kann man $2^8=256$ Zustände darstellen.
+Größere Speicherbereiche nennt man
 \begin{itemize}
 \item Byte:  1Byte $2^{8 }$ zustände
 \item Word:  2Byte $2^{16}$ zustände
 \item Dword: 4Byte $2^{32}$ zustände
 \item Qword: 8Byte $2^{64}$ zustände
 \end{itemize}
-Zum beispiel, wenn du schreibst deine Code in einem txt File, für alle geschriebene character nutzt man 1 Byte
-speicher auf das Festpallette. Man speichers das ASCII charachter der Buchstabe.
+Beispielsweise kann Text in einer Datei im ASCII Format gespeichert. 
+Das bedeutet, dass jedes Zeichen genau ein Byte in Anspruch nimmt.
+Damit kann aber im ASCII Format lediglich ein Zeichenumfang von $256$ Zeichen dargestellt werden.
 
-Die Speichers haben zwei wichtigen Eigenschaften:
+Die verschiedenen Speichertypen haben zwei wichtigen Eigenschaften:
 \begin{itemize}
-\item Ihre Grösse
-\item Zeit zu erreichen eine Zelle
+\item Die totale Größe
+\item Die Zugriffszeit
 \end{itemize}
-Diese Eigenschaften zusammen bestimmen die Speichern. Zum Beispiel die Memory ist umgefähr 10.000 mal
-schneller zu erreichen als die  Festpalletten, aber 50 mal langsamer zu erreichen als die Registers.
-Aber die Registers besteht aus wenigen Kilobytes, das Memory aus wenigen Gbytes, und das Festpallette
-aus wenigen TBytes. Glücklicherweise wir müssen nicht genau wissen, wie die verkehr zwischen haupt memory
-und die Register behandeln wird, die Compiler macht diese Aufgabe.
+Typischerweise ist die Zugriffszeit länger, wenn die totale Größe des Speichermediums größer ist.
+Zum Beispiel ist Hauptspeicher ungefähr $10.000$ mal schneller zu erreichen als eine Festplatte, aber 50 mal langsamer zu erreichen als die Register einer CPU.
+Die Register bestehen aber nur aus wenigen Kilobytes, der Hauptspeicher aus einigen Gigabyte, und die Festplatte heutzutage aus einigen Terabyte.
+Für uns ist hier aber lediglich der Unterschied Festplattenspeicher und Hauptspeicher von Bedeutung, da die Register vom Compiler angesteuert werden.
 
-\subsection{Der Körper des C code für Einfügesortieren}
-Die Computer programme besteht aus Variablen, mit dem wir operationen machen können und Funkcionen. In der letzten Punkt
-wir haben gesehen, wie kann man Zahlen im Computer speichern. Hier wir werden einführen, wie mann Variablen
-deklarieren, Wert geben oder auf dem Monitor ausdrücken kann.
+\subsection{Maschinenzahlen}
 
-\subsubsection{Ausdrücken}
-\begin{lstlisting}{Erste C programm}
-#include<stdio.h>
-int main(int argc, char *argv[]){
-   printf("Hello world\n");
+Auf einem Rechner ist lediglich eine Teilmenge $\mathcal{M}$ der
+reellen Zahlen darstellbar. Nach IEEE Standard wird eine Fließkomma
+Zahl wie folgt dargestellt:
+\begin{equation}
+x = \mathrm{sign}(x)\cdot a\cdot E^{e-k}
+\end{equation}
+wobei $E\in \mathbb{N}, E>1$ die Basis ist (meist $E=2$), $k\in
+\mathbb{N}$ die 
+Genauigkeit und $e$ im Exponentenbereich
+$e_\mathrm{min}<e<e_\mathrm{max}$ liegt mit
+$e_\mathrm{min},e_\mathrm{max}\in \mathbb{Z}$. Die Mantisse $a\in
+\mathbb{N}_0$ ist 
+definiert als
+\begin{equation}
+a = a_1 E^{k-1} + a_2 E^{k-2} + ... + a_k E^0\,,
+\end{equation}
+wobei $k$ die Mantissenlänge darstellt und $a_i$ die Ziffern im
+entsprechenden Zahlensystem sind. Auf modernen Rechnern ist
+üblicherweise $a_i\in\{0,1\}$ im Dualsystem mit Basis $E=2$.
+
+Bei der Abbildung der reellen Zahlen auf die Menge der Maschinenzahlen
+muss fast immer eine Rundungsoperation vorgenomme werden. Dabei geht
+Information verloren, eine Rückabbildung ist nicht eindeutig möglich.
+
+\begin{myexampleblock}{Zahlendarstellung}
+  \begin{enumerate}
+  \item Die Abbildung der Zahl $0,1$ im Dezimalsystem auf das
+    Dualsystem $0,1_{10} = 0,000110011001100\ldots_2$ ist ein unendlicher
+    periodischer Dualbruch und damit mit endlicher Stellenzahl nicht
+    exakt darstellbar.
+  \item beim Addieren zweier $k$-stelliger Zahlen entsteht im
+    Allgemeinen eine $k+1$ stellige Zahl. Überschreitet bei einem
+    solchen Schritt $k+1$ die maximal verfügbare Stellenzahl, so kommt
+    es zu einem sogenannten Überlauf (Englisch: \emph{overflow}), der
+    zum Fehlschlagen eines Verfahrens führt.
+  \end{enumerate}
+\end{myexampleblock}
+Als Maschinengenauigkeit bezeichnet man die größte reelle Zahl
+$\delta_M$ für die der Rechner
+\begin{equation}
+1 + \delta_M = 1
+\end{equation}
+liefert. Für die Abbildung der rellen Zahlen auf Maschinenzahlen gilt
+dann notwendigerweise
+\begin{equation}
+-\delta_M \leq \delta x\leq \delta_M\,.
+\end{equation}
+
+
+\subsection{C Quelltext für den Algorithmus Einfügesortieren}
+
+Daten werden im C Quelltext durch sogenannte Variablen representiert. 
+Auf Variablen können wir Operation ausführen, oder sie an Funktionen übergeben.
+Zunächst stellen wir jetzt vor, wie man Variablen deklariert, ihnen einen Wert zuweisst und wie man sie beispielsweise auf dem Monitor ausgeben kann.
+C kennt beispielsweise Datentypen für ganze Zahlen und für reelle Zahlen.
+Beispiele sind \texttt{int} für ganze und \texttt{float} für reelle Zahlen.
+Diese sind in verschiedenen Längen verfügbar.
+Verschiedene Längen erlauben die Darstellung verschiedener Zahlenbereiche.
+
+\subsubsection{Ein erstes C-Programm}
+
+Ein C-Programm ist ein Stück Text, der entsprechend den Sprachregeln von C formuliert sein muss.
+Es besteht im Allgemeinen aus Deklarationen, Anweisungen, Kontrollstrukturen und Kommentaren.
+Das vielleicht einfachste C-Programm hat folgende Form:
+\begin{lstlisting}{Ein erstes C-Programm}
+int main() {
+  // dies ist ein Kommentar
+  return(0);
 }
-\label{typ_1}
 \end{lstlisting}
+An Hand dieses einfachen Programms können wir schon einiges über die C Sprachregeln lernen.
+Jedes Programm in C muss die Funktion \texttt{main} definieren. 
+Die von uns gerade definiert Funktion \texttt{main} hat eine ganze Zahl (\texttt{int}) als Rückgabewert.
+Da der geklammerte Bereich direkt nach \texttt{main} leer ist, bekommt die Funktion keine Parameter übergeben.
+Schlüsselwörter, hier \texttt{int} und \texttt{main} werden durch ein oder mehrere Leerzeichen getrennt.
+Mit den geschweiften Klammern wird ein Abschnitt oder Block definiert, in diesem Fall der Block der Funktion.
+Die beiden Schrägstriche \texttt{//} lassen den Compiler alles danach folgende bis zum Zeilenende als Kommentar interpretieren.
+Die Funktion \texttt{return} beendet die Abarbeitung der Funktion und gibt einen Wert an die aufrufende Funktion zurück.
+Jede Funktion sollte immer explizit \texttt{return} aufrufen, auch wenn es keinen Rückgabewert gibt.
+Jede Deklaration oder Anweisung, in diesem Fall der Aufruf von \texttt{return}, muss mit einem Semikolon \texttt{;} abgeschlossen werden.
+Deklarationen oder Anweisungen sind nicht an Zeilen gebunden und können über mehrere Zeilen verteilt werden. 
+Leere Zeilen werden vom Compiler nicht beachtet.
+Groß- und Kleinschreibung sind wichtig, \texttt{Foo} und \texttt{foo} sind also unterschiedlich.
+Da auch Leerzeichen am Zeilenanfang beliebig sind, werden Zeilen normalerweise eingerückt.
+Das erhöht die Lesbarkeit des Quelltextes.
+Gute Editoren stellen Einrückungs Schemas zur Verfügung.
 
-Zuerst werden wir nur eine Nachricht auf dem Monitor Zeigen: "Hello World". Du siehst die Code oben. Es hat nur 4 Reihe, und
-macht die complex Aufgabe: drücken auf Monitor. Jede C programm hat zwei Teile. In den ersten Teil du sagst dem Computer, welchen
-Funkcionen die anderen geschrieben haben, willst du nutzten.  Das Funktion, ist eine Programmteil der macht ein Ausgang aus dem Eingang.
-Hier in der dritten Reihe wir nutzten die printf Funkcion, was zeigt ihrer Argumente auf dem Monitor. Der Compiler muss wissen
-wieviele and welche parameter jede Funktion haben kann. Dieses Information ist zusammelt von der sogennanten ''header`` Files.
-Du siehst das in der ersten Reihe. Diese Reihe sagt dem Compiler zu beilagen das Inhalt des File "stdio.h". In diesem File
-findet mann die deklaration des printf funktion. Mehr werden wir sagen über printf Funkcion gleich, aber hier wir also
-haben unseren ersten Funkcion geschrieben. Das Name des Funkcions ist main. Jede C code muss ein Funkcio mit dem Namen main
-haben. Die Ausführung des Programms beginnt mit diesem Funkcion. Es hat zwei Eingangsparameter:
-\begin{enumerate}
-\item Variable argc. Seines Wert ist gleich der Anzahl der Parameter.
-\item Variable argv. Es ethält die Parameter
-\end{enumerate}
-Das Funkcion Main also hat Ausgangs Parameter, der Null ist, wenn alles war gut, und unsere Program hat erfolgreich
-beendet.
+Wie übersetzt man nun dieses Programm?
+Wir zeigen dies hier beispielhaft für Linux und den GNU C compiler \texttt{gcc}.
+Angenommen, obiger Quelltext ist in einer Datei \texttt{main.c} im momentanen Arbeitsverzeichnis gespeichert.
+Dann kann man die Datei mit folgendem Aufruf auf der Console übersetzen:
+
+\vspace*{0.5cm}
+\begin{verb}
+>$  gcc -std=c99 main.c -o main.exe
+\end{verb}
+\vspace*{0.5cm}
+
+\noindent Das in Maschinencode übersetzte Programm kann man dann mit
+
+\vspace*{0.5cm}
+\begin{verb}
+>$  ./main.exe
+\end{verb}
+\vspace*{0.5cm}
+
+\noindent von der Console aus ausgegeführt werden. 
+
+Bisher tut unser erstes Programm noch nichts, außer Null zurückgeben. 
+Wir können es um eine Ausgabe auf den Bildschirm erweitern:
+\begin{lstlisting}{Programm Hallo Welt}
+#include<stdio.h>
+
+int main(){
+  // Ausgabe auf dem Bildschirm
+  printf("Hallo Welt\n");
+  return(0);
+}
+\end{lstlisting}
+Es sind zwei Dinge dazugekommen:
+Erstens haben wir eine sogenannte Header-Datei, in diesem Fall \texttt{stdio.h} eingebunden.
+Das ist nötig, damit der C-Compiler die Funktion \texttt{printf} kennt.
+Zweitens ist der Aufruf von \texttt{printf} hinzugekommen.
+Die Funktion \texttt{printf} gibt in diesem Fall den String "Hallo Welt" auf dem Standard Ausgabegerät aus, was normalerweise die Console selbst ist, wenn das Programm von der Console aufgerufen wird. 
+Wir werden die Funktion \texttt{printf} später noch im Detail diskutieren.
+Wieder wird der Aufruf von \texttt{printf} mit einem Semikolon \texttt{;} abgeschlossen.
+
+Der Rückgabewert von \texttt{main} kann übrigens an der Console wie folgt abgefragt werden
+
+\vspace*{0.5cm}
+\begin{verbatim}
+>$  ./main.exe
+>$  echo $?
+0
+\end{verbatim}
+\vspace*{0.5cm}
+
+Man kann der Funktion \texttt{main} auch Parameter übergeben.
+Wie, werden wir später sehen.
