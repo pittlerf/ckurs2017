@@ -129,15 +129,14 @@ und es ist -1.
 \begin{lstlisting}
 #define MAXNUM 10000
 int read( int array[] ){
-   int i;
-   for (i=0;i<MAXNUM;i++){
-     if ( scanf("%d\n", &array[i])== EOF )
-      break;
-   }
-   if (i==MAXNUM)
-     printf("Sorry, wir konnten leider
-             nicht das ganze File gelesen.");
-   return i;
+  unsigned int i;
+  for (i = 0; i < MAXNUM; i++){
+    if ( scanf("%d\n", &array[i])== EOF )
+    break;
+  }
+  if (i == MAXNUM)
+  printf("Sorry, wir konnten leider nicht die ganze Datei einlesen.");
+  return i;
 }
 \end{lstlisting} 
 In der ersten Zeile wir haben eine Symbolische Konstante definiert um die maximale Größe des
