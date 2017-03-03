@@ -17,13 +17,13 @@ gilt.
 
 Ein einfacher Algorithmus, um dieses Problem zu lösen heißt \emph{Einfügesortieren}.
 Er kann in folgen Schritten formuliert werden:
-\begin{lstlisting}{Einfügesortieren}
-1; Wir starten mit zwei Liste, eine sortierte S und eine unsortierte U
-2; Am Anfang besteht U aus der zu sortierenden Liste und S ist leer.
-3; Nun verschieben wir jeweils das erste Element aus U nach S
-   wir platzieren das Element dabei so in S ein, dass S immer sortiert ist
-4; Wir wiederholen 3; so oft, bis U leer ist.
-\end{lstlisting}
+\begin{enumerate}
+\item Wir starten mit zwei Liste, eine sortierte S und eine unsortierte U\\
+  Am Anfang besteht U aus der zu sortierenden Liste und S ist leer.
+\item Nun verschieben wir jeweils das erste Element aus U nach S
+  wir fügen das Element dabei so in S ein, dass S immer sortiert ist
+ \item Wir wiederholen 2. so oft, bis U leer ist.
+\end{enumerate}
 Wahrscheinlich ist jedem klar, dass diese Vorschrift in $n$ Schritten das gewünschte Ergebnis liefern wird.
 Leider wird der Computer bzw. der C-Compiler den Algorithmus so nicht verstehen.
 Deswegen werden wir den Algorithmus jetzt in C übersetzen.
@@ -120,40 +120,77 @@ Verschiedene Längen erlauben die Darstellung verschiedener Zahlenbereiche.
 \subsubsection{Ein erstes C-Programm}
 
 Ein C-Programm ist ein Stück Text, der entsprechend den Sprachregeln von C formuliert sein muss.
+Es besteht im Allgemeinen aus Deklarationen, Anweisungen, Kontrollstrukturen und Kommentaren.
 Das vielleicht einfachste C-Programm hat folgende Form:
 \begin{lstlisting}{Ein erstes C-Programm}
 int main() {
   // dies ist ein Kommentar
   return(0);
 }
-\label{typ_0}
 \end{lstlisting}
+An Hand dieses einfachen Programms können wir schon einiges über die C Sprachregeln lernen.
 Jedes Programm in C muss die Funktion \texttt{main} definieren. 
 Die von uns gerade definiert Funktion \texttt{main} hat eine ganze Zahl (\texttt{int}) als Rückgabewert.
 Da der geklammerte Bereich direkt nach \texttt{main} leer ist, bekommt die Funktion keine Parameter übergeben.
-Mit den geschweiften Klammern wird ein Abschnitt definiert, in diesem Fall der der Funktion.
+Schlüsselwörter, hier \texttt{int} und \texttt{main} werden durch ein oder mehrere Leerzeichen getrennt.
+Mit den geschweiften Klammern wird ein Abschnitt oder Block definiert, in diesem Fall der Block der Funktion.
+Die beiden Schrägstriche \texttt{//} lassen den Compiler alles danach folgende bis zum Zeilenende als Kommentar interpretieren.
 Die Funktion \texttt{return} beendet die Abarbeitung der Funktion und gibt einen Wert an die aufrufende Funktion zurück.
+Jede Funktion sollte immer explizit \texttt{return} aufrufen, auch wenn es keinen Rückgabewert gibt.
+Jede Deklaration oder Anweisung, in diesem Fall der Aufruf von \texttt{return}, muss mit einem Semikolon \texttt{;} abgeschlossen werden.
+Deklarationen oder Anweisungen sind nicht an Zeilen gebunden und können über mehrere Zeilen verteilt werden. 
+Leere Zeilen werden vom Compiler nicht beachtet.
+Groß- und Kleinschreibung sind wichtig, \texttt{Foo} und \texttt{foo} sind also unterschiedlich.
 
-\begin{lstlisting}{Erste C programm}
+Wie übersetzt man nun dieses Programm?
+Wir zeigen dies hier beispielhaft für Linux und den GNU C compiler \texttt{gcc}.
+Angenommen, obiger Quelltext ist in einer Datei \texttt{main.c} im momentanen Arbeitsverzeichnis gespeichert.
+Dann kann man die Datei mit folgendem Aufruf auf der Console übersetzen:
+
+\vspace*{0.5cm}
+\begin{verb}
+>$  gcc -std=c99 main.c -o main.exe
+\end{verb}
+\vspace*{0.5cm}
+
+\noindent Das in Maschinencode übersetzte Programm kann man dann mit
+
+\vspace*{0.5cm}
+\begin{verb}
+>$  ./main.exe
+\end{verb}
+\vspace*{0.5cm}
+
+\noindent von der Console aus ausgegeführt werden. 
+
+Bisher tut unser erstes Programm noch nichts, außer Null zurückgeben. 
+Wir können es um eine Ausgabe auf den Bildschirm erweitern:
+\begin{lstlisting}{Programm Hallo Welt}
 #include<stdio.h>
-int main(int argc, char *argv[]){
-   printf("Hello world\n");
-}
-\label{typ_1}
-\end{lstlisting}
 
-Zuerst werden wir nur eine Nachricht auf dem Monitor Zeigen: "Hello World". Du siehst die Code oben. Es hat nur 4 Reihe, und
-macht die complex Aufgabe: drücken auf Monitor. Jede C programm hat zwei Teile. In den ersten Teil du sagst dem Computer, welchen
-Funkcionen die anderen geschrieben haben, willst du nutzten.  Das Funktion, ist eine Programmteil der macht ein Ausgang aus dem Eingang.
-Hier in der dritten Reihe wir nutzten die printf Funkcion, was zeigt ihrer Argumente auf dem Monitor. Der Compiler muss wissen
-wieviele and welche parameter jede Funktion haben kann. Dieses Information ist zusammelt von der sogennanten ''header`` Files.
-Du siehst das in der ersten Reihe. Diese Reihe sagt dem Compiler zu beilagen das Inhalt des File "stdio.h". In diesem File
-findet mann die deklaration des printf funktion. Mehr werden wir sagen über printf Funkcion gleich, aber hier wir also
-haben unseren ersten Funkcion geschrieben. Das Name des Funkcions ist main. Jede C code muss ein Funkcio mit dem Namen main
-haben. Die Ausführung des Programms beginnt mit diesem Funkcion. Es hat zwei Eingangsparameter:
-\begin{enumerate}
-\item Variable argc. Seines Wert ist gleich der Anzahl der Parameter.
-\item Variable argv. Es ethält die Parameter
-\end{enumerate}
-Das Funkcion Main also hat Ausgangs Parameter, der Null ist, wenn alles war gut, und unsere Program hat erfolgreich
-beendet.
+int main(){
+  // Ausgabe auf dem Bildschirm
+  printf("Hallo Welt\n");
+  return(0);
+}
+\end{lstlisting}
+Es sind zwei Dinge dazugekommen:
+Erstens haben wir eine sogenannte Header-Datei, in diesem Fall \texttt{stdio.h} eingebunden.
+Das ist nötig, damit der C-Compiler die Funktion \texttt{printf} kennt.
+Zweitens ist der Aufruf von \texttt{printf} hinzugekommen.
+Die Funktion \texttt{printf} gibt in diesem Fall den String "Hallo Welt" auf dem Standard Ausgabegerät aus, was normalerweise die Console selbst ist, wenn das Programm von der Console aufgerufen wird. 
+Wir werden die Funktion \texttt{printf} später noch im Detail diskutieren.
+Wieder wird der Aufruf von \texttt{printf} mit einem Semikolon \texttt{;} abgeschlossen.
+
+Der Rückgabewert von \texttt{main} kann übrigens an der Console wie folgt abgefragt werden
+
+\vspace*{0.5cm}
+\begin{verbatim}
+>$  ./main.exe
+>$  echo $?
+0
+\end{verbatim}
+\vspace*{0.5cm}
+
+Man kann der Funktion \texttt{main} auch Parameter übergeben.
+Wie, werden wir später sehen.
