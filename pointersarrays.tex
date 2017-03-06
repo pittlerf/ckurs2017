@@ -1,55 +1,122 @@
 
-\section{Arrays und Pointers}
+\section{Felder und Zeiger}
 
-Wir haben fast mit allem Operatoren im Tabelle \ref{prior} getroffen außer die Adresse und die Dereferenzierung.
-Die Adresse Operator gib die Adresse die Variable von ihrem Rechte Seite. Um diese Wert speichern zu können in 
-der linkste Seite muss ein Pointer stehen.  
+Wir haben bisher zwar schon die \verb|scanf| Funktion benutzt, aber noch nicht erklärt, wie sie funktioniert. 
+Oder, genauer gesagt, wir haben noch nichts dazu gesagt, was \verb|&n| eigentlich bedeutet. 
+Der Rest von \verb|scanf| sollte eigentlich von der Benutzung von \verb|printf| klar sein.
 
-\begin{myblock}{Definition \texttt{Pointer}}
-Ist ein Variable, das Adresse von anderen Variablen speicher kann. Hat auch ein Typ.
-Das Pointer kann nur von solchen Variable Adresse speichern, die die mit ihm gleichen Typ haben.
+Um das verstehen zu können, muss man sich zunächst noch einmal ins Gedächtnis rufen, das eine Variable im Prinzip aus zwei Dingen besteht:
+Einserseits dem Typ der Variablen und andererseits der Speicheradresse, unter der ein Wert abgelegt wird.
+Über den Typ der Variablen weiss ich, wie viele bits im Speicher belegt sind, und wenn man die Anfangsadresse für das erste bit kennt, dann kann die gesamte Anzahl an bits auslesen und entsprechend dem Typ interpretieren.
+C erlaubt Zugriff sowohl auf den Wert einer Variablen, als auch auf die Adresse, an der der Wert abgelegt ist.
+Unterschieden wird zwischen den beiden mit dem \verb|&| operator. 
+Für eine variable \verb|n| representiert \verb|n| den Wert und \verb|&n| die Speicheradresse.
+Bei \verb|&n| spricht man auch von Zeiger (\emph{pointer}) und bei \verb|&| vom Adressenoperator.
+
+Die Funktion \verb|scanf| verlangt nun als zweites Argument einen Zeiger.
+Der Typ wird in der Zeichenkette angegeben, so dass die Funktion unter der Adresse, die mit \verb|&| angegeben wird, den Wert ablegen kann.
+
+Da Zeiger in C eine sehr wichtige Rolle spielt, gibt es für sie spezielle Datentypen:
+\begin{lstlisting}
+  int n = 3;      // eine Variable vom Typ int
+  int* address;  // eine Variable vom Typ Zeiger auf int
+  address = &n;   // address zeigt auf n
+  *address = 5;   // *address representiert den Wert, der unter der
+                  // Adresse address gespeichert ist.
+                  // man spricht von dereferenzieren
+  n == 5;         // ist jetzt wahr.
+\end{lstlisting}
+Genauso gibt es einen Typ Zeiger auf \verb|double|, nämlich \verb|double*| und so weiter.
+\begin{myblock}{Definition \texttt{Zeiger}}
+Ein Zeiger ist eine Variable, die eine Adresse zusammen mit einem Datentyp speichert.
 \end{myblock}
+Um die Nützlichkeit von Zeigern zu veranschaulichen, führen wir zunächst Funktionen ein.
+Eine Funktion kenne wir schon, das ist \verb|main|.
+Eine beliebige Funktion wird nun über einen Namen, einen Rückgabewert und Eingangsparameter definiert.
+Im folgenden Bespiel definieren wir eine Funktion, die zwei Parameter \verb|a, b| übergeben bekommt und diese um eins erhöht. 
+Anschließend sollen diese beiden neuen Werte zurückgegeben werden.
+Die Funktion hat aber nur einen Rückgabewert.
 
-Wir können für alle Variable Pointer definieren. Aber warum komplizieren wir unseren Leben mit Pointers.
-Welche Vorteile werden wir haben, wenn wir ihnen verwenden können. Zum Beispiel, wir möchten 
-eine Funktion schreiben, das ihre Eingabe Parameter inkrementiert. Nehmen wir an, das unsere
-Funkcion zwei Parameter hat, und soll beide inkrementieren\footnote{Wenn du nur eine Parameter
-inkrementieren willst, du könntest auch die Rückgabewert deines Funkcion verwenden.}.
-Unsere erste Versuch für die Lösung kannst du unter sehen.
-
+Ein Weg, um dieses Problem zu lösen, ist das sogenannte \emph{call by reference}.
+Was \textbf{nicht} funktioniert ist das folgende:
 \begin{lstlisting}
 #include<stdio.h>
-int inc( int a, int b){
-   a++;
-   b++;
-}
-int main(){
-  int a=2;
-  int b=3;
-  printf("Wert vor dem Funkcion a=%d, b=%d\n", a,b);
-  inc( a, b);
-  printf("Wert nach dem Funkcion a=%d, b=%d\n", a, b); 
-}
+  // einfache Funktion um a,b um 1 zu erhoehen
+  int increment( int a, int b) { 
+    a++;
+    b++;
+    return(0);
+  }
+  
+  int main(){
+    int a = 2, b = 3;
+    int ret = 0;
+    printf("Wert vor der Funktion a=%d, b=%d\n", a,b);
+    ret = increment(a, b); // die Variablen in unserem Block werden 
+                            // nicht veraendert!
+    printf("Wert nach der Funktion a=%d, b=%d\n", a, b); 
+    return(ret);
+  }
 \end{lstlisting}
+Der Grund ist, dass in der Funktion \verb|increment| neue Variablen \verb|a, b| angelegt werden, die nur in der Funktion selbst sichtbar sind. 
+Sie haben also nichts mit den Variablen \verb|a, b| in der Funktion \verb|main| gemein, außer dem Namen.
+Man spricht hier von \emph{call by value}, da die Variablen \verb|a, b| in der Funktion \verb|increment| mit den Werten der Variablen aus \verb|main| initialisiert werden.
+Deswegen liefern die \verb|printf| Aufrufe in den Zeilen $12$ und $15$ das gleiche Ergebnis.
+Denn die Variablen \verb|a, b| in \verb|main| wurden nicht verändert.
 
-Aber leider es wird nicht geklappt, weil die C sprache ist anders als zum Beispiel Pascal. 
-Das Interessant ist, was passiert, wenn wir das Funkcion $inc$ anrufen. Im Anruf des Funckcion
-die Werte von $a$ und $b$ werden ins Stapel kopieren, und sie werden der Anfangswert der lokalen
-$a$ und $b$ im Funkcion $inc$ sein. In der dritten und vierten Reihe wir inkrementieren nur diese 
-lokalen Variablen, deren Wert wir nachdem Ausführung des Funckions nicht so lange mehr haben.
-In der C Sprache nur der Wert der Variable ist abgegeben, ihre Adresse ist nicht! Wenn
-wir die Variable in einem Funktion ändern wollen, müssen wir ihre Adresse abgeben. Dafür 
-kann mann die Adresse und die Dereferenzierung Operator verwenden. Wir stellen vor, wie
-mann Pointers definieren, und Anfangswert geben kann.
+Bei \emph{call by reference} wird an Stelle des Wertes die Adresse übergeben.
 \begin{lstlisting}
 #include<stdio.h>
+  // einfache Funktion um a,b um 1 zu erhoehen
+  int increment(int* a, int* b) { 
+    (*a)++;
+    (*b)++;
+    return(0);
+  }
+  
+  int main(){
+    int a = 2, b = 3;
+    int ret = 0;
+    printf("Wert vor der Funktion a=%d, b=%d\n", a,b);
+    ret = increment(&a, &b); // die Variablen in unserem Block werden 
+                            // nicht veraendert!
+    printf("Wert nach der Funktion a=%d, b=%d\n", a, b); 
+    return(ret);
+  }
+\end{lstlisting}
+Die Funktion bekommt also zwei Parameter vom Typ \verb|int*|, also Zeiger auf \verb|int|. 
+Dann wird mit dem Dereferenzierungsoperator \verb|*| der Wert, der unter den beiden Adressen gespeichert ist, um eins erhöht.
+Das geschieht unter der Annahme, dass dort eine Variable vom Typ \verb|int| abegelegt ist.
+Damit werden also direkt die Werte der Variable \verb|a, b| in \verb|main| verändert.
+
+Zeiger kann man genau wie andere Variablen nutzen (womit auch klar ist, dass man auch Zeiger auf Zeiger definieren kann).
+Folgendes Beispiel illustriert die Nutzung noch einmal, wobei \emph{NULL} der Nullzeiger ist:
+\begin{lstlisting}
+#include<stdio.h>
+
 int main(){
-   int q=10;
-   int *p=NULL;
-   p=&q;
-   printf("Der Wert von q durch p ist:%d\n", *p);
+   int  q = 10;
+   int* p = NULL;
+   p = &q;
+   printf("Der Wert an der Adresse p ist:%d\n", *p);
+   return(0);
 }
 \end{lstlisting}
+In der vierten Zeile haben wir eine Variable vom Typ \verb|int| deklariert und mit dem Wert $10$ initialisiert, in der fünften Zeile eine Variable vom Typ \verb|int*|, die mit dem \verb|NULL| Zeiger initialisiert wurde.
+in der sechsten Zeile wird dann \verb|p| auf die Adresse von \verb|q| gesetzt. 
+Damit liefert die Dereferenzierung von \verb|p|, also \verb|*p|, den Wert von \verb|q|.
+Dies ist in Abbildung \ref{pointfig} illustriert.
+Zeigern dürfen nur gültige Adressen zugewiesen werden.
+Dies kann allerdings, bis auf Ausnahmen, nicht vom Compiler überprüft werden.
+Wenn doch keine gültige Adresse zugewiesen wurde, bekommt man den \emph{segmentation fault} als Laufzeitfehler.
+Dieser Quelltext weisst sehr wahrscheinlich eine ungültige Adresse zu
+\begin{lstlisting}
+int *p=42;
+\end{lstlisting}
+allerdings wird im diesen Fall der Compiler sehr wahrscheinlich\footnote{Hängt leider vom Compiler ab} eine Warnung geben, denn $42$ ist vom Typ \verb|int|, und nicht vom Typ \verb|int*|. 
+Wenn der Compiler sich hier nicht beschwert, sollte man die Dokumentation studieren, um heraus zu finden, wie man diesen Typ von Warnung anschalten kann, oder, wenn das nicht möglich ist, den Compiler wechseln.
+
+
 
 \begin{figure}[!ht]
 \centering
@@ -144,7 +211,7 @@ int main(){
 \curveto(20.1,-6.8867188)(20.3,-6.686719)(20.4,-6.7367187)
 }
 %\usefont{T1}{ptm}{m}{n}
-\rput(14.13625,-7.9267187){*p gib uns der Wert von Q}
+\rput(14.13625,-7.9267187){*p liefert den Wert von q}
 \pscustom[linewidth=0.04]
 {
 \newpath
@@ -190,147 +257,178 @@ int main(){
 \curveto(4.15,-1.2867187)(4.55,-1.1867187)(5.0,-1.0367187)
 }
 %\usefont{T1}{ptm}{m}{n}
-\rput(12.740937,3.8732812){\&q gib uns der Wert von P}
+\rput(12.740937,3.8732812){\&q liefert den Wert von p}
 \end{pspicture} 
 }
-\caption{\label{pointfig} Verwendung die Adresse einer Variable: das Pointer}
+\caption{\label{pointfig} Illustration Zeiger.}
 \end{figure}
-In der dritten Reihe wir habe ein ganze Zahl Variable definiert und in der
-nächsten wir haben ein Pointer auf Typ $int$ definiert. Das NULL in der
-Rechten Seite bedeuted ein Pointer, das zeigt nirgendwo. Dabei können wir viele
-Fehler vermieden. Wenn wir uninitializertes Pointer verwenden, wir werden
-Memory Fehler (Segmentation fault) machen. In der fünften Reihe wir haben zu 
-unserem Pointer die Adresse von Q zuweisen mithilfe des Adresse Operators. In der
-sechsten Reihe wir haben das Wert von $q$ durch $p$ ausgedrückt. Im printf
-Funktion das Dereferenzierung Operator interpretiert der Wert von der Variable ihren
-Rechten Seite als eine Adresse, und gib der Wert von der Varible aus dieser Adresse
-zurück. Wir zeigen ein Teil der Memory auf Abbildung \ref{pointfig}, mit der Du 
-das Weg vom Wert der Variable folgen kannst. In der Zuweisung eines Pointers
-in der Rechten Seite du kannst nur gültige Adresse verwenden. Zum Beispiel
-die unteren Quelltext führt zu Memory Fehler.
-\begin{lstlisting}
-int *p=42;
-\end{lstlisting}
 
+Zeiger sind in C doppelt wichtig, denn das wichtige Konstrukt von Feldern wird mit Hilfe von Zeigern realisiert. 
+Für unser Sortierbeispiel möchten wir beispielsweise nicht $n$ Variablen mit verschiedenen Namen \verb|a1|, \verb|a2|, ... deklarieren.
+Das wäre nicht nur ästetisch unschön, sondern auch extrem unpraktisch.
+Wie sollte man diese Variablennamen zum Beispiel in einer Schleife in Abhängigkeit von der Schleifenvariablen ansprechen?
+Deshalb stellt C Felder, sogenannte \emph{arrays} zur Verfügung.
 Normalweise wenn wir Zahlen sortieren möchten, möchten wir nicht jeden Zahl, als
 ein einzige Variable definieren. Auf diesem Fall gibt uns die Sprache die Arrays 
 strukturen. Die Arrays bestehen aus mehreren nacheinander stehenden elementare 
 Variablen mit den gleichen Datatypen. Für Indizierung mann muss
 die Eckige Klammer verwenden. 
 \begin{myblock}{Definition \texttt{Array}}
-Array ist eine Sammlung der Datenelementen, die der gleiche Typ haben. Die 
-Indizierung des Arrays ist von 0 bis die Länge des Arrays minus Eins.
+Ein Array ist eine Sammlung von Datenelementen vom gleichen Typ. Die 
+Indizierung des Arrays geschieht mit positiven ganzen Zahlen von 0 bis Länge des Arrays minus eins.
 \end{myblock}
-Die Länge des Arrays muss bekannt sein in der Kompilierung. Zum Beispiel wir 
-können Arrays definieren als in dem unteren Beispiel:
+Die Länge des Arrays muss zur Zeit der Übersetzung bekannt sein.
+Im Beispiel sieht das wie folgt aus: 
 \begin{lstlisting}
-#include<stdio.h>
-int main(){
-   int array1[]={1,2,3,4};
-   int array2[4];
-   array2[0]=1;
-   array2[1]=2;
-   array2[2]=3;
-   array2[3]=4;
-}
-\end{lstlisting}
-
-
-\begin{myexampleprogram}{ Programme: \texttt{Annäherung von $\pi$}}
-In dieser Aufgabe wir werden eine Annäherung von $\pi$ berechnen. 
-Wir werden die Werte der unteren Integral verwenden:
-\begin{equation}
-\pi=4\cdot \int_{0}^{1} \mathrm{d}x \dfrac{1}{1+x^2}
-\end{equation}
-Wir möchten dieses Integral numerisch berechnen. Wir kalkulieren den Bereich unter
-dem Funktion von 0 bis 1. Wir tailen das Intervall von 0 bis 1 gleichmäßig ab. Wir 
-approximieren das Integral mit der Summe vom Bereich der Trapäze deren 
-Höhe das kleine Interval (länge $\Delta$) ist.
-\vspace{-2cm}
-\begin{center}
-%\begin{minipage}
-\includegraphics[width=5cm]{trapez1.ps}
-\end{center}
-\vspace{-2.5cm}
-Lasst uns annehmen, wir das $[0,1]$ Interval ins $N$ Subinterval abgeteilt haben. Wir zeigen
-das $i$-th Subinterval in der obenen Abbildung. Die Bereichen dieser Trapezen werden
-wir summen:
-\begin{equation}
- \int_{0}^{1} \mathrm{d}x \dfrac{1}{1+x^2}\approx \sum_{i=0}^{N-1}\frac{1}{2N}(f(\frac{i}{N})+f(\frac{i+1}{N}))
-\end{equation}
-Hier ist das C Quelltext mit den Arrays.
-\begin{lstlisting}
-#include<stdio.h>
-#define MAX=10000
-int main(){
-  int N;
-  int i;
-  double f[MAX],x[MAX];
-  scanf("%d",&N);
-  if (N >= MAX) printf("Fehler, zu vielen Teilungspunkt\n");
-  for (i=0; i<N; ++i){
-     x[i]= (double) i/(double) N;
-     f[i]= 1./(1+x[i]*x[i]);
+  #include<stdio.h>
+  
+  int main(){
+    const int n = 4;
+    int array1[] = {1,2,3,4}; // Deklaration und Initialisierung
+    int array2[n];            // Deklaration, nicht initialisiert
+    array2[0] = 1;            // Zuweisung einzelner Elemente
+    array2[1] = 2;
+    array2[2] = 3;
+    array2[3] = 4;
+    return(0);
   }
-  double summe=0.;
-  double delta=x[1]-x[0];
-  for (i=0; i<N-1;++i)
-    summe += delta/2.*(f[i]+f[i+1]);
-  printf("Die Annaherung von pi ist =%e\n", summe);
-}
 \end{lstlisting}
-In diesem Bespiel wir haben einen konstanten Parameter, die Länge der Ärrays $f$ und $x$.
-Darum müssen wir in der zweiten Reihe eine Symbolische Konstante mit dem Macro $\#define$ einführen.
-Die länge muss bekannt sein in der Kompilierung. Wenn wir die Teilungspunktkoordinaten berechnen, wir 
-teilen zwei ganze Zahl. Um das Ergebnis nicht Trivial werden sein, müssen wir ihren Typ verändern. Dafür 
-verwenden wir das Typcasting: $(Typ)~Variable$. Dieses Beispiel könnten wir auch ohne Arrays erledigen, 
-aber Arrays sind sehr wichtig zum Bespiel in der linearen Algrebra.
-%\end{minipage}
+Hierbei wurden zwei \emph{int} Arrays erzeugt.
+Beide haben die Länge $4$.
+Die Länge des zweiten Arrays wurde mit Hilfe einer konstanten Variablen angegeben.
+Alternativ kann man auch direkt $4$ schreiben.
+Auf die einzelnen Elemente des Arrays wird mit Hilfe des \verb|[]| Operators zugegriffen.
+Man beachte, dass die Indizes bei $0$ anfangen, und bis $3$, also Länge des Arrays minus 1, laufen. 
+
+Die Benutzung von Arrays wird in folgendem Beispiel illustriert:
+\begin{myexampleprogram}{Beispiel: \texttt{Näherung von $\pi$}}
+  In diesem Beispiel berechnen wir $\pi$ näherungsweise.
+  Dafür verwenden wir folgende Integraldarstellung von $\pi$:
+  \begin{equation}
+    \pi=4\cdot \int_{0}^{1} \mathrm{d}x \dfrac{1}{1+x^2}
+  \end{equation}
+  Das Integral berechnen wir numerisch, indem wir die Fläche unterhalb der Kurve als eine Summe abschätzen. 
+  Dabei bedienen wir uns der sogenannten Trapez-Regel.
+  Wir teilen das Interval $[0,1]$ in $N$ gleichlange Unterintervalle auf.
+  Den jeweilige linke Punkt des Intervals nennen wir $x_i$, $i=0,...,N$, wobei $x_n-x_{n-1}=\Delta=\mathrm{const}$.
+  Auf jedem Unterintervall approximieren wir die Funktion linear, wie in folgender Abbildung dargestellt ist:
+  \vspace{-2cm}
+  \begin{center}
+    %\begin{minipage}
+    \includegraphics[width=.8\linewidth]{trapez1.ps}
+  \end{center}
+  \vspace{-2.5cm}
+  In unserem Fall sind die Punkte wie folgt gegeben
+  \begin{displaymath}
+    x_i = i/N\,,\qquad i = 0, ..., N-1\,.
+  \end{displaymath}
+  \textbf{Put a proper bounding box!!}
+  Definieren wir folgende Funktion
+  \[
+  f(x) = \frac{1}{1+x^2}\,,
+  \]
+  so können wir wie folgt über die Teilergebnisse summieren:
+  \begin{equation}
+    \int_{0}^{1} \mathrm{d}x \dfrac{1}{1+x^2}\approx \sum_{i=0}^{N-1}\frac{1}{2N}[f(x_i)+f(x_{i+1})]
+  \end{equation}
+  Hier ist der entsprechende C Quelltext, der Arrays benutzt:
+  \begin{lstlisting}
+    #include<stdio.h>
+    const int MAX=10000;
+
+    int main(){
+      int N=0;
+      double f[MAX], x[MAX]; // double arrays der Laenge MAX
+      scanf("%d",&N);
+      // Pruefe die Eingabe
+      if (N >= MAX) {
+        printf("Fehler, zu vielen Stuetzstellen\n");
+        return(-1);
+      }
+      if (N < 0) {
+        printf("N muss groesser als 0 sein!\n");
+        return(-2);
+      }
+      for (int i = 0; i < N; ++i){
+        x[i] = (double) i/(double) N;
+        f[i] = 1./(1 + x[i]*x[i]);
+      }
+      double summe = 0.;
+      for (int i = 0; i < N-1; ++i) {
+        summe += (f[i] + f[i+1]);
+      }
+      summe += f[N-1] + 0.5; // Randterm
+      printf("Die Naeherung von pi ist =%e\n", 2./N*summe);
+      return(0);
+    }
+  \end{lstlisting}
+  Neben der Benutzung von Arrays, haben wir noch ein weiteres neues Konzept eingeführt.
+  Bei der Division von $i/N$, beide vom Typ \verb|int|, in Zeile $10$ haben wir einen expliziten \emph{cast} nach \verb|double| durchgeführt, damit keine Division ganzer Zahlen durchgeführt wird.
+  
+  Dieses Beispiel hätten wir natürlich auch ohne Arrays durchführen können, aber es illustriert deren Benutzung.
 \end{myexampleprogram}
 
-In der C Sprache gibt es kein elementare Typ für Strings. Wir müssen die Strings durch Arrays behandeln.
-Zum Beispiel eine Variable mit Typ $char$ kann ein Zeichen (nach der Asciicodetabelle) speicher. Wir können
-die Strings aus diesem Zeichen aufbauen. Jeder String hat unterschiedlichen Länge, darum müssen wir
-in ihren Endungen abstimmen. Für die Endungen verwenden wir die \'{}\\0\'{} Zeichen. In der Unteren 
-Quelltext lesen wir ein string ein und testen wir ob es eine Zahl ethält.
+\subsection{Zeichenketten oder Strings}
+
+In C gibt es keinen elementaren Datentyp für Zeichenketten, sogenannte \emph{strings}.
+Zeichenkette werden mit Hilfe von Arrays abgebildet.
+Ein Zeichen kann in einer Variablen vom Typ \verb|char| gespeichert werden, siehe ASCII Zeichensatz.
+Eine Zeichenkette kann also durch eine Array von Elementen vom Typ \verb|char| erzeugt werden.
+Das Ende einer Zeichenkette wird durch das Zeichen \verb|\0| angegeben.
+Im nächsten Beispiel lesen wir eine Zeichenkette von der standard Eingabe ein, bis wir das Zeichen fuer das Ende des Strings finden und testen, ob die Kette eine Zahl enthält:
 \begin{lstlisting}
 #include<stdio.h>
-#define MAX_LENGTH
-#define NEIN 0
-#define JA   1
+const int MAX_LENGTH = 1000;
+const int TRUE = 1;
+const int FALSE = 0;
+
 int main(){
    char string[MAX_LENGTH];
    int i=0;
    char a;
-   int ergebnis= NEIN;
+   int ergebnis = FALSE;
    scanf("%s", string);
-   for (;;){
+   while(1) {
      if (string[i] == '\0')
        break;
      if ( (string[i] >= '0') && ( string[i] <= '9') )
-       ergebnis= JA;
+       ergebnis = TRUE;
+     i++;
    }
-   printf("%s besteht auch aus Zahlen %s",string, answer ? "ja" : "nein" );
+   if(ergebnis) printf("Der String %s enthaelt Zahlen\n", string);
+   else printf("Der String enthaelt keine Zahlen\n");
+   return(0);
 }
 \end{lstlisting}
-Hier in der zehnten Reihe wir lesen einen String vom Tastatur ein. In diesem Fall
-wir müssen nicht der Adresse Operator verwenden um die Adresse des Speichers bekommen.
-Die Name das Arrays ist mit ihrem Adresse Gleichwertig. Von den elften Linie wir laufen
-den String durch. Wir beenden, wenn wir die Beendungszeichen getroffen haben (Linie zwölf).
-Danach testen wir für die Anwesenheit eines Zahles. Es ist wichtig nicht mit dem Zahl (0 
-oder 9) sondern auch mit dem Asciicharakter zu vergleichen. Wenn wir ein Zahl 
-getroffen haben (Reihe 14) wechseln wir das Ergebnis zur ja.
+Es wird zunächst eine Zeichenkette über die Tastatur eingelesen.
+Offensichtlich ist \verb|string| ohne den Indexoperator \verb|[]| vom Typ \verb|char*|, also Zeiger auf \verb|char|. 
+Dann nutzen wir eine \verb|while| Schleife mit konstant wahrem logischem Ausdruck.
+Die Schleife wird dann mit \verb|break| abgebrochen, wenn das Endstring Zeichen gefunden wurde.
+In der Schleife wird dann jedes Element der Kette darauf überprüft, ob es eine Zahl ist.
+Dementsprechend wird die Variable \verb|ergebnis| gesetzt.
 
-Wir können ja auch für alle Elementen in einem Array Pointers zuweisen. Zum Beispiel:
+Vielleicht ist es Ihnen schon aufgefallen, aber der obige Beispielquelltext ist nicht sauber programmiert.
+Der Grund ist die Tatsache, dass wir die Länge des eingelesenen Strings nicht überprüfen, und damit nicht wissen, ob die maximale Länge überschritten wurde, oder nicht.
+Es kommt zu einem sogenannten \emph{buffer overflow}.
+Im besten Fall bekommt man bei einem zu langen Array einen Laufzeitfehler. 
+Im schlechtesten Fall kann man allerdings in Speicher schreiben, der dafür nicht vorgesehen ist.
+Es sollte also auf jeden Fall eine solche Überprüfung vorgenommen werden!
+
+Man kann auch eine Zeichenkette initialisieren:
 \begin{lstlisting}
-#include<stdio.h>
-int main(){
-   char string[]={'H','e','l','l','o',' ','w','o','r','l','d','\0'};
-   char *pointer;
-   pointer=&string[6];
-   printf("Sechste Zeichen %c\n",*pointer);
-}
+  #include<stdio.h>
+  int main(){
+    char string[]={'H','e','l','l','o',' ','w','o','r','l','d','\0'};
+    char *pointer = NULL;
+    pointer = &string[6];
+    printf("Das siebte Zeichen im String ist %c\n",*pointer);
+    return(0);
+  }
 \end{lstlisting} 
+und dann mit \verb|pointer| auf einzelne Elemente der Zeichekette zugreifen.
+C stellt Zeiger intern als ganze Zahlen dar und auf jedem Zeigetyp sind auch arithmetische Operationen definiert.
+%% stopped here...
+
 Hier wir haben eine Zeichenkette durch den Array $string$ und einer Pointer, der auf den Sechsten Element vom 
 $string$ Array zeigt. In der Sechsten Reihe wir dereferenzieren dieser Pointer und drücken der Wert als ein 
 Zeichen aus. Bislang wir haben nur Zuweisung und Dereferenzierung mit einer Variable vom Pointer Typ gemacht.
@@ -341,20 +439,20 @@ nehmen, weil es mehr als eine Byte besteht.
 /*Moeglicherweise Arithmetic Operations auf den Pointer */
 #include<stdio.h>
 int main(){
-   int sqnum[]={1,4,9,16,25,36,49};
+   int sqnum[] = {1,4,9,16,25,36,49};
    int *pointer;
    int *pointer2;
-   pointer=sqnum;
+   pointer = sqnum;
    pointer++;
-   printf("Nach der inkrementierung der Pointer %d\n", *pointer);
+   printf("Nach der Inkrementierung des Zeigers %d\n", *pointer);
    pointer--;
-   printf("Nach der inkrementierung der Pointer %d\n", *pointer);
-   pointer+=2;
-   printf("Nach dem Hinzufuegen zwei zum Pointer %d\n", *pointer);
+   printf("Nach der Dekrementierung des Zeigers %d\n", *pointer);
+   pointer += 2;
+   printf("Nach dem Hinzufuegen von 2 zum Zeiger %d\n", *pointer);
    pointer-=2;
-   printf("Nach dem Subtrahieren zwei zum Pointer %d\n", *pointer);   
-   printf("Dereferenzieren und inkrementieren in einem Befehl: %d\n",*++pointer);
-   pointer2=&sqnum[4];
+   printf("Nach dem Subtrahieren von 2 vom Pointer %d\n", *pointer);   
+   printf("Dereferenzieren und Inkrementieren in einem Befehl: %d\n",*++pointer);
+   pointer2 = &sqnum[4];
    printf("Zwischen pointer2 und 1 gibt es %ld Elementen\n",pointer2-pointer);
 }
 \end{lstlisting}
@@ -552,3 +650,5 @@ int main(){
 }
 \end{lstlisting}
 
+
+\endinput
