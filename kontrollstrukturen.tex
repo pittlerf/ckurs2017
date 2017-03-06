@@ -1,189 +1,219 @@
 \section{Kontrollstrukturen}
 
-Wir haben einfachste Anweisungen kennen gelernt, die nacheinander ausgeführen waren. In diesem Teil werden wir lernen wie mann die Reihenfolge 
-der Ausführung ändern kann. Zum Bespiel wenn wir möchten das Absolutwert  eines Zahlen herausfinden, wir die Anweisung wird von dem Aktuellen Wert
-der Variable abhängen. In diesem Fall wir können nutzten das sogennante $if~then~else$ Statement. Die korrekte Verwendung siehts du unter im
-kleinen Quelltext:
+Bisher haben wir einfache Anweisungen kennen gelernt, die vom Rechner nacheinander ausgeführt werden.
+Wir werden nun Kontrollstrukturen einführen, die es erlauben, den Fluss eines Programmes zu beeinflussen.
+Beispielsweise kann man, in Abhängigkeit von Werten von Variablen entweder einen, oder einen anderen Block von Anweisungen ausführen.
+
+Nehmen wir an, wir wollen den Absolutwert einer Variablen \verb|a| ausgeben.
+Dafür kann man einen \verb|if-then-else| Ausdruck verwenden.
+Der entsprechende Quelltext könnte so aussehen:
 \begin{lstlisting}
-#include<stdio.h>
-int main(){
-  int a=4;
-  int absolutevalue=0;
-  if ( a >  0 )
+  #include<stdio.h>
+  
+  int main(){
+    int a = 4;
+    unsigned int absolutevalue = 0;
+    if ( a > 0 )
+    {
+      absolutevalue = a;
+    }
+    else // falls a <= 0
+    {
+      absolutvalue = -a;
+    }
+    printf("Der Absolutwert von a ist %u\n", absolutevalue);
+    return(0);
+  }
+\end{lstlisting}
+In Abhängigkeit davon, ob \verb|a > 0| zu wahr ausgewertet wird oder nicht, wird in diesem Beispiel entweder der Codeblock nach dem \verb|if| oder der nach dem \verb|else| ausgeführt.
+Im Beispiel haben wir die zwei Blöcke durch die geschweiften Klammern abgetrennt. 
+Das ist nur dann nicht nötig, falls der jeweilige Block aus nur einer Anweisung besteht.
+
+Die Variable \verb|absolutevalue| is außerhalb beider Blöcke deklariert, und damit in beiden sichtbar.
+Die Zuweisung, die \verb|absolutevalue| innerhalb der Blöcke bekommt ist damit auch nach Ende der Blöcke weiterhin erhalten.
+Der logische Ausdruck kann prinzipiell alle Operatoren enthalten, bzw. auch verkettete Ausdrücke von Operatoren, die wir in Tabellen~\ref{vergoper} und \ref{vergoper2} zusammengestellt haben.
+Da C intern einen logischen Ausdruck als ganze Zahl darstellt, bei dem $0$ falsch und $\neq 0$ wahr entspricht, kann man anstelle des logischen Ausdrucks auch einen ganzzahligen Ausdruck verwenden.
+Im Allgemeinen hat das \emph{if-else} Konstrukt folgendes Aussehen:
+\begin{lstlisting}{if-else Statement}
+  if ( logischer Ausdruck )
   {
-     absolutevalue= a;
+    // falls wahr
+    Anweisung1;
+    Anweisung2;
+    ...;
   }
   else
   {
-     absolutvalue= -a;
+    // sonst
+    Anweisung3;
+    Anweisung4;
+    ...;
   }
-}
 \end{lstlisting}
-In der dritten  Reihe wir haben Variable $a$ als eine ganze Zahl definiert mit Anfangswert vier. In der vierten Reihe wir haben eine
-Variable für das Ergebnis definiert. In der fünften Reihe kommt das Selektion Anweisung mit dem Stichwort $if ()$. In dem 
-Klammerung muss ein Logikalische Ausdrückung stehen. Wir sind schon bereit für die Verwendung der Vergleichs operatoren (Tabelle \ref{vergoper}). 
-Die Größer operator steht zwischen zwei Ganzen Zahl: das Ergebnis der Ausführung von $a$ und $0$. Natürlich wissen wir das in diesem Fall das
-Ergebnis in der Klammerung wird wahr sein, und die  Anweisungen  zwischen  der geschweiften Klammern von der der sechsten bis der
-achten Reihe werden ausführen. In diesem Fall es gibt nur eine Anweisung, aber man kann mehrere Anweisungen haben. Wenn das
-Wert der Variable $a$ Negativ gewesen wäre, wäre die Anweisungen in der Block nach $else$ durchgefahren. In der Bedingung
-0 wird als Falsch erwertet, alle anderen Zahlen werden recht. Wenn wir möchten, wir
-können die ganze else Block entfallen. Hier wir zeigen auch die Allgemeine Verwendung des if then else Statements.
+Dabei kann \verb|Anweisung1| zum Beispiel auch wieder ein \emph{if-else} Ausdruck sein. 
+Man kann \emph{if-else} also beliebig schachteln.
+Außerdem ist der \emph{else} Block optional.
+Das ist nützlich, wenn man Code nur im Falle von \emph{wahr} oder nur im Falle von \emph{falsch} ausführen möchte.
 
-\begin{lstlisting}{if then else Statement}
-if ( logikalische Ausdruckung )
-{
-   Anweisungwahr1;
-   Anweisungwahr2;
-   ...;
-}
-else
-{
-   Anweisungfalsch1;
-   Anweisungfalsch2;
-   ...;
-}
-\end{lstlisting}
-Wir können auch Gesschachtelte if und else Statements nutzten. Zum Beispiel Anweisungwahr1 kann auch if und else Statement sein.
-
-Wenn mann mehrfache Alternativen haben will kann mann auch die Switch Anweisung nutzten. In diesem Fall wir müssen 
-alle Möglichkeiten für der Bedingungen bei der Kompilierung wissen. Wir lesen zum Beispiel in dem unteren Quelltext eine
-ganze Zahl von Standard Eingang, und machen einige Testen um ihre Wert.
+Ein dem \emph{if-else} Konstrukt verwandtes Konstrukt ist das \emph{switch} Konstrukt.
+Es erlaubt eine ganze Liste von Alternativen abzuarbeiten.
+Im folgende Bespiel wird eine ganze Zahl von der Standardeingabe eingelesen, und zwar mit Hilfe der \verb|scanf| Funktion, die eine \verb|printf| sehr ähnliche Syntax hat.
+Wir diskutieren die Details zu \verb|scanf| später.
+Dann wird, in Abhängigkeit vom eingegebenen Wert eine Ausgabe auf dem Bildschirm gemacht.
 \begin{lstlisting}
 #include<stdio.h>
+
 int main(){
   int n=0;
-  scanf("%d",&n);
+  scanf("%d", &n);
   switch ( n ) {
-     case 0: 
-         printf("Der Wert is 0\n");
-         break;
-     case 1:
-         printf("Der Wert is 1\n");
-     case 2:
-         printf("Der Wert kann auch 1 oder 2 sein\n");
-         break;
-     case 3:
-         printf("Der Wert is 3\n");
-         break;
-     default:
-         printf("Ich weiss es nicht\n");
-     
+    case 0: 
+    printf("Der Eigabewert ist 0\n");
+    break;
+    case 1:
+    printf("Der Eingabewert ist 1\n");
+    case 2:
+    printf("Der Eingabewert ist 1 oder 2\n");
+    break;
+    case 3:
+    printf("Der Eingabewert ist 3\n");
+    break;
+    default:
+    printf("Der Eingabewert ist groesser als 3 oder kleiner als 0\n");
+    break;
   }
+  return(0);
 }
 \end{lstlisting}
-In der vierten Reihe mit der scanf Funkcion, wir lesen ein Ganze Zahl vom Tastatur. Wir werden gleich mehr erzählen über die
-scanf Funkcion. In der fünften Reihe beginnt der bedingte Anweisung. Jede Möglichkeiten beginnt mit dem Strichwort $case$.
-Zum Beispiel wenn wir 0 typen, dann wird die siebten Reihe ausführen. In der achten Reihe der Strichwort $break$ bedeutet, dass
-das Ausführung wird nachdem $switch$ Blocke fortsetzen. Wenn wir 1 typen, dann die Bedingung in der Reihe neun wird wahr sein, und
-die Befehle in der zehnten und zwölften Reihen werden verarbeitet. Die Anweisungen werden verarbeitet bis den nächsten $break$ 
-Strichwort. Wenn keine der Möglichkeiten passt, dann wird die Anweisungen nach $default$ verarbeitet.  Wir zeigen die allgemeine
-Verwendung unter:
-
+Das Konstrukt wird mit dem Schlüsselwort \verb|switch| eingeleitet.
+Jede der Möglichkeiten beginnt mit dem Schlüsselwort \verb|case|, gefolgt vom möglichen Wert des Ausdruckes und einem Doppelpunkt. 
+Falls die entsprechende Möglichkeit realisiert ist, werden alle noch folgenden Anweisungen ausgeführt, bis ein \verb|break| Schlüsselwort kommt, oder der \verb|switch| Block zu Ende ist.
+D.h., wenn $0$ eingegeben wird, wird Zeile $8$ ausgeführt.
+Wenn $1$ eingegeben wird, wird Zeile $11$ und $13$ ausgeführt.
+Und, wenn keines von $0,1,2,3$ eingegeben wird, also keine der Möglichkeiten passt, so wird der \verb|default| Zweig ausgeführt, und damit Zeile $19$.
+Im Allgemeinen sieht das also so aus:
 \begin{lstlisting}
-  switch ( Variable mit Ganze Zahl Wert )
+  switch ( int )
   {
-     case Wert1:
-         Anweisung1;
-         .... ;
-         break; /* Optionall */
-     case Wert2:
-         Anweisung2;
-         ....; 
-         break; /*Optional */
-     ....
-     default:
-         Anweisung3;
-
+    case Wert1:
+    Anweisung1;
+    .... ;
+    break; // optional
+    case Wert2:
+    Anweisung2;
+    ....; 
+    break; // optional
+    ....
+    default:
+    Anweisung3;
+    break; // optional
   }
 \end{lstlisting}
 
-Es ist auch wichtig die gleiche Anweisung auf unterschiedlichen Data ausführen. Zum Beispiel wir wollen die Summe der ersten
-$n$ ganzen Zahl kalkulieren. In diesem Fall müssen wir Schleifen verwenden. 
+Eine wesentlich wichtigere Kontrollstruktur sind sogenannt \emph{for} Schleifen.
+Nehmen wir an, wir möchten die ganzen Zahlen von $0$ bis $n-1$ aufsummieren.
+Dann können wir das mit folgendem Quelltext machen:
 \begin{lstlisting}
 #include<stdio.h>
+
 int main(){
-   int i,n;
-   int summe;
+   int n;
+   int summe = 0;
    scanf("%d\n", &n);
-   for (i=0; i<n; ++i){
+   if(n < 0) {
+     printf("Die Eingabe muss groesser oder gleich 0 sein!\n");
+     return(-1);
+   }
+   for (int i = 0; i < n; ++i){
      summe += i; 
    }
-   printf("Summe von ersten %d ganze Zahlen ist %d\n", n, summe);
+   printf("Die Summe der Zahlen von 0 bis %d ist %d\n", n-1, summe);
+   return(0);
 }
 \end{lstlisting}
-\begin{myalertblock}{For Kontrollstrukture}
+Hierbei lesen wir zunächst den Wert von $n$ mit Hilfe von \verb|scanf| ein.
+Wir erwarten eine ganze Zahl größer gleich $0$.
+Damit das Programm sinnvolle Ergebnisse liefert, überprüfen wir das in den Zeilen $7-10$.
+Falls $n<0$, wird eine Fehlermeldung ausgegeben und das Programm mit Hilfe von \verb|return| beendet.
+Danach wird die Zeile 
 \begin{lstlisting}
-for ( Ausdruck_1; Ausdruck_2; Ausdruck_3) 
+summe += i;
+\end{lstlisting}
+die für $i=0,1,\ldots n-1$ nacheinander ausgeführt wird.
+Diese Zeile wird also $n-1$--Mail ausgeführt, mit jeweils anderen Werten für \verb|summe| und \verb|i|.
+Da \verb|summe| außerhalb der Schleife deklariert und initialisiert wurde, ist der entsprechende Wert auch nach der Schleife vergfügbar.
+\verb|i| dagegen ist in diesem Beispiel nur innerhalb der Schleife verfügbar!
+Allgemein sieht die \emph{for} Schleife wie folgt aus:
+\begin{myalertblock}{For Schleife}
+\begin{lstlisting}
+for ( Ausdruck1; Ausdruck2; Ausdruck3) 
 {
-   Anweisungen;
+   Anweisung1;
+   Anweisung2;
+   ...;
 }
 \end{lstlisting}
 \vspace{-1cm}
 \begin{enumerate}
-\item Zuerst Ausdruck\_1 wird ausführen.
-\item Dann wird Ausdruck\_2 ausführen.
-\item Wenn das Ergebnis im zweiten Punkt Wahr ist, die Anweisungen 
-in dem Kern der Schleife werden Ausführen
-\item Ausdruck\_3 wird ausführen
-\item Die Ausführung wird weitermachen ab Punkt 2.
+\item Zuerst wird Ausdruck1 ausgeführt.
+\item Dann wird Ausdruck2 ausgeführt.
+\item Wenn Ausdruck2 als wahr ausgewertet wird, werden die Anweisungen im Körper der Schleife ausgeführt.
+\item Jetzt wird Ausdruck3 ausgeführt.
+\item Starte wieder bei 2.
 \end{enumerate}
 \end{myalertblock}
+Dabei ist Ausdruck1 der Deklarations- und/oder Initialisierungsschritt für die Schleifenvariable(n).
+Ausdruck2 wird als logischer Ausdruck ausgewertet und stellt die Abbruchbedingung dar.
+Ausdruck3 modifiziert die Schleifenvariable(n).
 
-
-Die Kontrollstrukture ist bezeichnet als $for$. Die Schleife besteht aus drei verschiedenen Schritte.
-Initializierung die Schleifen Variable $i=0;$. Danach kommt die Ausführung der Schleifen Bedingung: $i<n$.
-Danach der Kern der Schleife wird ausführen, außerdem wir 0 getippt haben. Am ende des Schleifen Kerns,
-die Schleifenvariable ist ikrementiert und die Bedingung ($i<n$) wird testet nocheinmal und so weiter.
-Zusammenfassend der Schleifen Kern wird $n$ mal verarbeitet, und endlich in der Sum Variable wir 
-werden die Summe haben.
-
-Wir dürfen auch alle Ausdrucke entfallen,  aber wir müssen beachten um die Schleife nur Endliche mal 
-verarbeitet werden. Zum Beispiel die Initializierung kann auch vor der Schleife sein. Die Inkrementierung 
-der Schleife variable kann auch im Schleifen Kern inbegriffen. Wir können auch der Strichwort $break$ nutzen 
-in einem Selektion um die Schleife zu beenden. Wir zeigen unsere Beispiel mit diesen Änderungen unter:
-
+Interessanterweise dürfen auch alle drei Ausdrücke leer sein.
+Dann wird die Schleife im Prinzip unendlich oft ausgeführt.
+In einem solchen Fall kann man die Schleife mit Hilfe von \verb|break| explizit abbrechen, wie man im folgenden Beispiel sieht:
 \begin{lstlisting}
-#include<stdio.h>
-int main(){
-  int n;
-  int summe:
-  int i;
-  scanf("%d", &n);
-  i=0;
-  for (;;){
-   if (i==n)
-     break;
-   summe += i;
-   i++;
+  #include<stdio.h>
+  
+  int main(){
+    int n;
+    int summe = 0;
+    int i = 0;
+    scanf("%d", &n);
+    if(n < 0) {
+      printf("Die Eingabe muss groesser oder gleich 0 sein!\n");
+      return(-1);
+    }
+    for (;;){
+      if (i == n) break;
+      summe += i;
+      i++;
+    }
+    printf("Die Summe der Zahlen von 0 bis %d ist %d\n", n-1, summe);
+    return(0);
   }
-  printf("Summe von ersten %d ganze Zahlen ist %d\n", n, summe);
-}
 \end{lstlisting}
-C Sprache hat zwei anderen Kontrollstrukturen für die Schleife. Das sind $while;$ und $do; while$.
-Natürlich die diesen Schleifen können auch mit for ersetzen, aber manchmal es ist gut sie zu wissen.
-Sie werden often als vortester und nachtester Schleifen bezeichnet. Es gibt eine Große unterscied zwischen
-$while$ und $do~while$. Im $do~while$ der Kern wird mindestens einmal verarbeitet. 
-
-\begin{myalertblock}{While Kontrollstrukture}
+C kennt zwei weitere Schleifenkonstrukte, nämlich die \verb|while| und die \verb|do-while| Schleife.
+Während die \verb|while| Schleife die Abbruchbedingung vor dem Ausführen des Schleifenkörpers überprüft und im Zweifel abbricht, wird bei der \verb|do-while| Schleife der Körper immer mindestens einmal ausgeführt.
+Das macht den großen Unterschied zwischen den beiden aus, die im folgenden nocheinmal allgemein dargestellt sind.
+\begin{myalertblock}{while Konstrukt}
 \begin{lstlisting}
-while ( Ausdruck_1 )
+while ( logischer Ausdruck )
 {
    Anweisungen;
 }
 \end{lstlisting}
 \vspace{-0.5cm}
-Bis der Wert von Ausdruck\_1 Wahr ist, die Anweisungen werden verarbeitet.
+Die Anweisungen werden also so lange ausgeführt, wie der logische Ausdruck zu \emph{true} ausgewertet wird.
 \end{myalertblock}
 
-\begin{myalertblock}{Do While Kontrollstrukture}
+\begin{myalertblock}{do-while Konstrukt}
 \begin{lstlisting}
 do
 {
    Anweisungen;
 }
-while (Ausdruck_1)
+while ( logischer Ausdruck )
 \end{lstlisting}
 \vspace{-0.5cm}
-Die Anweisungen werden verarbeiten bis der Wert von Ausdruck\_1 Wahr ist.
+Die Anweisungen werden so lange ausgeführt, wie der logische Ausdruck zu wahr ausgewertet wird, allerdings mindestens einmal.
 \end{myalertblock}
 
+\endinput
