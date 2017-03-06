@@ -1,0 +1,378 @@
+\section{Endprojekt}
+
+
+In unserem ersten großen Programme (Einfügesortieren) wir hatten
+zwei verschachtelten Schleifen. Eine Schleife geht durch die Elementen
+und der andere versucht die richtigen Position zu finden. Diese
+innere Schleife im durchschnitt also skaliert mit dem Nummer der Elementen.
+Beispielweise für eine total zufällige Eingabe der sortierende Element ist im 
+durchschnitt kleiner als die Hälfte der schon sortierten Elementen. Darum 
+wir verbrauchen  auch in der inneren Schleife Computerzeit der mit 
+dem Nummer von elementen ($n$) skaliert. Deswegen ist das Einfügesortieren
+ein $n^2$ Algorithmus.
+
+Eine mögliche entwicklung ist die Haldensortierung. In diesem Projekt werden wir 
+diese Algorithmus kennenlernen und implementieren. Die grundsätztliche Datentyp ist 
+das $heap$.
+
+\begin{myexampleblock}{Definition: \texttt{Heap}}
+Es ist ein ausgeglichener Binärebaum. Es gibt nur eine Bedingung für die Elementen:
+jeden Element muss kleiner sein, als ihre Elter.
+\end{myexampleblock} 
+
+In einem Heap jede Element hat nur ein Elter, und kann maximal zwei Kinder
+haben. Der Strichwort ausgeglichen bedeuted das die Höhe des Heaps mit
+dem logarithmus von $n$ skaliert muss. Bespielweise wir zeigen ein Heap
+von der $[10,12,6,5,9,13,1,7]$ Reihenfolge auf Abbildung \ref{heapexample}.
+\begin{center}
+\begin{figure}[!ht]
+\begin{center}
+% Generated with LaTeXDraw 2.0.8
+% Mon Mar 06 15:43:52 CET 2017
+% \usepackage[usenames,dvipsnames]{pstricks}
+% \usepackage{epsfig}
+% \usepackage{pst-grad} % For gradients
+% \usepackage{pst-plot} % For axes
+\scalebox{0.7} % Change this value to rescale the drawing.
+{
+\begin{pspicture}(-5,-4)(5,5)
+\pscircle[linewidth=0.04,dimen=outer](0,4){.5}
+\rput(0, 4){13}
+\psline[linewidth=0.04cm](-0.5,3.33333)(-1,2.6666)
+\psline[linewidth=0.04cm](-.7,2.9)(-1,2.6666)
+\psline[linewidth=0.04cm](-.8,3.2)(-1,2.6666)
+
+\pscircle[linewidth=0.04,dimen=outer](-1.5,2){.5}
+\rput(-1.5, 2){10}
+\psline[linewidth=0.04cm](0.5,3.33333)(1,2.6666)
+\psline[linewidth=0.04cm](.7,2.9)(1,2.6666)
+\psline[linewidth=0.04cm](.8,3.2)(1,2.6666)
+
+\pscircle[linewidth=0.04,dimen=outer]( 1.5,2){.5}
+\rput( 1.5, 2){12}
+
+\psline[linewidth=0.04cm](-2.3,0.933333)(-1.9,1.466666)
+\psline[linewidth=0.04cm](-2.35,1.2)(-2.3,0.933333)
+\psline[linewidth=0.04cm](-2.0,1.0)(-2.3,0.933333)
+
+\pscircle[linewidth=0.04,dimen=outer](-2.7,0.4){.5}
+\psline[linewidth=0.04cm](-.8,0.933333)(-1.2,1.466666)
+\psline[linewidth=0.04cm](-0.75,1.2)(-.8,0.933333)
+\psline[linewidth=0.04cm](-1.1,1.0)(-.8,0.933333)
+
+\rput(-2.7, 0.4){7}
+\psline[linewidth=0.04cm](2.3,0.933333)(1.9,1.466666)
+\psline[linewidth=0.04cm](2.35,1.2)(2.3,0.933333)
+\psline[linewidth=0.04cm](2.0,1.0)(2.3,0.933333)
+
+\psline[linewidth=0.04cm](.8,0.933333)(1.2,1.466666)
+\psline[linewidth=0.04cm](0.75,1.2)(.8,0.933333)
+\psline[linewidth=0.04cm](1.1,1.0)(.8,0.933333)
+
+
+\pscircle[linewidth=0.04,dimen=outer](-0.8,0.4){.5}
+\rput(-0.8, 0.4){9}
+\pscircle[linewidth=0.04,dimen=outer](2.7,0.4){.5}
+\rput(2.7, .4){1}
+\pscircle[linewidth=0.04,dimen=outer](0.8,0.4){.5}
+\rput(0.8, 0.4){6}
+
+\psline[linewidth=0.04cm](-3.4,-0.533333333333333)(-3.1,-0.133333333333333)
+\psline[linewidth=0.04cm](-3.,-.3)(-3.4,-0.533333333333333)
+\psline[linewidth=0.04cm](-3.3,-.2)(-3.4,-0.533333333333333)
+
+\pscircle[linewidth=0.04,dimen=outer](-3.75,-1){.5}
+\rput(-3.75, -1){5}
+
+
+\end{pspicture} 
+}
+\end{center}
+\caption{Ein Heap von der $[10,12,6,5,9,13,1,7]$ Reihenfolge.\label{heapexample}}
+\end{figure}
+\end{center}
+Wie du siehst, grundsätztlich es gibt keine Beziehung zwischen Elementen von der 
+gleichen Höhe des Bäumes. Es gibt nur ein Regel: Das Kind muss kleiner sein, als ihres
+Elter. Jetzt zeigen wir, wie es im Haldensortierung verwendet werden.
+Er kann in folgen Schritten formuliert werden:
+\begin{itemize}
+\item Stellen wir ein $heap$ aus den Reihenfolge der Zahlen her
+\item Nun verschieben wir jeweils das erste Element aus, und das wird mit dem letzten Element 
+ersetzt.
+\item Das $heap$ Eigenschaft muss wiederhergestellt werden.
+\end{itemize}
+
+Wir verwenden verketetten Liste für die Darstellung des $heap$-s. Jedes Element muss
+ein Pointer für ihre Elter, und zwei Pointer für ihre rechten und linken Nachfolger haben.
+\begin{lstlisting}
+typedef struct heap {
+   int val;
+   struct heap *left;   /* Verweis auf linken Nachfolger  */
+   struct heap *right;  /* Verweis auf rechten Nachfolger */
+   struct heap *parent; /* Verweis auf den Vorgaenger */
+} heap;
+\end{lstlisting}
+Der $parent$ Pointer ist ein NULL pointer für die Wurzel des Bäumes. Die Blätters, die keinen
+Kinder haben, haben NULL als right und left Pointers.
+
+Jetzt zeigen wir wie können wir ein Heap aus einem Reihenfolge von Zahlen herstellen.
+
+\begin{myexampleprogram}{ Programme: \texttt{Die Warteschlange}}	
+\begin{lstlisting}
+typedef struct queue {
+   struct queue* next;
+   int data;
+} queue;
+\end{lstlisting}
+\begin{lstlisting}
+queue * get_a_queue( int x ){
+   queue *q=(queue *)malloc(sizeof(queue));
+   q->data=x;
+   q->next=NULL;
+   return q;
+}
+\end{lstlisting}
+\begin{lstlisting}
+void queue_put( int x, queue ** first){
+   if ((*first) == NULL){
+       (*first)=get_a_queue(x);
+       return;
+   }
+   queue *temp=get_a_queue(x);
+   temp->next=(*first);
+   (*first)=temp;
+}
+\end{lstlisting}
+\begin{lstlisting}
+int queue_rem( queue **first){
+   int ret;
+   queue *temp;
+   if ((*first) == NULL){
+     return -1;
+   }
+   if ((*first)->next == NULL){
+     ret=(*first)->data;
+     free((*first));
+     (*first)=NULL;
+     return ret;
+   }
+   temp=(*first);
+   queue *prev;
+   while ( temp->next != NULL){
+      prev=temp;
+      temp=temp->next;
+   }
+   prev->next=NULL;
+   ret=temp->data;
+   free(temp);
+   return (ret);
+}
+\end{lstlisting}
+\begin{lstlisting}
+void free_queue( queue **first){
+   if ((*first)== NULL)
+     return;
+   queue *temp=(*first);
+   queue *temp2;
+   for(;;){
+     temp2=temp->next;
+     free(temp);
+     temp=temp2;
+     if (temp == NULL)
+       break;
+   }
+}
+\end{lstlisting}
+\begin{lstlisting}
+void print_queue( queue *first ){
+   queue *temp=(first);
+   if (temp == NULL){
+     printf("Wir haben keine Element in der Wertechlange\n");
+     return;
+   }
+   for (;;){
+     printf("%d\t", temp->data);
+     temp=temp->next;
+     if (temp == NULL)
+       break;
+   }
+   printf("\n");
+}
+\end{lstlisting}
+\begin{lstlisting}
+int main(){
+    queue *elso=NULL;
+    int temp;
+    queue_put(2, &elso);  print_queue(elso);
+    queue_put(4, &elso);  print_queue(elso);
+    queue_put(6, &elso);  print_queue(elso);
+    temp=queue_rem( &elso ); printf("Ausgenommene Element: %d\n",temp); print_queue(elso);
+    queue_put(8, &elso);  print_queue(elso);
+    temp=queue_rem( &elso ); printf("Ausgenommene Element: %d\n",temp); print_queue(elso);
+    free_queue( &elso );
+}
+\end{lstlisting}
+\begin{lstlisting}{Output}
+2	
+4	2	
+6	4	2	
+Ausgenommene Element: 2
+6	4	
+8	6	4	
+Ausgenommene Element: 4
+8	6	
+\end{lstlisting}
+\end{myexampleprogram}
+\begin{myexampleprogram}{Programme: \texttt{Haldensortierung}}
+\begin{lstlisting}
+typedef struct heap {
+   int val;
+   struct heap *left;
+   struct heap *right;
+   struct heap *parent;
+} heap;
+\end{lstlisting}
+\begin{lstlisting}
+heap *newheap( int x, heap *parent)
+{
+   heap *ret=(heap *)malloc(sizeof(heap));
+   ret->left=NULL;
+   ret->right=NULL;
+   ret->parent=parent;
+   ret->val=x;
+   return ret;
+}
+\end{lstlisting}
+\begin{lstlisting}
+void heap_insert(heap** root, int x) {
+   if(*root == NULL) {
+     *root = newheap(x, NULL);
+   }
+   else {
+     queue* q = newqueue(*root);
+     heap* currentheap;
+
+     while((currentheap=queue_rem(&q))!=NULL){
+
+        if(currentheap->left == NULL) {
+          currentheap->left  = newheap(x, currentheap);
+          currentheap = currentheap->left;
+        }
+        else if(currentheap->right == NULL) {
+          currentheap->right = newheap(x, currentheap);
+          currentheap = currentheap->right;
+        }
+        else {
+          queue_put(currentheap->left, &q);
+          queue_put(currentheap->right,&q);
+          continue;
+        }
+        while(currentheap->parent != NULL && currentheap->parent->val < currentheap->val) {
+           int temp = currentheap->parent->val;
+           currentheap->parent->val = currentheap->val;
+           currentheap->val = temp;
+           currentheap = currentheap->parent;
+        }
+        break;
+
+     }
+     free_queue(&q);
+   }
+   return;
+}
+\end{lstlisting}
+\begin{lstlisting}
+int heap_remove(heap** root) {
+   int ret;
+   if(*root != NULL) {
+     queue* q = newqueue(*root);
+     heap* previousheap;
+     heap* currentheap;
+
+     while ((currentheap=queue_rem(&q)) != NULL) {
+       if (currentheap->left != NULL)
+          queue_put(currentheap->left, &q);
+       if (currentheap->right != NULL)
+          queue_put(currentheap->right, &q);
+       previousheap= currentheap;
+     }
+     currentheap = previousheap;
+     free_queue(&q);
+
+     if(currentheap->parent == NULL) {
+       ret=currentheap->val;
+       free(currentheap);
+       *root = NULL;
+       return ret;
+     }
+     else {
+       ret=(*root)->val;
+       (*root)->val = currentheap->val;
+       currentheap = currentheap->parent;
+       if(currentheap->right != NULL) {
+          free(currentheap->right);
+          currentheap->right = NULL;
+       }
+       else {
+          free(currentheap->left);
+          currentheap->left = NULL;
+       }
+       int a, b, c;
+       currentheap = *root;
+       while(1) {
+         if(currentheap->left == NULL) {
+           break;
+         }
+         else if(currentheap->right == NULL) {
+           a = currentheap->val;
+           b = currentheap->left->val;
+           if(a < b) {
+              currentheap->val = b;
+              currentheap->left->val = a;
+              currentheap = currentheap->left;
+           }
+           else {
+             break;
+           }
+         }
+         else {
+           a = currentheap->val;
+           b = currentheap->left->val;
+           c = currentheap->right->val;
+           if(a >= b && a >= c) {
+             break;
+           }
+           else if(b > a && b >= c) {
+             currentheap->left->val = a;
+             currentheap->val = b;
+             currentheap = currentheap->left;
+           }
+           else {
+             currentheap->right->val = a;
+             currentheap->val = c;
+             currentheap = currentheap->right;
+           }
+
+         }
+       }
+       return ret;
+     }
+   }
+   else
+    return -1;
+}
+\end{lstlisting}
+\end{myexampleprogram}
+\subsubsection{Formattierte Eingabe und Ausgabe}
+\begin{myexampleblock}{Function definition \texttt{printf}}
+int printf(char * formattierung\_text, $\cdots$);
+\begin{itemize}
+\item Rückgabe Wert: Der Anzahl der ausgedrückten Zeichen
+\item Parameters:
+\begin{enumerate}
+\item formattierung\_text: Eine Zeichenkette, beendet mit dem \'{}\\0\'{} Zeichen, specifiziert wie mann die Daten
+audrücken will
+\end{enumerate}
+\end{itemize}
+\end{myexampleblock}
+\pagebreak

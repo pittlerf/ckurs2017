@@ -111,137 +111,7 @@
 \include{pointersarrays}
 \include{einfuegesortieren}
 \include{dynamischespeicherverwaltung}
-\section{Complex Datatypen}
-Wir haben gelernt, wie wir mehrere Objekte von dem gleichen Typ händeln
-können. Aber often das ist nicht genug. Wenn in unserem Problem
-wir zusammenhörende Variablen haben, müssen wir ihnen zusammen handeln
-als ein Stukture. In der C Sprache wir können neuen Datentypen aus
-den Elementaren herstellen, dafür müssen wir $struct$ Strichwort
-verwenden.
-\begin{myalertblock}{struct Typdefinierung}
-\begin{lstlisting}
-struct name
-{
-   Type1 typename1;
-   Type2 typename2;
-   Type3 typename3;
-   ...
-}
-\end{lstlisting}
-\vspace{-0.4cm}
-Verwendung, definieren Variable aus $name$ Typ:
-\begin{lstlisting}
-struct name variablename;
-\end{lstlisting}
-\vspace{-0.4cm} 
-Die Typen in einer Strukture können auch Strukture sein.
-Sie müssen geschlossen sein, was bedeutet, dass ihre Größe
-(wievielen Speicherzellen verwenden Sie) in der Kompilierung
-bekannt sein muss.
-\end{myalertblock}
-Ein Strukture besteht aus Objekten von verschidenen Typen. 
-Mann kann auch ein Objejt in einer Structure mit $Record$ 
-oder $Feld$ bezeichnet.
-
-Wir können mit dem Punktoperator (.) zu den eigenen Felden
-griffen. In dem unteren kleinen Quelltext wir zeigen ein Beispiel
-für Strukture Datatyp.
-\begin{lstlisting}
-#include<stdio.h>
-struct Student { 
-int matrikelnummer;
-char *name;
-char klasse[5];
-}
-int main(){
-    struct Student erste, zweite;
-    erste.matrikalnummer=99;
-    erste.name="Martin Pfeindrich";
-    erste.klasse="5a";
-    zweite={101,"Andrea Tabarrios","6b"};
-}
-\end{lstlisting}
-In diesem Beispiel wir haben das Student stukture definiert in der Zeilen zwischen 2-7.
-Das musst außerhalb des $main$ Funktions sein, um alle andere Funktionen zugriffen zu können.
-In der neuenten Zeile wir haben zwei Variable von Student Typ definiert. Sie sind 
-nicht initializiert noch. In der zehnten Ziele wir griffen zu den Recorden in der
-Student Strukture mit dem Punkt operator. Allgemeinen die Zuweisung hat der folgende Form:
-\begin{lstlisting}
-Variablename.structurenecodname = wert;
-\end{lstlisting}
-Natürlich die structurenrecordname oben kann also ein Struktured Typ sein, d.h wir können
-Strukturen schachteln. Wir können auch nicht nur mit dem Punktoperator initializieren, sondern
-auch mit einer Aufzählung der Werten getrennt durch die (,) Operator.
-
-Natürlich wir können nicht alle Elementare operatoren auf Selbst
-erstellte Strukturen verwenden. Wir können zwischen zwei Elementen zuweisung machen zum Beispiel.
-In diesem Fall die Werten von alle Speicherzellen, die die Strukture aufbauen werden in der
-anderen Strukturevariable copyieren. Wir können auch Arrays  Elementen von Strukturen typ, 
-und deswegen die Dereferenzierung und die adresse Operator verwendet werden.
-
-Strukuren sind hilfreich auch wenn ein Fuktion mehr ($n$) zusammenhörige Änderung machen soll. 
-Anstatt $n$ Eingabeparameter zu verwenden, genügt es, einen zu verwenden. Im Standardbibliothek
-C also hat Complex Stukture Datatypen. Zum Beispiel, die Funktions, die die Zeit verarbeiten.
-
-\begin{myexampleblock}{Definition: \texttt{struct tm}}
-\begin{lstlisting}
-struct tm{
-int tm_sec:  /*Sekundums im Minute*/
-int tm_min;  /*Minutes im Uhr*/
-int tm_hour; /*Uhr am Tag*/
-int tm_mday; /*Tag im Monat*/
-int tm_mon;  /*Monat im Jahr*/
-int tm_year; /*Jahren seit 1900*/
-int tm_wday; /*Tage seit Sonntag*/
-int tm_yday; /*Tage seit Januar 1*/
-int tm_isdst;/*Sommerzeit ist oder nicht*/
-}
-\end{lstlisting}
-Das Definition befindet sich im Standardbibliothek Funktion time.h.
-\end{myexampleblock}
-\begin{myexampleblock}{Funktion:\texttt{time}}
-\begin{lstlisting}
-time_t time(time_t *t)
-\end{lstlisting}
-\vspace{-0.4cm}
-Kehrt die Zeit in Sekundum seit (00:00:00, January 1, 1970) zurück.
-Eingabeparameter ist die Adresse ein Variable von long int Typ, in der
-das Ergebnis gespeichert wird, oder $NULL$ Pointer.
-\end{myexampleblock}
-\begin{myexampleblock}{Funktion:\texttt{localtime}}
-\begin{lstlisting}
-struct tm * localtime (time_t * timer);
-\end{lstlisting}
-\vspace{-0.4cm}
-Eingabeparameter :Adresse einer Variable von long int Typ (often die Rückgabeparameter vom Fuktion $time$).
-Mit den Werten von $timer$ füllt dieser Funktion die felder in der $tm$ Strukture aus, und kehrt ihn zurück.
-\end{myexampleblock}
-\begin{lstlisting}
-#include <time.h>
-#include <stdlib.h>
-#include <stdio.h>
-int main(void)
-{
-   time_t now;
-   struct tm *local_date_time;
-   char *tagarray[7]={"Sonntag","Montag","Dienstag","Mittwoch","Donnerstag","Freitag","Samstag"};
-   now = time(NULL);
-   local_date_time=localtime(&now);
-   printf ("Jahr ist: %d\n", local_date_time->tm_year+1900);/*Auch (*local_date_time).tm_year+1900 ist ok*/
-   printf ("Monat ist: %d\n", local_date_time->tm_mon);
-   printf ("Tage ist: %s\n", tagarray[local_date_time->tm_wday]);
-   printf ("Uhr ist: %d\n", local_date_time->tm_hour);
-   printf ("Min ist: %d\n", local_date_time->tm_min);
-   printf ("Sek ist: %d\n", local_date_time->tm_sec);
-}
-\end{lstlisting}
-In diesem Beispiel wir drücken das aktuellen Datum auf Monitor aus. Zuerst rufen wir den $time$ Funktion
-an damit wir  im $now$ das Datum als Sekunden in einem Long int Zahl haben. Danach graben wir von diesem Zahl 
-verständnisvoll Informationen aus mit dem $localtime$ Funktion. Ihre Rückgabe ist eine Pointer auf $tm$ Strukture. 
-Wir haben gelernt, wie wir zu den Strukture Elementen griffen können. Wir können auch Direkt vom Pointer
-zu den Elementen griffen mit dem $->$ Operator. Auch in der Achten Zeile wir haben ein Variable mit komplizierten
-Typ definiert als $tagarray$. Wie der Name schon sagt, das ist ein Array von Pointers auf "char". Wir verwenden
-die Struktureelement $tm\_wday$, als ein Index für diesen Array in der dreizehnten Zeile.
+\include{complexdatatypen}
 \section{Datein verarbeiten}
 In Unix wir identifizieren ein Datein mit seinem Name. Wir können Funktionen aus dem Standardbibliothek verwenden, um
 detallierte Informationen zu erhalten. In diesem Fall die $C$ Sprache bietet uns den $stat$ Funktion und ihren Rückgabewert,
@@ -689,7 +559,7 @@ Binärdatei. Denn wir postionieren den Kanal wieder auf das Anfang des Datein um
 In diesem Fall müssen wir Auch der Kanal freigeben.
 \section{Verketette Liste, der Kellerspeicher und die Warteschlange}
 Wir haben gelernt, wie wir die Memoryverwaltung verwenden können. Aber was passiert, wenn wir ein Element löschen wollten, oder
-wir möchten nochein hinzufügen zwischen zwei schon existiert Elementen. In anderen Worten, wir möchten ein Dateistrukture, das
+wir nochein zwischen zwei schon existiert Elementen hinzufügen möchten. In anderen Worten, wir möchten ein Dateistrukture, das
 dynamisch erhöht, oder schrumpft. Das können wir ausführen mit einer Strukture, die die Adresse des nächsten Elements enthält.
 Beispielweise in der C Sprache ein Struktureelement kann auch ein Pointer auf den nächsten Element sein.
 \begin{lstlisting}
@@ -925,266 +795,7 @@ den aktuellen Zustand des Speichers aus. Die Ausgebe siehst du unter.
 Wie du siehst, wenn wir die erste $pop$ Anweisung ausführen, wurde die letzte 
 eingegebene Wert (6) aus dem Speicher gelöst. 
 
-\begin{myexampleprogram}{ Programme: \texttt{Die Warteschlange}}	
-\begin{lstlisting}
-typedef struct queue {
-   struct queue* next;
-   int data;
-} queue;
-\end{lstlisting}
-\begin{lstlisting}
-queue * get_a_queue( int x ){
-   queue *q=(queue *)malloc(sizeof(queue));
-   q->data=x;
-   q->next=NULL;
-   return q;
-}
-\end{lstlisting}
-\begin{lstlisting}
-void queue_put( int x, queue ** first){
-   if ((*first) == NULL){
-       (*first)=get_a_queue(x);
-       return;
-   }
-   queue *temp=get_a_queue(x);
-   temp->next=(*first);
-   (*first)=temp;
-}
-\end{lstlisting}
-\begin{lstlisting}
-int queue_rem( queue **first){
-   int ret;
-   queue *temp;
-   if ((*first) == NULL){
-     return -1;
-   }
-   if ((*first)->next == NULL){
-     ret=(*first)->data;
-     free((*first));
-     (*first)=NULL;
-     return ret;
-   }
-   temp=(*first);
-   queue *prev;
-   while ( temp->next != NULL){
-      prev=temp;
-      temp=temp->next;
-   }
-   prev->next=NULL;
-   ret=temp->data;
-   free(temp);
-   return (ret);
-}
-\end{lstlisting}
-\begin{lstlisting}
-void free_queue( queue **first){
-   if ((*first)== NULL)
-     return;
-   queue *temp=(*first);
-   queue *temp2;
-   for(;;){
-     temp2=temp->next;
-     free(temp);
-     temp=temp2;
-     if (temp == NULL)
-       break;
-   }
-}
-\end{lstlisting}
-\begin{lstlisting}
-void print_queue( queue *first ){
-   queue *temp=(first);
-   if (temp == NULL){
-     printf("Wir haben keine Element in der Wertechlange\n");
-     return;
-   }
-   for (;;){
-     printf("%d\t", temp->data);
-     temp=temp->next;
-     if (temp == NULL)
-       break;
-   }
-   printf("\n");
-}
-\end{lstlisting}
-\begin{lstlisting}
-int main(){
-    queue *elso=NULL;
-    int temp;
-    queue_put(2, &elso);  print_queue(elso);
-    queue_put(4, &elso);  print_queue(elso);
-    queue_put(6, &elso);  print_queue(elso);
-    temp=queue_rem( &elso ); printf("Ausgenommene Element: %d\n",temp); print_queue(elso);
-    queue_put(8, &elso);  print_queue(elso);
-    temp=queue_rem( &elso ); printf("Ausgenommene Element: %d\n",temp); print_queue(elso);
-    free_queue( &elso );
-}
-\end{lstlisting}
-\begin{lstlisting}{Output}
-2	
-4	2	
-6	4	2	
-Ausgenommene Element: 2
-6	4	
-8	6	4	
-Ausgenommene Element: 4
-8	6	
-\end{lstlisting}
-\end{myexampleprogram}
-\begin{myexampleprogram}{Programme: \texttt{Haldensortierung}}
-\begin{lstlisting}
-typedef struct heap {
-   int val;
-   struct heap *left;
-   struct heap *right;
-   struct heap *parent;
-} heap;
-\end{lstlisting}
-\begin{lstlisting}
-heap *newheap( int x, heap *parent)
-{
-   heap *ret=(heap *)malloc(sizeof(heap));
-   ret->left=NULL;
-   ret->right=NULL;
-   ret->parent=parent;
-   ret->val=x;
-   return ret;
-}
-\end{lstlisting}
-\begin{lstlisting}
-void heap_insert(heap** root, int x) {
-   if(*root == NULL) {
-     *root = newheap(x, NULL);
-   }
-   else {
-     queue* q = newqueue(*root);
-     heap* currentheap;
-
-     while((currentheap=queue_rem(&q))!=NULL){
-
-        if(currentheap->left == NULL) {
-          currentheap->left  = newheap(x, currentheap);
-          currentheap = currentheap->left;
-        }
-        else if(currentheap->right == NULL) {
-          currentheap->right = newheap(x, currentheap);
-          currentheap = currentheap->right;
-        }
-        else {
-          queue_put(currentheap->left, &q);
-          queue_put(currentheap->right,&q);
-          continue;
-        }
-        while(currentheap->parent != NULL && currentheap->parent->val < currentheap->val) {
-           int temp = currentheap->parent->val;
-           currentheap->parent->val = currentheap->val;
-           currentheap->val = temp;
-           currentheap = currentheap->parent;
-        }
-        break;
-
-     }
-     free_queue(&q);
-   }
-   return;
-}
-\end{lstlisting}
-\begin{lstlisting}
-int heap_remove(heap** root) {
-   int ret;
-   if(*root != NULL) {
-     queue* q = newqueue(*root);
-     heap* previousheap;
-     heap* currentheap;
-
-     while ((currentheap=queue_rem(&q)) != NULL) {
-       if (currentheap->left != NULL)
-          queue_put(currentheap->left, &q);
-       if (currentheap->right != NULL)
-          queue_put(currentheap->right, &q);
-       previousheap= currentheap;
-     }
-     currentheap = previousheap;
-     free_queue(&q);
-
-     if(currentheap->parent == NULL) {
-       ret=currentheap->val;
-       free(currentheap);
-       *root = NULL;
-       return ret;
-     }
-     else {
-       ret=(*root)->val;
-       (*root)->val = currentheap->val;
-       currentheap = currentheap->parent;
-       if(currentheap->right != NULL) {
-          free(currentheap->right);
-          currentheap->right = NULL;
-       }
-       else {
-          free(currentheap->left);
-          currentheap->left = NULL;
-       }
-       int a, b, c;
-       currentheap = *root;
-       while(1) {
-         if(currentheap->left == NULL) {
-           break;
-         }
-         else if(currentheap->right == NULL) {
-           a = currentheap->val;
-           b = currentheap->left->val;
-           if(a < b) {
-              currentheap->val = b;
-              currentheap->left->val = a;
-              currentheap = currentheap->left;
-           }
-           else {
-             break;
-           }
-         }
-         else {
-           a = currentheap->val;
-           b = currentheap->left->val;
-           c = currentheap->right->val;
-           if(a >= b && a >= c) {
-             break;
-           }
-           else if(b > a && b >= c) {
-             currentheap->left->val = a;
-             currentheap->val = b;
-             currentheap = currentheap->left;
-           }
-           else {
-             currentheap->right->val = a;
-             currentheap->val = c;
-             currentheap = currentheap->right;
-           }
-
-         }
-       }
-       return ret;
-     }
-   }
-   else
-    return -1;
-}
-\end{lstlisting}
-\end{myexampleprogram}
-\subsubsection{Formattierte Eingabe und Ausgabe}
-\begin{myexampleblock}{Function definition \texttt{printf}}
-int printf(char * formattierung\_text, $\cdots$);
-\begin{itemize}
-\item Rückgabe Wert: Der Anzahl der ausgedrückten Zeichen
-\item Parameters:
-\begin{enumerate}
-\item formattierung\_text: Eine Zeichenkette, beendet mit dem \'{}\\0\'{} Zeichen, specifiziert wie mann die Daten
-audrücken will
-\end{enumerate}
-\end{itemize}
-\end{myexampleblock}
-\pagebreak
-
+\include{endprojekt}
 
 %as Körper, das C code kannst du oben sehen. Alle C programm besteht aus Funkcionen. Wir nennen function ein part of the code, was eine
 %estimmte aufgabe erledigt.
@@ -1201,204 +812,204 @@ audrücken will
 %on links nach rechts\footnote{Hier gibt es ausnahme, wenn die Reihenfolge ist umgekehrt. Siehst denn letzten Spalte im Tablellen \ref{priortab}}. 
 
 
-\begin{lstlisting}{Einf\"ugesortieren in C: Körper }
-#include<stdio.h>
-void read_in_data( int n, int sort[], int unsort[], int argc, char *argv[]){
-statements a1;
-statements b1;
-...
-}
-void einfugesortieren( int n, int sort[], int unsort[]){
-statements a2;
-statements b2;
-...
-}
-void print_out_data( int n, sortiert){
-statements a3;
-statements b3;
-...
-}
-int main( int argc, char *argv[])
-{
-  int n=4;
-  int sortiert[n];
-  int unsortiert[n];
-  read_in_data(n, sortiert, unsortier, argc, argv);
-  einfugesortieren(n,  sortiert, unsortiert);
-  print_out_data( n, sortiert);
-
-}
-\end{lstlisting}
-Das Körper, das C code kannst du oben sehen. Alle C programm besteht aus Funkcionen. Wir nennen function ein part of the code, was eine
-bestimmte aufgabe erledigt. 
-Du wirst es gleich finden, dass du muss zuerst lernenDu musst zuerst den einladen, was jemanden
-geschrieben hat. Zum beispiel, zu computer printen du sollst stdio.h einladen. Sie
-gehören nicht zu den sprache. Danach kommt deine arbeite. Zuerst du sollst andenken was für ein ergebnis deine aufgabe haben soll und
-wie viele eingangsparameter deine programm hat. Du sollst denen es variablen deklarieren. Jetzt kommt die wichtigsten Teil des Program, die
-Funktionen. Diese teil rechnet aus den eingangsparameter deine Ergebnis. Es gibt ein specielle function was jeden programm haben
-soll. Das nahme of diese funcktion ist main. Von diesem Punkt beginnt die Ausführung. Wir werden mehr um funckcionen später lernen.
+%\begin{lstlisting}{Einf\"ugesortieren in C: Körper }
+%#include<stdio.h>
+%void read_in_data( int n, int sort[], int unsort[], int argc, char *argv[]){
+%statements a1;
+%statements b1;
+%...
+%}
+%void einfugesortieren( int n, int sort[], int unsort[]){
+%statements a2;
+%statements b2;
+%...
+%}
+%void print_out_data( int n, sortiert){
+%statements a3;
+%statements b3;
+%...
+%}
+%int main( int argc, char *argv[])
+%{
+%  int n=4;
+%  int sortiert[n];
+%  int unsortiert[n];
+%  read_in_data(n, sortiert, unsortier, argc, argv);
+%  einfugesortieren(n,  sortiert, unsortiert);
+%  print_out_data( n, sortiert);
+%
+%}
+%\end{lstlisting}
+%Das Körper, das C code kannst du oben sehen. Alle C programm besteht aus Funkcionen. Wir nennen function ein part of the code, was eine
+%bestimmte aufgabe erledigt. 
+%Du wirst es gleich finden, dass du muss zuerst lernenDu musst zuerst den einladen, was jemanden
+%geschrieben hat. Zum beispiel, zu computer printen du sollst stdio.h einladen. Sie
+%gehören nicht zu den sprache. Danach kommt deine arbeite. Zuerst du sollst andenken was für ein ergebnis deine aufgabe haben soll und
+%wie viele eingangsparameter deine programm hat. Du sollst denen es variablen deklarieren. Jetzt kommt die wichtigsten Teil des Program, die
+%Funktionen. Diese teil rechnet aus den eingangsparameter deine Ergebnis. Es gibt ein specielle function was jeden programm haben
+%soll. Das nahme of diese funcktion ist main. Von diesem Punkt beginnt die Ausführung. Wir werden mehr um funckcionen später lernen.
  
 
-Zum beispiel in C sieht die obene Auflistung so aus:
-\begin{lstlisting}{Einf\"ugesortieren in C}{
-1: int n=4;
-   int unsortiert[n],  sortiert[n];
-2; sortiert[0]=2;
-3; unsortiert[0]=9; 
-   unsortiert[1]=5;
-   unsortiert[2]=7;
-4; for (int i=1; i<n-1;++i){
-      sortiert[length]=unsortiert[i]
-5-6;   for (int j=length-1; j>0; --j){
-         if (sortiert[j+1]<sortiert[j]){
-            int tmp=sortiert[j];
-            sortiert[j]=sortiert[j+1];
-            sortiert[j+1]=tmp;
-         }
-         else{
-          break;
-         }
-      }
-      length++;
-   }
-}
-\end{lstlisting}
-''for`` steht f\"ur Schleife und wir nutzten das "A" array 
-Warum solltest du C programmier sprache lernen? Es gibt viele Antwort auf diese Frage. Zum Beispiel:
-\begin{itemize}
-\item C ist nicht kompliziert
-\item C ist sehr effizient
-\item C hat high level konstrukte
-\end{itemize}
-Aber M\"oglicherweise das beste Antwort ist das C Kenntnisse ist unbedingt in Forschungsrechnungen. Die meisten Programme,
-der zum Stand der Technik geh\"oren sind C programme. In diesem Kurz wir werden diese Sprache kennenlernen. Zuerst 
-wir zusammenfasseen was in der Sprache inbegriffen ist. Du wirst dich verwundern, das die einfachste funktion, was
-nur etwas auf deinem Monitor zeigt, geh\"ort nicht zu der Sprache. Wir vorstellen das k\"orper einem durchschnittlichen
-C program und erkl\"aren sein Teilen. 
+%Zum beispiel in C sieht die obene Auflistung so aus:
+%\begin{lstlisting}{Einf\"ugesortieren in C}{
+%1: int n=4;
+%   int unsortiert[n],  sortiert[n];
+%2; sortiert[0]=2;
+%3; unsortiert[0]=9; 
+%   unsortiert[1]=5;
+%   unsortiert[2]=7;
+%4; for (int i=1; i<n-1;++i){
+%      sortiert[length]=unsortiert[i]
+%5-6;   for (int j=length-1; j>0; --j){
+%         if (sortiert[j+1]<sortiert[j]){
+%            int tmp=sortiert[j];
+%            sortiert[j]=sortiert[j+1];
+%            sortiert[j+1]=tmp;
+%         }
+%         else{
+%          break;
+%         }
+%      }
+%      length++;
+%   }
+%}
+%\end{lstlisting}
+%''for`` steht f\"ur Schleife und wir nutzten das "A" array 
+%Warum solltest du C programmier sprache lernen? Es gibt viele Antwort auf diese Frage. Zum Beispiel:
+%\begin{itemize}
+%\item C ist nicht kompliziert
+%\item C ist sehr effizient
+%\item C hat high level konstrukte
+%\end{itemize}
+%Aber M\"oglicherweise das beste Antwort ist das C Kenntnisse ist unbedingt in Forschungsrechnungen. Die meisten Programme,
+%der zum Stand der Technik geh\"oren sind C programme. In diesem Kurz wir werden diese Sprache kennenlernen. Zuerst 
+%wir zusammenfasseen was in der Sprache inbegriffen ist. Du wirst dich verwundern, das die einfachste funktion, was
+%nur etwas auf deinem Monitor zeigt, geh\"ort nicht zu der Sprache. Wir vorstellen das k\"orper einem durchschnittlichen
+%C program und erkl\"aren sein Teilen. 
 
-Danach z\"ahlen wir die Komponenten der Sprache auf. Das wird beginnen mit der data Typen und Operationen, in denen wir 
-die Typen nutzen k\"onnen. Wir werden alle elementare Data type lernen. Mit Variablen aus diesen Typen k\"onnen wir Operationen machen, 
-die unsere Ergebnisse herstellen werden. Dann werden wir elementare Statements und Expressions einf\"uhren, mit denen 
-wir kleinen Aufgaben l\"osen k\"onnen. 
+%Danach z\"ahlen wir die Komponenten der Sprache auf. Das wird beginnen mit der data Typen und Operationen, in denen wir 
+%die Typen nutzen k\"onnen. Wir werden alle elementare Data type lernen. Mit Variablen aus diesen Typen k\"onnen wir Operationen machen, 
+%die unsere Ergebnisse herstellen werden. Dann werden wir elementare Statements und Expressions einf\"uhren, mit denen 
+%wir kleinen Aufgaben l\"osen k\"onnen. 
   
-Es is sehr wichtig, dass unsere Programm Parameter erhalten zu k\"onnen. Wir k\"onnen das erreichen durch Funkcionen.
-Die Funkcionen arbeiten wie schwarze K\"asten. Sie stellen von den Eingangsparameter ein neues Wert her. Wir zeigen, 
-wie man die Standart Eingabe und Ausgabe Bibliothek nutzten kann. Nachdem wir diese F\"ahigkeiten verstehen, werden wir etwas
-komplizierte \"Ubungen schreiben.
+%Es is sehr wichtig, dass unsere Programm Parameter erhalten zu k\"onnen. Wir k\"onnen das erreichen durch Funkcionen.
+%Die Funkcionen arbeiten wie schwarze K\"asten. Sie stellen von den Eingangsparameter ein neues Wert her. Wir zeigen, 
+%wie man die Standart Eingabe und Ausgabe Bibliothek nutzten kann. Nachdem wir diese F\"ahigkeiten verstehen, werden wir etwas
+%komplizierte \"Ubungen schreiben.
 
-Often gibt es Situationen in den wir mehr als Ein ergebnisse von einem Funktionen wollen. Um das erreichen
-m\"ussen wir die Addressirung der Memorie kennen zu lernen. In diesem Punkt werden wir auch lernen, wie man 
-strings verwendet kann.
+%Often gibt es Situationen in den wir mehr als Ein ergebnisse von einem Funktionen wollen. Um das erreichen
+%m\"ussen wir die Addressirung der Memorie kennen zu lernen. In diesem Punkt werden wir auch lernen, wie man 
+%strings verwendet kann.
+%
+%In einem sch\"onen Programm wir nutzten das wenigstens Speicher. In diesem Punkt wir werden lernen, 
+%wie die Speicherverwaltung behandelt wird.
 
-In einem sch\"onen Programm wir nutzten das wenigstens Speicher. In diesem Punkt wir werden lernen, 
-wie die Speicherverwaltung behandelt wird.
+%Im ersten Teil des Kurses wir haben die elemetare datatypen kennen gelernt. In diesem Punkt wir
+%werden lernen, wie mann eigenes Daten Structure herstellen kann. Überhaupt, Warum and Wenn müssen wir neue Structure herstellen.
+%Unser Programm mit eigenen Daten strukturen wird leichter lesen zu können. Das ist sehr wichtig. Typischer fehler der Angefangenen Programmern
+%ist, dass ihr Code ist sehr schwer zu lesen auch für Sie, und nach einem Monat Sie müssen die ganze Programm
+%wieder schreiben. Zum beispiel muss mann eigenes Datenstrukture nutzen, wenn man ein operations sehr often erledigen muss.
+%Zum bespiel in der Sorierung eines List, man kann die Daten in einem binären Suchbaum einschließen um die suchen schneller zu lassen.
 
-Im ersten Teil des Kurses wir haben die elemetare datatypen kennen gelernt. In diesem Punkt wir
-werden lernen, wie mann eigenes Daten Structure herstellen kann. Überhaupt, Warum and Wenn müssen wir neue Structure herstellen.
-Unser Programm mit eigenen Daten strukturen wird leichter lesen zu können. Das ist sehr wichtig. Typischer fehler der Angefangenen Programmern
-ist, dass ihr Code ist sehr schwer zu lesen auch für Sie, und nach einem Monat Sie müssen die ganze Programm
-wieder schreiben. Zum beispiel muss mann eigenes Datenstrukture nutzen, wenn man ein operations sehr often erledigen muss.
-Zum bespiel in der Sorierung eines List, man kann die Daten in einem binären Suchbaum einschließen um die suchen schneller zu lassen.
+%\section{Der Körper des C programms}
 
-\section{Der Körper des C programms}
-
-\begin{lstlisting}{caption= Do nothing}
-#include<stdio.h>
-int main( int argv, char *argv[])
-{
-/* do nothing */
-}
-\end{lstlisting}
-Welche Teile hat ein C programm. 
-Du wirst es gleich finden, dass du muss zuerst lernenDu musst zuerst den einladen, was jemanden 
-geschrieben hat. Zum beispiel, zu computer printen du sollst stdio.h einladen. Sie
-gehören nicht zu den sprache . Danach kommt deine arbeite. Zuerst du sollst andenken was für ein ergebnis deine aufgabe haben soll und
-wie viele eingangsparameter deine programm hat. Du sollst denen es variablen deklarieren. Jetzt kommt die wichtigsten Teil des Program, die
-Funktionen. Diese teil rechnet aus den eingangsparameter deine Ergebnis. Es gibt ein specielle function was jeden programm haben
-soll. Das nahme of diese funcktion ist main. Von diesem Punkt beginnt die Ausführung. Wir werden mehr um funckcionen später lernen.  
+%\begin{lstlisting}{caption= Do nothing}
+%#include<stdio.h>
+%int main( int argv, char *argv[])
+%{
+%/* do nothing */
+%}
+%\end{lstlisting}
+%Welche Teile hat ein C programm. 
+%Du wirst es gleich finden, dass du muss zuerst lernenDu musst zuerst den einladen, was jemanden 
+%geschrieben hat. Zum beispiel, zu computer printen du sollst stdio.h einladen. Sie
+%gehören nicht zu den sprache . Danach kommt deine arbeite. Zuerst du sollst andenken was für ein ergebnis deine aufgabe haben soll und
+%wie viele eingangsparameter deine programm hat. Du sollst denen es variablen deklarieren. Jetzt kommt die wichtigsten Teil des Program, die
+%Funktionen. Diese teil rechnet aus den eingangsparameter deine Ergebnis. Es gibt ein specielle function was jeden programm haben
+%soll. Das nahme of diese funcktion ist main. Von diesem Punkt beginnt die Ausführung. Wir werden mehr um funckcionen später lernen.  
 %\section{Was ist Programmieren}
 %Es gibt ein Problem, Sie müssen die Lösung finden. What we call input variables? What are the output variables? Specific problem?
-\section{Definitionen, Statements}
-Die Variablen haben Wert und Typ. Warum ist das Typ der Variable wichtig? Es hängt vom Typ ab, was für ein Wert eine Variable haben
-kann. Das Typ entscheid also die Grösse des Arbeitspeicher zu deine Variable. Mann kann nun solche Funkcionen und Operatoren nutzen, das 
-genanue Datentype hat. Es gibt elementare data Typen mit dem wir spielen können. Sie sind
-\begin{itemize}
-\item char
-\item int
-\item float
-\item double
-\end{itemize}
-Im char können wir eine character speichern(die bereich?). Größe, im können wir ein Ganzzeil spiechern von wert 0 bis 2**32-1 größe. 
-Im fließkommazahl von bis speichern grösse.
-\subsection{Mein erstes C programm}
-von linein bis linien wir erklären Einfachste Programm der Welt "Hello World.c"
-Ein bisschen schwerer aufgabe, sie müssen ausrechnen die Würzel einer quadratische Gleichung. 
-\section{Aufgaben}
-\subsection{Zufallszahlgenerator}
-Zufällige nummer sind sehr wichtig für uns. In numerischen physik wir nutzten Zufallszahlen ganz often. Zum Beispiel 
-in die einfachsten method für integration of mehreren variablen Funkctions müssen wir Monte Carlo algorithm nutzten. Die
-enthalten statements, die vom Werte auf Zufällige variablen abhängt. In dieser Aufgabe wir müssen eine Zufallszahlgenerator
-schreiben. Es gibt mehrere methode dazu, aber alle stammt aus linear Kongruenzen:
-\begin{equation}
-I_{j+1}=a I_{j} \left( \mathrm{mod} m\right).
-\label{basics}
-\end{equation}
-Diesen Instruktion macht eine neue Zufallszahl ($I_{j+1}$)  aus einem original ($I_j$). Der qualität der Zufallszahl generator
-hängt von dem eingangsparameters (a,m) ab. Eine gute Zufallszahlgenerator hat große period, die Zeit zwischen den beiden gleichen
-Zufallszahl muss sehr groß sein. Park und Miller hat die folgenden parameter für a und m gewählt:
-\begin{equation}
-a=16807, m=2^{31}-1=2147483647. 
-\end{equation}
-Leider direkte implementation der Zufallszahlgenerator mit deisen parameters ist nicht möglich in C. Der grund ist
-wir können nicht speichern Zahlen grossen als $m$. Zum glück gibt es eine möglichkeit das Problem umzugehen. 
-Wir faktorizieren $m$:
-\begin{equation}
-m= aq + r; r= m \left(\mathrm{mod}a\right); q= \left[m/a\right]
-\end{equation}
-Damit können wir Gleichung \ref{basics} auch bewerten mit ($q,r$):
-\begin{equation}
-a I_j \left( \mathrm{mod} m\right)=  
-\left\{ \begin{array}{rc}
-a\left(I_j \mathrm{mod} q\right) -r \left[I_j/q\right] & \mathrm{wenn~es~}>0\mathrm{ist} \\ 
-a\left(I_j \mathrm{mod} q\right) -r \left[I_j/q\right] + m & \mathrm{andernfalls} \\ 
-\end{array}\right.
-\label{algo}
-\end{equation}
-wo $r=2836,q=127773$ ist. Implementieren Sie das Zufallszahlgenerator nach eq.\ref{algo}. Ändern Sie die Algorithm
-um die Zahlen zwischen 0 und 1 zu sein werden.
-Es ist wichtig zu test unser Ergebnis. Wir müssen kontrollieren die Verteilung (Distribution) der Zufallszahlgenerator.
-Wir möchten gleichmäßige vertailung zu erreichen. Wir werden eine Histogramms machen aus dem Zufallszahlen. Wir teilen 
-das Interval in $n$ Teilen und zahlen wie oft die Zufallszahl in jedem Interval sinkt. Machen Sie ein Histogramm aus 
-den Verfügbaren daten und prüfen wie gleichmäßig der Verteilung ist!
-\section{Elementare operatoren}
-\subsection{Binäre, Aritmethic operatoren}
-+,-,*,/, \%, ++, -- 
-\subsection{Gleichungen}
-==,!=, >,<, >=,<=
-\subsection{Bitwise}
-\&,|,\^, ~, >>,<<
-\subsection{Zuweisungsoperator}
-=,+=,-=,|=,\&=,\^=,\%=,<<|,>>|,
-\subsection{Aufgaben}
-Programm rechnet die Wurzel, der gleichung
-\section{statements}
-\subsection{Schleifen}
-Was ist wichtig, wenn wir ein Schleifen plan? Wir müssen nicht überschreiben eine existierte variable. Wir müssen keine
-statements haben, was nicht von der Schleifenzahlnummer abhängt.
-\subsection{If then else}
-\subsection{case}
-\subsection{Standard input, output}
-\subsection{Conways Spiel des Lebens}
-Wir habe eine quadrate Gitter. In alle Zell der Gitter eine zwei hältige variable. Es sagte uns, wenn der
-kleine microbe im Zell, lebt oder nicht.
-\section{Funkcionen}
-\section{Addressierung}
-\subsection{Stackel(LIFO)}
-\subsection{Fifo}
-\subsection{Umgekehrte Polnische Notation}
-\section{Dynamische speicherverwaltung}
-\section{Daten strukturen}
-\subsection{Ketten listen}
-\subsection{Bäumen}
-\subsection{Recursive functionen, Schnell sortieren}
+%\section{Definitionen, Statements}
+%Die Variablen haben Wert und Typ. Warum ist das Typ der Variable wichtig? Es hängt vom Typ ab, was für ein Wert eine Variable haben
+%kann. Das Typ entscheid also die Grösse des Arbeitspeicher zu deine Variable. Mann kann nun solche Funkcionen und Operatoren nutzen, das 
+%genanue Datentype hat. Es gibt elementare data Typen mit dem wir spielen können. Sie sind
+%\begin{itemize}
+%\item char
+%\item int
+%\item float
+%\item double
+%\end{itemize}
+%Im char können wir eine character speichern(die bereich?). Größe, im können wir ein Ganzzeil spiechern von wert 0 bis 2**32-1 größe. 
+%Im fließkommazahl von bis speichern grösse.
+%\subsection{Mein erstes C programm}
+%von linein bis linien wir erklären Einfachste Programm der Welt "Hello World.c"
+%Ein bisschen schwerer aufgabe, sie müssen ausrechnen die Würzel einer quadratische Gleichung. 
+%\section{Aufgaben}
+%\subsection{Zufallszahlgenerator}
+%Zufällige nummer sind sehr wichtig für uns. In numerischen physik wir nutzten Zufallszahlen ganz often. Zum Beispiel 
+%in die einfachsten method für integration of mehreren variablen Funkctions müssen wir Monte Carlo algorithm nutzten. Die
+%enthalten statements, die vom Werte auf Zufällige variablen abhängt. In dieser Aufgabe wir müssen eine Zufallszahlgenerator
+%schreiben. Es gibt mehrere methode dazu, aber alle stammt aus linear Kongruenzen:
+%\begin{equation}
+%I_{j+1}=a I_{j} \left( \mathrm{mod} m\right).
+%\label{basics}
+%\end{equation}
+%Diesen Instruktion macht eine neue Zufallszahl ($I_{j+1}$)  aus einem original ($I_j$). Der qualität der Zufallszahl generator
+%hängt von dem eingangsparameters (a,m) ab. Eine gute Zufallszahlgenerator hat große period, die Zeit zwischen den beiden gleichen
+%Zufallszahl muss sehr groß sein. Park und Miller hat die folgenden parameter für a und m gewählt:
+%\begin{equation}
+%a=16807, m=2^{31}-1=2147483647. 
+%\end{equation}
+%Leider direkte implementation der Zufallszahlgenerator mit deisen parameters ist nicht möglich in C. Der grund ist
+%wir können nicht speichern Zahlen grossen als $m$. Zum glück gibt es eine möglichkeit das Problem umzugehen. 
+%Wir faktorizieren $m$:
+%\begin{equation}
+%m= aq + r; r= m \left(\mathrm{mod}a\right); q= \left[m/a\right]
+%\end{equation}
+%Damit können wir Gleichung \ref{basics} auch bewerten mit ($q,r$):
+%\begin{equation}
+%a I_j \left( \mathrm{mod} m\right)=  
+%\left\{ \begin{array}{rc}
+%a\left(I_j \mathrm{mod} q\right) -r \left[I_j/q\right] & \mathrm{wenn~es~}>0\mathrm{ist} \\ 
+%a\left(I_j \mathrm{mod} q\right) -r \left[I_j/q\right] + m & \mathrm{andernfalls} \\ 
+%\end{array}\right.
+%\label{algo}
+%\end{equation}
+%wo $r=2836,q=127773$ ist. Implementieren Sie das Zufallszahlgenerator nach eq.\ref{algo}. Ändern Sie die Algorithm
+%um die Zahlen zwischen 0 und 1 zu sein werden.
+%Es ist wichtig zu test unser Ergebnis. Wir müssen kontrollieren die Verteilung (Distribution) der Zufallszahlgenerator.
+%Wir möchten gleichmäßige vertailung zu erreichen. Wir werden eine Histogramms machen aus dem Zufallszahlen. Wir teilen 
+%das Interval in $n$ Teilen und zahlen wie oft die Zufallszahl in jedem Interval sinkt. Machen Sie ein Histogramm aus 
+%den Verfügbaren daten und prüfen wie gleichmäßig der Verteilung ist!
+%\section{Elementare operatoren}
+%\subsection{Binäre, Aritmethic operatoren}
+%+,-,*,/, \%, ++, -- 
+%\subsection{Gleichungen}
+%==,!=, >,<, >=,<=
+%\subsection{Bitwise}
+%\&,|,\^, ~, >>,<<
+%\subsection{Zuweisungsoperator}
+%=,+=,-=,|=,\&=,\^=,\%=,<<|,>>|,
+%\subsection{Aufgaben}
+%Programm rechnet die Wurzel, der gleichung
+%\section{statements}
+%\subsection{Schleifen}
+%Was ist wichtig, wenn wir ein Schleifen plan? Wir müssen nicht überschreiben eine existierte variable. Wir müssen keine
+%statements haben, was nicht von der Schleifenzahlnummer abhängt.
+%\subsection{If then else}
+%\subsection{case}
+%\subsection{Standard input, output}
+%\subsection{Conways Spiel des Lebens}
+%Wir habe eine quadrate Gitter. In alle Zell der Gitter eine zwei hältige variable. Es sagte uns, wenn der
+%kleine microbe im Zell, lebt oder nicht.
+%\section{Funkcionen}
+%\section{Addressierung}
+%\subsection{Stackel(LIFO)}
+%\subsection{Fifo}
+%\subsection{Umgekehrte Polnische Notation}
+%\section{Dynamische speicherverwaltung}
+%\section{Daten strukturen}
+%\subsection{Ketten listen}
+%\subsection{Bäumen}
+%\subsection{Recursive functionen, Schnell sortieren}
 \end{document}

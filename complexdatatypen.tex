@@ -1,0 +1,131 @@
+\section{Complex Datatypen}
+Wir haben gelernt, wie wir mehrere Objekte von dem gleichen Typ händeln
+können. Aber often das ist nicht genug. Wenn in unserem Problem
+wir zusammenhörende Variablen haben, müssen wir ihnen zusammen handeln
+als ein Stukture. In der C Sprache wir können neuen Datentypen aus
+den Elementaren herstellen, dafür müssen wir $struct$ Strichwort
+verwenden.
+\begin{myalertblock}{struct Typdefinierung}
+\begin{lstlisting}
+struct name
+{
+   Type1 typename1;
+   Type2 typename2;
+   Type3 typename3;
+   ...
+}
+\end{lstlisting}
+\vspace{-0.4cm}
+Verwendung, definieren Variable aus $name$ Typ:
+\begin{lstlisting}
+struct name variablename;
+\end{lstlisting}
+\vspace{-0.4cm} 
+Die Typen in einer Strukture können auch Strukture sein.
+Sie müssen geschlossen sein, was bedeutet, dass ihre Größe
+(wievielen Speicherzellen verwenden Sie) in der Kompilierung
+bekannt sein muss.
+\end{myalertblock}
+Ein Strukture besteht aus Objekten von verschidenen Typen. 
+Mann kann auch ein Objejt in einer Structure mit $Record$ 
+oder $Feld$ bezeichnet.
+
+Wir können mit dem Punktoperator (.) zu den eigenen Felden
+griffen. In dem unteren kleinen Quelltext wir zeigen ein Beispiel
+für Strukture Datatyp.
+\begin{lstlisting}
+#include<stdio.h>
+struct Student { 
+int matrikelnummer;
+char *name;
+char klasse[5];
+}
+int main(){
+    struct Student erste, zweite;
+    erste.matrikalnummer=99;
+    erste.name="Martin Pfeindrich";
+    erste.klasse="5a";
+    zweite={101,"Andrea Tabarrios","6b"};
+}
+\end{lstlisting}
+In diesem Beispiel wir haben das Student stukture definiert in der Zeilen zwischen 2-7.
+Das musst außerhalb des $main$ Funktions sein, um alle andere Funktionen zugriffen zu können.
+In der neuenten Zeile wir haben zwei Variable von Student Typ definiert. Sie sind 
+nicht initializiert noch. In der zehnten Ziele wir griffen zu den Recorden in der
+Student Strukture mit dem Punkt operator. Allgemeinen die Zuweisung hat der folgende Form:
+\begin{lstlisting}
+Variablename.structurenecodname = wert;
+\end{lstlisting}
+Natürlich die structurenrecordname oben kann also ein Struktured Typ sein, d.h wir können
+Strukturen schachteln. Wir können auch nicht nur mit dem Punktoperator initializieren, sondern
+auch mit einer Aufzählung der Werten getrennt durch die (,) Operator.
+
+Natürlich wir können nicht alle Elementare operatoren auf Selbst
+erstellte Strukturen verwenden. Wir können zwischen zwei Elementen zuweisung machen zum Beispiel.
+In diesem Fall die Werten von alle Speicherzellen, die die Strukture aufbauen werden in der
+anderen Strukturevariable copyieren. Wir können auch Arrays  Elementen von Strukturen typ, 
+und deswegen die Dereferenzierung und die adresse Operator verwendet werden.
+
+Strukuren sind hilfreich auch wenn ein Fuktion mehr ($n$) zusammenhörige Änderung machen soll. 
+Anstatt $n$ Eingabeparameter zu verwenden, genügt es, einen zu verwenden. Im Standardbibliothek
+C also hat Complex Stukture Datatypen. Zum Beispiel, die Funktions, die die Zeit verarbeiten.
+
+\begin{myexampleblock}{Definition: \texttt{struct tm}}
+\begin{lstlisting}
+struct tm{
+int tm_sec:  /*Sekundums im Minute*/
+int tm_min;  /*Minutes im Uhr*/
+int tm_hour; /*Uhr am Tag*/
+int tm_mday; /*Tag im Monat*/
+int tm_mon;  /*Monat im Jahr*/
+int tm_year; /*Jahren seit 1900*/
+int tm_wday; /*Tage seit Sonntag*/
+int tm_yday; /*Tage seit Januar 1*/
+int tm_isdst;/*Sommerzeit ist oder nicht*/
+}
+\end{lstlisting}
+Das Definition befindet sich im Standardbibliothek Funktion time.h.
+\end{myexampleblock}
+\begin{myexampleblock}{Funktion:\texttt{time}}
+\begin{lstlisting}
+time_t time(time_t *t)
+\end{lstlisting}
+\vspace{-0.4cm}
+Kehrt die Zeit in Sekundum seit (00:00:00, January 1, 1970) zurück.
+Eingabeparameter ist die Adresse ein Variable von long int Typ, in der
+das Ergebnis gespeichert wird, oder $NULL$ Pointer.
+\end{myexampleblock}
+\begin{myexampleblock}{Funktion:\texttt{localtime}}
+\begin{lstlisting}
+struct tm * localtime (time_t * timer);
+\end{lstlisting}
+\vspace{-0.4cm}
+Eingabeparameter :Adresse einer Variable von long int Typ (often die Rückgabeparameter vom Fuktion $time$).
+Mit den Werten von $timer$ füllt dieser Funktion die felder in der $tm$ Strukture aus, und kehrt ihn zurück.
+\end{myexampleblock}
+\begin{lstlisting}
+#include <time.h>
+#include <stdlib.h>
+#include <stdio.h>
+int main(void)
+{
+   time_t now;
+   struct tm *local_date_time;
+   char *tagarray[7]={"Sonntag","Montag","Dienstag","Mittwoch","Donnerstag","Freitag","Samstag"};
+   now = time(NULL);
+   local_date_time=localtime(&now);
+   printf ("Jahr ist: %d\n", local_date_time->tm_year+1900);/*Auch (*local_date_time).tm_year+1900 ist ok*/
+   printf ("Monat ist: %d\n", local_date_time->tm_mon);
+   printf ("Tage ist: %s\n", tagarray[local_date_time->tm_wday]);
+   printf ("Uhr ist: %d\n", local_date_time->tm_hour);
+   printf ("Min ist: %d\n", local_date_time->tm_min);
+   printf ("Sek ist: %d\n", local_date_time->tm_sec);
+}
+\end{lstlisting}
+In diesem Beispiel wir drücken das aktuellen Datum auf Monitor aus. Zuerst rufen wir den $time$ Funktion
+an damit wir  im $now$ das Datum als Sekunden in einem Long int Zahl haben. Danach graben wir von diesem Zahl 
+verständnisvoll Informationen aus mit dem $localtime$ Funktion. Ihre Rückgabe ist eine Pointer auf $tm$ Strukture. 
+Wir haben gelernt, wie wir zu den Strukture Elementen griffen können. Wir können auch Direkt vom Pointer
+zu den Elementen griffen mit dem $->$ Operator. Auch in der Achten Zeile wir haben ein Variable mit komplizierten
+Typ definiert als $tagarray$. Wie der Name schon sagt, das ist ein Array von Pointers auf "char". Wir verwenden
+die Struktureelement $tm\_wday$, als ein Index für diesen Array in der dreizehnten Zeile.
