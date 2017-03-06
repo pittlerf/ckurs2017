@@ -225,77 +225,102 @@ int main(){
   return(0);  
 }
 \end{lstlisting}
-%% stopped here...
-Im obenen Beispiel zuerst wir definieren eine Variable mit dem Anfangswert zwei. Danach drücken wir die wirkung des Postfix operators ($++$) auf $a$ aus 
-in der vierten Reihe. Das Ergebnis wird auch zwei sein, weil wir das Postfix operator genutzten haben. Aber wenn wir gleich danach im fünften Reihe
-das Wert von $a$ ausdrücken, das Ergebnis wird drei sein. In der sechsten Reihe wir drücken die wirkung des Präfix operators ($++$) auf $a$ aus, und 
-das Ergebnis wird vier sein, und als Nebeneffect, das Variable $a$ wird inkrementiert.
+In diesem Beispiel wird zunächst eine Variable \texttt{a} mit dem Wert $2$ initialisiert. 
+Dann nutzen wir die Funktion \texttt{printf}, um den Wert der Variablen bzw. von Ausdrücken auszugeben. 
+Das erste Argument von \texttt{printf} ist immer ein String, also eine Zeichenkette.
+Diese Zeichenkette wird unverändert in den standard output kopiert.
+Die Ausnahme sind Zeichenfolgen, die mit einem Prozentzeichen \% beginnen.
+Die auf das \% folgenden Zeichen werden von \texttt{printf} in bestimmter Weise interpretiert.
+\verb|%d| beispielsweise steht für eine ganze Zahl vom Typ \texttt{int}. 
+Bei genau einem \% in der Zeichkette erwartet \texttt{printf} dann genau eine Variable als zweiten Parameter nach der Zeichenkette vom entsprechenden Typ, hier also vom Typ \texttt{int}.
+Man kann sich leicht überlegen, dass obiges Programm die Zahlenfolge $2,3,4,4$ ausgibt.
 
-Wir haben also drei Vershieden Operator Typen:
+Im Allgemeinen gibt es drei verschiedene Typen von Operatoren
 \begin{itemize}
-\item binärer: Das operator hat zwei Argumente
-\item unärer: Das operator hat nur ein Argumente
-\item ternärer; Nur eine, der drei Argumente hat: $?:$
+\item binäre Operatoren: Operatoren mit zwei Argumenten, wie z.B. \verb|+|.
+\item unäre Operatoren: Die Operatoren haben nur ein Argument, wie z.B. \verb|++|.
+\item trinäre Operatoren: Operatoren mit drei Argumenten. In C gibt es davon nur einen, nämlich \verb|?:|.
 \end{itemize} 
+Neben arithmetischen Operatoren gibt es auch noch solche, die bit--weise wirken. 
+Außerdem gibt es logische Operatoren.
+Bit--weise Operatoren sind binäre Operatoren und wirken auf jedes bit des Arguments.
+Logische Operatoren liefern als Wert entweder \emph{true} or \emph{false}, richtig oder falsch, $1$ oder $0$.
+In den Tabellen~\ref{oper}, \ref{vergoper} und \ref{vergoper2} fassen wir die wichtigsten arithmetischen Operatoren und logischen Operatoren zusammen.
 
-Die operatoren könnten bitwise, oder logicalische sein. Die bitwise operator sind binäre operatoren. Sie ausführen die operation mit jedem bits der Arguments.
-Die Logical operatoren geben zurück Logical Wert: nein, oder falsh. In dem unteren Tabelle wir fassen zusammen die Wichtige operatoren der Sprache.
+Es gibt einige Dinge, die man sich bei der Benutzung von Operatoren bewusst machen sollte.
+An dieser Stelle weisen wir auf zwei davon hin:
+\begin{itemize}
+\item Die Division ist sowohl für ganze, als auch für reelle Zahlen definiert. 
+  Eine ganzzahlige Division von $7$ durch $2$ ergibt $3$.
+  Dagegen liefert eine Division von reellen Zahlen $7.0$ und $2.0$ das Ergebnis $3.5$.
+  Dementsprechend liefert
+  \begin{lstlisting}
+    float a = 7 / 3;
+  \end{lstlisting}
+  \verb|2.0| als Ergebnis. 
+  Man kann C mitteilen, dass man eine reellwertige Division durchführen möchte, indem man den Dezimalpunkt mit angibt
+  \begin{lstlisting}
+    float a = 7. / 3;
+  \end{lstlisting}
+  
+\item Das Prüfen auf Gleichheit ist für reelle Maschinenzahlen nicht wohl definiert.
+  Der Grund dafür ist, wie oben diskutiert, die Maschinengenauigkeit.
+  Zwei reelle Zahlen werden vom Rechner als gleich ausgewertet, falls sie sich ihr Betrag um weniger als $|\delta_M|$ unterscheidet. 
+  Deshalb sollte man wenn irgend möglich zwei reelle Zahlen nicht auf Gleichheit prüfen.
+
+\end{itemize}
+
 
 \begin{table}
-\caption{Arithmetic operatoren \label{oper}}
-\centering
-\begin{tabular}{|l c c|}
-\hline
-Operator & Expression & Wert der Expression \\
-\hline
-Zuweisung & $a$ = $b$ & Werte von $b$ \\
-Addition & $a$ + $b$ & Summe von $a$ und $b$ \\
-Subraktion & $a$ - $b$ & Differenz von $a$ und $b$ \\
-Multiplikation & $a$ * $b$ & Produkt von $a$ und $b$ \\
-Division & $a$ / $b$ & Quotient von $a$ und $b$ \\
-Modulo & $a$ \% $b$ & Rest eine Ganzzahldivision von $a$ durch $b$ \\
-Inckrement & $++a$,$a++$ & Präfix: $a$+1, Postfix: $a$ \\
-Dekrement & $--a$, $a--$ & Präfix: $a$-1, Postfix: $a$ \\
-Positiver Vorzeichenoperator & $+a$ & Wert von $a$ \\
-Negativer Vorzeichenoperator & $-a$ & Wert von $a$ aber mit umgekehrte Vorzeichen \\
-\hline
-\end{tabular}
+  \centering
+  \begin{tabular}{l c c}
+    \hline
+    Operator & Ausdruck & Auswertung \\
+    \hline
+    Zuweisung & \verb|a = b| & Werte von \verb|b| \\
+    Addition & \verb|a + b| & Summe von \verb|a| und \verb|b| \\
+    Subraktion & \verb|a - b| & Differenz von \verb|a| und \verb|b| \\
+    Multiplikation & \verb|a * b| & Produkt von \verb|a| und \verb|b| \\
+    Division & \verb|a / b| & Quotient von \verb|a| und \verb|b| \\
+    Modulo & \verb|a % b| & \verb|a| modulo \verb|b| \\
+    Inckrement & \verb|++a, a++| & Präfix: \verb|a|+1, Postfix: \verb|a| \\
+    Dekrement & \verb|--a, a--| & Präfix: \verb|a|-1, Postfix: \verb|a| \\
+    Positiver Vorzeichenoperator & \verb|+a| & Wert von \verb|a| \\
+    Negativer Vorzeichenoperator & \verb|-a| & Wert von \verb|-a|  \\
+    \hline
+  \end{tabular}
+  \caption{Arithmetische Operatoren \label{oper}}
 \end{table}
 
 \begin{table}
-\caption{Vergleichs operatoren \label{vergoper}}
-\centering
-\begin{tabular}{|l c|}
-\hline
-Operator & Expression \\
-\hline
-Prüfen auf Gleichheit & $a == b$  \\
-Prüfen auf Ungleichheit & $a != b$ \\
-Prüfen, ob $a$ echt größer als $b$ ist & $a>b$ \\
-Prüfen, ob $a$ echt kleiner als $b$ ist & $a<b$ \\
-Prüfen, ob $a$ größer oder gleich $b$ ist & $a>=b$ \\
-Prüfen, ob $a$ kleiner oder gleich $b$ ist & $a<=b$ \\
-\hline
-\end{tabular}
+  \centering
+  \begin{tabular}{l c}
+    \hline
+    Operator & Ausdruck \\
+    \hline
+    Prüft auf Gleichheit & \verb|a == b|  \\
+    Prüft auf Ungleichheit & \verb|a != b| \\
+    Prüft, ob \verb|a| echt größer als \verb|b| ist & \verb|a > b| \\
+    Prüft, ob \verb|a| echt kleiner als \verb|b| ist & \verb|a < b| \\
+    Prüft, ob \verb|a| größer gleich \verb|b| ist & \verb|a >= b| \\
+    Prüft, ob \verb|a| kleiner gleich \verb|b| ist & \verb|a <= b| \\
+    \hline
+  \end{tabular}
+  \caption{Vergleichsoperatoren \label{vergoper}}
 \end{table}
 
 \begin{table}
-\caption{Logischen operatoren \label{vergoper}}
-\centering
-\begin{tabular}{|l c c|}
-\hline
-Operator & Expression & Wert \\
-\hline
-                                                &                                &   Wenn $a$ und $b$ beide waren wahr, \\
-                                                &                                &   dann der Rückgabe ist wahr,  \\
-\raisebox{1.5ex}{Operator für das Logische UND} & \raisebox{1.5ex}{$a \&\& b$ }  &   in jeden anderen Fallen falsch \\
-\hline
-                                                &                                &   Wenn $a$ oder $b$ war wahr, \\
-                                                &                                &   dann der Rückgabe ist wahr, \\
-\raisebox{1.5ex}{Opatoren für das logische ODER}& \raisebox{1.5ex}{$a ||    b$}  &   in den anderen Fall  falsch \\
-\hline
-                                                &                                &   Wenn $a$ ist falsch, die Rückgabe is wahr, \\
-\raisebox{1.5ex}{Negationsopeator}              & \raisebox{1.5ex}{$!a$}         &   und umgekehrt \\
-\hline
-\end{tabular}
+  \centering
+  \begin{tabular}{l c c}
+    \hline
+    Operator & Ausdruck & Wert \\
+    \hline
+    Logisches UND & \verb|a && b|  &   \verb|a| und \verb|b| \\
+
+    logische ODER & \verb'a || b'  &   \verb|a| oder \verb|b| \\
+
+    Negation      & \verb|!a|      &   nicht \verb|a| \\
+    \hline
+  \end{tabular}
+  \caption{Logischen operatoren \label{vergoper2}}
 \end{table}
