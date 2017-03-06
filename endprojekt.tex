@@ -115,7 +115,56 @@ typedef struct heap {
 Der $parent$ Pointer ist ein NULL pointer für die Wurzel des Bäumes. Die Blätters, die keinen
 Kinder haben, haben NULL als right und left Pointers.
 
-Jetzt zeigen wir wie können wir ein Heap aus einem Reihenfolge von Zahlen herstellen.
+Jetzt zeigen wir wie können wir ein Heap aus einem Reihenfolge von Zahlen herstellen. Zuerst
+müssen wir den ersten freien Platz finden, dann fügen wir das Element hier ein. Danach es kann sein, dass 
+das $heap$ Eigenschaft nicht wahr ist. Darum müssen wir das $heap$ Eigenschaft überprüfen und wenn
+es notwendig ist, tauschen wir den aktuellen Wert mit dem Wert von ihrem Eltern bis das
+$heap$ Eigenschaft wahr wird.
+\begin{figure}[!ht]
+\begin{center}
+% Generated with LaTeXDraw 2.0.8
+% Sun Mar 05 20:17:29 CET 2017
+% \usepackage[usenames,dvipsnames]{pstricks}
+% \usepackage{epsfig}
+% \usepackage{pst-grad} % For gradients
+% \usepackage{pst-plot} % For axes
+\scalebox{0.7} % Change this value to rescale the drawing.
+{
+\begin{pspicture}(0,-4)(12.0,3)
+\psframe[linewidth=0.04,dimen=outer](3,3)(0.0,2)
+\psframe[linewidth=0.04,dimen=outer](11.0,-2.2)(8,-3.2)
+\pscustom[linewidth=0.04]
+{
+\newpath
+\moveto(3.1,2.5)
+%\lineto(7.5,1.5)
+\curveto(3.3,2.5)(3.5,2.4)(4.5,1.7)
+}
+\rput(4.7, 2.8){\LARGE queue\_put}
+\psline[linewidth=0.04cm](4.55,1.9)(4.5,1.7)
+\psline[linewidth=0.04cm](4.4,1.6)(4.5,1.7)
+
+
+\pscustom[linewidth=0.04]
+{
+\newpath
+\moveto(7.2,-1.6)
+%\lineto(7.5,1.5)
+\curveto(7.2,-1.6)(8,-1.2)(9.5,-2.1)
+}
+\rput(9, -1.){\LARGE queue\_rem}
+\psline[linewidth=0.04cm](9.15,-2.2)(9.5,-2.1)
+\psline[linewidth=0.04cm](9.2,-1.8)(9.5,-2.1)
+
+
+\psframe[linewidth=0.04,dimen=outer](7,1.5)(4,0.5)
+\psframe[linewidth=0.04,dimen=outer](7,0.2)(4,-0.8)
+\psframe[linewidth=0.04,dimen=outer](7,-1.1)(4,-2.1)
+\end{pspicture}
+}
+\caption{Die Warteschlange\label{warteschlange}}
+\end{center}
+\end{figure}
 
 \begin{myexampleprogram}{ Programme: \texttt{Die Warteschlange}}	
 \begin{lstlisting}
