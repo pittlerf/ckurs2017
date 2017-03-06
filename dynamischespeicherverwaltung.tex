@@ -1,0 +1,314 @@
+\section{Dynamische Speicherverwaltung}
+Wir haben ein Sortieren geschrieben. Das ist Toll, aber wir können unsere Programme mindestens in drei Richtungen
+verbessern:
+\begin{enumerate}
+\item In allen Fallen wir verwenden $MAXNUM$ int Variable von den Speichern. Es kann auch wenig sein (Sieh unsere
+Nachricht im read Funktion), aber es kann auch zu viel sein. Beispielweise Wenn wir nur 100 Elementen haben, verschwenden
+wir 99\% der erfordelichen Speicherzellen. Wir können dies überholen mit Hilfe der dynamischen Speicherverwaltung.
+\item
+Obwohl der Algorithmus vom Einfügesortieren sehr einfach zu verstehen ist, es ist nicht der schnellste. Wenn wir 
+$n$ Elementen sortieren wollen, die Zeit für die Sortierung skaliert quadratisch mit $n$. Wir können 
+eigene Datentypen herstellen und damit besser Algorithmen implementieren, um unseres Programm schneller zu machen.
+\item
+Wir können auch das Input Teil verbessern. Zum Beispiel direkt aus einem Datein einlesen. Außerdem wir müssen
+die logische zusammenhörende Teilen, die mehr als ~100 Zeilen haben, in eigenen Datein schreiben, und das Linker
+in der Kompilirung verwenden.
+\end{enumerate}
+Zuerst werden wir kennenlernen, wie wir dynamische Speichern zugriffen können. Wir können das Memory in zwei Teile teilen:
+\begin{enumerate}
+\item Statische Memory. Dieses Part haben wir auch kennengelernt. Wenn wir eine Variable definieren, wir weisen zu ihr
+Speicherzellen von diesem Platz. Es kann eigentlich mit ihrer Name zugegriffen werden. Ihre Lebensdauer und Sichtbarkeit 
+hängt von ihrem Platz in dem Quelltext ab. Beispielweise wenn wir ihn in einem Block definiert haben, wir können
+nur ihn nur im Block verwenden.
+\item Dynamische Memory. Wir müssen das reservieren (es ist nicht automatisch, wie im Fall der Statishen Memory).
+Dieses Memory wird zuverfügung stehen, bis wir Sie explizit freigeben. Das bedeutet, das ihre Lebensdauer 
+hängt nur von uns ab. Außerdem  Sie sind sichtbar für alle Programmteil, die ihre Adresse haben. Dass
+bedeutet, dass ihre Name nicht wichtig ist (wir können auch es ändern) und nur mit der Adresse zugegriffen 
+werden kann.
+\end{enumerate}
+\begin{myexampleblock}{\texttt{Block}}
+Ein Block ist eine eine Abfolge von sequenziellen Anweisungen, die
+zwischen geschweiften Klammern sind.
+\end{myexampleblock}
+\begin{figure}[!ht]
+% Generated with LaTeXDraw 2.0.8
+% Tue Feb 28 11:46:41 CET 2017
+% \usepackage[usenames,dvipsnames]{pstricks}
+% \usepackage{epsfig}
+% \usepackage{pst-grad} % For gradients
+% \usepackage{pst-plot} % For axes
+\scalebox{0.5} % Change this value to rescale the drawing.
+{
+\begin{pspicture}(0,-1.2792188)(31.8,1.2792188)
+\psframe[linewidth=0.04,dimen=outer](31.8,1.1657813)(0.0,-1.0342188)
+\psline[linewidth=0.04cm](5.6,1.1657813)(5.6,-1.0342188)
+\rput(1.1,0.7 ){\LARGE Statische}
+\rput(7.2,0.7 ){\LARGE Dynamishe}
+\rput(1.1,0.1 ){\LARGE Memory}
+\rput(7.2,0.1 ){\LARGE Memory}
+\psline[linewidth=0.04cm](3.4,1.1657813)(3.4,-1.0342188)
+\psline[linewidth=0.04cm](4.0,1.1657813)(4.0,-1.0342188)
+\usefont{T1}{ptm}{m}{n}
+\rput(4.416406,-1.5){\LARGE Pointer}
+\psframe[linewidth=0.04,dimen=outer](18.2,1.1657813)(14.4,-1.0342188)
+
+\rput(16,0.7 ){\LARGE Reservierte}
+\rput(16,0.1 ){\LARGE Speicher}
+
+\pscustom[linewidth=0.04]
+{
+\newpath
+\moveto(4.,-2)
+%\lineto(7.5,1.5)
+\curveto(6,-3.)(10.5,-5.)(14.5,-1.5)
+}
+\psline[linewidth=0.04cm](14.1,-1.6)(14.5,-1.5)
+\psline[linewidth=0.04cm](14.3,-2.0)(14.5,-1.5)
+
+\end{pspicture} 
+}
+\vspace{0.6cm}
+\caption{\label{abmem} Abteilung der Memory zur statischen, und dynamischen Teil.}
+\end{figure}
+Um Speicher dynamische zu reservieren, können wir die Funktionen aus Standardbibliothek 
+verwenden. Beispielweise der $malloc$ Funktion. Alle Funktion in diesem Thema sind im $stdlib.h$
+definiert. Der $malloc$ Funktion wird uns eine Pointer geben, mit dem wir den Speicher erreichen können.
+Aber welchen Typ von Pointer will sie rückgeben. Wir brauchen anderen Typen jeden mal, wenn wir 
+Speicher für anderen Typen reservieren wollen. Die Sprache bietet für dieses Fall 
+der Pointer mit $void$ Typ. Natürlich wir können nicht ein Pointer von void Typ 
+dereferenzieren, aber wir können ihn zu dem angemessenen Typ casten mit casting operator: (Typ *).
+Nach jeder Reservierung müssen wir uns achten, ob es erfolgreich war, oder nicht. Wir müssen
+prüfen ob der Wert vom Pointer nicht $NULL$ ist. Wir können uns in dieser Folge von vielen Problemen 
+vermeiden. Mit $malloc$ die reservierten Speoicherzellen werden nicht initializiert sein. Um das 
+erreichen wir müssen $calloc$ Funktion verwenden.
+\begin{myexampleblock}{Funktion definition \texttt{malloc}}
+\begin{lstlisting}
+void * malloc(size_t size);
+\end{lstlisting}
+\vspace{-0.7cm}
+Reserviert Speicherzellen von größe $size$.
+\begin{itemize}
+\itemsep0.2pt
+\item Rückgabewert: Wenn die Reservierung erfolgreichs war, ein Pointer für den Anfang der 
+reservierten Speicherzellen, anderfalls $NULL$.
+\item Eingabeparamter: size: Größe von den begehrten Speicherzellen
+\item Beispielweise:
+\begin{lstlisting}
+int *array=(int *)malloc(sizeof(int)*10);
+\end{lstlisting}
+\end{itemize}
+\vspace{-0.7cm}
+Achtung, wenn wir die reservierten Speicherzellen nicht mehr brauchen, müssen Sie 
+von uns freigegeben werden.
+\end{myexampleblock}
+Wenn wir in einem langen Programm immer mehr Speicherzellen reservieren, 
+möglicherweise kurz können wir nicht mehr reservieren. Auf jedem Fall, wir müssen
+die reservierten Speicherzellen so bald wie möglich wieder freigeben. Dafür steht
+der Funktion $free$ zur Verfügung.
+\begin{myexampleblock}{Funktion definition \texttt{free}}
+\begin{lstlisting}
+void free(void *memory);
+\end{lstlisting}
+\vspace{-0.7cm}
+Freigib die Speicherzellen, die mit $malloc$ reservierten wurden.
+\begin{itemize}
+\item Einggabeparamter: Pointer für den Anfang der freigegebenen Speicherzellen
+\item Zum Beispiel:
+\begin{lstlisting}
+free(array);
+\end{lstlisting}
+\end{itemize}
+\vspace{-0.7cm}
+\end{myexampleblock}
+
+Wir können eindimensionale Vektoren entweder mit Pointers oder mit Arrays handeln.
+Aber wie können wir mehrere dimensionale Objekte herstellen und was verstehen wir eigentlich 
+unter mehrere dimensionale Objekte? Lass uns annehmen, dass wir Vektoren in zwei Dimenzion haben,
+Beispielweise Bewegungsvektoren $\vec{r}=\left(\begin{array}{c}x\\y\end{array}\right)$. Sie sind 
+Vektoren (Eindimensionale Objekte), deren Koordinäten nur mit einem Zeichen vertreten werden
+können. In unserem Beispiel sie sind $\left(\vec{r}\right)_1=x$ und $\left(\vec{r}\right)_2=y$.
+In diesem Fall eine Lineare Operation, die aus einem Vektor ein neues herstellen, nennen
+wir zwei dimenzionale Objekte. Zum Bespiel eine Drehung mit einem Winkel $\alpha$:
+\begin{equation}
+\left(\begin{array}{c}x^{,}\\y^{,}\end{array}\right)=
+\left(\begin{array}{cc} \cos\left(\alpha\right) & \sin\left(\alpha\right) \\
+                       -\sin\left(\alpha\right) & \cos\left(\alpha\right) 
+\end{array}\right)
+\left(\begin{array}{c}x\\y\end{array}\right)
+\end{equation}
+Das rotation kann durch eine Matrix dargestellt werden. Natürlich um diese Matrices
+in C Sprache verwenden zu können, wir brauchen nur zwei dimensionale Arrays. Wir können
+dies erreichen mit einem anderen eckigen Klammern, zum Bespiel 
+\begin{lstlisting}
+double rotate2d[2][2];
+\end{lstlisting}
+In anderen Wörter wir brauchen Arrays vom Arrays.
+Aber wir haben gelernt, dass was wir mit einem Array machen können, können wir auch 
+mit Pointers erledigen. In diesem Fall aber wir brauchen auch Pointers auf Pointers.
+Wir zeigen in der Abbildung \ref{mem2d} was in diesem Fall passiert. Wir haben am Anfang 
+eine Variable in statischen Speicherzelle mit Typ double Pointer auf Pointer.
+Danach müssen wir Specherzellen reservieren für Pointers mit $malloc$. Wir reservieren
+Speichern für die Elementen im Mittelsäule auf der Abbildung \ref{mem2d}. $malloc$
+wird die Anfangsadresse von den reservierten Speicherzellen rückgeben. Das wird der Wert
+der Pointer auf Pointer Variable sein. Zum Ende wir müssen für jede Pointer Speicherzellen 
+für zwei $double$ Variable reservieren. Das ist alles. Wir zeigen auch das Quelltext zur diesen
+Übung.
+\begin{lstlisting}
+#include<stdio.h>
+#include<stdlib.h>
+#include<math.h>
+#define SPACEDIM 2 
+int main(){
+  double **array2d;
+  int i,j;
+  array2d=(double **)malloc(sizeof(double *)*SPACEDIM);
+  for (i=0; i<SPACEDIM; ++i)
+    array2d[i]=(double *)malloc(sizeof(double)*SPACEDIM); 
+  array2d[0][0]= cos(M_PI/4.); /*Alternative *(*(array+0)+0) */
+  array2d[0][1]= sin(M_PI/4.); /*Alternative *(*(array+0)+1) */
+  array2d[1][0]=-sin(M_PI/4.); /*Alternative *(*(array+1)+0) */
+  array2d[1][1]= cos(M_PI/4.); /*Alternative *(*(array+1)+1) */ 
+  for (i=0; i<SPACEDIM; ++i){
+    for (j=0; j<SPACEDIM; ++j)
+      printf("%e ", array2d[i][j]);
+    printf("\n");
+  }
+}
+\end{lstlisting}
+\begin{figure}[!ht]
+% Generated with LaTeXDraw 2.0.8
+% Tue Feb 28 15:43:57 CET 2017
+% \usepackage[usenames,dvipsnames]{pstricks}
+% \usepackage{epsfig}
+% \usepackage{pst-grad} % For gradients
+% \usepackage{pst-plot} % For axes
+\center
+\scalebox{0.75} % Change this value to rescale the drawing.
+{
+\begin{pspicture}(0,-5)(14.8,4.1)
+
+\pscustom[linewidth=0.04]
+{
+\newpath
+\moveto(3.2,1.)
+%\lineto(7.5,1.5)
+\curveto(3.2,1.5)(4.8,3.5)(6.7,2.2)
+}
+\psline[linewidth=0.04cm](6.5,2.6)(6.7,2.2)
+\psline[linewidth=0.04cm](6.3,2.3)(6.7,2.2)
+
+
+
+\psframe[linewidth=0.04,dimen=outer](3.0,0.8725)(0.0,-0.1275)
+\rput(1.6, 1.3){Typ: double **}
+\rput(1.6, 0.3){Wert:0x1deb430}
+\rput(1.6,-0.7){Adresse: 0x7fff541bdbc8}
+
+
+\pscustom[linewidth=0.04]
+{
+\newpath
+\moveto(9.,2.1)
+%\lineto(7.5,1.5)
+\curveto(9.,2.5)(10.1,3.1)(11,3.8)
+}
+\psline[linewidth=0.04cm](10.6,3.7)(11,3.8)
+\psline[linewidth=0.04cm](10.6,3.2)(11,3.8)
+
+
+\psframe[linewidth=0.04,dimen=outer](8.8,1.8)(5.2,0.8)
+\rput(6.8, 2.0){Typ: double *}
+\rput(6.8, 1.4){Wert:0x1deb450}
+\rput(6.8, 0.4){Adresse: 0x1deb430}
+
+\pscustom[linewidth=0.04]
+{
+\newpath
+\moveto(9.,-0.2)
+%\lineto(7.5,1.5)
+\curveto(9.,-0.2)(10.1,-0.4)(11,-0.9)
+}
+\psline[linewidth=0.04cm](10.5,-0.5)(11,-0.9)
+\psline[linewidth=0.04cm](10.3,-0.7)(11,-0.9)
+
+\psframe[linewidth=0.04,dimen=outer](8.8,-0.25)(5.2,-1.25)
+\rput(6.8, -0.1){Typ: double *}
+\rput(6.8, -0.7){Wert:0x1deb470}
+\rput(6.8, -1.7){Adresse: 0x1deb438}
+
+
+
+
+\psframe[linewidth=0.04,dimen=outer](14.8,3.9)(11.2,2.9)
+\rput(13., 4.05){Typ: double }
+\rput(13., 3.5){Wert: $\pi$/4}
+\rput(13., 2.6){Adresse: 0x1deb450}
+
+\psframe[linewidth=0.04,dimen=outer](14.8,1.7)(11.2,0.7)
+\rput(13., 1.85){Typ: double }
+\rput(13., 1.3){Wert: $\pi$/4}
+\rput(13., 0.4){Adresse: 0x1deb458}
+
+\psframe[linewidth=0.04,dimen=outer](14.8,-0.7)(11.2,-1.7)
+\rput(13., -0.55){Typ: double }
+\rput(13., -1.1){Wert: -$\pi$/4}
+\rput(13., -2.){Adresse: 0x1deb470}
+
+\psframe[linewidth=0.04,dimen=outer](14.8,-2.9)(11.2,-3.9)
+\rput(13., -2.65){Typ: double }
+\rput(13., -3.2){Wert: $\pi$/4}
+\rput(13., -4.1){Adresse: 0x1deb478}
+
+
+\rput(1.464063,-4.8){\large Pointer auf Pointer}
+\rput(7.271094,-4.8){\large Pointers auf  double Variablen}
+\rput(13.05875,-4.8){\large double Variablen}
+\end{pspicture} 
+}
+\caption{\label{mem2d} Pointers auf Pointer in Betrien.}
+\end{figure}
+In der achten Zeile wir reservieren Speicherzellen für Pointers
+und danach in einer Schleife reservieren wir Speicherzellen für
+die aktuellen Fließkommazahlen. Für die indexierung wir können
+entweder mehrere eckigen Klammern $(array2d[i][j])$ oder
+die Dereferenzierung operator $(*(*(array2d+i)+j))$ verwenden.
+Sie sind in jeder Hinsicht gleichwertig. Von Zeile 15 bis 19 
+wir stellen vor, wie mann eine zwei dimenzionale Objekt
+durchführen kann. In diesem Fall wir 
+drücken die Elementen aus in Spalten-Zeil matrixmode.
+
+Zum ende, wir zeigen, wie mann diese Objekte im Funktion herstellen kann.
+Im Funkcion wir müssen der Wert von $array2d$ ändern d.h wenn wir zurück
+aus dem Funktion gekommen sind, $array2d$ muss ein neuer Wert haben.
+Um diese Übung zu erledigen, wir müssen ihre Adresse übergeben und
+die Funktion muss einer Pointer auf $**$ erhalten. Wir zeigen 
+es ausdrücklich in den unteren Quelltext. Im Allgemeinen 
+wenn wir den Wert von einem $n$ dimenzionalen Objekte in einem
+Funktion ändern wollen, müssen wir ihre Adresse übergeben, und die Funktion soll
+eine Pointer auf $n+1$ dimenzionale Object erhalten.
+\begin{lstlisting}
+#include<stdio.h>
+#include<stdlib.h>
+#define SPACEDIM
+void create2darray( double *** p1 ){
+  int i;
+  (*p1)=(double **)malloc(sizeof(double *)*SPACEDIM);
+  for (i=0; i<SPACEDIM; ++i)
+    (*p1)[i]=(double *)malloc( sizeof(double)*SPACEDIM);
+}
+int main(){
+  double **array2d;
+  int i,j;
+  create2darray(&array2d);
+  array2d[i]=(double *)malloc(sizeof(double)*SPACEDIM);
+  array2d[0][0]= cos(M_PI/4.); /*Alternative *(*(array+0)+0) */
+  array2d[0][1]= sin(M_PI/4.); /*Alternative *(*(array+0)+1) */
+  array2d[1][0]=-sin(M_PI/4.); /*Alternative *(*(array+1)+0) */
+  array2d[1][1]= cos(M_PI/4.); /*Alternative *(*(array+1)+1) */
+  for (i=0; i<SPACEDIM; ++i){
+    for (j=0; j<SPACEDIM; ++j)
+      printf("%e ", array2d[i][j]);
+    printf("\n");
+  }
+}
+\end{lstlisting}
