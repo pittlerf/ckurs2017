@@ -382,6 +382,44 @@ machen eine Schleife bis die Warteschlange leer wird. Wenn wir ein Element
 ohne zwei Kinder von der Warteschlange ausgenehmen haben, wird sind fertig, wir
 haben den Platz gefunden. Anderfalls wir schließen ihre Kinder in der Warteschlange
 ein und springen auf den nächsten Iteration mit Hilfe des Stichwort $continue$.
+
+Im Löschen das Prinzip ist die gleiche: Im ersten Schritt wir müssen das letzte Element 
+finden, tauschen ihren Wert mit dem Wert von der Wurzel, und zum Ende müssen wir ihn
+freigeben. Im zweiten Schritt wir müssen das $heap$ Eigenschaft wiederherstellen.
+
+Die Suchung für das letzte Element ist ähnlich wie im Einschließen Funktion. Das
+unterschied ist dass wir müssen errinern an das Letzte nicht $NULL$ Element. Als 
+Eingabe wir haben der Zeiger auf die Wurzel des $heap$-s. Du kannst die dazuhöringen
+Codeteil unter sehen.
+\begin{lstlisting}
+queue* q = newqueue(*root);
+heap* previousheap;
+heap* currentheap;
+
+while ((currentheap=queue_rem(&q)) != NULL) {
+  if (currentheap->left != NULL)
+     queue_put(currentheap->left, &q);
+  if (currentheap->right != NULL)
+     queue_put(currentheap->right, &q);
+  previousheap= currentheap;
+}
+currentheap = previousheap;
+free_queue(&q);
+\end{lstlisting}
+Grundsätzlich Wir tun das Gleiche wie im Einschließen, außer das, dass wir am Ende 
+von jeden Iteration den aktuellen Zeiger auf dem $heap$ speicher. Am Ende 
+dieser gespeicherte Zeiger wird das letzte Element sein. 
+
+Das Wiederherstellen des $heap$ Eigenschafts ist nicht so trivial als im 
+Einschließen. Dafür zeigen wir den Prozess auf Abbildung \ref{loschen}.
+Am Anfang wir haben das originalle $heap$ (Teil $a$) und wir werden
+den Wert der Wurzel mit dem Wert vom letzten Element umtauschen. Danach
+wir zeigen das aktuellen $heap$ im Teil $b$. Natürlich in diesem Fall das $heap$
+Eigenshaft ist nicht mehr wahr. Darum müssen wir den Wert der Wurzel mit der Wert, ihres
+größten Kindes umtauschen. Wir zeigen das Ergebnis im Teil $c$. Danach müssen
+wir das $heap$ Eigenschaft also in niedrigen Ebenen wiederherstellen. Das bedeutet
+wir müssen das Knote 5 auch mit ihrem größten Kind umtauschen. Dann bekommen wir
+das endgültige Ergebnis (Teil $d$).
 \begin{figure}[!ht]
 \begin{center}
 % Generated with LaTeXDraw 2.0.8
@@ -640,6 +678,16 @@ linecolor=red,
 die Knoten, die im aktuellen Schritt, und mit Rot die Knoten die im 
 nächsten Schritt verändert werden.}
 \end{figure}
+
+
+Zusamennfassen wir haben drei Möglichkeiten um das $heap$ Eigenschaft wiederherstellen:
+\begin{enumerate}
+\item Das aktuelle Knote hat kein Kinder: Wir sind fertig.
+\item Das aktuelle Knote hat ein Kind: Wir müssen prüfen, ob ihre Wert kleiner ist oder nicht.
+Wenn nicht, wir müssen umtauschen. Dann wir sind fertig.
+\item Das aktuelle Knote hat zwei Kinder. Wir müssen prüfen ob ihre Kinder sind kleiner oder nicht.
+Wenn nicht, wir müssen mit dem größten Kind umtauschen und die Prüfung fortsetzen mit dem größten Kind.
+\end{enumerate}
 
 \begin{myexampleprogram}{Programme: \texttt{Haldensortierung}}
 \begin{lstlisting}
