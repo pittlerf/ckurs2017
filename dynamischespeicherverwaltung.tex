@@ -1,35 +1,52 @@
 \section{Dynamische Speicherverwaltung}
-Wir haben ein Sortieren geschrieben. Das ist Toll, aber wir können unsere Programme mindestens in drei Richtungen
-verbessern:
+
+Mit den bisher eingeführten Grundlagen der Programmiersprache C kann man einfache Probleme lösen.
+Das haben wir am Beispiel des Einfügesortierens gesehen.
+Im folgenden zweiten Teil werden wir versuchen, die Kenntnis von C zu vertiefen und zu erweitern.
+
+Dafür werden wir den Quelltext für das Sortieren von Zahlen in drei Richtungen versuchen zu verbessern:
 \begin{enumerate}
-\item In allen Fallen wir verwenden $MAXNUM$ int Variable von den Speichern. Es kann auch wenig sein (Sieh unsere
-Nachricht im read Funktion), aber es kann auch zu viel sein. Beispielweise Wenn wir nur 100 Elementen haben, verschwenden
-wir 99\% der erfordelichen Speicherzellen. Wir können dies überholen mit Hilfe der dynamischen Speicherverwaltung.
-\item
-Obwohl der Algorithmus vom Einfügesortieren sehr einfach zu verstehen ist, es ist nicht der schnellste. Wenn wir 
-$n$ Elementen sortieren wollen, die Zeit für die Sortierung skaliert quadratisch mit $n$. Wir können 
-eigene Datentypen herstellen und damit besser Algorithmen implementieren, um unseres Programm schneller zu machen.
-\item
-Wir können auch das Input Teil verbessern. Zum Beispiel direkt aus einem Datein einlesen. Außerdem wir müssen
-die logische zusammenhörende Teilen, die mehr als ~100 Zeilen haben, in eigenen Datein schreiben, und das Linker
-in der Kompilirung verwenden.
+\item Bei der Benutzng von Arrays muss man immer schon zur Zeit der Übersetzung wissen, wie groß das Array maximal werden darf.
+  Das ist eine relativ starke Einschränkung, die sehr ineffizient sein kann.
+  Entweder, man hat viel zu viel Speicher bereitgestellt, oder zu wenig.
+  Genau passen wird es selten.
+  Diese Einschränkung werden wir mit Hilfe der dynamischen Speicherverwaltung überwinden.
+
+\item Man kann sich relativ schnell klar machen, dass der Einfügesortier-Algorithmus im schlechtesten Fall (\emph{worst case}) Größenordnung $n^2$ Operation benötigt, um das korrekte Ergebnis zu erzeugen.
+  Nehmen Sie eine Folge von Zahlen, die absteigend sortiert ist.
+  Dann braucht man $1 + 2 + 3 + ... + n = n(n+1)/2$ Vergleichs- und Vertauschoperationen, um die Folge aufsteigend zu sortieren.
+  Für sehr große $n$ ergibt das Ordnung $n^2$ Operationen.
+  Man sagt auch, der Algorithmus ist von der Ordnung $O(n)$.
+  Es gibt Algorithmen, die eine wesentlich besseres worst case Skalierungsverhalten haben. 
+
+\item Beim Einlesen haben wir bisher den Standardeingabe benutzt.
+  Das können wir verbessern, indem wir direkt aus Dateien einlesen.
 \end{enumerate}
-Zuerst werden wir kennenlernen, wie wir dynamische Speichern zugriffen können. Wir können das Memory in zwei Teile teilen:
+Darüberhinaus werden wir diskutieren, wie man Quelltext sinnvoll in verschiedene Dateien verteilt.
+Damit soll die Übersicht einfacher und das Programmieren weniger fehleranfällig werden.
+Beim Beispiel Einfügesortieren hatten wir bereits Unterprobleme in jeweils eigene Funktionen ausgelagert.
+Diese werden wir auf mehrere Dateien verteilen und zeigen, wie man ein solches Projekt effizient übersetzt.
+
+Zuerst diskutieren wir, wie man Speicher dynamisch reserviert, zugreift und wieder freigibt.
+Der Speicher, der einem Programm zugeteilt ist, kann in zwei Kategorien unterteilt werden.
 \begin{enumerate}
-\item Statische Memory. Dieses Part haben wir auch kennengelernt. Wenn wir eine Variable definieren, wir weisen zu ihr
-Speicherzellen von diesem Platz. Es kann eigentlich mit ihrer Name zugegriffen werden. Ihre Lebensdauer und Sichtbarkeit 
-hängt von ihrem Platz in dem Quelltext ab. Beispielweise wenn wir ihn in einem Block definiert haben, wir können
-nur ihn nur im Block verwenden.
-\item Dynamische Memory. Wir müssen das reservieren (es ist nicht automatisch, wie im Fall der Statishen Memory).
-Dieses Memory wird zuverfügung stehen, bis wir Sie explizit freigeben. Das bedeutet, das ihre Lebensdauer 
-hängt nur von uns ab. Außerdem  Sie sind sichtbar für alle Programmteil, die ihre Adresse haben. Dass
-bedeutet, dass ihre Name nicht wichtig ist (wir können auch es ändern) und nur mit der Adresse zugegriffen 
-werden kann.
+\item Statischer Speicher\\
+  Dieses Teil haben wir schon kennengelernt. 
+  Im statischen Speicher befindet sich der Programmcode selbst, und der Speicher aller Variablen, die wir bisher deklariert haben.
+  Seine Größe ist zum Zeitpunkt des Übersetzens festgelegt.
+
+\item Dynamische Speicher\\
+  Diesen Teil haben wir bisher noch nicht benutzt, aber jedes Programm kann eine bestimmte Menge an dynamischen Speicherplatz nutzen.
+  Allerdings muss man sich zur Laufzeit des Programms selbst um das Reservieren und Freigeben dieses Speichers kümmern.
 \end{enumerate}
-\begin{myexampleblock}{\texttt{Block}}
-Ein Block ist eine eine Abfolge von sequenziellen Anweisungen, die
-zwischen geschweiften Klammern sind.
-\end{myexampleblock}
+Wenn wir also in einem Programm zum Beispiel einen Zeiger
+\begin{lstlisting}
+  int * list;
+\end{lstlisting}
+deklarieren, so liegt dieser Zeiger selbst im statischen Speicherbereich.
+Er kann aber auf Speicher zeigen, der im dynamischen Speicherbereich liegt.
+Dies ist in Abbildung~\ref{abmem} illustriert.
+
 \begin{figure}[!ht]
 % Generated with LaTeXDraw 2.0.8
 % Tue Feb 28 11:46:41 CET 2017
@@ -42,18 +59,18 @@ zwischen geschweiften Klammern sind.
 \begin{pspicture}(0,-1.2792188)(31.8,1.2792188)
 \psframe[linewidth=0.04,dimen=outer](31.8,1.1657813)(0.0,-1.0342188)
 \psline[linewidth=0.04cm](5.6,1.1657813)(5.6,-1.0342188)
-\rput(1.1,0.7 ){\LARGE Statische}
-\rput(7.2,0.7 ){\LARGE Dynamishe}
-\rput(1.1,0.1 ){\LARGE Memory}
-\rput(7.2,0.1 ){\LARGE Memory}
+\rput(1.1,0.7 ){\LARGE Statischer}
+\rput(7.2,0.7 ){\LARGE Dynamischer}
+\rput(1.1,0.1 ){\LARGE Speicher}
+\rput(7.2,0.1 ){\LARGE Speicher}
 \psline[linewidth=0.04cm](3.4,1.1657813)(3.4,-1.0342188)
 \psline[linewidth=0.04cm](4.0,1.1657813)(4.0,-1.0342188)
 \usefont{T1}{ptm}{m}{n}
-\rput(4.416406,-1.5){\LARGE Pointer}
+\rput(4.416406,-1.5){\LARGE Zeiger}
 \psframe[linewidth=0.04,dimen=outer](18.2,1.1657813)(14.4,-1.0342188)
 
-\rput(16,0.7 ){\LARGE Reservierte}
-\rput(16,0.1 ){\LARGE Speicher}
+\rput(16,0.7 ){\LARGE Reservierter}
+\rput(16,0.1 ){\LARGE Speicherbereich}
 
 \pscustom[linewidth=0.04]
 {
@@ -68,80 +85,124 @@ zwischen geschweiften Klammern sind.
 \end{pspicture} 
 }
 \vspace{0.6cm}
-\caption{\label{abmem} Abteilung der Memory zur statischen, und dynamischen Teil.}
+\caption{\label{abmem} Illustration zu dynamischem und statischem Speicher eines Programms.}
 \end{figure}
-Um Speicher dynamische zu reservieren, können wir die Funktionen aus Standardbibliothek 
-verwenden. Beispielweise der $malloc$ Funktion. Alle Funktion in diesem Thema sind im $stdlib.h$
-definiert. Der $malloc$ Funktion wird uns eine Pointer geben, mit dem wir den Speicher erreichen können.
-Aber welchen Typ von Pointer will sie rückgeben. Wir brauchen anderen Typen jeden mal, wenn wir 
-Speicher für anderen Typen reservieren wollen. Die Sprache bietet für dieses Fall 
-der Pointer mit $void$ Typ. Natürlich wir können nicht ein Pointer von void Typ 
-dereferenzieren, aber wir können ihn zu dem angemessenen Typ casten mit casting operator: (Typ *).
-Nach jeder Reservierung müssen wir uns achten, ob es erfolgreich war, oder nicht. Wir müssen
-prüfen ob der Wert vom Pointer nicht $NULL$ ist. Wir können uns in dieser Folge von vielen Problemen 
-vermeiden. Mit $malloc$ die reservierten Speoicherzellen werden nicht initializiert sein. Um das 
-erreichen wir müssen $calloc$ Funktion verwenden.
-\begin{myexampleblock}{Funktion definition \texttt{malloc}}
-\begin{lstlisting}
-void * malloc(size_t size);
-\end{lstlisting}
-\vspace{-0.7cm}
-Reserviert Speicherzellen von größe $size$.
-\begin{itemize}
-\itemsep0.2pt
-\item Rückgabewert: Wenn die Reservierung erfolgreichs war, ein Pointer für den Anfang der 
-reservierten Speicherzellen, anderfalls $NULL$.
-\item Eingabeparamter: size: Größe von den begehrten Speicherzellen
-\item Beispielweise:
-\begin{lstlisting}
-int *array=(int *)malloc(sizeof(int)*10);
-\end{lstlisting}
-\end{itemize}
-\vspace{-0.7cm}
-Achtung, wenn wir die reservierten Speicherzellen nicht mehr brauchen, müssen Sie 
-von uns freigegeben werden.
-\end{myexampleblock}
-Wenn wir in einem langen Programm immer mehr Speicherzellen reservieren, 
-möglicherweise kurz können wir nicht mehr reservieren. Auf jedem Fall, wir müssen
-die reservierten Speicherzellen so bald wie möglich wieder freigeben. Dafür steht
-der Funktion $free$ zur Verfügung.
-\begin{myexampleblock}{Funktion definition \texttt{free}}
-\begin{lstlisting}
-void free(void *memory);
-\end{lstlisting}
-\vspace{-0.7cm}
-Freigib die Speicherzellen, die mit $malloc$ reservierten wurden.
-\begin{itemize}
-\item Einggabeparamter: Pointer für den Anfang der freigegebenen Speicherzellen
-\item Zum Beispiel:
-\begin{lstlisting}
-free(array);
-\end{lstlisting}
-\end{itemize}
-\vspace{-0.7cm}
-\end{myexampleblock}
 
-Wir können eindimensionale Vektoren entweder mit Pointers oder mit Arrays handeln.
-Aber wie können wir mehrere dimensionale Objekte herstellen und was verstehen wir eigentlich 
-unter mehrere dimensionale Objekte? Lass uns annehmen, dass wir Vektoren in zwei Dimenzion haben,
-Beispielweise Bewegungsvektoren $\vec{r}=\left(\begin{array}{c}x\\y\end{array}\right)$. Sie sind 
-Vektoren (Eindimensionale Objekte), deren Koordinäten nur mit einem Zeichen vertreten werden
-können. In unserem Beispiel sie sind $\left(\vec{r}\right)_1=x$ und $\left(\vec{r}\right)_2=y$.
-In diesem Fall eine Lineare Operation, die aus einem Vektor ein neues herstellen, nennen
-wir zwei dimenzionale Objekte. Zum Bespiel eine Drehung mit einem Winkel $\alpha$:
+Um Speicher dynamisch zu reservieren, nutzt man Funktionen aus der Standardbibliothek \verb|stdlib.h|.
+Das Reservieren erledigt die Funktion \verb|malloc|, was für \emph{memory allocation} steht.
+\verb|malloc| hat die folgenden Syntax:
+\begin{myexampleblock}{Definition \texttt{malloc}}
+  \begin{lstlisting}
+    void * malloc(size_t size);
+  \end{lstlisting}
+  \vspace{-0.7cm}
+  Reserviert Speicherzellen von der Größe \verb|size| bytes.
+  \begin{itemize}
+    \itemsep0.2pt
+  \item Rückgabewert: Wenn die Reservierung erfolgreichs war, einen Zeiger auf den Anfang des
+    reservierten Speicherbereiches, anderfalls \verb|NULL|.
+  \item Eingabeparameter \verb|size|: die Größe des zu reservierenden Speicherbereiches in bytes.
+  \item Beispielcode:
+    \begin{lstlisting}
+      int *array=(int *)malloc(sizeof(int)*10);
+    \end{lstlisting}
+  \end{itemize}
+  \vspace{-0.7cm}
+  Man beachte, dass der reservierte Speicherbereich mit der Funktion \verb|free| (siehe unten) wieder freigegeben werden muss, wenn er nicht mehr benötigt wird. 
+  Ansonsten steht er für das Programm nicht mehr zur Verfügung.
+  Am Ende des Programms wird aller vom Programm reservierte Speicher automatisch freigegeben.
+\end{myexampleblock}
+Wir haben schon den Rückgabewert \verb|void| kennengelernt, der für keinen Rückgabewert steht.
+Ein Zeiger auf \verb|void| representiert einen Zeiger ohne Typ.
+Er kann bzw. muss später mit einem \emph{cast} in jeden anderen Zeigertyp umgewandelt werden.
+Deshalb wird im Beispielcode ein explizieter \emph{cast} nach \verb|int *| durchgeführt, den man immer bei der Benutzung von \verb|malloc| machen sollte.
+
+Den Zeiger \verb|NULL| haben wir schon kennen gelernt. 
+\verb|malloc| gibt \verb|NULL| zurück, falls das reservieren nicht erfolgreich war, aus welchem Grund auch immer.
+Daher ist es sehr wichtig bei jedem Aufruf von \verb|malloc| den Rückgabewert auf \verb|NULL| zu testen!
+Die Größe eine Typs in byte liefert die Funktion \verb|sizeof|.
+
+Wie schon angedeutet, dynamisch reservierter Speicher muss wieder freigegeben werden, wenn er nicht mehr benötigt wird.
+Dafür gibt es die Funktion \verb|free|:
+\begin{myexampleblock}{Funktion definition \texttt{free}}
+  \begin{lstlisting}
+    void free(void *memory);
+  \end{lstlisting}
+  \vspace{-0.7cm}
+  Gibt einen mit \verb|malloc| reservierten Speicherbereich wieder frei.
+  \begin{itemize}
+  \item Einggabeparameter: Zeiger auf einen Speicherbereich, der mit \verb|malloc| reserviert wurde.
+  \item Beispiel:
+    \begin{lstlisting}
+      int *array=(int *)malloc(sizeof(int)*10);
+      free(array);
+    \end{lstlisting}
+  \end{itemize}
+  \vspace{-0.7cm}
+\end{myexampleblock}
+Wendet man \verb|free| auf einen Zeiger an, der nicht auf den Anfang eines mit \verb|malloc| reservierten Bereiches zeigt, so erhält man einen Laufzeitfehler.
+
+\subsection{Mehrdimensionale Arrays}
+
+Bisher haben wir uns auf eindimensionale Arrays beschränkt.
+Als Beisipel für ein mehrdimensionales Array betrachen wir eine Drehmatrix in zwei Dimensionen um den Winkel $\alpha$. 
+Es handelt sich um eine lineare Abbildung, die einen zweidimensionalen Vektor $(x,y)^t$ auf den Vektor $(x',y')^t$ wie folgt abbildet:
 \begin{equation}
-\left(\begin{array}{c}x^{,}\\y^{,}\end{array}\right)=
-\left(\begin{array}{cc} \cos\left(\alpha\right) & \sin\left(\alpha\right) \\
-                       -\sin\left(\alpha\right) & \cos\left(\alpha\right) 
-\end{array}\right)
-\left(\begin{array}{c}x\\y\end{array}\right)
+  \left(\begin{array}{c}x^{,}\\y^{,}\end{array}\right)=
+  \left(\begin{array}{cc} \cos\left(\alpha\right) & \sin\left(\alpha\right) \\
+    -\sin\left(\alpha\right) & \cos\left(\alpha\right) 
+  \end{array}\right)
+  \left(\begin{array}{c}x\\y\end{array}\right)
 \end{equation}
-Das rotation kann durch eine Matrix dargestellt werden. Natürlich um diese Matrices
-in C Sprache verwenden zu können, wir brauchen nur zwei dimensionale Arrays. Wir können
-dies erreichen mit einem anderen eckigen Klammern, zum Bespiel 
+Die entsprechende Matrix kann man in C mit Hilfe von zweidimensionalen Arrays darstellen.
+Die Deklaration eines statische $2\times2$ Arrays sieht wie folgt aus:
 \begin{lstlisting}
-double rotate2d[2][2];
+  double rotate2d[2][2];
 \end{lstlisting}
+Von dieser Deklaration kann man sehen, dass ein zweidimensionales Array ein Array von Arrays ist.
+Daher entspricht ein solches zweidimensionales Array auch einem Zeiger auf einen Zeiger auf einen Typ.
+Diskutieren wir wieder ein Beispiel:
+\begin{lstlisting}
+  #include<stdlib.h>
+  #include<stdio.h>
+  #include<math.h>
+  int main() {
+    const int SPACEDIM=2;
+    const double M_PI = 3.1415;
+
+    // Speicher reservieren
+    double **array2d;
+    if( (array2d = (double **)malloc(sizeof(double *)*SPACEDIM)) == NULL) {
+      printf("Fehler in malloc\n");
+      return(-1);
+    }
+    for (int i = 0; i < SPACEDIM; ++i) {
+      if( (array2d[i]=(double *)malloc(sizeof(double)*SPACEDIM)) == NULL) {
+        printf("Fehler in malloc\n");
+        return(-2);
+      }
+    }
+    // Werte zuweisen
+    array2d[0][0]= cos(M_PI/4.); 
+    array2d[0][1]= sin(M_PI/4.); 
+    array2d[1][0]=-sin(M_PI/4.); 
+    array2d[1][1]= cos(M_PI/4.); 
+    // Ausgabe
+    for (int i = 0; i < SPACEDIM; ++i) {
+      for (int j = 0; j < SPACEDIM; ++j) {
+        printf("%e ", array2d[i][j]);
+      }
+      printf("\n");
+    }
+    // Speicher freigeben
+    for (int i = 0; i < SPACEDIM; ++i) {
+      free(array2d[i]);
+    }
+    free(array2d);
+    return(0);
+  }
+\end{lstlisting}
+
 In anderen Wörter wir brauchen Arrays vom Arrays.
 Aber wir haben gelernt, dass was wir mit einem Array machen können, können wir auch 
 mit Pointers erledigen. In diesem Fall aber wir brauchen auch Pointers auf Pointers.
@@ -153,28 +214,6 @@ wird die Anfangsadresse von den reservierten Speicherzellen rückgeben. Das wird
 der Pointer auf Pointer Variable sein. Zum Ende wir müssen für jede Pointer Speicherzellen 
 für zwei $double$ Variable reservieren. Das ist alles. Wir zeigen auch das Quelltext zur diesen
 Übung.
-\begin{lstlisting}
-#include<stdio.h>
-#include<stdlib.h>
-#include<math.h>
-#define SPACEDIM 2 
-int main(){
-  double **array2d;
-  int i,j;
-  array2d=(double **)malloc(sizeof(double *)*SPACEDIM);
-  for (i=0; i<SPACEDIM; ++i)
-    array2d[i]=(double *)malloc(sizeof(double)*SPACEDIM); 
-  array2d[0][0]= cos(M_PI/4.); /*Alternative *(*(array+0)+0) */
-  array2d[0][1]= sin(M_PI/4.); /*Alternative *(*(array+0)+1) */
-  array2d[1][0]=-sin(M_PI/4.); /*Alternative *(*(array+1)+0) */
-  array2d[1][1]= cos(M_PI/4.); /*Alternative *(*(array+1)+1) */ 
-  for (i=0; i<SPACEDIM; ++i){
-    for (j=0; j<SPACEDIM; ++j)
-      printf("%e ", array2d[i][j]);
-    printf("\n");
-  }
-}
-\end{lstlisting}
 \begin{figure}[!ht]
 % Generated with LaTeXDraw 2.0.8
 % Tue Feb 28 15:43:57 CET 2017
@@ -289,26 +328,42 @@ eine Pointer auf $n+1$ dimenzionale Object erhalten.
 \begin{lstlisting}
 #include<stdio.h>
 #include<stdlib.h>
-#define SPACEDIM
-void create2darray( double *** p1 ){
-  int i;
-  (*p1)=(double **)malloc(sizeof(double *)*SPACEDIM);
-  for (i=0; i<SPACEDIM; ++i)
-    (*p1)[i]=(double *)malloc( sizeof(double)*SPACEDIM);
+#include<math.h>
+
+double ** create2darray(const int dim) {
+  double ** p1 = NULL;
+  if( (p1=(double **)malloc(sizeof(double *)*dim)) == NULL) {
+    return(NULL);
+  }
+  for (int i = 0; i < dim; ++i) {
+    if( (p1[i]=(double *)malloc( sizeof(double)*dim)) == NULL) {
+      return(NULL);
+    }
+  }
+  return(p1);
 }
+
 int main(){
-  double **array2d;
-  int i,j;
-  create2darray(&array2d);
-  array2d[i]=(double *)malloc(sizeof(double)*SPACEDIM);
-  array2d[0][0]= cos(M_PI/4.); /*Alternative *(*(array+0)+0) */
-  array2d[0][1]= sin(M_PI/4.); /*Alternative *(*(array+0)+1) */
-  array2d[1][0]=-sin(M_PI/4.); /*Alternative *(*(array+1)+0) */
-  array2d[1][1]= cos(M_PI/4.); /*Alternative *(*(array+1)+1) */
-  for (i=0; i<SPACEDIM; ++i){
-    for (j=0; j<SPACEDIM; ++j)
+  const int SPACEDIM = 2;
+  const double M_PI = 3.1415;
+
+  double ** array2d;
+  if( (array2d = create2darray(SPACEDIM)) == NULL) {
+    printf("Fehler in malloc\n");
+    return(-1);
+  }
+  // Zuweisen
+  array2d[0][0]= cos(M_PI/4.); 
+  array2d[0][1]= sin(M_PI/4.); 
+  array2d[1][0]=-sin(M_PI/4.); 
+  array2d[1][1]= cos(M_PI/4.); 
+  for (int i = 0; i < SPACEDIM; ++i){
+    for (int j = 0; j < SPACEDIM; ++j) {
       printf("%e ", array2d[i][j]);
+    }
     printf("\n");
   }
+  // hier sollte noch der Speicher freigegeben werden!
+  return(0);
 }
 \end{lstlisting}
