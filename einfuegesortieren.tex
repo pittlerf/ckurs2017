@@ -1,125 +1,96 @@
-\begin{myexampleprogram}{ Programme: \texttt{Einfügesortieren}}
-%\begin{myexampleprogram}{ Programme: \texttt{Einfügesortieren}}
-Für Zusammenfassung der ersten Teil des Buches wir werden eine komplizierten Aufgabe Zeile für Zeile lösen.
-Wir werden ganzen Zahlen mit dem Algorithmus vom Einfügesortieren sortieren. Die Aufgabe ist die Folgende:
-Wir müssen $int$ Zahlen aus einem File einlesen, und wir müssen ihnen sortieren. Es ist gut zu errinern, 
-dass alle Teil des Problems, der gut getrennte Aufgabe hat, müssen wir als ein Funktion verwirklichen.
-In diesem Beispiel müssen wir ein Funkcion für readin (Einlesen) und für Sort (sortieren) schreiben.
-Jetzt müssen wir über die Eingabe und Rückgabeparameters der Funkcions entscheiden.
-Das read Funktion wird das Nummer der Zahlen in dem Datei bestimmen und die Zahlen in einem Array
-speichern. Dies kann mit einem int Rückgabewert (Nummer des eingelesenen Zahlens) und mit einem Array
-(speicher für die Zahlen) Eingabeparamter erreichen. Der Sort Funktion muss hat zwei Eingabeparameter haben:
-die sortierende Liste und ihre Länge.
+\section{Beispiel: Einfügesortieren}
 
-Wir werden für Einlesen der $scanf()$ Funkcion verwenden. Wir haben auch diesen Funktion für 
-Einlesen verwendet. Hier wir nutzen auch ihre Rückgabewert. Wenn diese Rückgabewert $EOF$ ist, 
-das bedeutet, dass wir das Ende des Datein erreicht haben. Der Wert von $EOF$ ist im $stdio.h$ definiert, 
-und es ist -1.
+Als abschließendes und zusammenfassendes Beispiel für den ersten Teil dieses Skripts diskutieren wir nun noch ein etwas komplizierteres Beispiel.
+Dabei wenden wir das bisher gelernte auf das schon erwähnte Sortierproblem an:
+Ganze Zahlen $x_1, \ldots, x_n$ sollen eingelesen und dann sortiert ausgegeben werden.
+Dafür unterteilen wir das Problem zunächst in kleinere Unterprobleme, das Einlesen der Zahlen und das Sortieren.
+Dafür werden wir jeweils eine Funktion schreiben.
+
+Wir beginnen mit dem Einlesen der zu sortierenden Zahlen.
+Dafür nutzen wir wieder die Funktion \verb|scanf|.
+Die Funktion, die wir \verb|read| nennen, sieht wie folgt aus
 \begin{lstlisting}
-#define MAXNUM 10000
-int read( int array[] ){
-  unsigned int i;
-  for (i = 0; i < MAXNUM; i++){
-    if ( scanf("%d\n", &array[i])== EOF )
-    break;
+  #include<stdio.h>
+
+  int read(int array[], const int n){
+    int i;
+    for (i = 0; i < n; i++) {
+      if ( scanf("%d\n", &array[i]) == EOF ) {
+        break;
+      }
+    }
+    if (i == n) printf("Sorry, es konnte nicht die ganze Datei eingelesen werden.\n");
+    return(i);
   }
-  if (i == MAXNUM)
-  printf("Sorry, wir konnten leider nicht die ganze Datei einlesen.");
-  return i;
-}
-\end{lstlisting} 
-In der ersten Zeile wir haben eine Symbolische Konstante definiert um die maximale Größe des
-Arrays festzustellen. Wir haben eine lokale Variable $i$, das das Nummer vom eingelesenen Zahlen speichert.
-Wenn die Rückgabewert von scanf EOF ist, wir beenden die Schleife, und geben der Wert von $i$ zurück.
-Wenn wir unsere Grenze erreicht haben, drücken wir eine Nachricht aus.
-Das war ganz einfach nur 9 Zeilen. Jetzt müssen wir der Funktion für Sortieren schreiben.
-\begin{lstlisting}{}{
-#define SWAP(x, y) do { typeof(x) swap = x; x = y; y = swap; } while (0)
-void Sort( int unsortiert[], int n ){
-   int sortiert[MAXNUM];
-   int i,j;
-   for (i=0; i<n; ++i){
-     sortiert[i]=unsortiert[i];
-     for (j=i; j>0; --j){
-        if (sortiert[j] < sortiert[j-1] ){
-           SWAP( sortiert[j], sortiert[j-1] );
-        }
-        else
-           break;
-     }
-   }
-   for (i=0; i<n; ++i)
-     unsortiert[i]=sortiert[i];
-}
 \end{lstlisting}
+Die Funktion liest bis zu $n$ Zeichen ein, bzw. bis \verb|scanf| den Rückgabewert \verb|EOF| liefert.
+Dieser Rückgabewert, der in \verb|stdio.h| definiert ist, bedeutet, dass \verb|scanf| das Ende des Eingabestroms erreicht hat.
+Die eingelesenen Zahlen werde in \verb|array| gespeichert, das by reference übergeben wird.
+Der Speicher für \verb|array| muss also von der aufrufenden Funktion bereitgestellt sein.
+Der Rückgabewert unserer Funktion \verb|read| ist die Anzahl der eingelesenen Zahlen.
 
-Zuerst müssen wir erwähnen, dass unsere Sort Funktion hat zwei Eingabeparameter (das Array, das
-wir sortieren möchten und ihre Länge) und hat keine Rückgabewert. Wir folgen den Algorithmus
-bei dem Codeschreiben. Am Anfang haben wir zwei Arrays, eine sortierte und eine unsortierte. 
-Dann kommt die Schleife für die Elementen des unsortierten Arrays. In jedem Schritt wir ziehen 
-den aktuallen Element vom unsortierten Array zum Ende des sortierten Arrays (Zeile 7) um. 
-Danach suchen wir für ihre rechtige  Position. Wir tauschen es mit dem Vorherigen aus bis es 
-auf dem richtigen Position ist. Wenn wir die richtige Position gefunden haben, beenden wir die 
-Schleife mit $break$. Wir haben ein Macro definiert um die Tauschen zu erledigen. Das wird nützlich 
-in der Zukunft, weil wir den $SWAP$ nicht nur hier (in diesem Funktion)  verwenden können. 
-Die Macros werden von dem Preprocessor verarbeiten. Grundsätzlich das Macrodefinition
-wird copiert an Stelle von jeden Macroanrufs. Diese Macro hat zwei Eingabeparameter, die Zahlen (die Variablen), 
-die wir tauschen wollen. Wir verwendem im Macro auch eine do while Schleife, aber die Anweisungen 
-im Schleifenkern werden nur einmal Ausführen. Im macro wir haben eine lokale Variable von Namen $swap$ hergestellt,
-deswegen brauchen wir die Schleife. Die Laufdauerzeit der swap Variable ist nur diese drei Anweisungen in dem 
-Schleifenkern. Zum Ende wir kopieren die Werten aus dem sortierten Array zum unsortierten, weil der sortierte 
-Array auch lokale ist.
-
+Als nächstes schreiben wir die Funktion zum sortieren:
 \begin{lstlisting}
-#include<stdio.h>
-#define MAXNUM 10000
-int read( int array[] ){
-   int i;
-   for (i=0;i<MAXNUM;i++){
-     if ( scanf("%d\n", &array[i])== EOF )
-      break;
-   }
-   if (i==MAXNUM)
-     printf("Sorry, wir konnten leider
-             nicht das ganze File gelesen.");
-   return i;
-}
-#define SWAP(x, y) do { typeof(x) swap = x; x = y; y = swap; } while (0)
-void Sort( int unsortiert[], int n ){
-   int sortiert[MAXNUM];
-   int i,j;
-   for (i=0; i<n; ++i){
-     sortiert[i]=unsortiert[i];
-     for (j=i; j>0; --j){
-        if (sortiert[j] < sortiert[j-1] ){
-           SWAP( sortiert[j], sortiert[j-1] );
+  void sort(int sortiert[], int unsortiert[], const int n) {
+    for (int i = 0; i < n; ++i) {
+      sortiert[i] = unsortiert[i];
+      for (int j = i; j > 0; --j) {
+        if( sortiert[j] < sortiert[j-1] ) {
+          int swap = sortiert[j];
+          sortiert[j] = sortiert[j-1];
+          sortiert[j-1] = swap;
         }
-        else
-           break;
-     }
-   }
-   for (i=0; i<n; ++i)
-     unsortiert[i]=sortiert[i];
-}
-int main(){
-   int array[MAXNUM];
-   int i;
-   int actual_legth=read(array);
-   Sort(array, actual_length );
-   for (i=0; i<length; ++i)
-     printf("%d\n", array[i]); 
-}
+        else break;
+      }
+    }
+    return;
+  }
 \end{lstlisting}
-Jetzt grundsätzlich wir haben alles um das Programm zu verrvollständigen.
-Der $main$ Funktion besteht nur 6 Zeile aus, mann kann es ganz einfach zu verstehen. Das
-ist das größte Vorteil der modulierten Programmierung. Um unseren Quelltext verwenden zu können,
-wir müssen zuerst es kompilieren.
+Diese Funktion hat drei Eingabeparameter: Das Array, dass die sortierten Zahlen enthalten soll, das Array, dass die zu sortierenden Zahlen enthält, und die Anzahl an zu sortierenden Zahlen.
+Wieder muss die aufrufende Funktion dafür Sorge tragen, dass für beide Arrays ausreichend Speicher bereitgestellt wurde.
+Überzeugen Sie Sich bei den übrigen Zeilen, dass diese wirklich die $n$ Zahlen durch einfügen in das Array \verb|sortiert|.
+Als neues Element haben wir an dieser Stelle den Rückgabewert von \verb|sort| als \verb|void| deklariert. 
+Das bedeutet, dass die Funktion keinen Rückgabewert hat.
+
+Bleibt noch die \verb|main| Funktion, die wie folgt aussieht:
 \begin{lstlisting}
-gcc myerste.c -o myerste
+  #include<stdio.h>
+  
+  int read( int array[], const int n);  
+  void Sort( int sortiert[], int unsortiert[], const int n);
+
+  int main(){
+    const int MAXNUM = 10000;
+    int array[MAXNUM], sortiert[MAXNUM];
+
+    // read the numbers
+    int actual_length =read(array, MAXNUM);
+
+    // sort the numbers
+    sort(sortiert, array, actual_length);
+
+    // print them on the screen
+    for (int i = 0; i < actual_length; ++i) {
+      printf("%d ", array[i]); 
+    }
+    printf("\n");
+  }
 \end{lstlisting}
-In diesem Fall das Name des ausführbaren Dateins ist $myerste$. Lasst uns annehmen, dass wir die folgende Datein 
-unter dem Namen "Datequelle.txt" 
-hergestellt haben:
+Hier haben wir schon von der Möglichkeit Gebrauch gemacht, dass man Funktionen deklarieren kann, und die Definition später stattfinden kann.
+Man kann also beispielsweise in eine Datei \verb|sort.c| erst den Code für die \verb|main| Funktion kopieren, und im Anschluss daran den Code für die beiden Funktionen.
+Übersetzen kann man dann mit
+\begin{verbatim}
+  gcc -std=c99 -o sort sort.c
+\end{verbatim}
+Der Name der ausführbaren Datei ist dann \verb|sort|.
+Diese kann im Prinzip mit 
+\begin{verbatim}                                                                                                    
+  $> ./sort
+\end{verbatim}
+von der Console ausgeführt werden.
+Allerdings brauchen wir erst noch Eingabedaten.
+Damit nicht alles von Hand eingegeben werden muss, nutzen wir die Funktionalität von Linux und leiten den Eingabestrom aus einer Datei um.
+Wir erzeugen erst eine Textdatei mit Namen \verb|data.dat| mit folgenden Zeilen
 \begin{lstlisting}
 12
 77
@@ -127,11 +98,11 @@ hergestellt haben:
 43
 4
 \end{lstlisting}
-Dann wir können unsere Programm ausführen im Kommandoziele mit ihrem Name und das Quelle verwenden:
-\begin{lstlisting}
-./myerste < Datequelle.txt
-\end{lstlisting}
-Standardmäßig der $scanf$ Funktion lest aus dem Standardinput ein. Um aus dem Datein einlesen, wir müssen es
-zum Standardinput richten  (Gleich werden wir lernen, wie können wir direkt aus einem File einlesen). Im bash 
-wir können es mit dem < Operator erledigen.
-\end{myexampleprogram}
+Damit kann man das Programm von der Kommandozeile wie folgt ausführen:
+\begin{verbatim}
+$> ./sort < data.dat
+4 12 25 43 77
+\end{verbatim}
+Im zweiten Teil werden wir zeigen, wie man direkt aus C aus einer Datei einlesen kann.
+
+\endinput

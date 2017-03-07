@@ -460,6 +460,17 @@ Denn C reserviert für \verb|int list[5];| einen zusammenhängenden Speicherbere
 \verb|list|, ohne den Indexoperator, ist selbst vom Typ \verb|int*|, und zeigt auf den Anfang dieses Speicherbereichs. 
 \verb|list[3]| ist dann equivalent zu folgender Dereferenzierung: \verb|*(list + 3)|.
 Und damit weisst obiger Beispielcode dem $i$ten Element von \verb|list| den Wert $i$ zu.
+Genauso kann man den Indexoperator für Zeiger verwenden.
+Im obigen Beispiel hätten wir auch
+\begin{lstlisting}
+  int list[5];
+  int * plist = NULL;
+  plist = list; // equivalent zu plist = &list[0];
+  for(int i = 0; i < 5; i++) {
+    plist[i] = i;
+  }
+\end{lstlisting}
+schreiben können.
 Im folgenden Beispiel finden sich einige der möglichen arithmetischen Operationen für Zeiger:
 \begin{lstlisting}
   #include<stdio.h>
@@ -623,67 +634,32 @@ Es gibt aber wichtige Unterschiede.
 Wenn \verb|array| als Array deklariert ist, so darf man dessen Adresse nicht veraendern.
 Folgendes Bespiel erläutert dies:
 \begin{lstlisting}
-#include<stdio.h>
-int main(){
-   int *pointer;
-   int array[]={1,4,9,16,25,36,49,64};
-   int i=2;
-   pointer = array; // pointer zeigt auf &array[0]
-   printf("Die Werte sind identisch: %d %d\n",array[i], *(pointer+i));
-   pointer++;       // sinnvoll
-   array++;         // nicht erlaubt!
-   array=pointer;   // nicht erlaubt!
-}
-\end{lstlisting}
-
-\textbf{ist das folgende sinnvoll hier zu machen!?} 
-Es gibt eine weitere Unstershied in Bezug auf char Arrays und Pointers auf char. Lassen
-Sie uns das folgende Beispiel sehen:
-\begin{lstlisting}
   #include<stdio.h>
   int main(){
-    char array[]="Hello world";
-    char *pointer="Hello world";
-    array[1] = 'a';   // korrekt
+    int *pointer;
+    int array[]={1,4,9,16,25,36,49,64};
+    int i=2;
+    pointer = array; // pointer zeigt auf &array[0]
+    printf("Die Werte sind identisch: %d %d\n",array[i], *(pointer+i));
+    pointer++;       // sinnvoll
+    array++;         // nicht erlaubt!
+    array=pointer;   // nicht erlaubt!
+    return(0);
+  }
+\end{lstlisting}
+Abschließend diskutieren wir noch eine Subtilität für den Fall von Arrays für den Typ \verb|char|.
+Dafür betrachten wir folgenden Beispielcode:
+\begin{lstlisting}
+  int main(){
+    char *pointer = "Hello world";
     pointer[1] = 'a'; // uebersetzt, fuehrt aber zu einem segmentation fault!
     return(0);
   }
 \end{lstlisting}
-In der dritten Zeile wir definieren ein Zeichenarray, damit wir also fur 12 Zeichen Speicherzellen reservieren. 
-In den vierten Zeile wir definieren nur ein Pointer, und die Zeichenkette "Hello world" wird in einer konstanter
-Speicherplatz speichern. Der Pointer will nur zeigt auf deiser konstanter Speicherplatz. Das bedeutet durch den
-Pointer wir natürlich wir können nicht ändern der Wert der Variable von einem konstanten Spiecherplatz. Im gegenteil
-wenn wir Array verwenden, wir können ihrer Elementen natürlich ändern.
-
-Können wir auch vergleichoperatoren auf Pointers verwenden. Nur auf den Pointer macht es ziemlich kein Sinn.
-Selbst wenn die Werte von zwei Variablen gleich ist, wahrseinlich haben Sie unterschiedlich Adresse in Speicherplatz.
-Allerdings mit der Dereferenzierung Operator kann mann alle Vergleichungsoperator verwenden. Wenn die Pointer nicht
-auf demselben Objekten zeigen, ob größer oder kleiner der Wert des Pointers gibt es uns keine Information. 
-Üblicherweise vergleichen wir Pointers nur mit dem NULL pointer. Zum Beispiel wir den können NULL pointer 
-verwenden um eine Fehler die Anwälden zu berichten.
-
-Um die Bedeutung des Types vom Pointer noch einmal zu betonen, wir schließen noch ein Beispiel ein.
-Hier wir wollen die erste und zweite halb-Teil ein Variable von Typ $int$ haben. Wir erreichen es
-durch Pointers auf $short~int$ type. Anweisungen zwischen unterschiedlichen Pointer Typen sind nicht möglich.
-Zum Beispiel wir können nicht direkt ein Wert von Pointer int Typ zu ein Pointer von shot int Type weisen.
-Das können wir durch Typ casting. Wir zeigen diese Fall in der siebten Zeile. Wenn wir dann in der
-neunten Zeile der Pointer inkremenentieren, er will nicht auf den nächsten int typ zeigen, sonder auch
-auf der nächsten $short~int$ Typ, was tatsächlich in unserem Bespiel das zweite Halfe einer int Variable
-ist. Nocheinmal, wenn wir einen Verschiebung zu einem Pointer hinfügen, der Pointer will zeigt auf die Variable
-deren Adresse mit dem Größe von Pointer mal die Verschiebung von der Basisadresse ist.
-
-\begin{lstlisting}
-#include<stdio.h>
-int main(){
-   int *pointer, zahl=0x0002000F;
-   short int *pointers;
-   printf("Zahl is %d %x \n",zahl,zahl);
-   pointer=&zahl;
-   pointers=(short int *)pointer;
-   printf("Der Wert der ersten Half  %x\n",*pointers);
-   printf("Der Wert der zweiten Half ist %x\n", *(pointers+1));
-}
-\end{lstlisting}
-
+In der dritten Zeile wird versucht, das zweite Element von \verb|pointer| auf das Zeichen \verb|a| zu setzen.
+Obwohl dieser Quelltext vom Compiler übersetzt wird, wird es bei der Ausführung zu einem \emph{segmentation fault} kommen.
+Das liegt daran, dass \verb|pointer| auf einen Bereich im Speicher zeigt, der nicht verändert werden darf.
+Die Zeichenkette \verb|"Hello world"| wird zur Zeit der Übersetzung in einem Speicherbereich abgelegt, der nur gelesen werden darf.
+Deswegen darf er dann nicht mehr verändert werden.
 
 \endinput
