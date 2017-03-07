@@ -17,7 +17,7 @@ das $heap$.
 
 \begin{myexampleblock}{Definition: \texttt{Heap}}
 Es ist ein ausgeglichener Binärebaum. Es gibt nur eine Bedingung für die Elementen:
-jeden Element muss kleiner sein, als ihre Elter.
+jedes Element muss kleiner sein, als ihre Elter.
 \end{myexampleblock} 
 
 In einem Heap jede Element hat nur ein Elter, und kann maximal zwei Kinder
@@ -312,7 +312,7 @@ while(current_heap->parent != NULL && current_heap->parent->val < current_heap->
 }
 \end{lstlisting} 
 In der dritten Zeile wir tauschen die Werte um, und danach machen
-wir ein Schritt oben mit der Zeige. Wir wiederholen es bis
+wir ein Schritt oben mit dem Zeiger. Wir wiederholen es bis
 das $heap$ Eigenschaft wahr wird. Jetzt wir können die zwei Teilen
 zusammenstellen um ein Code für einschließen ins $heap$ bekommen.
 
@@ -382,6 +382,265 @@ machen eine Schleife bis die Warteschlange leer wird. Wenn wir ein Element
 ohne zwei Kinder von der Warteschlange ausgenehmen haben, wird sind fertig, wir
 haben den Platz gefunden. Anderfalls wir schließen ihre Kinder in der Warteschlange
 ein und springen auf den nächsten Iteration mit Hilfe des Stichwort $continue$.
+\begin{figure}[!ht]
+\begin{center}
+% Generated with LaTeXDraw 2.0.8
+% Mon Mar 06 15:43:52 CET 2017
+% \usepackage[usenames,dvipsnames]{pstricks}
+% \usepackage{epsfig}
+% \usepackage{pst-grad} % For gradients
+% \usepackage{pst-plot} % For axes
+\scalebox{0.5} % Change this value to rescale the drawing.
+{
+\begin{pspicture}(-5,-4)(5,5)
+{\color{red}
+\psset
+{
+    linecolor=red,
+}
+\pscircle[linewidth=0.04,dimen=outer](0,4){.5}
+\rput(0, 4){13}
+}
+\psline[linewidth=0.04cm](-0.5,3.33333)(-1,2.6666)
+\psline[linewidth=0.04cm](-.7,2.9)(-1,2.6666)
+\psline[linewidth=0.04cm](-.8,3.2)(-1,2.6666)
+
+\pscircle[linewidth=0.04,dimen=outer](-1.5,2){.5}
+\rput(-1.5, 2){10}
+\psline[linewidth=0.04cm](0.5,3.33333)(1,2.6666)
+\psline[linewidth=0.04cm](.7,2.9)(1,2.6666)
+\psline[linewidth=0.04cm](.8,3.2)(1,2.6666)
+
+\pscircle[linewidth=0.04,dimen=outer]( 1.5,2){.5}
+\rput( 1.5, 2){12}
+
+\psline[linewidth=0.04cm](-2.3,0.933333)(-1.9,1.466666)
+\psline[linewidth=0.04cm](-2.35,1.2)(-2.3,0.933333)
+\psline[linewidth=0.04cm](-2.0,1.0)(-2.3,0.933333)
+
+\pscircle[linewidth=0.04,dimen=outer](-2.7,0.4){.5}
+\psline[linewidth=0.04cm](-.8,0.933333)(-1.2,1.466666)
+\psline[linewidth=0.04cm](-0.75,1.2)(-.8,0.933333)
+\psline[linewidth=0.04cm](-1.1,1.0)(-.8,0.933333)
+
+\rput(-2.7, 0.4){7}
+\psline[linewidth=0.04cm](2.3,0.933333)(1.9,1.466666)
+\psline[linewidth=0.04cm](2.35,1.2)(2.3,0.933333)
+\psline[linewidth=0.04cm](2.0,1.0)(2.3,0.933333)
+
+\psline[linewidth=0.04cm](.8,0.933333)(1.2,1.466666)
+\psline[linewidth=0.04cm](0.75,1.2)(.8,0.933333)
+\psline[linewidth=0.04cm](1.1,1.0)(.8,0.933333)
+
+
+\pscircle[linewidth=0.04,dimen=outer](-0.8,0.4){.5}
+\rput(-0.8, 0.4){9}
+\pscircle[linewidth=0.04,dimen=outer](2.7,0.4){.5}
+\rput(2.7, .4){1}
+\pscircle[linewidth=0.04,dimen=outer](0.8,0.4){.5}
+\rput(0.8, 0.4){6}
+
+\psline[linewidth=0.04cm](-3.4,-0.533333333333333)(-3.1,-0.133333333333333)
+\psline[linewidth=0.04cm](-3.,-.3)(-3.4,-0.533333333333333)
+\psline[linewidth=0.04cm](-3.3,-.2)(-3.4,-0.533333333333333)
+
+{\color{red}
+\psset{
+linecolor=red,
+}
+\pscircle[linewidth=0.04,dimen=outer](-3.75,-1){.5}
+\rput(-3.75, -1){5}
+}
+\rput(0,-2.2){\LARGE $(a)$}
+\end{pspicture}
+}
+\quad 
+\quad
+% \usepackage{pst-plot} % For axes
+\scalebox{0.5} % Change this value to rescale the drawing.
+{
+\begin{pspicture}(-5,-4)(5,5)
+{
+\color{blue}
+\psset{
+linecolor=blue,
+}
+\pscircle[linewidth=0.04,dimen=outer](0,4){.5}
+\rput(0, 4){5}
+}
+\psline[linewidth=0.04cm](-0.5,3.33333)(-1,2.6666)
+\psline[linewidth=0.04cm](-.7,2.9)(-1,2.6666)
+\psline[linewidth=0.04cm](-.8,3.2)(-1,2.6666)
+   
+\pscircle[linewidth=0.04,dimen=outer](-1.5,2){.5}
+\rput(-1.5, 2){10}
+\psline[linewidth=0.04cm](0.5,3.33333)(1,2.6666)
+\psline[linewidth=0.04cm](.7,2.9)(1,2.6666)
+\psline[linewidth=0.04cm](.8,3.2)(1,2.6666)
+
+{
+\color{red}
+\psset{
+linecolor=red,
+}
+\pscircle[linewidth=0.04,dimen=outer]( 1.5,2){.5}
+\rput( 1.5, 2){12}
+}  
+\psline[linewidth=0.04cm](-2.3,0.933333)(-1.9,1.466666)
+\psline[linewidth=0.04cm](-2.35,1.2)(-2.3,0.933333)
+\psline[linewidth=0.04cm](-2.0,1.0)(-2.3,0.933333)
+
+\pscircle[linewidth=0.04,dimen=outer](-2.7,0.4){.5}
+\psline[linewidth=0.04cm](-.8,0.933333)(-1.2,1.466666)
+\psline[linewidth=0.04cm](-0.75,1.2)(-.8,0.933333)
+\psline[linewidth=0.04cm](-1.1,1.0)(-.8,0.933333)
+
+\rput(-2.7, 0.4){7}
+\psline[linewidth=0.04cm](2.3,0.933333)(1.9,1.466666)
+\psline[linewidth=0.04cm](2.35,1.2)(2.3,0.933333)
+\psline[linewidth=0.04cm](2.0,1.0)(2.3,0.933333)
+
+\psline[linewidth=0.04cm](.8,0.933333)(1.2,1.466666)
+\psline[linewidth=0.04cm](0.75,1.2)(.8,0.933333)
+\psline[linewidth=0.04cm](1.1,1.0)(.8,0.933333)
+
+
+\pscircle[linewidth=0.04,dimen=outer](-0.8,0.4){.5}
+\rput(-0.8, 0.4){9}
+\pscircle[linewidth=0.04,dimen=outer](2.7,0.4){.5}
+\rput(2.7, .4){1}
+\pscircle[linewidth=0.04,dimen=outer](0.8,0.4){.5}
+\rput(0.8, 0.4){6}
+\rput(0,-2.2){\LARGE $(b)$}
+
+\end{pspicture}
+
+}
+\\
+% \usepackage{pst-plot} % For axes
+\scalebox{0.5} % Change this value to rescale the drawing.
+{
+\begin{pspicture}(-5,-4)(5,5)
+{\color{blue}
+\psset{linecolor=blue,
+}
+\pscircle[linewidth=0.04,dimen=outer](0,4){.5}
+\rput(0, 4){12}
+}
+\psline[linewidth=0.04cm](-0.5,3.33333)(-1,2.6666)
+\psline[linewidth=0.04cm](-.7,2.9)(-1,2.6666)
+\psline[linewidth=0.04cm](-.8,3.2)(-1,2.6666)
+   
+\pscircle[linewidth=0.04,dimen=outer](-1.5,2){.5}
+\rput(-1.5, 2){10}
+\psline[linewidth=0.04cm](0.5,3.33333)(1,2.6666)
+\psline[linewidth=0.04cm](.7,2.9)(1,2.6666)
+\psline[linewidth=0.04cm](.8,3.2)(1,2.6666)
+
+{
+\color{blue}
+\psset{linecolor=blue,
+}
+\pscircle[linewidth=0.04,dimen=outer]( 1.5,2){.5}
+\rput( 1.5, 2){5}
+}   
+\psline[linewidth=0.04cm](-2.3,0.933333)(-1.9,1.466666)
+\psline[linewidth=0.04cm](-2.35,1.2)(-2.3,0.933333)
+\psline[linewidth=0.04cm](-2.0,1.0)(-2.3,0.933333)
+
+\pscircle[linewidth=0.04,dimen=outer](-2.7,0.4){.5}
+\psline[linewidth=0.04cm](-.8,0.933333)(-1.2,1.466666)
+\psline[linewidth=0.04cm](-0.75,1.2)(-.8,0.933333)
+\psline[linewidth=0.04cm](-1.1,1.0)(-.8,0.933333)
+
+\rput(-2.7, 0.4){7}
+\psline[linewidth=0.04cm](2.3,0.933333)(1.9,1.466666)
+\psline[linewidth=0.04cm](2.35,1.2)(2.3,0.933333)
+\psline[linewidth=0.04cm](2.0,1.0)(2.3,0.933333)
+
+\psline[linewidth=0.04cm](.8,0.933333)(1.2,1.466666)
+\psline[linewidth=0.04cm](0.75,1.2)(.8,0.933333)
+\psline[linewidth=0.04cm](1.1,1.0)(.8,0.933333)
+
+
+\pscircle[linewidth=0.04,dimen=outer](-0.8,0.4){.5}
+\rput(-0.8, 0.4){9}
+\pscircle[linewidth=0.04,dimen=outer](2.7,0.4){.5}
+\rput(2.7, .4){1}
+{
+\color{red}
+\psset{linecolor=red,}
+\pscircle[linewidth=0.04,dimen=outer](0.8,0.4){.5}
+\rput(0.8, 0.4){6}
+}
+\rput(0,-2.2){\LARGE $(c)$}
+
+\end{pspicture}
+}
+\quad
+\quad
+% \usepackage{pst-plot} % For axes
+\scalebox{0.5} % Change this value to rescale the drawing.
+{
+\begin{pspicture}(-5,-4)(5,5)
+\pscircle[linewidth=0.04,dimen=outer](0,4){.5}
+\rput(0, 4){12}
+\psline[linewidth=0.04cm](-0.5,3.33333)(-1,2.6666)
+\psline[linewidth=0.04cm](-.7,2.9)(-1,2.6666)
+\psline[linewidth=0.04cm](-.8,3.2)(-1,2.6666)
+   
+\pscircle[linewidth=0.04,dimen=outer](-1.5,2){.5}
+\rput(-1.5, 2){10}
+\psline[linewidth=0.04cm](0.5,3.33333)(1,2.6666)
+\psline[linewidth=0.04cm](.7,2.9)(1,2.6666)
+\psline[linewidth=0.04cm](.8,3.2)(1,2.6666)
+
+{
+\color{blue}
+\psset{linecolor=blue,
+}
+\pscircle[linewidth=0.04,dimen=outer]( 1.5,2){.5}
+\rput( 1.5, 2){6}
+}   
+\psline[linewidth=0.04cm](-2.3,0.933333)(-1.9,1.466666)
+\psline[linewidth=0.04cm](-2.35,1.2)(-2.3,0.933333)
+\psline[linewidth=0.04cm](-2.0,1.0)(-2.3,0.933333)
+
+\pscircle[linewidth=0.04,dimen=outer](-2.7,0.4){.5}
+\psline[linewidth=0.04cm](-.8,0.933333)(-1.2,1.466666)
+\psline[linewidth=0.04cm](-0.75,1.2)(-.8,0.933333)
+\psline[linewidth=0.04cm](-1.1,1.0)(-.8,0.933333)
+
+\rput(-2.7, 0.4){7}
+\psline[linewidth=0.04cm](2.3,0.933333)(1.9,1.466666)
+\psline[linewidth=0.04cm](2.35,1.2)(2.3,0.933333)
+\psline[linewidth=0.04cm](2.0,1.0)(2.3,0.933333)
+
+\psline[linewidth=0.04cm](.8,0.933333)(1.2,1.466666)
+\psline[linewidth=0.04cm](0.75,1.2)(.8,0.933333)
+\psline[linewidth=0.04cm](1.1,1.0)(.8,0.933333)
+
+
+\pscircle[linewidth=0.04,dimen=outer](-0.8,0.4){.5}
+\rput(-0.8, 0.4){9}
+\pscircle[linewidth=0.04,dimen=outer](2.7,0.4){.5}
+\rput(2.7, .4){1}
+{
+\color{blue}
+\psset{linecolor=blue,}
+\pscircle[linewidth=0.04,dimen=outer](0.8,0.4){.5}
+\rput(0.8, 0.4){5}
+}
+\rput(0,-2.2){\LARGE $(d)$}
+
+\end{pspicture}
+}
+\end{center}
+\caption{Beispiel für Löschen aus einem $heap$\label{loschen}. Wir haben mit Blau
+die Knoten, die im aktuellen Schritt, und mit Rot die Knoten die im 
+nächsten Schritt verändert werden.}
+\end{figure}
+
 \begin{myexampleprogram}{Programme: \texttt{Haldensortierung}}
 \begin{lstlisting}
 typedef struct heap {
