@@ -215,7 +215,7 @@ typedef struct queue {
 } queue;
 \end{lstlisting}
 \begin{lstlisting}{queue.h}
-queue *get_a_queue( heap *data );
+queue *newqueue( heap *data );
 void queue_put( heap *data, queue ** first);
 heap *queue_rem( queue **first);
 void print_queue( queue *first );
@@ -226,7 +226,7 @@ void free_queue( queue **first);
 #include<stdio.h>
 #include<stdlib.h>
 #include"heapqueue.h"
-queue *get_a_queue( heap *data ){
+queue *newqueue( heap *data ){
    queue *q=(queue *)malloc(sizeof(queue));
    q->element=data;
    q->next=NULL;
@@ -234,10 +234,10 @@ queue *get_a_queue( heap *data ){
 }
 void queue_put( heap *data, queue ** first){
    if ((*first) == NULL){
-       (*first)=get_a_queue(data);
+       (*first)=newqueue(data);
        return;
    }
-   queue *temp=get_a_queue(data);
+   queue *temp=newqueue(data);
    temp->next=(*first);
    (*first)=temp;
 }
@@ -311,7 +311,77 @@ while(current_heap->parent != NULL && current_heap->parent->val < current_heap->
     current_heap = current_heap->parent;
 }
 \end{lstlisting} 
+In der dritten Zeile wir tauschen die Werte um, und danach machen
+wir ein Schritt oben mit der Zeige. Wir wiederholen es bis
+das $heap$ Eigenschaft wahr wird. Jetzt wir können die zwei Teilen
+zusammenstellen um ein Code für einschließen ins $heap$ bekommen.
 
+Wenn wir den Platz gefunden haben, prüfen wir das $heap$ Eigenschaft über
+(Zeile 24-26). Dann wir sind fertig, die Warteschlange wird freigegeben und
+wir beenden die Schleife mit Hilfe des Strichworts $break$.
+\begin{lstlisting}
+void heap_insert(heap** root, int x) {
+   if(*root == NULL) {
+     *root = newheap(x, NULL);
+   }
+   else {
+     queue* q = newqueue(*root);
+     heap* currentheap;
+
+     while((currentheap=queue_rem(&q))!=NULL){
+
+        if(currentheap->left == NULL) {
+          currentheap->left  = newheap(x, currentheap);
+          currentheap = currentheap->left;
+        }
+        else if(currentheap->right == NULL) {
+          currentheap->right = newheap(x, currentheap);
+          currentheap = currentheap->right;
+        }
+        else {
+          queue_put(currentheap->left, &q);
+          queue_put(currentheap->right,&q);
+          continue;
+        }
+        while(currentheap->parent != NULL && currentheap->parent->val < currentheap->val) {
+           SWAP(current_heap->parent->val, current_heap->val);
+           currentheap = currentheap->parent;
+        }
+        break;
+
+     }
+     free_queue(&q);
+   }
+   return;
+}
+\end{lstlisting}
+\begin{myexampleblock}{Strichwörter: \texttt{break} und \texttt{continue}}
+\begin{itemize}
+\item break: Beenden eine Schleife, oder ein Selektion im $switch$.
+\item continue: Springen in einer Schleife zu dem nächsten Iteration
+\end{itemize}
+\end{myexampleblock}
+In diesem Codeteil wir haben der Funktion $newheap$ verwendet. Dieser Funktion
+erzeugt ein neues $heap$ Element und hat zwei Eingabeparameter: ein für den neuen 
+Wert, und ein Zeiger für ihre Elter. Die aktuellen Quelltext für diese Funktion 
+siehst du unter:
+\begin{lstlisting}
+heap *newheap( int x, heap *parent){
+   heap *ret=(heap *)malloc(sizeof(heap));
+   ret->left=NULL;
+   ret->right=NULL;
+   ret->parent=parent;
+   ret->val=x;
+   return ret;
+}
+\end{lstlisting}
+Wenn das $heap$ leer ist, das Programm ist ganz einfach. Wir einschließen ein neues 
+Element als die neue Wurzel (Zeile 3). Anderfalls wir suchen für den ersten freien Platz
+(Siehe die Diskussion oben). Wir schließen die Wurzel in einem Warteschlange, und 
+machen eine Schleife bis die Warteschlange leer wird. Wenn wir ein Element
+ohne zwei Kinder von der Warteschlange ausgenehmen haben, wird sind fertig, wir
+haben den Platz gefunden. Anderfalls wir schließen ihre Kinder in der Warteschlange
+ein und springen auf den nächsten Iteration mit Hilfe des Stichwort $continue$.
 \begin{myexampleprogram}{Programme: \texttt{Haldensortierung}}
 \begin{lstlisting}
 typedef struct heap {
