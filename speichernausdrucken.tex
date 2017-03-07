@@ -127,8 +127,8 @@ Es besteht im Allgemeinen aus Deklarationen, Anweisungen, Kontrollstrukturen und
 Das vielleicht einfachste C-Programm hat folgende Form:
 \begin{lstlisting}{Ein erstes C-Programm}
 int main() {
-  // dies ist ein Kommentar
-  return(0);
+    // dies ist ein Kommentar
+    return 0;
 }
 \end{lstlisting}
 An Hand dieses einfachen Programms können wir schon einiges über die C Sprachregeln lernen.
@@ -172,12 +172,12 @@ Dann kann man die Datei mit folgendem Aufruf auf der Console übersetzen:
 Bisher tut unser erstes Programm noch nichts, außer Null zurückgeben. 
 Wir können es um eine Ausgabe auf den Bildschirm erweitern:
 \begin{lstlisting}{Programm Hallo Welt}
-#include<stdio.h>
+#include <stdio.h>
 
-int main(){
-  // Ausgabe auf dem Bildschirm
-  printf("Hallo Welt\n");
-  return(0);
+int main() {
+    // Ausgabe auf dem Bildschirm
+    printf("Hallo Welt\n");
+    return 0;
 }
 \end{lstlisting}
 Es sind zwei Dinge dazugekommen:

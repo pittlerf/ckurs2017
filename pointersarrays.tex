@@ -18,13 +18,12 @@ Der Typ wird in der Zeichenkette angegeben, so dass die Funktion unter der Adres
 
 Da Zeiger in C eine sehr wichtige Rolle spielt, gibt es für sie spezielle Datentypen:
 \begin{lstlisting}
-  int n = 3;      // eine Variable vom Typ int
-  int* address;  // eine Variable vom Typ Zeiger auf int
-  address = &n;   // address zeigt auf n
-  *address = 5;   // *address representiert den Wert, der unter der
-                  // Adresse address gespeichert ist.
-                  // man spricht von dereferenzieren
-  n == 5;         // ist jetzt wahr.
+int n = 3; // eine Variable vom Typ int
+int *address; // eine Variable vom Typ Zeiger auf int
+address = &n; // address zeigt auf n
+*address = 5; // *address representiert den Wert, der unter der Adresse address
+              // gespeichert ist. man spricht von dereferenzieren
+n == 5; // ist jetzt wahr.
 \end{lstlisting}
 Genauso gibt es einen Typ Zeiger auf \verb|double|, nämlich \verb|double*| und so weiter.
 \begin{myblock}{Definition \texttt{Zeiger}}
@@ -40,23 +39,23 @@ Die Funktion hat aber nur einen Rückgabewert.
 Ein Weg, um dieses Problem zu lösen, ist das sogenannte \emph{call by reference}.
 Was \textbf{nicht} funktioniert ist das folgende:
 \begin{lstlisting}
-#include<stdio.h>
-  // einfache Funktion um a,b um 1 zu erhoehen
-  int increment( int a, int b) { 
+#include <stdio.h>
+// einfache Funktion um a,b um 1 zu erhoehen
+int increment(int a, int b) {
     a++;
     b++;
-    return(0);
-  }
-  
-  int main(){
+    return (0);
+}
+
+int main() {
     int a = 2, b = 3;
     int ret = 0;
-    printf("Wert vor der Funktion a=%d, b=%d\n", a,b);
-    ret = increment(a, b); // die Variablen in unserem Block werden 
-                            // nicht veraendert!
-    printf("Wert nach der Funktion a=%d, b=%d\n", a, b); 
-    return(ret);
-  }
+    printf("Wert vor der Funktion a=%d, b=%d\n", a, b);
+    ret = increment(a, b); // die Variablen in unserem Block werden
+    // nicht veraendert!
+    printf("Wert nach der Funktion a=%d, b=%d\n", a, b);
+    return (ret);
+}
 \end{lstlisting}
 Der Grund ist, dass in der Funktion \verb|increment| neue Variablen \verb|a, b| angelegt werden, die nur in der Funktion selbst sichtbar sind. 
 Sie haben also nichts mit den Variablen \verb|a, b| in der Funktion \verb|main| gemein, außer dem Namen.
@@ -66,23 +65,23 @@ Denn die Variablen \verb|a, b| in \verb|main| wurden nicht verändert.
 
 Bei \emph{call by reference} wird an Stelle des Wertes die Adresse übergeben.
 \begin{lstlisting}
-#include<stdio.h>
-  // einfache Funktion um a,b um 1 zu erhoehen
-  int increment(int* a, int* b) { 
+#include <stdio.h>
+// einfache Funktion um a,b um 1 zu erhoehen
+int increment(int *a, int *b) {
     (*a)++;
     (*b)++;
-    return(0);
-  }
-  
-  int main(){
+    return (0);
+}
+
+int main() {
     int a = 2, b = 3;
     int ret = 0;
-    printf("Wert vor der Funktion a=%d, b=%d\n", a,b);
-    ret = increment(&a, &b); // die Variablen in unserem Block werden 
-                            // nicht veraendert!
-    printf("Wert nach der Funktion a=%d, b=%d\n", a, b); 
-    return(ret);
-  }
+    printf("Wert vor der Funktion a=%d, b=%d\n", a, b);
+    ret = increment(&a, &b); // die Variablen in unserem Block werden
+    // nicht veraendert!
+    printf("Wert nach der Funktion a=%d, b=%d\n", a, b);
+    return (ret);
+}
 \end{lstlisting}
 Die Funktion bekommt also zwei Parameter vom Typ \verb|int*|, also Zeiger auf \verb|int|. 
 Dann wird mit dem Dereferenzierungsoperator \verb|*| der Wert, der unter den beiden Adressen gespeichert ist, um eins erhöht.
@@ -92,14 +91,14 @@ Damit werden also direkt die Werte der Variable \verb|a, b| in \verb|main| verä
 Zeiger kann man genau wie andere Variablen nutzen (womit auch klar ist, dass man auch Zeiger auf Zeiger definieren kann).
 Folgendes Beispiel illustriert die Nutzung noch einmal, wobei \emph{NULL} der Nullzeiger ist:
 \begin{lstlisting}
-#include<stdio.h>
+#include <stdio.h>
 
-int main(){
-   int  q = 10;
-   int* p = NULL;
-   p = &q;
-   printf("Der Wert an der Adresse p ist:%d\n", *p);
-   return(0);
+int main() {
+    int q = 10;
+    int *p = NULL;
+    p = &q;
+    printf("Der Wert an der Adresse p ist:%d\n", *p);
+    return (0);
 }
 \end{lstlisting}
 In der vierten Zeile haben wir eine Variable vom Typ \verb|int| deklariert und mit dem Wert $10$ initialisiert, in der fünften Zeile eine Variable vom Typ \verb|int*|, die mit dem \verb|NULL| Zeiger initialisiert wurde.
@@ -111,7 +110,7 @@ Dies kann allerdings, bis auf Ausnahmen, nicht vom Compiler überprüft werden.
 Wenn doch keine gültige Adresse zugewiesen wurde, bekommt man den \emph{segmentation fault} als Laufzeitfehler.
 Dieser Quelltext weisst sehr wahrscheinlich eine ungültige Adresse zu
 \begin{lstlisting}
-int *p=42;
+int *p = 42;
 \end{lstlisting}
 allerdings wird im diesen Fall der Compiler sehr wahrscheinlich\footnote{Hängt leider vom Compiler ab} eine Warnung geben, denn $42$ ist vom Typ \verb|int|, und nicht vom Typ \verb|int*|. 
 Wenn der Compiler sich hier nicht beschwert, sollte man die Dokumentation studieren, um heraus zu finden, wie man diesen Typ von Warnung anschalten kann, oder, wenn das nicht möglich ist, den Compiler wechseln.
@@ -280,18 +279,18 @@ Indizierung des Arrays geschieht mit positiven ganzen Zahlen von 0 bis Länge de
 Die Länge des Arrays muss zur Zeit der Übersetzung bekannt sein.
 Im Beispiel sieht das wie folgt aus: 
 \begin{lstlisting}
-  #include<stdio.h>
-  
-  int main(){
+#include <stdio.h>
+
+int main() {
     const int n = 4;
-    int array1[] = {1,2,3,4}; // Deklaration und Initialisierung
-    int array2[n];            // Deklaration, nicht initialisiert
-    array2[0] = 1;            // Zuweisung einzelner Elemente
+    int array1[] = {1, 2, 3, 4}; // Deklaration und Initialisierung
+    int array2[n]; // Deklaration, nicht initialisiert
+    array2[0] = 1; // Zuweisung einzelner Elemente
     array2[1] = 2;
     array2[2] = 3;
     array2[3] = 4;
-    return(0);
-  }
+    return 0;
+}
 \end{lstlisting}
 Hierbei wurden zwei \emph{int} Arrays erzeugt.
 Beide haben die Länge $4$.
@@ -334,34 +333,34 @@ Die Benutzung von Arrays wird in folgendem Beispiel illustriert:
   \end{equation}
   Hier ist der entsprechende C Quelltext, der Arrays benutzt:
   \begin{lstlisting}
-    #include<stdio.h>
-    const int MAX=10000;
+#include <stdio.h>
+  const int MAX = 10000;
 
-    int main(){
-      int N=0;
+  int main() {
+      int N = 0;
       double f[MAX], x[MAX]; // double arrays der Laenge MAX
-      scanf("%d",&N);
+      scanf("%d", &N);
       // Pruefe die Eingabe
       if (N >= MAX) {
-        printf("Fehler, zu vielen Stuetzstellen\n");
-        return(-1);
+          printf("Fehler, zu vielen Stuetzstellen\n");
+          return (-1);
       }
       if (N < 0) {
-        printf("N muss groesser als 0 sein!\n");
-        return(-2);
+          printf("N muss groesser als 0 sein!\n");
+          return (-2);
       }
-      for (int i = 0; i < N; ++i){
-        x[i] = (double) i/(double) N;
-        f[i] = 1./(1 + x[i]*x[i]);
+      for (int i = 0; i < N; ++i) {
+          x[i] = (double)i / (double)N;
+          f[i] = 1. / (1 + x[i] * x[i]);
       }
       double summe = 0.;
-      for (int i = 0; i < N-1; ++i) {
-        summe += (f[i] + f[i+1]);
+      for (int i = 0; i < N - 1; ++i) {
+          summe += (f[i] + f[i + 1]);
       }
-      summe += f[N-1] + 0.5; // Randterm
-      printf("Die Naeherung von pi ist =%e\n", 2./N*summe);
-      return(0);
-    }
+      summe += f[N - 1] + 0.5; // Randterm
+      printf("Die Naeherung von pi ist =%e\n", 2. / N * summe);
+      return (0);
+  }
   \end{lstlisting}
   Neben der Benutzung von Arrays, haben wir noch ein weiteres neues Konzept eingeführt.
   Bei der Division von $i/N$, beide vom Typ \verb|int|, in Zeile $10$ haben wir einen expliziten \emph{cast} nach \verb|double| durchgeführt, damit keine Division ganzer Zahlen durchgeführt wird.
@@ -371,9 +370,9 @@ Die Benutzung von Arrays wird in folgendem Beispiel illustriert:
 Zum Indexoperator \verb|[]| ist es sehr wichtig zu wissen, dass dabei nicht überprüft wird, ob der Index größer ist, als die Länge des Arrays.
 Folgendes geht also im Prinzip
 \begin{lstlisting}
-  int list[5];
-  int i = 5;
-  list[i] = 3;
+int list[5];
+int i = 5;
+list[i] = 3;
 \end{lstlisting}
 und wird vom Compiler übersetzt. 
 Im besten Fall erhält man dann bei der Ausführung dieses Codes einen \emph{segmentation fault}.
@@ -391,27 +390,29 @@ Eine Zeichenkette kann also durch eine Array von Elementen vom Typ \verb|char| e
 Das Ende einer Zeichenkette wird durch das Zeichen \verb|\0| angegeben.
 Im nächsten Beispiel lesen wir eine Zeichenkette von der standard Eingabe ein, bis wir das Zeichen fuer das Ende des Strings finden und testen, ob die Kette eine Zahl enthält:
 \begin{lstlisting}
-#include<stdio.h>
+#include <stdio.h>
 const int MAX_LENGTH = 1000;
 const int TRUE = 1;
 const int FALSE = 0;
 
-int main(){
-   char string[MAX_LENGTH];
-   int i=0;
-   char a;
-   int ergebnis = FALSE;
-   scanf("%s", string);
-   while(1) {
-     if (string[i] == '\0')
-       break;
-     if ( (string[i] >= '0') && ( string[i] <= '9') )
-       ergebnis = TRUE;
-     i++;
-   }
-   if(ergebnis) printf("Der String %s enthaelt Zahlen\n", string);
-   else printf("Der String enthaelt keine Zahlen\n");
-   return(0);
+int main() {
+    char string[MAX_LENGTH];
+    int i = 0;
+    char a;
+    int ergebnis = FALSE;
+    scanf("%s", string);
+    while (1) {
+        if (string[i] == '\0')
+            break;
+        if ((string[i] >= '0') && (string[i] <= '9'))
+            ergebnis = TRUE;
+        i++;
+    }
+    if (ergebnis)
+        printf("Der String %s enthaelt Zahlen\n", string);
+    else
+        printf("Der String enthaelt keine Zahlen\n");
+    return (0);
 }
 \end{lstlisting}
 Es wird zunächst eine Zeichenkette über die Tastatur eingelesen.
@@ -432,27 +433,28 @@ Es sollte also auf jeden Fall eine solche Überprüfung vorgenommen werden!
 
 Man kann auch eine Zeichenkette initialisieren:
 \begin{lstlisting}
-  #include<stdio.h>
-  int main(){
-    char string[]={'H','e','l','l','o',' ','w','o','r','l','d','\0'};
+#include <stdio.h>
+int main() {
+    char string[] = {'H', 'e', 'l', 'l', 'o', ' ',
+                     'w', 'o', 'r', 'l', 'd', '\0'};
     char *pointer = NULL;
     pointer = &string[6];
-    printf("Das siebte Zeichen im String ist %c\n",*pointer);
-    return(0);
-  }
+    printf("Das siebte Zeichen im String ist %c\n", *pointer);
+    return (0);
+}
 \end{lstlisting} 
 und dann mit \verb|pointer| auf einzelne Elemente der Zeichekette zugreifen.
 Das ist nicht nur ein alternativer Weg, um auf die Elemente eines Arrays zuzugreifen.
 C stellt Zeiger intern als ganze Zahlen dar und auf jedem Zeigetyp sind auch arithmetische Operationen definiert.
 Beispielsweise ist folgendes in C korrekter Quelltext:
 \begin{lstlisting}
-  int list[5];
-  int * plist = NULL;
-  plist = list; // equivalent zu plist = &list[0];
-  for(int i = 0; i < 5; i++) {
+int list[5];
+int *plist = NULL;
+plist = list; // equivalent zu plist = &list[0];
+for (int i = 0; i < 5; i++) {
     *plist = i;
-    plistx++;  // equivalent zu plist = plist + 1; oder plist += 1;
-  }
+    plistx++; // equivalent zu plist = plist + 1; oder plist += 1;
+}
 \end{lstlisting}
 Mit unserer bisherigen Kenntnis des Operators \verb|++|, würden wir erwarten, dass der Wert von \verb|plist| um eins erhöht wird.
 Das ist im Prinzip auch richtig, allerdings findet die Erhöhung in Einheiten der Länge des Typs, auf den der Zeiger zeigt.
@@ -464,20 +466,20 @@ Und damit weisst obiger Beispielcode dem $i$ten Element von \verb|list| den Wert
 Genauso kann man den Indexoperator für Zeiger verwenden.
 Im obigen Beispiel hätten wir auch
 \begin{lstlisting}
-  int list[5];
-  int * plist = NULL;
-  plist = list; // equivalent zu plist = &list[0];
-  for(int i = 0; i < 5; i++) {
+int list[5];
+int *plist = NULL;
+plist = list; // equivalent zu plist = &list[0];
+for (int i = 0; i < 5; i++) {
     plist[i] = i;
-  }
+}
 \end{lstlisting}
 schreiben können.
 Im folgenden Beispiel finden sich einige der möglichen arithmetischen Operationen für Zeiger:
 \begin{lstlisting}
-  #include<stdio.h>
+#include <stdio.h>
 
-  int main(){
-    int sqnum[] = {1,4,9,16,25,36,49};
+int main() {
+    int sqnum[] = {1, 4, 9, 16, 25, 36, 49};
     int *pointer;
     int *pointer2;
     pointer = sqnum;
@@ -488,12 +490,13 @@ Im folgenden Beispiel finden sich einige der möglichen arithmetischen Operation
     pointer += 2;
     printf("Nach dem Hinzufuegen von 2 zum Zeiger %d\n", *pointer);
     pointer -= 2;
-    printf("Nach dem Subtrahieren von 2 vom Zeiger %d\n", *pointer);   
+    printf("Nach dem Subtrahieren von 2 vom Zeiger %d\n", *pointer);
     ++pointer;
     pointer2 = &sqnum[4];
-    printf("Zwischen pointer2 und pointer gibt es %ld Elemente\n",pointer2-pointer);
-    return(0);
-  }
+    printf("Zwischen pointer2 und pointer gibt es %ld Elemente\n",
+           pointer2 - pointer);
+    return (0);
+}
 \end{lstlisting}
 Überlegen Sie Sich, was obiges Programm als Ausgabe erzeugen wird, bevor Sie diesen Quelltext übersetzen und ausführen lassen.
 Die \verb|++| Operation auf einen Zeiger vom Typ \verb|int| ist in Abbildung~\ref{pointinc} illustriert.
@@ -606,16 +609,16 @@ Die \verb|++| Operation auf einen Zeiger vom Typ \verb|int| ist in Abbildung~\re
 An dieser Stelle müssen wir auf einen möglichen Fehler hinweisen.
 Folgender Quelltext wird vom Compiler anstandslos übersetzt
 \begin{lstlisting}
-  int main() {
-    int list[5];                      // int array
-    double * plist = (double *) list; // explizit cast
+int main() {
+    int list[5]; // int array
+    double *plist = (double *)list; // explizit cast
     *(plist + 1) = 3;
-    return(0);
-  }
+    return (0);
+}
 \end{lstlisting}
 Wenn man Zeile $3$ durch
 \begin{lstlisting}
-  double * plist = list; // without cast
+double *plist = list; // without cast
 \end{lstlisting}
 übersetzen das die meisten Compiler auch noch, hoffentlich wenigstens mit einer Warnung.
 Was ist problematisch an obigen Code:
@@ -635,27 +638,27 @@ Es gibt aber wichtige Unterschiede.
 Wenn \verb|array| als Array deklariert ist, so darf man dessen Adresse nicht veraendern.
 Folgendes Bespiel erläutert dies:
 \begin{lstlisting}
-  #include<stdio.h>
-  int main(){
+#include <stdio.h>
+int main() {
     int *pointer;
-    int array[]={1,4,9,16,25,36,49,64};
-    int i=2;
+    int array[] = {1, 4, 9, 16, 25, 36, 49, 64};
+    int i = 2;
     pointer = array; // pointer zeigt auf &array[0]
-    printf("Die Werte sind identisch: %d %d\n",array[i], *(pointer+i));
-    pointer++;       // sinnvoll
-    array++;         // nicht erlaubt!
-    array=pointer;   // nicht erlaubt!
-    return(0);
-  }
+    printf("Die Werte sind identisch: %d %d\n", array[i], *(pointer + i));
+    pointer++; // sinnvoll
+    array++; // nicht erlaubt!
+    array = pointer; // nicht erlaubt!
+    return 0;
+}
 \end{lstlisting}
 Abschließend diskutieren wir noch eine Subtilität für den Fall von Arrays für den Typ \verb|char|.
 Dafür betrachten wir folgenden Beispielcode:
 \begin{lstlisting}
-  int main(){
+int main() {
     char *pointer = "Hello world";
     pointer[1] = 'a'; // uebersetzt, fuehrt aber zu einem segmentation fault!
-    return(0);
-  }
+    return 0;
+}
 \end{lstlisting}
 In der dritten Zeile wird versucht, das zweite Element von \verb|pointer| auf das Zeichen \verb|a| zu setzen.
 Obwohl dieser Quelltext vom Compiler übersetzt wird, wird es bei der Ausführung zu einem \emph{segmentation fault} kommen.

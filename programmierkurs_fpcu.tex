@@ -120,18 +120,19 @@ detallierte Informationen zu erhalten. In diesem Fall die $C$ Sprache bietet uns
 ein $stat$ Strukture. 
 \begin{myexampleblock}{Definition: \texttt{struct stat}}
 \begin{lstlisting}
-struct tm{
-  _dev_t st_dev:  /*Laufwerksnummer*/
-  _ino_t st_ino;  /*Inode: eine grundlegende Datenstruktur zur Verwaltung von Dateisystemen mit unixartigen Betriebssystemen. */
-  unsigned short st_mode; /*Modus, Berechtigungen*/
-  short st_nlink; /**/
-  short st_uid;   /*USER-ID*/
-  short st_gid;   /*GROUP-ID*/
-  _dev_t st_rdev: /*Laufwerksnummer*/
-  _off_t st_size; /*Dateigroesse in Bytes */
-  time_t st_atime; /*Datum des letzten Zugriffes*/
-  time_t st_mtime; /*Datum des letzten Aenderung*/
-  time_t st_ctime; /*Erstelldatum*/
+struct tm {
+    _dev_t st_dev; /*Laufwerksnummer*/
+    _ino_t st_ino; /*Inode: eine grundlegende Datenstruktur zur Verwaltung von
+                      Dateisystemen mit unixartigen Betriebssystemen. */
+    unsigned short st_mode; /*Modus, Berechtigungen*/
+    short st_nlink; /**/
+    short st_uid; /*USER-ID*/
+    short st_gid; /*GROUP-ID*/
+    _dev_t st_rdev; /*Laufwerksnummer*/
+    _off_t st_size; /*Dateigroesse in Bytes */
+    time_t st_atime; /*Datum des letzten Zugriffes*/
+    time_t st_mtime; /*Datum des letzten Aenderung*/
+    time_t st_ctime; /*Erstelldatum*/
 }
 \end{lstlisting}
 \vspace{-0.4cm}
@@ -140,12 +141,12 @@ Das Definition befindet sich im Standardbibliothek sys/stat.h.
 \begin{myexampleblock}{Definition: \texttt{struct passwd}}
 \begin{lstlisting}
 struct passwd {
- char *pw_name; /*Anwaenders login Name*/
- uid_t pw_uid; /* UID id*/
- gid_t pw_gid; /* GID id*/
- char *pw_dir; /*Login Direktory*/
- ...
-}; 
+    char *pw_name; /*Anwaenders login Name*/
+    uid_t pw_uid; /* UID id*/
+    gid_t pw_gid; /* GID id*/
+    char *pw_dir; /*Login Direktory*/
+    ...
+};
 \end{lstlisting}
 \vspace{-0.4cm}
 Das Definition befindet sich im Standardbibliothek passwd.h
@@ -153,10 +154,10 @@ Das Definition befindet sich im Standardbibliothek passwd.h
 \begin{myexampleblock}{Definition: \texttt{struct group}}
 \begin{lstlisting}
 struct group {
-  char *gr_name;
-  gid_t gr_gid;
-  char **gr_mem;
-  ...
+    char *gr_name;
+    gid_t gr_gid;
+    char **gr_mem;
+    ...
 };
 \end{lstlisting}
 \vspace{-0.4cm}
@@ -164,7 +165,7 @@ Das Definition befindet sich im grp.h
 \end{myexampleblock}
 \begin{myexampleblock}{Funktion: \texttt{stat}}
 \begin{lstlisting}
-int stat(char * path, struct stat * buf);
+int stat(char *path, struct stat *buf);
 \end{lstlisting}
 \vspace{-.4cm}
 Information erhalten über das Datein bennant als $path$. Die Informations werden im $buf$ gespeichert.
@@ -185,49 +186,45 @@ Hello world
 \end{lstlisting}
 Wir haben die folgende C Code geschrieben, um Informationen über diesen Datei erhalten:
 \begin{lstlisting}
+#include <grp.h>
+#include <pwd.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
-#include <pwd.h>
-#include <grp.h>
 #include <sys/stat.h>
-int main(int argc, char *argv[])
-{
-   struct stat *sb;
-   struct passwd *pwuser;
-   struct group *grpnam;
-   int i;
-   if (argc < 2)
-   {
-       printf("Usage: %s: file ...\n", argv[0]);
-       exit(EXIT_FAILURE);
-   }
-   sb= (struct stat *)malloc(sizeof(struct stat));
-   for ( i = 1; i < argc; i++){
-      if (stat(argv[i], sb) == -1){
-          exit(EXIT_FAILURE);
-      }
-      if ( (pwuser = getpwuid(sb->st_uid)) == NULL )
-      {
-          exit(EXIT_FAILURE);
-      }
-      if ( (grpnam = getgrgid(sb->st_gid)) == NULL )
-      {
-          exit(EXIT_FAILURE);
-      }
-      printf("%s:\n", argv[i]);
-      printf("\tinode: %u\n", (int)sb->st_ino);
-      printf("\towner: %u (%s)\n", sb->st_uid, pwuser->pw_name);
-      printf("\tgroup: %u (%s)\n", sb->st_gid, grpnam->gr_name);
-      printf("\tperms: %o\n", sb->st_mode & (S_IRWXU | S_IRWXG | S_IRWXO));
-      printf("\tsize: %ld\n", sb->st_size);
-      printf("\tatime: %s", ctime(&(sb->st_atime)));
-      printf("\tmtime: %s", ctime(&(sb->st_mtime)));
-      printf("\tctime: %s", ctime(&(sb->st_ctime)));
-      printf("\n");
-   }
-   free(sb);
-   return 0;
+#include <time.h>
+int main(int argc, char *argv[]) {
+    struct stat *sb;
+    struct passwd *pwuser;
+    struct group *grpnam;
+    int i;
+    if (argc < 2) {
+        printf("Usage: %s: file ...\n", argv[0]);
+        exit(EXIT_FAILURE);
+    }
+    sb = (struct stat *)malloc(sizeof(struct stat));
+    for (i = 1; i < argc; i++) {
+        if (stat(argv[i], sb) == -1) {
+            exit(EXIT_FAILURE);
+        }
+        if ((pwuser = getpwuid(sb->st_uid)) == NULL) {
+            exit(EXIT_FAILURE);
+        }
+        if ((grpnam = getgrgid(sb->st_gid)) == NULL) {
+            exit(EXIT_FAILURE);
+        }
+        printf("%s:\n", argv[i]);
+        printf("\tinode: %u\n", (int)sb->st_ino);
+        printf("\towner: %u (%s)\n", sb->st_uid, pwuser->pw_name);
+        printf("\tgroup: %u (%s)\n", sb->st_gid, grpnam->gr_name);
+        printf("\tperms: %o\n", sb->st_mode & (S_IRWXU | S_IRWXG | S_IRWXO));
+        printf("\tsize: %ld\n", sb->st_size);
+        printf("\tatime: %s", ctime(&(sb->st_atime)));
+        printf("\tmtime: %s", ctime(&(sb->st_mtime)));
+        printf("\tctime: %s", ctime(&(sb->st_ctime)));
+        printf("\n");
+    }
+    free(sb);
+    return 0;
 }
 \end{lstlisting}
 Diesen Beispiel gibt es viele Neueigkeiten für uns. Zum ersten Mal wir verwenden die Eingabeparameters unseres 
@@ -272,18 +269,18 @@ mit dem wir Sie verwenden können. Der Laufzeitsystem stellt automatisch für un
 eine weitere Übung:
 \begin{myexampleprogram}{Programme: \texttt{Eingabe nach Ausgabe Kopieren}}
 \begin{lstlisting}
-#include<stdio.h>
-#include<stdlib.h>
-int main(){
-  char c;
-  while( (c=getchar()) !=EOF)
-   putchar(c);
+#include <stdio.h>
+#include <stdlib.h>
+int main() {
+    char c;
+    while ((c = getchar()) != EOF)
+        putchar(c);
 }
 \end{lstlisting}
 \end{myexampleprogram}
 \begin{myexampleblock}{Funktion: \texttt{getchar}}
 \begin{lstlisting}
-int getchar ( void );
+int getchar(void);
 \end{lstlisting}
 \vspace{-0.4cm}
 Lest ein Zeichen von der Standard Eingabe. Rückgabewert ist das eingelesene Zeichen, wenn die Einlesung erfolgreich war, außerdem
@@ -291,7 +288,7 @@ EOF.
 \end{myexampleblock}
 \begin{myexampleblock}{Funktion: \texttt{putchar}}
 \begin{lstlisting}
-int putchar (char c);
+int putchar(char c);
 \end{lstlisting}
 \vspace{-0.4cm}
 Drückt den Zeichen $c$ aus. Der Rückgabewert ist ein int Wert, der von unsigned char konvertiert wurde.
@@ -302,7 +299,7 @@ bei der Ausführung wir müssen den Datein mit dem $<$ Operator zur Standard Ein
 einem Datein lesen zu können, wir müssen ein Kanal zum Datein eröffnen.
 \begin{myexampleblock}{Funktion: \texttt{fopen}}
 \begin{lstlisting}
-FILE *fopen( const char *filename, char mode);
+FILE *fopen(const char *filename, char mode);
 \end{lstlisting}
 \vspace{-0.4cm}
 Eröffnet ein Kanal zum Datein für Verarbeitung.
@@ -325,7 +322,7 @@ ASCII speichern würde, brauchen wir $~40$-mal mehr speichern um die gleiche Gen
 werden wir einlesen aus Einfache Asciidatei.
 \begin{myexampleblock}{Funktion: \texttt{fscanf}}
 \begin{lstlisting}
-int fscanf(FILE *kanal,char *formattierungtext, ....);
+int fscanf(FILE *kanal, char *formattierungtext, ....);
 \end{lstlisting}
 Formattierte Einlesung von einer Asciidatei, interpretiert von dem formattierungtext. Der Rückgabewert ist der
 Anzahl der Elemente von Argumentliste erfolgreich gefüllt. Als Arguments, wir müssen nicht der Wert der Variable geben
@@ -363,25 +360,25 @@ Zum Beispiel wir möchten die Zahlen von diesem Asciidatei einlesen.
 Wir müssen nicht achten auf die ``white space'' Zeichen, wir können Sie einfach vergessen.
 Im unteren Quelltext wir zeigen, wie es funkzioinert in der Praxis.
 \begin{lstlisting}
-#include<stdio.h>
-#include<stdlib.h>
-#include<errno.h>
-int main(int argc, char *argv[]){
-  FILE *in;
-  int d;
-  if (argc>2){
-   fprintf(stderr,"Useage: ./read_int_ascii filename\n");
-   exit(1);
-  }
-  in=fopen(argv[1], "r");
-  if (in == NULL){
-   fprintf(stderr, "Error opening the file %d\n", errno);
-   exit(1);
-  }
-  while( fscanf(in, "%d", &d) == 1 ){
-    printf("%d\n");
-  }
-  fclose(in);
+#include <errno.h>
+#include <stdio.h>
+#include <stdlib.h>
+int main(int argc, char *argv[]) {
+    FILE *in;
+    int d;
+    if (argc > 2) {
+        fprintf(stderr, "Useage: ./read_int_ascii filename\n");
+        exit(1);
+    }
+    in = fopen(argv[1], "r");
+    if (in == NULL) {
+        fprintf(stderr, "Error opening the file %d\n", errno);
+        exit(1);
+    }
+    while (fscanf(in, "%d", &d) == 1) {
+        printf("%d\n");
+    }
+    fclose(in);
 }
 \end{lstlisting}
 Zuerst wir öffnen ein Kanal für einlesen mit dem $fopen$ Fuktion in der 11-ten Zeile. Wir müssen 
@@ -404,7 +401,7 @@ wir möchten auch neuen Datein erzeugen. Formattierte Ausgabe in einem Datei ist
 der $fprintf$ Fuktion aus dem Standardbibliothek verwenden.
 \begin{myexampleblock}{Funktion: \texttt{fprintf}}
 \begin{lstlisting}
-int fprintf(FILE *kanal,char *formattierungtext, ....);
+int fprintf(FILE *kanal, char *formattierungtext, ....);
 \end{lstlisting}
 Formattierte Ausgabe in einer Asciidatei, interpretiert von dem formattierungtext. Der Rückgabewert ist der
 Anzahl der ausgegebenen Zeichen. Als Arguments, wir müssen der Wert der Variable geben
@@ -431,21 +428,21 @@ ausdrücken.
 Beispielweise, drücken wir das Quadrat der Zahlen von 0 bis 100 immer, sodass alle Zeilen werden
 aus 6 Zeichen bestehen.
 \begin{lstlisting}
-#include<stdio.h>
-#include<stdlib.h>
-#include<errno.h>
-int main(){
-  FILE *out;
-  int i;
-  out=fopen("quadrats.txt", "w");
-  if (out == NULL){
-   fprintf(stderr, "Error opening the file %d\n", errno);
-   exit(1);
-  }
-  for (i=1;i<=100;++i){
-    fprintf(out,"%.6d\n",i*i);
-  }
-  fclose(out);
+#include <errno.h>
+#include <stdio.h>
+#include <stdlib.h>
+int main() {
+    FILE *out;
+    int i;
+    out = fopen("quadrats.txt", "w");
+    if (out == NULL) {
+        fprintf(stderr, "Error opening the file %d\n", errno);
+        exit(1);
+    }
+    for (i = 1; i <= 100; ++i) {
+        fprintf(out, "%.6d\n", i * i);
+    }
+    fclose(out);
 }
 \end{lstlisting}
 In diesem Fall wir öffnen der Datei zum Schreiben (Zeile 7). Wir drücken 
@@ -477,7 +474,7 @@ wir diese Datei verwenden. In diesem Fall wir können der Kanal mit dem $rewind(
 positionieren.
 \begin{myexampleblock}{Funktion: \texttt{fread}}
 \begin{lstlisting}
-size_t fread ( void * ptr, size_t size, size_t count, FILE * stream );
+size_t fread(void *ptr, size_t size, size_t count, FILE *stream);
 \end{lstlisting}
 \vspace{-0.4cm}
 Lest aus einem Binärdatei. Der Rückgabewert ist die Größe der eingelesene Datei.\\
@@ -491,7 +488,7 @@ Die Parameters:
 \end{myexampleblock}
 \begin{myexampleblock}{Funktion: \texttt{fwrite}}
 \begin{lstlisting}
-size_t fwrite ( const void * ptr, size_t size, size_t count, FILE * stream );
+size_t fwrite(const void *ptr, size_t size, size_t count, FILE *stream);
 \end{lstlisting}
 \vspace{-0.4cm}
 Schreibt in einem Binärdatei. Rückgabewert ist die Größe, der ausgeschrienen
@@ -525,34 +522,34 @@ Binärdatei. Rückgabewert ist 0, wenn die Positionierung erfolgreich war.
 \end{myexampleblock}
 Unter wir geben ein Beispiel für die Verwendung der Funktions $fread$ und $fwrite$.
 \begin{lstlisting}
-#include<stdio.h>
-#include<stdlib.h>
-int main(){
-   FILE *kanal;
-   int *squares;
-   int i;
-   int n=100;
-   kanal=fopen("temporarystorage", "w+");
-   if (kanal == NULL){
-     fprintf(stderr, "Error in opening the file\n");
-     exit(1);
-   }
-   squares=(int *)malloc(sizeof(int)*n);
-   if (squares == NULL){
-     fprintf(stderr, "Error in allocating memory\n");
-     exit(1);
-   }
-   for (i=0; i<n; ++i)
-     squares[i]=(i+1)*(i+1);
-   fwrite(squares, sizeof(int), n, kanal);
-   for (i=0; i<n; ++i)
-     squares[i]=0;
-   rewind(kanal); 
-   fread (squares, sizeof(int), n, kanal);
-   for (i=0; i<n; ++i)
-    printf("%d\n", squares[i]);
-   fclose(kanal);
-}   
+#include <stdio.h>
+#include <stdlib.h>
+int main() {
+    FILE *kanal;
+    int *squares;
+    int i;
+    int n = 100;
+    kanal = fopen("temporarystorage", "w+");
+    if (kanal == NULL) {
+        fprintf(stderr, "Error in opening the file\n");
+        exit(1);
+    }
+    squares = (int *)malloc(sizeof(int) * n);
+    if (squares == NULL) {
+        fprintf(stderr, "Error in allocating memory\n");
+        exit(1);
+    }
+    for (i = 0; i < n; ++i)
+        squares[i] = (i + 1) * (i + 1);
+    fwrite(squares, sizeof(int), n, kanal);
+    for (i = 0; i < n; ++i)
+        squares[i] = 0;
+    rewind(kanal);
+    fread(squares, sizeof(int), n, kanal);
+    for (i = 0; i < n; ++i)
+        printf("%d\n", squares[i]);
+    fclose(kanal);
+}
 \end{lstlisting}
 Wir öffnen der Kanal nicht nur für Einlesen, sondern auch für Schreiben (Zeile 8). Achtung, wenn $temporarystorage$ 
 Datei schon exisitiert, dann ihre Inhalt wird gelöscht. Wir reservieren Speicherzellen für 100 Variable von $int$ Typ (Zeile 13).
@@ -565,9 +562,9 @@ wir nochein zwischen zwei schon existiert Elementen hinzufügen möchten. In and
 dynamisch erhöht, oder schrumpft. Das können wir ausführen mit einer Strukture, die die Adresse des nächsten Elements enthält.
 Beispielweise in der C Sprache ein Struktureelement kann auch ein Pointer auf den nächsten Element sein.
 \begin{lstlisting}
-struct list{
-  int element;
-  struct list *nachste;
+struct list {
+    int element;
+    struct list *nachste;
 }
 \end{lstlisting}
 \begin{figure}[!ht]
@@ -671,8 +668,8 @@ den verketetten Listen. Zuerst stellen wir der Datenstruktur, den wir verwenden
 vor:
 \begin{lstlisting}
 typedef struct list {
-   struct list* next;
-   int data;
+    struct list *next;
+    int data;
 } list;
 \end{lstlisting}
 Das ist natürlich eine verketette Liste. Aber wir haben hier diesen Typ also definiert
@@ -690,15 +687,15 @@ sein. Jetzt wir haben das Definition der Datenstrukture, wir können die Impleme
 anfangen. Zuerst besprechen wir, wie können wir eine neue Stapelelement herstellen.
 Wie können wir eine neue Variable von Typ $list$ herstellen.
 \begin{lstlisting}
-list * get_a_list( int x ){
-   list *q=(list *)malloc(sizeof(list));
-   if (q == NULL){
-     fprintf(stderr, "Error in Memory allocation\n");
-     exit(1);
-   }
-   q->data=x;
-   q->next=NULL;
-   return q;
+list *get_a_list(int x) {
+    list *q = (list *)malloc(sizeof(list));
+    if (q == NULL) {
+        fprintf(stderr, "Error in Memory allocation\n");
+        exit(1);
+    }
+    q->data = x;
+    q->next = NULL;
+    return q;
 }
 \end{lstlisting}
 Der obene Codeteil gib eine $list$ Element zurück und hat die
@@ -708,14 +705,14 @@ den Eingabewert. Zum Ende wir müssen die nächste Element als ein NULL
 Pointer festlegen. Die nächste Teil ist das push() Funktion. Speichern 
 ein Element im Stapelspeicher.
 \begin{lstlisting}
-void push( int x, list ** first){
-   if ((*first) == NULL){
-       (*first)=get_a_list(x);
-       return;
-   }
-   list *temp=get_a_list(x);
-   temp->next=(*first);
-   (*first)=temp;
+void push(int x, list **first) {
+    if ((*first) == NULL) {
+        (*first) = get_a_list(x);
+        return;
+    }
+    list *temp = get_a_list(x);
+    temp->next = (*first);
+    (*first) = temp;
 }
 \end{lstlisting}
 Wir müssen die Adresse von dem Pointer auf den Anfang des Speichers  und den speichernde 
@@ -727,18 +724,18 @@ weil wir den Wert von ihm im Funktion ändern wollen. Den logischen nächsten Sc
 ist die implementierung des $pop$ Funktions. Der Rückgabewert muss den letzten gespeicherte
 Element sein. Der Eingabeparameter muss den Anfangsadresse den Stapelspeicher sein.
 \begin{lstlisting}
-int pop( list **first){
-   list *temp;
-   int ret;
-   if ((*first) == NULL){
-     printf("Es gibt kein Element im Speicher\n");
-     return 0;
-   }
-   ret=(*first)->data;
-   temp=(*first)->next;
-   free(*first);
-   (*first)=temp;
-   return ret;
+int pop(list **first) {
+    list *temp;
+    int ret;
+    if ((*first) == NULL) {
+        printf("Es gibt kein Element im Speicher\n");
+        return 0;
+    }
+    ret = (*first)->data;
+    temp = (*first)->next;
+    free(*first);
+    (*first) = temp;
+    return ret;
 }
 \end{lstlisting}
 Wenn das Stapelspeicher leer war, wir werden eine Nachricht ausdrücken. 
@@ -750,17 +747,17 @@ Wir können auch prüfen die aktuellen Inhalt des Speichers.
 Dafür müssen wir einer Funktion, der dursch die Listelementen geht
 schreiben.
 \begin{lstlisting}
-void print_list( list *first){
-   list *temp=(first);
-   if (temp == NULL)
-      return;
-   for (;;){
-      printf("%d\t", temp->data);
-      temp=temp->next;
-      if (temp == NULL)
-        break;
-   }
-   printf("\n");
+void print_list(list *first) {
+    list *temp = (first);
+    if (temp == NULL)
+        return;
+    for (;;) {
+        printf("%d\t", temp->data);
+        temp = temp->next;
+        if (temp == NULL)
+            break;
+    }
+    printf("\n");
 }
 \end{lstlisting}
 Dieser Funktion zuerst prüft ob der Speicher leer ist. Wenn der
@@ -772,14 +769,20 @@ sind, beenden wir die Schleife.
 Es fehlt jetzt nur noch ein Gebrauchanweisung für unseren Stapelspeichern.
 Dies wird der $main$ Funktion.
 \begin{lstlisting}
-int main(){
-   list *erste=NULL;
-   push(2, &erste);  print_list(erste);
-   push(4, &erste);  print_list(erste);
-   push(6, &erste);  print_list(erste);
-   pop( &erste );    print_list(erste);
-   push(8, &erste);  print_list(erste);
-   pop( &erste );    print_list(erste);
+int main() {
+    list *erste = NULL;
+    push(2, &erste);
+    print_list(erste);
+    push(4, &erste);
+    print_list(erste);
+    push(6, &erste);
+    print_list(erste);
+    pop(&erste);
+    print_list(erste);
+    push(8, &erste);
+    print_list(erste);
+    pop(&erste);
+    print_list(erste);
 }
 \end{lstlisting}
 Wir definieren zuerst einer Pointer um die 

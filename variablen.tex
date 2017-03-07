@@ -3,12 +3,12 @@
 Wie schon angedeutet werden Daten in C in Variablen bzw. Objekten gespeichert.
 Auch dies ist am einfachsten an Hand eines Beispiels zu verstehen
 \begin{lstlisting}{Erste Variablen Deklaration und Zuweisung}
-#include<stido.h>
+#include <stido.h>
 
-int main(){
-  int n;
-  n = 4;
-  printf("Wir werden n zahlen sortieren:\n");
+int main() {
+    int n;
+    n = 4;
+    printf("Wir werden n zahlen sortieren:\n");
 }
 \end{lstlisting}
 Im Vergleich zu unserem letzten Beispiel sind zwei Zeilen hinzugekommen. 
@@ -35,11 +35,12 @@ In unserem Beispiel von oben heißt das, dass die Variable \texttt{n} nur in der
 Es ist wichtig, dass jeder Benutzung einer Variablen, beispielsweise in einer Zuweisung, die Deklaration der Variablen vorangehen muss.
 Deklaration und Zuweisung können auch in einer Anweisung geschehen, man kann also auch
 \begin{lstlisting}{Erste Variablen Deklaration und Zuweisung}
-#include<stido.h>
+#include <stido.h>
 
-int main(){
-  int n = 4;
-  printf(``Wir werden n zahlen sortieren:\n'');
+int main() {
+    int n = 4;
+    printf("Wir werden n zahlen sortieren :\n");
+    return 0;
 }
 \end{lstlisting}
 schreiben. 
@@ -166,13 +167,14 @@ Dafür sollte man aber sehr genau wissen, was man tut.
 Leider ist die Typkontrolle vom Compiler abhängig und meist wird bei einer Zuweisung ein impliziter \emph{cast} durchgeführt.
 Beispielsweise wird folgender Code ohne Beanstandung übersetzt
 \begin{lstlisting}{Erste Variablen Deklaration und Zuweisung}
-  #include<stido.h>
-  
-  int main(){
+#include <stido.h>
+
+int main() {
     // so etwas sollte man nicht schreiben!
     int n = 4.5;
-    printf(``Wir werden n Zahlen sortieren:\n'');
-  }
+    printf("Wir werden n Zahlen sortieren :\n");
+    return 0;
+}
 \end{lstlisting}
 obwohl hier implizit die reelle Zahl $4.5$ durch Abschneiden in eine ganze Zahl umgewandelt wird.
 \texttt{n} hat den Wert $4$.
@@ -186,13 +188,14 @@ Das macht den Quelltext lesbarer und erhöht die Verständlichkeit.
 Für den Algorithmus Einfügesortieren sollte man beispielsweise die beiden Liste mit \texttt{sortiert} und \texttt{unsortiert} benennen.
 Im folgenden Quelltext sind einige Beispiele für richtige und falsche Variablendeklarationen zu finden:
 \begin{lstlisting}
-  int main(){
-    int m1=4, n1=5, l1=6; // Richtig
-    int m2=4, char n2='a', float m2=4. // Falsch
-    char m3='a'; double n3=18.9; // Richtig
-    float 4m=1.; // Falsch
-    return(0);
-  }
+int main() {
+    int m1 = 4, n1 = 5, l1 = 6; // Richtig
+    int m2 = 4, char n2 = 'a', float m2 = 4.; // Falsch
+    char m3 = 'a';
+    double n3 = 18.9; // Richtig
+    float 4m = 1.; // Falsch
+    return (0);
+}
 \end{lstlisting} 
 Wie man sieht kann man mehrere Variable in einer Anweisung deklarieren, definieren und initialisieren, wenn sie den gleichen Typ haben.
 Die Variablen werden dabei durch ein Komma getrennt.
@@ -204,7 +207,7 @@ C erlaubt auch, Variablen als konstant zu deklarieren.
 Dies bedeutet, dass sich der einmal zugewiesene Wert einer solchen als \verb|const| deklarierten Variablen nicht äender darf.
 Im Quelltext sieht das wie folgt aus
 \begin{lstlisting}
-  const int n = 5;
+const int n = 5;
 \end{lstlisting}
 Die Benutzung von \verb|const| kann große Vorteile haben.
 Erstens, wenn wir wissen, dass sich eine Variable nicht mehr äendern wird und wir sie als  \verb|const| deklariert haben, dann kann der Compiler das überprüfen und eine Fehlermeldung ausgeben, wenn wir versehentlich den Wert der Variablen doch ändern.
@@ -229,15 +232,15 @@ Man unterscheidet drei verschiedene Typen von Operationen:
 \end{itemize}
 Wieder sieht man es am einfachsten an einem Beispiel:
 \begin{lstlisting}
-#include<stdio.h>
+#include <stdio.h>
 
-int main(){
-  int a = 2;
-  printf("%d\n", a++);
-  printf("%d\n", a);
-  printf("%d\n", ++a);
-  printf("%d\n", a);
-  return(0);  
+int main() {
+    int a = 2;
+    printf("%d\n", a++);
+    printf("%d\n", a);
+    printf("%d\n", ++a);
+    printf("%d\n", a);
+    return 0;
 }
 \end{lstlisting}
 In diesem Beispiel wird zunächst eine Variable \texttt{a} mit dem Wert $2$ initialisiert. 

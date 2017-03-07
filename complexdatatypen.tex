@@ -7,14 +7,13 @@ den Elementaren herstellen, dafür müssen wir $struct$ Strichwort
 verwenden.
 \begin{myalertblock}{struct Typdefinierung}
 \begin{lstlisting}
-struct name
-{
-   Type1 typename1;
-   Type2 typename2;
-   Type3 typename3;
-   ...
+struct name {
+    Type1 typename1;
+    Type2 typename2;
+    Type3 typename3;
+    ...
 }
-\end{lstlisting}
+\end {lstlisting}
 \vspace{-0.4cm}
 Verwendung, definieren Variable aus $name$ Typ:
 \begin{lstlisting}
@@ -34,18 +33,17 @@ Wir können mit dem Punktoperator (.) zu den eigenen Felden
 griffen. In dem unteren kleinen Quelltext wir zeigen ein Beispiel
 für Strukture Datatyp.
 \begin{lstlisting}
-#include<stdio.h>
-struct Student { 
-int matrikelnummer;
-char *name;
-char klasse[5];
-}
-int main(){
+#include <stdio.h>
+struct Student {
+    int matrikelnummer;
+    char *name;
+    char klasse[5];
+} int main() {
     struct Student erste, zweite;
-    erste.matrikalnummer=99;
-    erste.name="Martin Pfeindrich";
-    erste.klasse="5a";
-    zweite={101,"Andrea Tabarrios","6b"};
+    erste.matrikalnummer = 99;
+    erste.name = "Martin Pfeindrich";
+    erste.klasse = "5a";
+    zweite = {101, "Andrea Tabarrios", "6b"};
 }
 \end{lstlisting}
 In diesem Beispiel wir haben das Student stukture definiert in der Zeilen zwischen 2-7.
@@ -72,16 +70,16 @@ C also hat Complex Stukture Datatypen. Zum Beispiel, die Funktions, die die Zeit
 
 \begin{myexampleblock}{Definition: \texttt{struct tm}}
 \begin{lstlisting}
-struct tm{
-int tm_sec:  /*Sekundums im Minute*/
-int tm_min;  /*Minutes im Uhr*/
-int tm_hour; /*Uhr am Tag*/
-int tm_mday; /*Tag im Monat*/
-int tm_mon;  /*Monat im Jahr*/
-int tm_year; /*Jahren seit 1900*/
-int tm_wday; /*Tage seit Sonntag*/
-int tm_yday; /*Tage seit Januar 1*/
-int tm_isdst;/*Sommerzeit ist oder nicht*/
+struct tm {
+    int tm_sec; /*Sekundums im Minute*/
+    int tm_min; /*Minutes im Uhr*/
+    int tm_hour; /*Uhr am Tag*/
+    int tm_mday; /*Tag im Monat*/
+    int tm_mon; /*Monat im Jahr*/
+    int tm_year; /*Jahren seit 1900*/
+    int tm_wday; /*Tage seit Sonntag*/
+    int tm_yday; /*Tage seit Januar 1*/
+    int tm_isdst; /*Sommerzeit ist oder nicht*/
 }
 \end{lstlisting}
 Das Definition befindet sich im Standardbibliothek Funktion time.h.
@@ -97,29 +95,31 @@ das Ergebnis gespeichert wird, oder $NULL$ Pointer.
 \end{myexampleblock}
 \begin{myexampleblock}{Funktion:\texttt{localtime}}
 \begin{lstlisting}
-struct tm * localtime (time_t * timer);
+struct tm *localtime(time_t *timer);
 \end{lstlisting}
 \vspace{-0.4cm}
 Eingabeparameter :Adresse einer Variable von long int Typ (often die Rückgabeparameter vom Fuktion $time$).
 Mit den Werten von $timer$ füllt dieser Funktion die felder in der $tm$ Strukture aus, und kehrt ihn zurück.
 \end{myexampleblock}
 \begin{lstlisting}
-#include <time.h>
-#include <stdlib.h>
 #include <stdio.h>
-int main(void)
-{
-   time_t now;
-   struct tm *local_date_time;
-   char *tagarray[7]={"Sonntag","Montag","Dienstag","Mittwoch","Donnerstag","Freitag","Samstag"};
-   now = time(NULL);
-   local_date_time=localtime(&now);
-   printf ("Jahr ist: %d\n", local_date_time->tm_year+1900);/*Auch (*local_date_time).tm_year+1900 ist ok*/
-   printf ("Monat ist: %d\n", local_date_time->tm_mon);
-   printf ("Tage ist: %s\n", tagarray[local_date_time->tm_wday]);
-   printf ("Uhr ist: %d\n", local_date_time->tm_hour);
-   printf ("Min ist: %d\n", local_date_time->tm_min);
-   printf ("Sek ist: %d\n", local_date_time->tm_sec);
+#include <stdlib.h>
+#include <time.h>
+int main(void) {
+    time_t now;
+    struct tm *local_date_time;
+    char *tagarray[7] = {"Sonntag",    "Montag",  "Dienstag", "Mittwoch",
+                         "Donnerstag", "Freitag", "Samstag"};
+    now = time(NULL);
+    local_date_time = localtime(&now);
+    printf("Jahr ist: %d\n",
+           local_date_time->tm_year +
+               1900); /*Auch (*local_date_time).tm_year+1900 ist ok*/
+    printf("Monat ist: %d\n", local_date_time->tm_mon);
+    printf("Tage ist: %s\n", tagarray[local_date_time->tm_wday]);
+    printf("Uhr ist: %d\n", local_date_time->tm_hour);
+    printf("Min ist: %d\n", local_date_time->tm_min);
+    printf("Sek ist: %d\n", local_date_time->tm_sec);
 }
 \end{lstlisting}
 In diesem Beispiel wir drücken das aktuellen Datum auf Monitor aus. Zuerst rufen wir den $time$ Funktion

@@ -83,7 +83,7 @@ vermeiden. Mit $malloc$ die reservierten Speoicherzellen werden nicht initializi
 erreichen wir müssen $calloc$ Funktion verwenden.
 \begin{myexampleblock}{Funktion definition \texttt{malloc}}
 \begin{lstlisting}
-void * malloc(size_t size);
+void *malloc(size_t size);
 \end{lstlisting}
 \vspace{-0.7cm}
 Reserviert Speicherzellen von größe $size$.
@@ -94,7 +94,7 @@ reservierten Speicherzellen, anderfalls $NULL$.
 \item Eingabeparamter: size: Größe von den begehrten Speicherzellen
 \item Beispielweise:
 \begin{lstlisting}
-int *array=(int *)malloc(sizeof(int)*10);
+int *array = (int *)malloc(sizeof(int) * 10);
 \end{lstlisting}
 \end{itemize}
 \vspace{-0.7cm}
@@ -154,25 +154,25 @@ der Pointer auf Pointer Variable sein. Zum Ende wir müssen für jede Pointer Sp
 für zwei $double$ Variable reservieren. Das ist alles. Wir zeigen auch das Quelltext zur diesen
 Übung.
 \begin{lstlisting}
-#include<stdio.h>
-#include<stdlib.h>
-#include<math.h>
-#define SPACEDIM 2 
-int main(){
-  double **array2d;
-  int i,j;
-  array2d=(double **)malloc(sizeof(double *)*SPACEDIM);
-  for (i=0; i<SPACEDIM; ++i)
-    array2d[i]=(double *)malloc(sizeof(double)*SPACEDIM); 
-  array2d[0][0]= cos(M_PI/4.); /*Alternative *(*(array+0)+0) */
-  array2d[0][1]= sin(M_PI/4.); /*Alternative *(*(array+0)+1) */
-  array2d[1][0]=-sin(M_PI/4.); /*Alternative *(*(array+1)+0) */
-  array2d[1][1]= cos(M_PI/4.); /*Alternative *(*(array+1)+1) */ 
-  for (i=0; i<SPACEDIM; ++i){
-    for (j=0; j<SPACEDIM; ++j)
-      printf("%e ", array2d[i][j]);
-    printf("\n");
-  }
+#include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
+#define SPACEDIM 2
+int main() {
+    double **array2d;
+    int i, j;
+    array2d = (double **)malloc(sizeof(double *) * SPACEDIM);
+    for (i = 0; i < SPACEDIM; ++i)
+        array2d[i] = (double *)malloc(sizeof(double) * SPACEDIM);
+    array2d[0][0] = cos(M_PI / 4.); /*Alternative *(*(array+0)+0) */
+    array2d[0][1] = sin(M_PI / 4.); /*Alternative *(*(array+0)+1) */
+    array2d[1][0] = -sin(M_PI / 4.); /*Alternative *(*(array+1)+0) */
+    array2d[1][1] = cos(M_PI / 4.); /*Alternative *(*(array+1)+1) */
+    for (i = 0; i < SPACEDIM; ++i) {
+        for (j = 0; j < SPACEDIM; ++j)
+            printf("%e ", array2d[i][j]);
+        printf("\n");
+    }
 }
 \end{lstlisting}
 \begin{figure}[!ht]
@@ -287,28 +287,28 @@ wenn wir den Wert von einem $n$ dimenzionalen Objekte in einem
 Funktion ändern wollen, müssen wir ihre Adresse übergeben, und die Funktion soll
 eine Pointer auf $n+1$ dimenzionale Object erhalten.
 \begin{lstlisting}
-#include<stdio.h>
-#include<stdlib.h>
+#include <stdio.h>
+#include <stdlib.h>
 #define SPACEDIM
-void create2darray( double *** p1 ){
-  int i;
-  (*p1)=(double **)malloc(sizeof(double *)*SPACEDIM);
-  for (i=0; i<SPACEDIM; ++i)
-    (*p1)[i]=(double *)malloc( sizeof(double)*SPACEDIM);
+void create2darray(double ***p1) {
+    int i;
+    (*p1) = (double **)malloc(sizeof(double *) * SPACEDIM);
+    for (i = 0; i < SPACEDIM; ++i)
+        (*p1)[i] = (double *)malloc(sizeof(double) * SPACEDIM);
 }
-int main(){
-  double **array2d;
-  int i,j;
-  create2darray(&array2d);
-  array2d[i]=(double *)malloc(sizeof(double)*SPACEDIM);
-  array2d[0][0]= cos(M_PI/4.); /*Alternative *(*(array+0)+0) */
-  array2d[0][1]= sin(M_PI/4.); /*Alternative *(*(array+0)+1) */
-  array2d[1][0]=-sin(M_PI/4.); /*Alternative *(*(array+1)+0) */
-  array2d[1][1]= cos(M_PI/4.); /*Alternative *(*(array+1)+1) */
-  for (i=0; i<SPACEDIM; ++i){
-    for (j=0; j<SPACEDIM; ++j)
-      printf("%e ", array2d[i][j]);
-    printf("\n");
-  }
+int main() {
+    double **array2d;
+    int i, j;
+    create2darray(&array2d);
+    array2d[i] = (double *)malloc(sizeof(double) * SPACEDIM);
+    array2d[0][0] = cos(M_PI / 4.); /*Alternative *(*(array+0)+0) */
+    array2d[0][1] = sin(M_PI / 4.); /*Alternative *(*(array+0)+1) */
+    array2d[1][0] = -sin(M_PI / 4.); /*Alternative *(*(array+1)+0) */
+    array2d[1][1] = cos(M_PI / 4.); /*Alternative *(*(array+1)+1) */
+    for (i = 0; i < SPACEDIM; ++i) {
+        for (j = 0; j < SPACEDIM; ++j)
+            printf("%e ", array2d[i][j]);
+        printf("\n");
+    }
 }
 \end{lstlisting}

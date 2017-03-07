@@ -10,18 +10,19 @@ Wir beginnen mit dem Einlesen der zu sortierenden Zahlen.
 Dafür nutzen wir wieder die Funktion \verb|scanf|.
 Die Funktion, die wir \verb|read| nennen, sieht wie folgt aus
 \begin{lstlisting}
-  #include<stdio.h>
+#include <stdio.h>
 
-  int read(int array[], const int n){
+int read(int array[], const int n) {
     int i;
     for (i = 0; i < n; i++) {
-      if ( scanf("%d\n", &array[i]) == EOF ) {
-        break;
-      }
+        if (scanf("%d\n", &array[i]) == EOF) {
+            break;
+        }
     }
-    if (i == n) printf("Sorry, es konnte nicht die ganze Datei eingelesen werden.\n");
-    return(i);
-  }
+    if (i == n)
+        printf("Sorry, es konnte nicht die ganze Datei eingelesen werden.\n");
+    return (i);
+}
 \end{lstlisting}
 Die Funktion liest bis zu $n$ Zeichen ein, bzw. bis \verb|scanf| den Rückgabewert \verb|EOF| liefert.
 Dieser Rückgabewert, der in \verb|stdio.h| definiert ist, bedeutet, dass \verb|scanf| das Ende des Eingabestroms erreicht hat.
@@ -31,20 +32,20 @@ Der Rückgabewert unserer Funktion \verb|read| ist die Anzahl der eingelesenen Z
 
 Als nächstes schreiben wir die Funktion zum sortieren:
 \begin{lstlisting}
-  void sort(int sortiert[], int unsortiert[], const int n) {
+void sort(int sortiert[], int unsortiert[], const int n) {
     for (int i = 0; i < n; ++i) {
-      sortiert[i] = unsortiert[i];
-      for (int j = i; j > 0; --j) {
-        if( sortiert[j] < sortiert[j-1] ) {
-          int swap = sortiert[j];
-          sortiert[j] = sortiert[j-1];
-          sortiert[j-1] = swap;
+        sortiert[i] = unsortiert[i];
+        for (int j = i; j > 0; --j) {
+            if (sortiert[j] < sortiert[j - 1]) {
+                int swap = sortiert[j];
+                sortiert[j] = sortiert[j - 1];
+                sortiert[j - 1] = swap;
+            } else
+                break;
         }
-        else break;
-      }
     }
     return;
-  }
+}
 \end{lstlisting}
 Diese Funktion hat drei Eingabeparameter: Das Array, dass die sortierten Zahlen enthalten soll, das Array, dass die zu sortierenden Zahlen enthält, und die Anzahl an zu sortierenden Zahlen.
 Wieder muss die aufrufende Funktion dafür Sorge tragen, dass für beide Arrays ausreichend Speicher bereitgestellt wurde.
@@ -54,27 +55,27 @@ Das bedeutet, dass die Funktion keinen Rückgabewert hat.
 
 Bleibt noch die \verb|main| Funktion, die wie folgt aussieht:
 \begin{lstlisting}
-  #include<stdio.h>
-  
-  int read( int array[], const int n);  
-  void Sort( int sortiert[], int unsortiert[], const int n);
+#include <stdio.h>
 
-  int main(){
+int read(int array[], const int n);
+void Sort(int sortiert[], int unsortiert[], const int n);
+
+int main() {
     const int MAXNUM = 10000;
     int array[MAXNUM], sortiert[MAXNUM];
 
     // read the numbers
-    int actual_length =read(array, MAXNUM);
+    int actual_length = read(array, MAXNUM);
 
     // sort the numbers
     sort(sortiert, array, actual_length);
 
     // print them on the screen
     for (int i = 0; i < actual_length; ++i) {
-      printf("%d ", array[i]); 
+        printf("%d ", array[i]);
     }
     printf("\n");
-  }
+}
 \end{lstlisting}
 Hier haben wir schon von der Möglichkeit Gebrauch gemacht, dass man Funktionen deklarieren kann, und die Definition später stattfinden kann.
 Man kann also beispielsweise in eine Datei \verb|sort.c| erst den Code für die \verb|main| Funktion kopieren, und im Anschluss daran den Code für die beiden Funktionen.
