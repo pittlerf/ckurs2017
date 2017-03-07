@@ -172,16 +172,16 @@ Die wichtigsten Schritte sind:
 \item $heap$ Eigenschaft wiederherstellen
 \end{enumerate}
 Zuerst möchten wir den ersten freien Platz finden. Lass uns annehmen
-die Folgende Beispiel. Eine Familie möchte ein Ticket für ein Konzert kaufen.
+das Folgende Beispiel. Eine Familie möchte ein Ticket für ein Konzert kaufen.
 Aber es gibt nur eine Karte, und die Eltern dürfen nicht gehen, sie müssen sich 
 um ihre Kinder kümmern. Zuerst der Kopf der Familie geht zur Ticketschalter
 um das Ticket zu kaufen, und wenn er/sien  kein Kind hat, hat er Glück und
 kann zum Konzert gehen. Aber wenn er Kind hat, er ist sehr Höflich, und 
 geb die Möchkligkeit für ihre Kinder zum Konzert zu gehen, in anderen Wörte, er
-stellt ihre Kinder zur Warteschlange. Dies wird weitergehen bis der aktuellen 
-Käufer keine Kind hat. Dieses Beispiel ist ähnlich wie unsere Probleme: den
-ersten freien Platz zu finden. Nachdem Beispiel ist es klar, dass wir eine
-Datenstrukture ähnlich wie die Warteschlange verwenden müssen. 
+stellt ihre Kinder zur Warteschlange. Weil das Kind alles tun könnte. Dies wird 
+weitergehen bis der aktuellen Käufer keine Kind hat. Dieses Beispiel ist ähnlich 
+wie unsere Probleme: den ersten freien Platz zu finden. Nachdem Beispiel ist es 
+klar, dass wir eine Datenstrukture ähnlich wie die Warteschlange verwenden müssen. 
 In der Abbildung \ref{warteschlange} wir zeigen wie die Warteschlange
 funktioniert. Das großte Unterschied zwischen Stapelspeicher und Werteschlange ist,
 dass im Werteschlange das erste gekommene Element zuerst auskommen kann. 
@@ -292,6 +292,26 @@ void free_queue( queue **first){
 }
 \end{lstlisting}
 \end{myexampleprogram}
+Das Datei $heapqueue.h$ wird die Typdefinitionen enthalten. Wir müssen
+diese Headerdatei im Codetext für Warteschlange beilegen, um der Kompiler
+den Typ $heap$ verstehen zu können. Natürlich wir müssen ein eigenen 
+Headerdatei für die Warteschlange erzeugen, weil die Funktionen 
+werden in einem anderen Datei ($heap.c$) verwenden. Das Unterschied
+zwischen Stapelspeicher und Warteschlange siehst du im $queue.c$ Zeile 33-36.
+In diesem Teil wir suchen für das letzte (freigegebene) Element in
+der Warteschlange.
+
+Jetzt wir müssen das $heap$ Eigenschaft überprüfen. Das ist ganz einfach, 
+wir ziehen das eingegebenen Element oben bis das $heap$ Eigenschaft wahr wird.
+Wir zeigen hier das in der Praxis:
+\begin{lstlisting}
+while(current_heap->parent != NULL && current_heap->parent->val < current_heap->val) 
+{
+    SWAP(current_heap->parent->val, current_heap->val);
+    current_heap = current_heap->parent;
+}
+\end{lstlisting} 
+
 \begin{myexampleprogram}{Programme: \texttt{Haldensortierung}}
 \begin{lstlisting}
 typedef struct heap {
