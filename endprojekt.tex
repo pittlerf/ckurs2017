@@ -115,11 +115,11 @@ typedef struct heap {
 Der $parent$ Pointer ist ein NULL pointer für die Wurzel des Bäumes. Die Blätters, die keinen
 Kinder haben, haben NULL als right und left Pointers.
 
-Jetzt zeigen wir wie können wir ein Heap aus einem Reihenfolge von Zahlen herstellen. Zuerst
+Jetzt zeigen wir wie mann ein Heap aus einem Reihenfolge von Zahlen herstellen kann. Zuerst
 müssen wir den ersten freien Platz finden, dann fügen wir das Element hier ein. Danach es kann sein, dass 
 das $heap$ Eigenschaft nicht wahr ist. Darum müssen wir das $heap$ Eigenschaft überprüfen und wenn
-es notwendig ist, tauschen wir den aktuellen Wert mit dem Wert von ihrem Eltern bis das
-$heap$ Eigenschaft wahr wird.
+es notwendig ist, tauschen wir den aktuellen Wert mit dem Wert von ihrem Elter bis das $heap$ Eigenschaft 
+wahr wird.
 \begin{figure}[!ht]
 \begin{center}
 % Generated with LaTeXDraw 2.0.8
@@ -166,41 +166,89 @@ $heap$ Eigenschaft wahr wird.
 \end{center}
 \end{figure}
 
+Die wichtigsten Schritte sind:
+\begin{enumerate}
+\item Freie Platz finden
+\item $heap$ Eigenschaft wiederherstellen
+\end{enumerate}
+Zuerst möchten wir den ersten freien Platz finden. Lass uns annehmen
+die Folgende Beispiel. Eine Familie möchte ein Ticket für ein Konzert kaufen.
+Aber es gibt nur eine Karte, und die Eltern dürfen nicht gehen, sie müssen sich 
+um ihre Kinder kümmern. Zuerst der Kopf der Familie geht zur Ticketschalter
+um das Ticket zu kaufen, und wenn er/sien  kein Kind hat, hat er Glück und
+kann zum Konzert gehen. Aber wenn er Kind hat, er ist sehr Höflich, und 
+geb die Möchkligkeit für ihre Kinder zum Konzert zu gehen, in anderen Wörte, er
+stellt ihre Kinder zur Warteschlange. Dies wird weitergehen bis der aktuellen 
+Käufer keine Kind hat. Dieses Beispiel ist ähnlich wie unsere Probleme: den
+ersten freien Platz zu finden. Nachdem Beispiel ist es klar, dass wir eine
+Datenstrukture ähnlich wie die Warteschlange verwenden müssen. 
+In der Abbildung \ref{warteschlange} wir zeigen wie die Warteschlange
+funktioniert. Das großte Unterschied zwischen Stapelspeicher und Werteschlange ist,
+dass im Werteschlange das erste gekommene Element zuerst auskommen kann. 
+So die Umsetzung ist ähnlich wie im Stapelspeicher. Die Untershiede sind
+\begin{enumerate}
+\item Das Typ der gespeicherte Variable
+\item Das pop() Funktion muss das letzte Element ausgeben
+\end{enumerate}
+
+Deises Endprojekt wird mehr aus 100 Zeilen Code bestehen.
+Um die Durchsichtigkeit unseres Programm zu verteidigen müssen
+wir die verschieden Teilen im getrennte Datei schreiben und
+das headerdatei verwenden. Beispielweise, das ist ganz ähnlich wie der 
+$printf$ Funktion. Im headerdatei wir müssen die Typendefinition
+und die Funktiondeklarationen speichern. Achtung, die Typ deklaration
+müssen in einem Verschiedenen Datei sein, weil es Querverweise
+gibt. Beispielweise zeigen wir hier das Quelltext und die Headerdatein
+für die Warteschlange:
+
 \begin{myexampleprogram}{ Programme: \texttt{Die Warteschlange}}	
-\begin{lstlisting}
+\begin{lstlisting}{heapqueue.h}
+typedef struct heap {
+   int val;
+   struct heap *left;
+   struct heap *right;
+   struct heap *parent;
+} heap;
 typedef struct queue {
    struct queue* next;
-   int data;
+   heap * element;
 } queue;
 \end{lstlisting}
-\begin{lstlisting}
-queue * get_a_queue( int x ){
+\begin{lstlisting}{queue.h}
+queue *get_a_queue( heap *data );
+void queue_put( heap *data, queue ** first);
+heap *queue_rem( queue **first);
+void print_queue( queue *first );
+void free_queue( queue **first);
+\end{lstlisting}
+
+\begin{lstlisting}{queue.c}
+#include<stdio.h>
+#include<stdlib.h>
+#include"heapqueue.h"
+queue *get_a_queue( heap *data ){
    queue *q=(queue *)malloc(sizeof(queue));
-   q->data=x;
+   q->element=data;
    q->next=NULL;
    return q;
 }
-\end{lstlisting}
-\begin{lstlisting}
-void queue_put( int x, queue ** first){
+void queue_put( heap *data, queue ** first){
    if ((*first) == NULL){
-       (*first)=get_a_queue(x);
+       (*first)=get_a_queue(data);
        return;
    }
-   queue *temp=get_a_queue(x);
+   queue *temp=get_a_queue(data);
    temp->next=(*first);
    (*first)=temp;
 }
-\end{lstlisting}
-\begin{lstlisting}
-int queue_rem( queue **first){
-   int ret;
+heap *queue_rem( queue **first){
    queue *temp;
+   heap *ret;
    if ((*first) == NULL){
-     return -1;
+     return NULL;
    }
    if ((*first)->next == NULL){
-     ret=(*first)->data;
+     ret=(*first)->element;
      free((*first));
      (*first)=NULL;
      return ret;
@@ -212,12 +260,23 @@ int queue_rem( queue **first){
       temp=temp->next;
    }
    prev->next=NULL;
-   ret=temp->data;
+   ret=temp->element;
    free(temp);
    return (ret);
 }
-\end{lstlisting}
-\begin{lstlisting}
+void print_queue( queue *first ){
+   queue *temp=(first);
+   if (temp == NULL){
+     return;
+   }
+   for (;;){
+     printf("%d\t", temp->element->val);
+     temp=temp->next;
+     if (temp == NULL)
+       break;
+   }
+   printf("\n");
+}
 void free_queue( queue **first){
    if ((*first)== NULL)
      return;
@@ -231,45 +290,6 @@ void free_queue( queue **first){
        break;
    }
 }
-\end{lstlisting}
-\begin{lstlisting}
-void print_queue( queue *first ){
-   queue *temp=(first);
-   if (temp == NULL){
-     printf("Wir haben keine Element in der Wertechlange\n");
-     return;
-   }
-   for (;;){
-     printf("%d\t", temp->data);
-     temp=temp->next;
-     if (temp == NULL)
-       break;
-   }
-   printf("\n");
-}
-\end{lstlisting}
-\begin{lstlisting}
-int main(){
-    queue *elso=NULL;
-    int temp;
-    queue_put(2, &elso);  print_queue(elso);
-    queue_put(4, &elso);  print_queue(elso);
-    queue_put(6, &elso);  print_queue(elso);
-    temp=queue_rem( &elso ); printf("Ausgenommene Element: %d\n",temp); print_queue(elso);
-    queue_put(8, &elso);  print_queue(elso);
-    temp=queue_rem( &elso ); printf("Ausgenommene Element: %d\n",temp); print_queue(elso);
-    free_queue( &elso );
-}
-\end{lstlisting}
-\begin{lstlisting}{Output}
-2	
-4	2	
-6	4	2	
-Ausgenommene Element: 2
-6	4	
-8	6	4	
-Ausgenommene Element: 4
-8	6	
 \end{lstlisting}
 \end{myexampleprogram}
 \begin{myexampleprogram}{Programme: \texttt{Haldensortierung}}
