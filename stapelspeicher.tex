@@ -179,10 +179,10 @@ Element mit dem originalle Anfangsadresse und die neue Anfangsadresse wird die A
 sein. Darum müssen wir nicht die Anfangsadresse als Parameter abgeben, sondern ihre Adresse,
 weil wir den Wert von ihm im Funktion ändern wollen. Den logischen nächsten Schritt
 ist die implementierung des \texttt{pop} Funktions. Der Rückgabewert muss den letzten gespeicherte
-Element sein. Natürlich nachdem \texttt{pop} der Stapelspeicher muss ein Spatelspeicher sein. Das bedeuted
-dass wir die Hierarchie beibehalten müssen. Nachdem \texttt{pop} der Knopf der Speicher (ersten Element in Folge)
+Element sein. Natürlich nachdem \texttt{pop} der Stapelspeicher muss ein Stapelspeicher sein. Das bedeuted
+dass wir die Hierarchie beibehalten müssen. Nachdem \texttt{pop} der neue Knopf der Speicher (ersten Element in Folge)
 muss das vorheriges zweiten sein. Darum hier wir auch müssen die Adresse vom Zeiger auf das ersten Element
-als parameter eingeben. Unter kannst du die Verwirklichung im \texttt{C} sehen.
+als Parameter eingeben. Unter kannst du die Verwirklichung im \texttt{C} sehen.
 \begin{lstlisting}
 int pop( list **first){
    list *temp;
@@ -200,12 +200,14 @@ int pop( list **first){
 \end{lstlisting}
 Wenn das Stapelspeicher leer war, wir werden eine Nachricht ausdrücken. 
 Im anderen Fall wir legen den Rückgabewert mit dem Wert von dem ersten 
-Element fest. Wir müssen auch die ersten Element freigeben, und die neue
-Anfangsadresse mit dem nächste der originalen festlegen.
+Element (Zeile 8) und das neue erste Element (Zeile 11) fest. Das unnötige
+Element muss freigegeben werden (Zeile 10).
 
-Wir können auch prüfen die aktuellen Inhalt des Speichers. 
-Dafür müssen wir einer Funktion, der dursch die Listelementen geht
-schreiben.
+Wir können auch prüfen die aktuellen Inhalt des Stapelspeichers. 
+Dafür müssen wir ein Funktion, der durch die Listelementen geht
+schreiben. Dieser Funktion wird den Speicher nicht ändern, darum 
+können wir auch den Zeiger auf dem Speicher als Parameter eingeben.
+Unter siehst du den Quelltext für das Durchgehen.
 \begin{lstlisting}
 void print_list( list *first){
    list *temp=(first);
@@ -220,14 +222,14 @@ void print_list( list *first){
    printf("\n");
 }
 \end{lstlisting}
-Dieser Funktion zuerst prüft ob der Speicher leer ist. Wenn der
-Speicher nicht leer ist, wir machen eine Schleife um durch die
-Listelementen gehen. In jeden iteration wir springer zur 
-nächsten Element (Zeile 7). Wenn wir am Ende des Speichers
+Wir zuerst prüfen ob der Speicher leer ist oder nicht. Wenn der
+Speicher nicht leer ist, wir machen eine Schleife um die
+Listelementen durchzugehen. In jeden Iteration wir springer zum 
+nächsten Element mit der Asswieung im Zeile 7. Wenn wir am Ende des Speichers
 sind, beenden wir die Schleife.
 
 Es fehlt jetzt nur noch ein Gebrauchanweisung für unseren Stapelspeichern.
-Dies wird der $main$ Funktion.
+Dies wird der \texttt{main} Funktion.
 \begin{lstlisting}
 int main(){
    list *erste=NULL;
@@ -239,9 +241,9 @@ int main(){
    pop( &erste );    print_list(erste);
 }
 \end{lstlisting}
-Wir definieren zuerst einer Pointer um die 
+Wir definieren zuerst ein Zeiger um die 
 Anfangsadresse des Speichers zu speichern (Zeile 2). Dann wir machen eine
-Folgen aus push und pop Anweisungen, und im jeden Schritt wir drücken
+Folgen aus \texttt{push(int x)} und \texttt{pop()} Anweisungen, und im jeden Schritt wir drücken
 den aktuellen Zustand des Speichers aus. Die Ausgebe siehst du unter.
 \begin{lstlisting}
 2	
@@ -251,6 +253,6 @@ den aktuellen Zustand des Speichers aus. Die Ausgebe siehst du unter.
 8	4	2	
 4	2	
 \end{lstlisting}
-Wie du siehst, wenn wir die erste $pop$ Anweisung ausführen, wurde die letzte 
+Wie du siehst, wenn wir die erste \texttt{pop} Anweisung ausführen, wurde die letzte 
 eingegebene Wert (6) aus dem Speicher gelöst. 
 
