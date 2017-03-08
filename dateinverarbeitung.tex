@@ -166,15 +166,15 @@ $EOF$(Ende des Dateins) Zeichen. Mit diesem Byte die Größe des Dateins stimmt.
 \subsection{Das Stream Konzept}
 
 Obwohl die Sprache keine eingebaute Methode für Ein und Ausgabe hat, in der Standardbibliothek befindet sich
-mehrere wertvollen Ein und Ausgabe Funktionen. Ein wichtiges Konzept ist das $stream$. Das $stream$ ist ein Kanal, die
-eine Verbindung zwischen die Datein und deine Programm macht. Beispielweise hier Datein kann  Tastatur, 
-Monitor, oder Datein auf einem Kasetten bezeichnet. In jedem Fall wir haben das gleiche Kanal.
-Diese Universalität macht Ein und Ausgabe einfach zu handhaben. Zu jeden Kanalen gehören ein Pointer von FILE Typ,
+mehrere wertvollen Ein und Ausgabe Funktionen. Ein wichtiges Konzept ist das \texttt{stream}. Das \texttt{stream} ist ein Kanal, die
+eine Verbindung zwischen die Datein und deine Programm macht. Beispielweise hier Datein kann nicht nur eine physikalische Dateiobjekt
+aus der Festpalette bezeichnet, sondern auch Datei aus Tastatur, Monitor, oder Datein auf einem Kasetten. In jedem Fall wir haben das 
+gleiche Kanal. Diese Universalität macht Ein und Ausgabe einfach zu handhaben. Zu jeden Kanalen gehören ein Zeiger von \texttt{FILE} Typ,
 mit dem wir Sie verwenden können. Der Laufzeitsystem stellt automatisch für uns drei Kanale
 \begin{enumerate}
-\item stdin : Standard für Eingabe 
-\item stdout : Standard für Ausgabe
-\item stderr : Standard für Fehler
+\item \texttt{stdin} : Standard für Eingabe (Wir haben schon verwendem mit \texttt{scanf}) 
+\item \texttt{stdout} : Standard für Ausgabe (Wir haben schon verwenden mit \texttt{printf})
+\item \texttt{stderr} : Standard für Fehlernachrichten
 \end{enumerate} zur Verfügung. Wir haben schon das Standard Ein und Ausgabe kennengelernt. Zur errinerung hier gibt es
 eine weitere Übung:
 \begin{myexampleprogram}{Programme: \texttt{Eingabe nach Ausgabe Kopieren}}
@@ -204,8 +204,8 @@ int putchar (char c);
 Drückt den Zeichen $c$ aus. Der Rückgabewert ist ein int Wert, der von unsigned char konvertiert wurde.
 \end{myexampleblock}
 In diesem einfachen Beispiel wir lesen die Zeichen ein bis zum Ende des Dateins in der fünften Zeile.
-Im Schleifenkern wir habe nur eine Anweisung, die der eingelesene Zeichen ausdrückt. Aber in diesem Beispiel
-bei der Ausführung wir müssen den Datein mit dem $<$ Operator zur Standard Eingabe ziehen. Um direkt aus
+Im Schleifenkern wir haben nur eine Anweisung, die der eingelesenen Zeichen ausdrückt. Aber in diesem Beispiel
+bei der Ausführung wir müssen den Datein mit dem \texttt{<} Operator zur Standard Eingabe ziehen. Um direkt aus
 einem Datein lesen zu können, wir müssen ein Kanal zum Datein eröffnen.
 \begin{myexampleblock}{Funktion: \texttt{fopen}}
 \begin{lstlisting}
@@ -215,45 +215,54 @@ FILE *fopen( const char *filename, char mode);
 Eröffnet ein Kanal zum Datein für Verarbeitung.
 \begin{itemize} 
 \itemsep0.5ex
-\item "w": Datei zum Schreiben erzeugen, wenn es schon existiert, wird sie überschreiben
-\item "r": Öffnen einer Datei ausschließlich zum Lesen
-\item "{}a": Öffnen einer Datein zum Anfügen. Wenn is nicht existiert, wird sie erzeugen.
-\item "w+" Öffnen zum Schreiben und Lesen, wenn es schon existiert, wird sie überschreiben.
-\item "r+" Öffnen einer Datei zum Schreiben und Lesen.
-\item "{}a+" Öffnen einer Datei zum Lesen und Anfügen.
+\item \texttt{"w"}: Datei zum Schreiben erzeugen, wenn es schon existiert, wird sie überschreiben
+\item \texttt{"r"}: Öffnen einer Datei ausschließlich zum Lesen
+\item \texttt{"{}a"}: Öffnen einer Datein zum Anfügen. Wenn is nicht existiert, wird sie erzeugen.
+\item \texttt{"w+"} Öffnen zum Schreiben und Lesen, wenn es schon existiert, wird sie überschreiben.
+\item \texttt{"r+"} Öffnen einer Datei zum Schreiben und Lesen.
+\item \texttt{"{}a+"} Öffnen einer Datei zum Lesen und Anfügen.
 \end{itemize}
 \end{myexampleblock}  
-In diesem Fall können wir das $fopen$ Funktion verwenden um einer Kanal zu eröffnen. Vordem
+\begin{myexampleblock}{Funktion:\texttt{fclose}}
+\begin{lstlisting}
+int fclose(FILE *stream);
+\end{lstlisting}
+\vspace{-0.4cm}
+Dieser Funktion wird der Kanal \texttt{stream} freigegeben. Der Rückgabewert ist \texttt{0}, wenn es
+erfolgreich war und \texttt{EOF} wenn nicht.
+\end{myexampleblock}
+In diesem Fall können wir das \texttt{fopen} Funktion verwenden um einer Kanal zu eröffnen. Vordem
 wir mit einem Datei das Arbeit anfangen, müssen wir wissen ob es ein Binärdatei oder ein Asciidatei
-ist. Ein Asciidatei ist ein Sequenz von Zeichen beenden mit $EOF$. In einem Binärdatei, wir müssen vorhand
-die Strukture des Inhalts von Datei wissen. Kann mann fragen, Warum wir bei allen Binärdateien verwenden?
-Das Antwort liegt in der Genauigkeit und im Speicherplatz. Wenn wir eine 8 byte größe Fließkommazahl in 
+ist. Ein Asciidatei ist ein Sequenz von Zeichen beenden mit \texttt{EOF}. In einem Binärdatei, wir müssen vorhand
+die Strukture des Inhalts von Datei wissen. Kann mann fragen, Warum wir bei allen Binärdateien verwenden wollen?
+Das Antwort liegt in der Genauigkeit und im Speicherplatz. Wenn wir eine 8 \texttt{byte} größe Fließkommazahl in 
 ASCII speichern würde, brauchen wir $~40$-mal mehr speichern um die gleiche Genauigkeit zu erreichen. Zuerst 
 werden wir einlesen aus Einfache Asciidatei.
 \begin{myexampleblock}{Funktion: \texttt{fscanf}}
 \begin{lstlisting}
 int fscanf(FILE *kanal,char *formattierungtext, ....);
 \end{lstlisting}
+\vspace{-0.4cm}
 Formattierte Einlesung von einer Asciidatei, interpretiert von dem formattierungtext. Der Rückgabewert ist der
-Anzahl der Elemente von Argumentliste erfolgreich gefüllt. Als Arguments, wir müssen nicht der Wert der Variable geben
-sondern auch ihre Adresse. Mit dem formattierungtext können wir im einzelnen Wiese einlesen.
-Die White-Space zeichen im Kanal wurden nicht gelesen (Zum Beispiel: Neue Zeile, Raumtaste, Tabulatorzeichen).
+Anzahl der Argumenten die erfolgreich gefüllt waren. Als Arguments, wir müssen nicht der Wert der Variable geben
+sondern auch ihre Adresse. Mit dem formattierungtext können wir im individuellen Weise Einlesen.
+Die White-Space zeichen im Kanal wurden nicht gelesen (Beispielweise: Neue Zeile, Raumtaste, Tabulatorzeichen).
 
-Die eingelesene Datei wurden nach den Folgenden Regeln Speichern. Die generelle Form ist:
-$$\%Spezificierungszeichen$$
+Die eingelesenen Datei wurden nach den Folgenden Regeln Speichern. Die generelle Form ist:
+\texttt{\%Spezificierungszeichen}
 
 Die eingelesene Datei wurden nach den Folgenden Regeln Speichern. 
 
 \begin{center}
 \begin{tabular}{|cc|}
 \hline
-Specifizierungzeichen & Bedeutung \\\hline
-$\%d$	&  Einlesen ein ganze Zahl in einer $in$ Variable \\
-$\%ld$  &  Einlesen ein ganze Zahl in einer $long~int$ Variable \\
-$\%f,\%e$   & Einlesen ein Fließkommazahl in einer $float$ Variable \\
-$\%lf,\%le$  & Einlesen ein Fließkommazahl in einer $double$ Variable \\
-$\%c$  & Einlesen ein Zeichen in einer $char$ Variable \\
-$\%s$  & Einlesen eine Zeichenkette in einem Charakterarray.\\
+\texttt{Specifizierungzeichen} & Bedeutung \\\hline
+\texttt{\%d}	&  Einlesen ein ganze Zahl in einer $in$ Variable \\
+\texttt{\%ld}  &  Einlesen ein ganze Zahl in einer $long~int$ Variable \\
+\texttt{\%f,\%e}   & Einlesen ein Fließkommazahl in einer $float$ Variable \\
+\texttt{\%lf,\%le}  & Einlesen ein Fließkommazahl in einer $double$ Variable \\
+\texttt{\%c}  & Einlesen ein Zeichen in einer $char$ Variable \\
+\texttt{\%s}  & Einlesen eine Zeichenkette in einem Charakterarray.\\
 \hline
 \end{tabular}
 \end{center}
@@ -268,7 +277,7 @@ Zum Beispiel wir möchten die Zahlen von diesem Asciidatei einlesen.
 888
 \end{lstlisting}
 Wir müssen nicht achten auf die ``white space'' Zeichen, wir können Sie einfach vergessen.
-Im unteren Quelltext wir zeigen, wie es funkzioinert in der Praxis.
+Im unteren Quelltext wir zeigen, wie es in der Praxis funktioniert.
 \begin{lstlisting}
 #include<stdio.h>
 #include<stdlib.h>
@@ -288,51 +297,56 @@ int main(int argc, char *argv[]){
   while( fscanf(in, "%d", &d) == 1 ){
     printf("%d\n");
   }
-  fclose(in);
+  if (fclose(in) != 0){
+    printf("Error closing the File\n");
+    exit(1);
+  }
 }
 \end{lstlisting}
-Zuerst wir öffnen ein Kanal für einlesen mit dem $fopen$ Fuktion in der 11-ten Zeile. Wir müssen 
-der Rückgabewert vom $fopen$ überprüfen um Fehler zu vermeiden. Wenn die Rückgabewert ist das 
-$NULL$ Pointer wir haben irgendeine Fehler. Hier verwenden wir das $errno$ Systemumgebungsvariable.
-Wenn die Standardbibliothek Funktionen Fehler zurückgeben, sie auch weisen den Typ des Fehlers aus mithilfe
-der $errno$ Variable. Es gibt Tabellen, die für jede Wert von $errno$ Variable den Fehler zeigen.
-Nachdem wir den Datei erfolgreich geöffnet haben, fangen wir das Einlesen an. Wir lesen 
-ganze Zahlen bis zum Ende des Datein (Zeile 16). Nachdem Einlesen wir brauchen den Kanal nicht mehr. 
-Zum ende muss die Kanal freigegeben werden (Zeile 19). Die Ausgabe nachhdem Ausführung siehst du unter.
+Zuerst wir öffnen ein Kanal für einlesen mit dem \texttt{fopen} Fuktion in der 11-ten Zeile. Wir müssen 
+der Rückgabewert vom \texttt{fopen} überprüfen um Fehler zu vermeiden. Wenn die Rückgabewert ist das 
+\texttt{NULL} Zeiger wir haben irgendeine Fehler. Hier verwenden wir das \texttt{errno} Systemumgebungsvariable
+um Informationen über den Fehler zu erhalten. Wenn die Standardbibliothek Funktionen Fehler zurückgeben, sie auch 
+weisen den Typ des Fehlers aus mit Hilfe der \texttt{errno} Variable. Es gibt Tabellen, die für jede Wert von 
+\texttt{errno} Variable den passierten Fehler zeigen. Nachdem wir den Datei erfolgreich geöffnet haben, fangen wir 
+das Einlesen an. Wir lesen ganze Zahlen bis zum Ende des Datein (Zeile 16). Nachdem Einlesen wir brauchen den Kanal 
+nicht mehr. Zum ende muss die Kanal freigegeben werden (Zeile 19). Die Ausgabe nachhdem Ausführung siehst du unter.
 \begin{lstlisting}
 1212
 1222
 999
 12212
- 88
+88
 \end{lstlisting}
 Das beweist, dass das Ergebnis unabhänging von den ``white space'' Zeichen ist. Jetzt wir können Einlesen, 
-wir möchten auch neuen Datein erzeugen. Formattierte Ausgabe in einem Datei ist wie die Eingabe. Wir können 
-der $fprintf$ Fuktion aus dem Standardbibliothek verwenden.
+wir möchten auch neuen Datein aus unserem Programm erzeugen. Formattierte Ausgabe in einem Datei ist ähnlich 
+wie die Eingabe. Wir können der \texttt{fprintf} Funktion aus dem Standardbibliothek verwenden um Daten 
+auszuschreiben.
 \begin{myexampleblock}{Funktion: \texttt{fprintf}}
 \begin{lstlisting}
 int fprintf(FILE *kanal,char *formattierungtext, ....);
 \end{lstlisting}
+\vspace{-0.4cm}
 Formattierte Ausgabe in einer Asciidatei, interpretiert von dem formattierungtext. Der Rückgabewert ist der
-Anzahl der ausgegebenen Zeichen. Als Arguments, wir müssen der Wert der Variable geben
+Anzahl der ausgeschriebenen Zeichen. Als Arguments, wir müssen der Wert der Variable geben
 nicht ihre Adresse. Mit dem formattierungtext können wir im einzelnen Wiese ausdrücken.
 
-Die ausgebende Datei wurden ähnlich wie im $fscanf$ verarbeiten. Die generelle Form ist:
-$$\%Spezificierungszeichen$$
+Die ausgebende Datei wurden ähnlich wie im \texttt{fscanf} verarbeiten. Die generelle Form ist:\\
+\texttt{\%Spezificierungszeichen}
 {
 \begin{center}
 \begin{tabular}{|cc|}
 \hline
 Specifizierungzeichen & Bedeutung \\\hline
-$\%d$   &  Ausgeben ein ganze Zahl \\
-$\%f,\%e$   & Ausgeben ein Fließkommazahl  \\
-$\%c$  & Ausgeben ein Zeichen  \\
-$\%s$  & Ausgeben eine Zeichenkette\\
+\texttt{\%d}   &  Ausgeben ein ganze Zahl \\
+\texttt{\%f,\%e}   & Ausgeben ein Fließkommazahl  \\
+\texttt{\%c}  & Ausgeben ein Zeichen  \\
+\texttt{\%s}  & Ausgeben eine Zeichenkette\\
 \hline
 \end{tabular}
 \end{center}
 }
-Im $fprintf$ wir können mit $\%f$ entweder der Wert von einem $float$ oder $double$ Fließkommazahl
+Im \texttt{fprintf} wir können mit \texttt{\%f} entweder der Wert von einem \texttt{float} oder \texttt{double} Fließkommazahl
 ausdrücken.
 \end{myexampleblock}
 Beispielweise, drücken wir das Quadrat der Zahlen von 0 bis 100 immer, sodass alle Zeilen werden
@@ -352,15 +366,18 @@ int main(){
   for (i=1;i<=100;++i){
     fprintf(out,"%.6d\n",i*i);
   }
-  fclose(out);
+  if (fclose(out) != 0){
+    printf("Error in closing the File\n");
+    exit(1);
+  }
 }
 \end{lstlisting}
 In diesem Fall wir öffnen der Datei zum Schreiben (Zeile 7). Wir drücken 
-die Quadrats mit dem $fprintf$ Fuktion zum Kanal aus. In der C Sprache wir 
+die Quadrats mit dem \texttt{fprintf} Funktion zum Kanal aus. In der \texttt{C} Sprache wir 
 können einstellen, wieviele Ziechen wir in der Ausdrückung verwenden möchten. 
-Mit der Anweisung $\%x.yd$ die Ausdrückung beginnt im $x$-ten Zeichen, und 
-verwendet mindesten $y$ zeichen. Mit dem $\%.6d$ jede Quadrat wird ergänzt mit $0$
-um 6 Zeichen zuverwenden. Die ersten Zeilen des Ergebnis befindest du unter:
+Mit der Anweisung \texttt{\%x.yd} die Ausdrückung beginnt im \texttt{x}-ten Zeichen, und 
+verwendet mindesten \texttt{y} zeichen. Mit dem \texttt{\%.6d} jede Quadrat wird ergänzt mit 
+\texttt{0} um 6 Zeichen zuverwenden. Die ersten Zeilen des Ergebnis befindest du unter:
 \begin{lstlisting}
 000001
 000004
@@ -372,28 +389,28 @@ um 6 Zeichen zuverwenden. Die ersten Zeilen des Ergebnis befindest du unter:
 000064
 000081
 \end{lstlisting}
-Es macht sinn in einem Großen Projekt die Parameters in einem Asciidatei ausdrücken, aber
+Es macht sinn in einem großen Projekt die Parameters in einem Asciidatei ausdrücken, aber
 das Ergebnis muss in Binärdatei gespeichert werden. Dafür stellen wir hier vor, wie 
-mann binäredatei in C handeln kann. Das großte Unterschied zwischen Binäre and Asciidatei
+mann binäredatei in \texttt{C} handeln kann. Das großte Unterschied zwischen Binäre and Asciidatei
 ist, dass wir der Binäredatei mit einem einfachen Editor nicht anschauen können. Wir müssen uns
 errinern in welchen Form wieviele Datei wir in einem Binärdatei geschrieben haben. Für ein einfaches 
-Einlesen oder Ausgaben wir können die Funktionen ($fread$ und $fwrite$) verwenden. Wenn wir nicht nur
+Einlesen oder Ausgaben wir können die Funktionen \texttt{fread} und \texttt{fwrite} verwenden. Wenn wir nicht nur
 Schreiben sondern auch Einlesen möchten, müssen wir der Kanal auch positionieren.  Beispielweise
 wir möchten die Festpalette als Memory verwenden: zuerst schreiben wir etwas aus, danach möchten
-wir diese Datei verwenden. In diesem Fall wir können der Kanal mit dem $rewind()$ oder $fseek()$ Funktion
-positionieren.
+wir diese Datei verwenden. In diesem Fall wir können der Kanal mit dem \texttt{rewind()} oder \texttt{fseek()}
+Funktion positionieren.
 \begin{myexampleblock}{Funktion: \texttt{fread}}
 \begin{lstlisting}
 size_t fread ( void * ptr, size_t size, size_t count, FILE * stream );
 \end{lstlisting}
 \vspace{-0.4cm}
-Lest aus einem Binärdatei. Der Rückgabewert ist die Größe der eingelesene Datei.\\
+Lest aus einem Binärdatei. Der Rückgabewert ist die Größe der eingelesenen Datei.\\
 Die Parameters:
 \begin{enumerate}
-\item $ptr$: Anfangadresse, wo die eingelesene Datei gespeichert wird
-\item $size$: Größe einer eingelesenen Einheit
-\item $count$: Anzahl der eingelesenen Einheiten
-\item $stream$: Pointer zum Kanal
+\item \texttt{ptr}: Anfangsadresse, wo die eingelesene Datei gespeichert wird
+\item \texttt{size}: Größe einer einlesenden Einheit
+\item \texttt{count}: Anzahl der einlesenden Einheiten
+\item \texttt{stream}: Zeiger zum Kanal
 \end{enumerate}
 \end{myexampleblock}
 \begin{myexampleblock}{Funktion: \texttt{fwrite}}
@@ -401,13 +418,13 @@ Die Parameters:
 size_t fwrite ( const void * ptr, size_t size, size_t count, FILE * stream );
 \end{lstlisting}
 \vspace{-0.4cm}
-Schreibt in einem Binärdatei. Rückgabewert ist die Größe, der ausgeschrienen
+Schreibt in einem Binärdatei. Rückgabewert ist die Größe, der ausgeschriebenen
 Datei.\\ Die Parameters:
 \begin{itemize}
-\item Quelladresse von den ausschreibenden Datei 
-\item Größe einer ausschreibenden Einheit
-\item Anzahl der ausschreibenden Einheiten
-\item Pointer Zum Kanal
+\item \texttt{ptr}: Quelladresse von den ausschreibenden Datei 
+\item \texttt{size}: Größe einer ausschreibenden Einheit
+\item \texttt{count}: Anzahl der ausschreibenden Einheiten
+\item \texttt{stream}: Zeiger Zum Kanal
 \end{itemize}
 \end{myexampleblock}
 \begin{myexampleblock}{Funktion: \texttt{rewind}}
@@ -416,18 +433,19 @@ void rewind(FILE *stream)
 \end{lstlisting}
 \vspace{-0.4cm}
 Positioniert der Kanal auf dem Anfang des Binärdateis.
+Es hat nur ein Parameter: \texttt{stream}: Zeiger zum Kanal.
 \end{myexampleblock}
 \begin{myexampleblock}{Funktion: \texttt{fseek}}
 \begin{lstlisting}
 int fseek(FILE *stream, long int offset, int whence)
 \end{lstlisting}
 \vspace{-0.4cm}
-Positioniert der Kanal auf einem specific Position in dem 
-Binärdatei. Rückgabewert ist 0, wenn die Positionierung erfolgreich war.
+Positioniert der Kanal auf einem Spezifisch Position in dem 
+Binärdatei. Rückgabewert ist \texttt{0}, wenn die Positionierung erfolgreich war. Die Parameters:
 \begin{enumerate}
-\item stream: Der Kanal
-\item offset: Versatz
-\item whence: Die Position, zur die Versatz hinzufügen wird
+\item \texttt{stream}: Zeiger zum Kanal
+\item \texttt{offset}: Versatz, Verschiebung
+\item \texttt{whence}: Die Position, zur die Verschiebung hinzufügen wird
 \end{enumerate}
 \end{myexampleblock}
 Unter wir geben ein Beispiel für die Verwendung der Funktions $fread$ und $fwrite$.
