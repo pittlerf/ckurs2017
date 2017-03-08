@@ -1,12 +1,15 @@
 \section{Verketette Liste, der Kellerspeicher}
-Wir haben gelernt, wie wir die Memoryverwaltung verwenden können. Aber was passiert, wenn wir ein Element löschen wollten, oder
-wir nochein zwischen zwei schon existiert Elementen hinzufügen möchten. In anderen Worten, wir möchten ein Dateistrukture, das
+Wir haben gelernt, wie wir die Speicherverwaltung verwenden können. Aber was passiert, wenn wir ein Element löschen wollen, oder
+nochein zwischen zwei schon existierten Elementen hinzufügen möchten. In anderen Wörten, wir möchten ein Dateistrukture, das
 dynamisch erhöht, oder schrumpft. Das können wir ausführen mit einer Strukture, die die Adresse des nächsten Elements enthält.
-Beispielweise in der C Sprache ein Struktureelement kann auch ein Pointer auf den nächsten Element sein.
+Mann kann dieses Strukture als verkettete Liste bezeichnet. Beispielweise in der \texttt{C} Sprache ein Struktureelement kann 
+auch ein Zeiger auf demselben Element sein. Es gibt nur eine Bedingung für ein Feld im Strukture: Ihre Größe musst beim Kompilierung 
+bekannt sein. Der Zeiger auf demselben Element erfüllt deise Bedingung. Beispielweise im \texttt{C} eine mögliche verwirlichung der
+verketteten Liste zeigen wir unter:
 \begin{lstlisting}
 struct list{
   int element;
-  struct list *nachste;
+  struct list *naechste;
 }
 \end{lstlisting}
 \begin{figure}[!ht]
@@ -20,45 +23,54 @@ struct list{
 {
 \begin{pspicture}(0,0.)(16.0,4.)
 \psframe[linewidth=0.04,dimen=outer](3.,1)(0.0,3.0)
-\rput(1.2, 2.5){element: 4}
-\rput(1.2, 2.0){nachste:} 
-\rput(1.2, 1.5){0x1b464c0}
-\rput(1.5, 0.5){Adresse: 0x1b464a0} 
+\rput(1.2, 2.5){\texttt{element: 4}}
+\rput(1.2, 2.0){\texttt{naechste}:} 
+\rput(1.2, 1.5){\texttt{0x1b464c0}}
+\rput(1.5, 0.5){\texttt{Adresse: 0x1b464a0}} 
 
 \psline[linewidth=0.04cm](3.5,2.)(4.5,2.)
 \psline[linewidth=0.04cm](4.25,2.5)(4.5,2)
 \psline[linewidth=0.04cm](4.25,1.5)(4.5,2)
 \psframe[linewidth=0.04,dimen=outer](8.,1)(5.0,3.0)
-\rput(6.2, 2.5){element: 6}
-\rput(6.2, 2.0){nachste:}
-\rput(6.2, 1.5){0x1b46480}
-\rput(6.2, 0.5){0x1b464c0}
+\rput(6.2, 2.5){\texttt{element: 6}}
+\rput(6.2, 2.0){\texttt{naechste:}}
+\rput(6.2, 1.5){\texttt{0x1b46480}}
+\rput(6.2, 0.5){\texttt{0x1b464c0}}
 \psline[linewidth=0.04cm](8.5,2.)(9.5,2.)
 \psline[linewidth=0.04cm](9.25,2.5)(9.5,2)
 \psline[linewidth=0.04cm](9.25,1.5)(9.5,2)
 
 \psframe[linewidth=0.04,dimen=outer](13.,1)(10.0,3.0)
-\rput(11.2, 2.5){element: 6}
-\rput(11.2, 2.0){nachste:}
-\rput(11.2, 1.5){NULL}
-\rput(11.2, 0.5){0x1b46480}
+\rput(11.2, 2.5){\texttt{element: 8}}
+\rput(11.2, 2.0){\texttt{naechste:}}
+\rput(11.2, 1.5){\texttt{NULL}}
+\rput(11.2, 0.5){\texttt{0x1b46480}}
 \psline[linewidth=0.04cm](13.,2.)(14.,2.)
 \psline[linewidth=0.04cm](13.75,2.5)(14.,2)
 \psline[linewidth=0.04cm](13.75,1.5)(14.,2)
-\rput(15, 2.){\LARGE NULL}
+\rput(15, 2.){\texttt{\LARGE NULL}}
 \end{pspicture} 
 }
 \caption{Einmal Verketette Liste\label{verklist}}
 \end{figure}
 In der Abbildung \ref{verklist} wir zeigen, wie es in der Praxis
-funkzioniert. Wir werden den NULL pointer für das Ende der verketetten
-Liste verwenden. Viele wichtigen Datenstukturen können mit 
-verketetten Listen darstellen. Beispielweise den Stapelspeicher.
-In Assembly Programmiersprache beim Funktionanrufen die Parameters werden 
-zum Stapelspeicher gestellt. Wenn wir kommen von einem Funktion zurück, 
-wir nehmen ein Element vom Stapelspeicher aus. Das Grundprinzip im
+funkzioniert. Wir werden den \texttt{NULL} pointer für das Ende der verketteten
+Liste verwenden. Es gibt mehrere Möglichkeiten um eine verkettete Liste herstellen.
+Beispielwiese wir können auch ein Zeiger für das vorherigen Element verwenden um die Liste
+auch in der andere Richtung durchgehen zu können. Mann kann das auch als
+doppelt verkettete Liste bezeichnet. Viele wichtigen Datenstukturen können mit 
+verketteten Listen darstellen. Beispielweise den Stapelspeicher.
+Der Stapelspeicher ist ein Speicher, der nur zwei operationen hat:
+\begin{itemize}
+\item \texttt{push()}: Speicher ein Element im Stapelspeicher
+\item \texttt{pop()} : Gib das zuletzt gespeicherte Element Zurück
+\end{itemize}
+Wir zeigen es in der Abbildung \ref{stapspeicher}. Die wichtigste Verwendungsmöglichkeiten
+ist im \texttt{Assembly} Programmiersprache. In diesem Sprache beim Funktionanrufen die Parameters werden 
+zum Stapelspeicher gestellt. Wenn wir von einem Funktion zurückkommen, 
+wir nehmen ein Element vom Stapelspeicher aus als Rückgabewert. Das Grundprinzip im
 Stapelspeicher ist: Den zuletzt gespeicherten Element werden wir zuerst
-zurückgeben. Wir zeigen es in der Abbildung \ref{stapspeicher}.
+zurückgeben. Es ist ein \texttt{LIFO} Speichertyp: \texttt{L}ast \texttt{I}n \texttt{F}irst \texttt{O}ut.
 \begin{figure}[!ht]
 \begin{center}
 % Generated with LaTeXDraw 2.0.8
@@ -106,30 +118,33 @@ zurückgeben. Wir zeigen es in der Abbildung \ref{stapspeicher}.
 \end{figure}
 
 Wir werden jetzt implementieren diesen wichtigen Datenstruktur mit 
-den verketetten Listen. Zuerst stellen wir der Datenstruktur, den wir verwenden
-vor:
+den verketteten Listen. Zuerst stellen wir der Datenstruktur vor:
 \begin{lstlisting}
 typedef struct list {
    struct list* next;
    int data;
 } list;
 \end{lstlisting}
-Das ist natürlich eine verketette Liste. Aber wir haben hier diesen Typ also definiert
-mit dem Strichwort $typedef$.
+Das ist natürlich eine verkettete Liste. Aber wir haben hier diesen Typ also definiert
+mit dem Strichwort \texttt{typedef}.
 \begin{myexampleblock}{Strichwort: \texttt{typedef}}
 \begin{lstlisting}
 typedef neuename altename;
 \end{lstlisting}
 \vspace{-0.4cm}
-Stellt ein neues Name ($neuename$) für den Typ von $altename$ her.
+Stellt ein neues Name (\texttt{neuename}) für den Typ von \texttt{altename} her.
 \end{myexampleblock}
-Der größte Vorteil in diesem Fall ist, dass wir den Strichwort $struct$ 
-vor allen Variable definition verwenden müssen. Der Quelltext wird durchsichtiger
-sein. Jetzt wir haben das Definition der Datenstrukture, wir können die Implementierung
-anfangen. Zuerst besprechen wir, wie können wir eine neue Stapelelement herstellen.
-Wie können wir eine neue Variable von Typ $list$ herstellen.
+Der größte Vorteil in diesem Fall ist, dass wir den Strichwort \texttt{struct} 
+vor allen Variable definition verwenden müssen. Der \texttt{typedef} ändert nur
+den Datenstrukture um in dem Codetext leichter zuzugriffen. Der Quelltext wird auch
+durchsichtiger sein. Jetzt wir haben das Definition der Datenstrukture, wir können die 
+Implementierung anfangen. Zuerst besprechen wir, wie können wir eine neue Stapelelement herstellen.
+Wir müssen die zwei Operation \texttt{pop} und \texttt{push} als Funktion verwirklichen.
+Natürlich dazu müssen wir andere (kleiner) Funktionen verwenden.
+Beispielweise wir müssen eine neue Variable von Typ \texttt{list} herstellen mit dem Funktion 
+\texttt{newlist} (Den Quelltext siehst du unter).
 \begin{lstlisting}
-list * get_a_list( int x ){
+list * newlist( int x ){
    list *q=(list *)malloc(sizeof(list));
    if (q == NULL){
      fprintf(stderr, "Error in Memory allocation\n");
@@ -140,31 +155,34 @@ list * get_a_list( int x ){
    return q;
 }
 \end{lstlisting}
-Der obene Codeteil gib eine $list$ Element zurück und hat die
+Der obene Codeteil gib eine \texttt{list} Element zurück und hat die
 speichernde ganze Zahl als Eingabeparameter. Dieser Teil ist ganz einfach.
-Wir reservieren Speicherzellen für den neuen Listelement und zuweisen
-den Eingabewert. Zum Ende wir müssen die nächste Element als ein NULL 
-Pointer festlegen. Die nächste Teil ist das push() Funktion. Speichern 
-ein Element im Stapelspeicher.
+Wir reservieren Speicherzellen für das neue Listelement und zuweisen
+den Eingabewert. Zum Ende wir müssen die nächste Element als ein \texttt{NULL} 
+Zeiger festlegen. Die nächste Teil ist das \texttt{push()} Funktion. Das wird
+ein neues Element zum Stapelspeichern hinzufügen.
 \begin{lstlisting}
 void push( int x, list ** first){
    if ((*first) == NULL){
-       (*first)=get_a_list(x);
+       (*first)=newlist(x);
        return;
    }
-   list *temp=get_a_list(x);
+   list *temp=newlist(x);
    temp->next=(*first);
    (*first)=temp;
 }
 \end{lstlisting}
-Wir müssen die Adresse von dem Pointer auf den Anfang des Speichers  und den speichernde 
-Element abgeben. Wenn den List leer ist, wir legen die Anfangsadresse mit der adresse 
-des  neuen Elements fest. In anderem Fall wir legen den next Pointer von dem neuen Element 
-mit dem originalle Anfangsadresse und die neue Anfangsadresse wird die Adresse vom neuen Element 
+Wir müssen die Adresse vom Zeiger auf das Anfangsadresse des Speichers und den speichernde 
+Element als Parameter eingeben. Wenn der Stapelspeicher leer ist, wir legen die Anfangsadresse 
+mit der Adresse des neuen Elements fest. In anderem Fall wir legen den nächste Zeiger von dem neuen 
+Element mit dem originalle Anfangsadresse und die neue Anfangsadresse wird die Adresse vom neuen Element 
 sein. Darum müssen wir nicht die Anfangsadresse als Parameter abgeben, sondern ihre Adresse,
 weil wir den Wert von ihm im Funktion ändern wollen. Den logischen nächsten Schritt
-ist die implementierung des $pop$ Funktions. Der Rückgabewert muss den letzten gespeicherte
-Element sein. Der Eingabeparameter muss den Anfangsadresse den Stapelspeicher sein.
+ist die implementierung des \texttt{pop} Funktions. Der Rückgabewert muss den letzten gespeicherte
+Element sein. Natürlich nachdem \texttt{pop} der Stapelspeicher muss ein Spatelspeicher sein. Das bedeuted
+dass wir die Hierarchie beibehalten müssen. Nachdem \texttt{pop} der Knopf der Speicher (ersten Element in Folge)
+muss das vorheriges zweiten sein. Darum hier wir auch müssen die Adresse vom Zeiger auf das ersten Element
+als parameter eingeben. Unter kannst du die Verwirklichung im \texttt{C} sehen.
 \begin{lstlisting}
 int pop( list **first){
    list *temp;
