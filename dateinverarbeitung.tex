@@ -1,236 +1,74 @@
 \section{Datein verarbeiten}
-In Unix wir identifizieren ein Datein mit seinem Name. Wir können Funktionen aus dem Standardbibliothek verwenden, um
-detallierte Informationen über ihnen zu erhalten. In diesem Fall die \texttt{C} Sprache bietet uns den \texttt{stat} Funktion 
-und ihren Rückgabewert die \texttt{stat} Strukture. 
-\begin{myexampleblock}{Definition: \texttt{struct stat}}
-\begin{lstlisting}
-struct tm{
-  _dev_t st_dev:   /*Laufwerksnummer*/
-  _ino_t st_ino;   /*Inode: eine grundlegende Datenstruktur zur Verwaltung von Dateisystemen mit unixartigen Betriebssystemen. */
-  unsigned short st_mode; /*Modus, Berechtigungen*/
-  short st_nlink;  /*Anzahl der Referenzen auf dem Datei*/
-  short st_uid;    /*USER-ID*/
-  short st_gid;    /*GROUP-ID*/
-  _dev_t st_rdev:  /*Laufwerksnummer*/
-  _off_t st_size;  /*Dateigroesse in Bytes */
-  time_t st_atime; /*Datum des letzten Zugriffes*/
-  time_t st_mtime; /*Datum des letzten Aenderung*/
-  time_t st_ctime; /*Erstelldatum*/
-}
-\end{lstlisting}
-\vspace{-0.4cm}
-Das Definition befindet sich im Standardbibliothek \texttt{sys/stat.h}.
-\end{myexampleblock}
-\begin{myexampleblock}{Definition: \texttt{struct passwd}}
-\begin{lstlisting}
-struct passwd {
- char *pw_name; /*Anwaenders login Name*/
- uid_t pw_uid; /* UID id*/
- gid_t pw_gid; /* GID id*/
- char *pw_dir; /*Login Direktory*/
- ...
-}; 
-\end{lstlisting}
-\vspace{-0.4cm}
-Das Definition befindet sich im Standardbibliothek \texttt{passwd.h}.
-Die Punkten stehen für Elementen, die uns nicht interessiert.
-\end{myexampleblock}
-\begin{myexampleblock}{Definition: \texttt{struct group}}
-\begin{lstlisting}
-struct group {
-  char *gr_name;
-  gid_t gr_gid;
-  char **gr_mem;
-  ...
-};
-\end{lstlisting}
-\vspace{-0.4cm}
-Das Definition befindet sich im Standardbibliothek \texttt{grp.h}.
-Die Punkten stehen für Elementen, die uns nicht interessiert.
-\end{myexampleblock}
-\begin{myexampleblock}{Funktion: \texttt{stat}}
-\begin{lstlisting}
-int stat(char * path, struct stat * buf);
-\end{lstlisting}
-\vspace{-.4cm}
-Information erhalten über das Datein bennant als $path$. Die Informations werden im $buf$ gespeichert.
-Der Rückgabewert ist 0, wenn alles geklappt hat, und -1 bei einem Fehler.
-\end{myexampleblock}
-Bevor wir mit einem Datein arbeiten, müssen wir sicher sein, ob wir die entsprechende Rechte haben, um ihn zu 
-erstellen oder einzulesen. Die Felden \texttt{uid} und \texttt{gid} in der \texttt{stat} Strukture geben Informationen 
-über die Besitzer des Dateins. Der Supervisor hat immer \texttt{(0,0)} als \texttt{(uid,gid)}. Normalweise der erste Anwänder 
-hat 1000 \texttt{uid}. Für die weitere Anwänders das \texttt{uid} wird um eins erhöht. 
-Wir können auch das \texttt{uid} mit einem Anwänder's Name verbunden. Dafür gibt es zum Bespiel der \texttt{getpwuid} 
-Funktion im Standardbibliothek. Die Anwänders in den unixartigen Betriebsystemen haben ihre login Name und gehören
-auch zu einer Gruppe. Wenn in einem Computer mehrere Programmierer arbeiten, Sie können ihre Arbeit leicht teilen. 
-Wir können das \texttt{gid} mit einem Name mit Hilfe von \texttt{getgrgid} Funktion verbunden.
-Es kann nötig sein zu prüfen, ob die Datein beschädigt ist, oder nicht.  Bespielweise, wir können ihre Größe
-überprüfen. Lass uns annehmen, dass wir die folgende Datei (example.txt) haben
-\begin{lstlisting}{example.txt}
-Hello world
-\end{lstlisting}
-Wir haben die folgende \texttt{C} Code geschrieben, um Informationen über diesen Datei erhalten:
-\begin{lstlisting}
-#include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
-#include <pwd.h>
-#include <grp.h>
-#include <sys/stat.h>
-int main(int argc, char *argv[])
-{
-   struct stat *sb;
-   struct passwd *pwuser;
-   struct group *grpnam;
-   int i;
-   if (argc < 2)
-   {
-       printf("Usage: %s: file ...\n", argv[0]);
-       exit(EXIT_FAILURE);
-   }
-   sb= (struct stat *)malloc(sizeof(struct stat));
-   if (sb == NULL){
-      printf("Memory allocation failure\n");
-      exit(1);
-   }
-   for ( i = 1; i < argc; i++){
-      if (stat(argv[i], sb) == -1){
-          exit(EXIT_FAILURE);
-      }
-      if ( (pwuser = getpwuid(sb->st_uid)) == NULL )
-      {
-          exit(EXIT_FAILURE);
-      }
-      if ( (grpnam = getgrgid(sb->st_gid)) == NULL )
-      {
-          exit(EXIT_FAILURE);
-      }
-      printf("%s:\n", argv[i]);
-      printf("\tinode: %u\n", (int)sb->st_ino);
-      printf("\towner: %u (%s)\n", sb->st_uid, pwuser->pw_name);
-      printf("\tgroup: %u (%s)\n", sb->st_gid, grpnam->gr_name);
-      printf("\tperms: %o\n", sb->st_mode & (S_IRWXU | S_IRWXG | S_IRWXO));
-      printf("\tsize: %ld\n", sb->st_size);
-      printf("\tatime: %s", ctime(&(sb->st_atime)));
-      printf("\tmtime: %s", ctime(&(sb->st_mtime)));
-      printf("\tctime: %s", ctime(&(sb->st_ctime)));
-      printf("\n");
-   }
-   free(sb);
-   return 0;
-}
-\end{lstlisting}
-Dieses Beispiel gibt  viele Neueigkeiten für uns. Zum ersten Mal verwenden wir die Eingabeparameters unseres 
-Programms. Zur Erinnerung, der Wert vom \texttt{argc} erhaltet die Anzahl der Parameter, und im \texttt{argv[]} 
-(Array von Zeiger auf \texttt{char} Typ) sind die Parameter gespeichert. Standardmäßig das erste Parameter ist das 
-Name des Programms, dann kommen die Parameter, die wir hinzufügen haben. In der 13-ten Zeile prüfen wir die Anzahl 
-der eingegebenen Parameter. Wenn wir keinen Parameter eingegeben haben, beenden wir das Programm mit einer Gebrauchanweisung.
-Für die Anwänders das ist ein große Hilfe. Standartmäßig die Unix Programmen ausführen mit dem \texttt{--help} werden
-ähnliche Gebrauchanweisungen zur Verfügung stellen.
-In dem Programm wir verwenden jeden Parameter als ein Dateiname und erhalten ihre Eigenschaften mit Hilfe des \texttt{stat} 
-Funktion. Es ist wichtig in der 18-ten Zeile Speicher für \texttt{sb} reservieren. Der Funktion \texttt{stat} geht davon aus, 
-dass die Adresse, die sie bekommen habe, ist schon reserviert. In diesem Beispiel wir verwenden auch der \texttt{getpwuid} Funktion, 
-mit dem wir die \texttt{uid} mit einem login Name verbunden. In unix Betriebsystemen wir können verschiedene Rechten für 
-\begin{enumerate}
-\item Besitzer, 
-\item Gruppe vom Besitzer
-\item Die Anderen
-\end{enumerate}
-geb en. Für ein Datei gibt es Rechte für Schreiben (\texttt{w}), Lesen(\texttt{r}) und Ausführen(\texttt{x}). Aus der Kommandozeile
-können wir die Rechten mit \texttt{ls -la} überprüfen. Beispielweise:\\
-\begin{verb}
->$ ls -la example.txt
-\end{verb}\\
-\begin{verb}
--rw-rw-r-- 1 pittler pittler 26 Maer  4 18:36 example.txt
-\end{verb}\\
-Das bedeutet, dass der Besitzer von \texttt{example.txt} ist der Anwänder von Name \texttt{pittler} aus der \texttt{pittler} Gruppe.
-Der Besitzer und ihre Gruppe hat Recht für Lesen und auch Schreiben, die Anderen haben Rechte nur für Lesen.
-In unserem Code wir determinieren die Rechten für die drei Oben Kategorie im Zeile 35. Jede Rechte wird ein 3\texttt{bit} binären
-Zahl sein. Die Rechte für Lesen gehört zum höchsten \texttt{bit}, und die Rechte von Ausführen gehört zum niedrigsten \texttt{bit}. 
-Beispielweise in unserer Ausgabe(Siehst du unter) \texttt{perms: 6} bedeutet Rechte für Schreiben und Lesen.
-\begin{lstlisting}
-./a.out example.txt
-example.txt:
-  inode: 11931732
-  owner: 1000 (pittler)
-  group: 1000 (pittler)
-  perms: 664
-  size: 12
-  atime: Fri Mar  3 12:57:38 2017
-  mtime: Fri Mar  3 12:57:31 2017
-  ctime: Fri Mar  3 12:57:31 2017
-\end{lstlisting}
-Die Größe vom Datein kann überraschend sein, weil es nur aus 11 Zeichen besteht. Aber jeden Datein enthält die 
-$EOF$(Ende des Dateins) Zeichen. Mit diesem Byte die Größe des Dateins stimmt.
+
+
 \subsection{Das Stream Konzept}
 
-Obwohl die Sprache keine eingebaute Methode für Ein und Ausgabe hat, in der Standardbibliothek befindet sich
-mehrere wertvollen Ein und Ausgabe Funktionen. Ein wichtiges Konzept ist das \texttt{stream}. Das \texttt{stream} ist ein Kanal, die
-eine Verbindung zwischen die Datein und deine Programm macht. Beispielweise hier Datein kann nicht nur eine physikalische Dateiobjekt
-aus der Festpalette bezeichnet, sondern auch Datei aus Tastatur, Monitor, oder Datein auf einem Kasetten. In jedem Fall wir haben das 
-gleiche Kanal. Diese Universalität macht Ein und Ausgabe einfach zu handhaben. Zu jeden Kanalen gehören ein Zeiger von \texttt{FILE} Typ,
-mit dem wir Sie verwenden können. Der Laufzeitsystem stellt automatisch für uns drei Kanale
+Ein- und Ausgabe in Dateien, oder allgemein Ein- und Ausgabe auf Geräten ist nicht Teil von C selbst.
+Aber die Standardbibliothek stellt diese Funktionalität zur Verfügung.
+Sie basiert auf dem Konzept von sogenannten \emph{streams}.
+Der Name kommt daher, dass Ein- und Ausgabe immer ein serieller Prozess ist.
+D.h., in Einheiten bestimmter kleinster Elemente werden die Daten sukzessive eingelesen oder ausgegeben.
+Man kann es sich also als einen Datenstrom vorstellen.
+
+Ein Strom in \verb|stdio.h| ist immer vom Typ \verb|FILE*|.
+Es gibt einige vordefinierte streams:
 \begin{enumerate}
-\item \texttt{stdin} : Standard für Eingabe (Wir haben schon verwendem mit \texttt{scanf}) 
-\item \texttt{stdout} : Standard für Ausgabe (Wir haben schon verwenden mit \texttt{printf})
-\item \texttt{stderr} : Standard für Fehlernachrichten
-\end{enumerate} zur Verfügung. Wir haben schon das Standard Ein und Ausgabe kennengelernt. Zur errinerung hier gibt es
-eine weitere Übung:
-\begin{myexampleprogram}{Programme: \texttt{Eingabe nach Ausgabe Kopieren}}
+\item \verb|stdin| : Standardeingabe (haben wir schon implizit mit \texttt{scanf} verwendet) 
+\item \texttt{stdout} : Standardausgabe (haben wir schon implizit mit \texttt{printf} verwendet) 
+\item \texttt{stderr} : Standardfehler
+\end{enumerate} 
+Standard Ein- und Ausgabe haben wir schon implizit mit \texttt{scanf} und \texttt{printf} benutzt.
+Funktionen, die ebenfalls direkt auf \verb|stdin| und \texttt{stdout} arbeiten, sind \verb|getchar| and \verb|putchar|.
+Sie lesen bzw. schreiben genau ein Zeichen von \verb|stdin| bzw. \texttt{stdout}.
+Ihre Deklaration in \verb|stdio.h| sieht wie folgt aus:
 \begin{lstlisting}
-#include<stdio.h>
-#include<stdlib.h>
-int main(){
-  char c;
-  while( (c=getchar()) !=EOF)
-   putchar(c);
-}
+  int getchar ();
+  int putchar (char c);
 \end{lstlisting}
-\end{myexampleprogram}
-\begin{myexampleblock}{Funktion: \texttt{getchar}}
+Man beachte, dass \verb|int| und \verb|char| in C äquivalent sind.
+Damit kann man beispielsweise ein Programm schreiben, dass alle eingegenen Zeichen direkt wieder auf \texttt{stdout} ausgibt:
 \begin{lstlisting}
-int getchar ( void );
+  #include<stdlib.h>
+  #include<stdio.h>
+  
+  int main(){
+    char c;
+    while( (c=getchar()) != EOF) {
+      putchar(c);
+    }
+    return(0);
+  }
 \end{lstlisting}
-\vspace{-0.4cm}
-Lest ein Zeichen von der Standard Eingabe. Rückgabewert ist das eingelesene Zeichen, wenn die Einlesung erfolgreich war, außerdem
-EOF.
-\end{myexampleblock}
-\begin{myexampleblock}{Funktion: \texttt{putchar}}
-\begin{lstlisting}
-int putchar (char c);
-\end{lstlisting}
-\vspace{-0.4cm}
-Drückt den Zeichen $c$ aus. Der Rückgabewert ist ein int Wert, der von unsigned char konvertiert wurde.
-\end{myexampleblock}
-In diesem einfachen Beispiel wir lesen die Zeichen ein bis zum Ende des Dateins in der fünften Zeile.
-Im Schleifenkern wir haben nur eine Anweisung, die der eingelesenen Zeichen ausdrückt. Aber in diesem Beispiel
-bei der Ausführung wir müssen den Datein mit dem \texttt{<} Operator zur Standard Eingabe ziehen. Um direkt aus
-einem Datein lesen zu können, wir müssen ein Kanal zum Datein eröffnen.
+Wiederum wird solange eingelesen, bis das Sonderzeichen \verb|EOF| gefunden wird.
+
+Wenn wir direkt aus einer Datei lesen wollen, so müssen wir einen \emph{stream} bekanntmachen.
+Dies geht mit Hilfe der Funktion \verb|fopen|.
 \begin{myexampleblock}{Funktion: \texttt{fopen}}
-\begin{lstlisting}
-FILE *fopen( const char *filename, char mode);
-\end{lstlisting}
-\vspace{-0.4cm}
-Eröffnet ein Kanal zum Datein für Verarbeitung.
-\begin{itemize} 
-\itemsep0.5ex
-\item \texttt{"w"}: Datei zum Schreiben erzeugen, wenn es schon existiert, wird sie überschreiben
-\item \texttt{"r"}: Öffnen einer Datei ausschließlich zum Lesen
-\item \texttt{"{}a"}: Öffnen einer Datein zum Anfügen. Wenn is nicht existiert, wird sie erzeugen.
-\item \texttt{"w+"} Öffnen zum Schreiben und Lesen, wenn es schon existiert, wird sie überschreiben.
-\item \texttt{"r+"} Öffnen einer Datei zum Schreiben und Lesen.
-\item \texttt{"{}a+"} Öffnen einer Datei zum Lesen und Anfügen.
-\end{itemize}
+  \begin{lstlisting}
+    FILE *fopen( const char *filename, char mode);
+  \end{lstlisting}
+  \vspace{-0.4cm}
+  Öffnet eine Datei. Dabei gibt \texttt{mode} an, für welchen Zweck die Datei geöffnet werden soll:
+  \begin{itemize} 
+    \itemsep0.5ex
+  \item \texttt{"w"}: Datei zum Schreiben öffnen. Wenn sie schon existiert, wird sie überschrieben. Wenn sie nicht existiert, wird die Datei erzeugt.
+  \item \texttt{"r"}: Öffnen einer Datei ausschließlich zum lesen. Der \emph{stream} zeigt auf den Anfang der Datei.
+  \item \texttt{"{}a"}: Öffnen einer Datein zum Schreiben. Wenn sie schon existiert, wird am Ende der Datei hinzugefügt.
+  \item \texttt{"w+"}: Öffnen zum Schreiben und Lesen. Wenn die Datei schon existiert, wird sie überschrieben. Der \emph{stream} zeigt auf den Anfang der Datei.
+  \item \texttt{"r+"}: Öffnen einer Datei zum Schreiben und Lesen. Der \emph{stream} zeigt auf den Anfang der Datei.
+  \item \texttt{"{}a+"}: Öffnen einer Datei zum Lesen und Hinzufügen. Zum Lesen zeigt der \emph{stream} auf den Anfang der Datei. Geschriebenes wird immer hinzugefügt.
+  \end{itemize}
 \end{myexampleblock}  
-\begin{myexampleblock}{Funktion:\texttt{fclose}}
-\begin{lstlisting}
-int fclose(FILE *stream);
-\end{lstlisting}
-\vspace{-0.4cm}
-Dieser Funktion wird der Kanal \texttt{stream} freigegeben. Der Rückgabewert ist \texttt{0}, wenn es
-erfolgreich war und \texttt{EOF} wenn nicht.
+Eine Datei, die mit \texttt{fopen} geöffnet wurde, muss mit \texttt{fclose} wieder geschlossen werden:
+\begin{myexampleblock}{Funktion: \texttt{fclose}}
+  \begin{lstlisting}
+    int fclose(FILE *stream);
+  \end{lstlisting}
+  \vspace{-0.4cm}
+  Der Rückgabewert ist \texttt{0}, wenn die Datei erfolgreich geschlossen werden konnte und \texttt{EOF}, wenn nicht.
 \end{myexampleblock}
+Nur, wenn \texttt{fclose} aufgerufen wurde ist sichergestellt, dass die Daten auch in die Datei geschrieben wurden.
+%% stopped here...
 In diesem Fall können wir das \texttt{fopen} Funktion verwenden um einer Kanal zu eröffnen. Vordem
 wir mit einem Datei das Arbeit anfangen, müssen wir wissen ob es ein Binärdatei oder ein Asciidatei
 ist. Ein Asciidatei ist ein Sequenz von Zeichen beenden mit \texttt{EOF}. In einem Binärdatei, wir müssen vorhand
@@ -239,18 +77,18 @@ Das Antwort liegt in der Genauigkeit und im Speicherplatz. Wenn wir eine 8 \text
 ASCII speichern würde, brauchen wir $~40$-mal mehr speichern um die gleiche Genauigkeit zu erreichen. Zuerst 
 werden wir einlesen aus Einfache Asciidatei.
 \begin{myexampleblock}{Funktion: \texttt{fscanf}}
-\begin{lstlisting}
-int fscanf(FILE *kanal,char *formattierungtext, ....);
-\end{lstlisting}
-\vspace{-0.4cm}
-Formattierte Einlesung von einer Asciidatei, interpretiert von dem formattierungtext. Der Rückgabewert ist der
-Anzahl der Argumenten die erfolgreich gefüllt waren. Als Arguments, wir müssen nicht der Wert der Variable geben
-sondern auch ihre Adresse. Mit dem formattierungtext können wir im individuellen Weise Einlesen.
-Die White-Space zeichen im Kanal wurden nicht gelesen (Beispielweise: Neue Zeile, Raumtaste, Tabulatorzeichen).
-
-Die eingelesenen Datei wurden nach den Folgenden Regeln Speichern. Die generelle Form ist:
-\texttt{\%Spezificierungszeichen}
-
+  \begin{lstlisting}
+    int fscanf(FILE * stream, char *format, ...);
+  \end{lstlisting}
+  \vspace{-0.4cm}
+  Formattierte Einlesung von einer Asciidatei, interpretiert von dem formattierungtext. Der Rückgabewert ist der
+  Anzahl der Argumenten die erfolgreich gefüllt waren. Als Arguments, wir müssen nicht der Wert der Variable geben
+  sondern auch ihre Adresse. Mit dem formattierungtext können wir im individuellen Weise Einlesen.
+  Die White-Space zeichen im Kanal wurden nicht gelesen (Beispielweise: Neue Zeile, Raumtaste, Tabulatorzeichen).
+  
+  Die eingelesenen Datei wurden nach den Folgenden Regeln Speichern. Die generelle Form ist:
+  \texttt{\%Spezificierungszeichen}
+  
 Die eingelesene Datei wurden nach den Folgenden Regeln Speichern. 
 
 \begin{center}

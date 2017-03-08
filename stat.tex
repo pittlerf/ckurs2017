@@ -1,0 +1,164 @@
+In Unix wir identifizieren ein Datein mit seinem Name. Wir können Funktionen aus dem Standardbibliothek verwenden, um
+detallierte Informationen über ihnen zu erhalten. In diesem Fall die \texttt{C} Sprache bietet uns den \texttt{stat} Funktion 
+und ihren Rückgabewert die \texttt{stat} Strukture. 
+\begin{myexampleblock}{Definition: \texttt{struct stat}}
+\begin{lstlisting}
+struct tm{
+  _dev_t st_dev:   /*Laufwerksnummer*/
+  _ino_t st_ino;   /*Inode: eine grundlegende Datenstruktur zur Verwaltung von Dateisystemen mit unixartigen Betriebssystemen. */
+  unsigned short st_mode; /*Modus, Berechtigungen*/
+  short st_nlink;  /*Anzahl der Referenzen auf dem Datei*/
+  short st_uid;    /*USER-ID*/
+  short st_gid;    /*GROUP-ID*/
+  _dev_t st_rdev:  /*Laufwerksnummer*/
+  _off_t st_size;  /*Dateigroesse in Bytes */
+  time_t st_atime; /*Datum des letzten Zugriffes*/
+  time_t st_mtime; /*Datum des letzten Aenderung*/
+  time_t st_ctime; /*Erstelldatum*/
+}
+\end{lstlisting}
+\vspace{-0.4cm}
+Das Definition befindet sich im Standardbibliothek \texttt{sys/stat.h}.
+\end{myexampleblock}
+\begin{myexampleblock}{Definition: \texttt{struct passwd}}
+\begin{lstlisting}
+struct passwd {
+ char *pw_name; /*Anwaenders login Name*/
+ uid_t pw_uid; /* UID id*/
+ gid_t pw_gid; /* GID id*/
+ char *pw_dir; /*Login Direktory*/
+ ...
+}; 
+\end{lstlisting}
+\vspace{-0.4cm}
+Das Definition befindet sich im Standardbibliothek \texttt{passwd.h}.
+Die Punkten stehen für Elementen, die uns nicht interessiert.
+\end{myexampleblock}
+\begin{myexampleblock}{Definition: \texttt{struct group}}
+\begin{lstlisting}
+struct group {
+  char *gr_name;
+  gid_t gr_gid;
+  char **gr_mem;
+  ...
+};
+\end{lstlisting}
+\vspace{-0.4cm}
+Das Definition befindet sich im Standardbibliothek \texttt{grp.h}.
+Die Punkten stehen für Elementen, die uns nicht interessiert.
+\end{myexampleblock}
+\begin{myexampleblock}{Funktion: \texttt{stat}}
+\begin{lstlisting}
+int stat(char * path, struct stat * buf);
+\end{lstlisting}
+\vspace{-.4cm}
+Information erhalten über das Datein bennant als $path$. Die Informations werden im $buf$ gespeichert.
+Der Rückgabewert ist 0, wenn alles geklappt hat, und -1 bei einem Fehler.
+\end{myexampleblock}
+Bevor wir mit einem Datein arbeiten, müssen wir sicher sein, ob wir die entsprechende Rechte haben, um ihn zu 
+erstellen oder einzulesen. Die Felden \texttt{uid} und \texttt{gid} in der \texttt{stat} Strukture geben Informationen 
+über die Besitzer des Dateins. Der Supervisor hat immer \texttt{(0,0)} als \texttt{(uid,gid)}. Normalweise der erste Anwänder 
+hat 1000 \texttt{uid}. Für die weitere Anwänders das \texttt{uid} wird um eins erhöht. 
+Wir können auch das \texttt{uid} mit einem Anwänder's Name verbunden. Dafür gibt es zum Bespiel der \texttt{getpwuid} 
+Funktion im Standardbibliothek. Die Anwänders in den unixartigen Betriebsystemen haben ihre login Name und gehören
+auch zu einer Gruppe. Wenn in einem Computer mehrere Programmierer arbeiten, Sie können ihre Arbeit leicht teilen. 
+Wir können das \texttt{gid} mit einem Name mit Hilfe von \texttt{getgrgid} Funktion verbunden.
+Es kann nötig sein zu prüfen, ob die Datein beschädigt ist, oder nicht.  Bespielweise, wir können ihre Größe
+überprüfen. Lass uns annehmen, dass wir die folgende Datei (example.txt) haben
+\begin{lstlisting}{example.txt}
+Hello world
+\end{lstlisting}
+Wir haben die folgende \texttt{C} Code geschrieben, um Informationen über diesen Datei erhalten:
+\begin{lstlisting}
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include <pwd.h>
+#include <grp.h>
+#include <sys/stat.h>
+int main(int argc, char *argv[])
+{
+   struct stat *sb;
+   struct passwd *pwuser;
+   struct group *grpnam;
+   int i;
+   if (argc < 2)
+   {
+       printf("Usage: %s: file ...\n", argv[0]);
+       exit(EXIT_FAILURE);
+   }
+   sb= (struct stat *)malloc(sizeof(struct stat));
+   if (sb == NULL){
+      printf("Memory allocation failure\n");
+      exit(1);
+   }
+   for ( i = 1; i < argc; i++){
+      if (stat(argv[i], sb) == -1){
+          exit(EXIT_FAILURE);
+      }
+      if ( (pwuser = getpwuid(sb->st_uid)) == NULL )
+      {
+          exit(EXIT_FAILURE);
+      }
+      if ( (grpnam = getgrgid(sb->st_gid)) == NULL )
+      {
+          exit(EXIT_FAILURE);
+      }
+      printf("%s:\n", argv[i]);
+      printf("\tinode: %u\n", (int)sb->st_ino);
+      printf("\towner: %u (%s)\n", sb->st_uid, pwuser->pw_name);
+      printf("\tgroup: %u (%s)\n", sb->st_gid, grpnam->gr_name);
+      printf("\tperms: %o\n", sb->st_mode & (S_IRWXU | S_IRWXG | S_IRWXO));
+      printf("\tsize: %ld\n", sb->st_size);
+      printf("\tatime: %s", ctime(&(sb->st_atime)));
+      printf("\tmtime: %s", ctime(&(sb->st_mtime)));
+      printf("\tctime: %s", ctime(&(sb->st_ctime)));
+      printf("\n");
+   }
+   free(sb);
+   return 0;
+}
+\end{lstlisting}
+Dieses Beispiel gibt  viele Neueigkeiten für uns. Zum ersten Mal verwenden wir die Eingabeparameters unseres 
+Programms. Zur Erinnerung, der Wert vom \texttt{argc} erhaltet die Anzahl der Parameter, und im \texttt{argv[]} 
+(Array von Zeiger auf \texttt{char} Typ) sind die Parameter gespeichert. Standardmäßig das erste Parameter ist das 
+Name des Programms, dann kommen die Parameter, die wir hinzufügen haben. In der 13-ten Zeile prüfen wir die Anzahl 
+der eingegebenen Parameter. Wenn wir keinen Parameter eingegeben haben, beenden wir das Programm mit einer Gebrauchanweisung.
+Für die Anwänders das ist ein große Hilfe. Standartmäßig die Unix Programmen ausführen mit dem \texttt{--help} werden
+ähnliche Gebrauchanweisungen zur Verfügung stellen.
+In dem Programm wir verwenden jeden Parameter als ein Dateiname und erhalten ihre Eigenschaften mit Hilfe des \texttt{stat} 
+Funktion. Es ist wichtig in der 18-ten Zeile Speicher für \texttt{sb} reservieren. Der Funktion \texttt{stat} geht davon aus, 
+dass die Adresse, die sie bekommen habe, ist schon reserviert. In diesem Beispiel wir verwenden auch der \texttt{getpwuid} Funktion, 
+mit dem wir die \texttt{uid} mit einem login Name verbunden. In unix Betriebsystemen wir können verschiedene Rechten für 
+\begin{enumerate}
+\item Besitzer, 
+\item Gruppe vom Besitzer
+\item Die Anderen
+\end{enumerate}
+geb en. Für ein Datei gibt es Rechte für Schreiben (\texttt{w}), Lesen(\texttt{r}) und Ausführen(\texttt{x}). Aus der Kommandozeile
+können wir die Rechten mit \texttt{ls -la} überprüfen. Beispielweise:\\
+\begin{verb}
+>$ ls -la example.txt
+\end{verb}\\
+\begin{verb}
+-rw-rw-r-- 1 pittler pittler 26 Maer  4 18:36 example.txt
+\end{verb}\\
+Das bedeutet, dass der Besitzer von \texttt{example.txt} ist der Anwänder von Name \texttt{pittler} aus der \texttt{pittler} Gruppe.
+Der Besitzer und ihre Gruppe hat Recht für Lesen und auch Schreiben, die Anderen haben Rechte nur für Lesen.
+In unserem Code wir determinieren die Rechten für die drei Oben Kategorie im Zeile 35. Jede Rechte wird ein 3\texttt{bit} binären
+Zahl sein. Die Rechte für Lesen gehört zum höchsten \texttt{bit}, und die Rechte von Ausführen gehört zum niedrigsten \texttt{bit}. 
+Beispielweise in unserer Ausgabe(Siehst du unter) \texttt{perms: 6} bedeutet Rechte für Schreiben und Lesen.
+\begin{lstlisting}
+./a.out example.txt
+example.txt:
+  inode: 11931732
+  owner: 1000 (pittler)
+  group: 1000 (pittler)
+  perms: 664
+  size: 12
+  atime: Fri Mar  3 12:57:38 2017
+  mtime: Fri Mar  3 12:57:31 2017
+  ctime: Fri Mar  3 12:57:31 2017
+\end{lstlisting}
+Die Größe vom Datein kann überraschend sein, weil es nur aus 11 Zeichen besteht. Aber jeden Datein enthält die 
+$EOF$(Ende des Dateins) Zeichen. Mit diesem Byte die Größe des Dateins stimmt.
