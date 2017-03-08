@@ -1,17 +1,17 @@
 
 \section{Felder und Zeiger}
 
-Wir haben bisher zwar schon die \verb|scanf| Funktion benutzt, aber noch nicht erklärt, wie sie funktioniert. 
-Oder, genauer gesagt, wir haben noch nichts dazu gesagt, was \verb|&n| eigentlich bedeutet. 
+Wir haben bisher zwar schon die \verb|scanf| Funktion benutzt, aber noch nicht erklärt, wie sie funktioniert.
+Oder, genauer gesagt, wir haben noch nichts dazu gesagt, was \verb|&n| eigentlich bedeutet.
 Der Rest von \verb|scanf| sollte eigentlich von der Benutzung von \verb|printf| klar sein.
 
 Um das verstehen zu können, muss man sich zunächst noch einmal ins Gedächtnis rufen, das eine Variable im Prinzip aus zwei Dingen besteht:
-Einserseits dem Typ der Variablen und andererseits der Speicheradresse, unter der ein Wert abgelegt wird.
-Über den Typ der Variablen weiss ich, wie viele bits im Speicher belegt sind, und wenn man die Anfangsadresse für das erste bit kennt, dann kann die gesamte Anzahl an bits auslesen und entsprechend dem Typ interpretieren.
+Einerseits dem Typ der Variablen und andererseits der Speicheradresse, unter der ein Wert abgelegt wird.
+Über den Typ der Variablen weiß ich, wie viele Bits im Speicher belegt sind, und wenn man die Anfangsadresse für das erste Bit kennt, dann kann die gesamte Anzahl an Bits auslesen und entsprechend dem Typ interpretieren.
 C erlaubt Zugriff sowohl auf den Wert einer Variablen, als auch auf die Adresse, an der der Wert abgelegt ist.
-Unterschieden wird zwischen den beiden mit dem \verb|&| operator. 
-Für eine variable \verb|n| representiert \verb|n| den Wert und \verb|&n| die Speicheradresse.
-Bei \verb|&n| spricht man auch von Zeiger (\emph{pointer}) und bei \verb|&| vom Adressenoperator.
+Unterschieden wird zwischen den beiden mit dem \verb|&| Operator.
+Für eine Variable \verb|n| repräsentiert \verb|n| den Wert und \verb|&n| die Speicheradresse.
+Bei \verb|&n| spricht man auch von Zeiger (\emph{pointer}) und bei \verb|&| vom Adressoperator.
 
 Die Funktion \verb|scanf| verlangt nun als zweites Argument einen Zeiger.
 Der Typ wird in der Zeichenkette angegeben, so dass die Funktion unter der Adresse, die mit \verb|&| angegeben wird, den Wert ablegen kann.
@@ -32,7 +32,7 @@ Ein Zeiger ist eine Variable, die eine Adresse zusammen mit einem Datentyp speic
 Um die Nützlichkeit von Zeigern zu veranschaulichen, führen wir zunächst Funktionen ein.
 Eine Funktion kenne wir schon, das ist \verb|main|.
 Eine beliebige Funktion wird nun über einen Namen, einen Rückgabewert und Eingangsparameter definiert.
-Im folgenden Bespiel definieren wir eine Funktion, die zwei Parameter \verb|a, b| übergeben bekommt und diese um eins erhöht. 
+Im folgenden Beispiel definieren wir eine Funktion, die zwei Parameter \verb|a, b| übergeben bekommt und diese um eins erhöht.
 Anschließend sollen diese beiden neuen Werte zurückgegeben werden.
 Die Funktion hat aber nur einen Rückgabewert.
 
@@ -41,10 +41,10 @@ Was \textbf{nicht} funktioniert ist das folgende:
 \begin{lstlisting}
 #include <stdio.h>
 // einfache Funktion um a,b um 1 zu erhoehen
-int increment(int a, int b) {
+void increment(int a, int b) {
     a++;
     b++;
-    return (0);
+    return 0;
 }
 
 int main() {
@@ -54,23 +54,23 @@ int main() {
     ret = increment(a, b); // die Variablen in unserem Block werden
     // nicht veraendert!
     printf("Wert nach der Funktion a=%d, b=%d\n", a, b);
-    return (ret);
+    return ret;
 }
 \end{lstlisting}
-Der Grund ist, dass in der Funktion \verb|increment| neue Variablen \verb|a, b| angelegt werden, die nur in der Funktion selbst sichtbar sind. 
-Sie haben also nichts mit den Variablen \verb|a, b| in der Funktion \verb|main| gemein, außer dem Namen.
+Der Grund ist, dass in der Funktion \verb|increment| neue Variablen \verb|a|, \verb|b| angelegt werden, die nur in der Funktion selbst sichtbar sind.
+Sie haben also nichts mit den Variablen \verb|a|, \verb|b| in der Funktion \verb|main| gemein, außer dem Namen.
 Man spricht hier von \emph{call by value}, da die Variablen \verb|a, b| in der Funktion \verb|increment| mit den Werten der Variablen aus \verb|main| initialisiert werden.
-Deswegen liefern die \verb|printf| Aufrufe in den Zeilen $12$ und $15$ das gleiche Ergebnis.
-Denn die Variablen \verb|a, b| in \verb|main| wurden nicht verändert.
+Deswegen liefern die \verb|printf| Aufrufe in den Zeilen 12 und 15 das gleiche Ergebnis.
+Denn die Variablen \verb|a|, \verb|b| in \verb|main| wurden nicht verändert.
 
 Bei \emph{call by reference} wird an Stelle des Wertes die Adresse übergeben.
 \begin{lstlisting}
 #include <stdio.h>
 // einfache Funktion um a,b um 1 zu erhoehen
-int increment(int *a, int *b) {
+void increment(int *a, int *b) {
     (*a)++;
     (*b)++;
-    return (0);
+    return 0;
 }
 
 int main() {
@@ -80,16 +80,16 @@ int main() {
     ret = increment(&a, &b); // die Variablen in unserem Block werden
     // nicht veraendert!
     printf("Wert nach der Funktion a=%d, b=%d\n", a, b);
-    return (ret);
+    return ret;
 }
 \end{lstlisting}
-Die Funktion bekommt also zwei Parameter vom Typ \verb|int*|, also Zeiger auf \verb|int|. 
+Die Funktion bekommt also zwei Parameter vom Typ \verb|int*|, also Zeiger auf \verb|int|.
 Dann wird mit dem Dereferenzierungsoperator \verb|*| der Wert, der unter den beiden Adressen gespeichert ist, um eins erhöht.
-Das geschieht unter der Annahme, dass dort eine Variable vom Typ \verb|int| abegelegt ist.
+Das geschieht unter der Annahme, dass dort eine Variable vom Typ \verb|int| abgelegt ist.
 Damit werden also direkt die Werte der Variable \verb|a, b| in \verb|main| verändert.
 
 Zeiger kann man genau wie andere Variablen nutzen (womit auch klar ist, dass man auch Zeiger auf Zeiger definieren kann).
-Folgendes Beispiel illustriert die Nutzung noch einmal, wobei \emph{NULL} der Nullzeiger ist:
+Folgendes Beispiel illustriert die Nutzung noch einmal, wobei \verb|NULL| der Nullzeiger ist:
 \begin{lstlisting}
 #include <stdio.h>
 
@@ -98,21 +98,27 @@ int main() {
     int *p = NULL;
     p = &q;
     printf("Der Wert an der Adresse p ist:%d\n", *p);
-    return (0);
+    return 0;
 }
 \end{lstlisting}
-In der vierten Zeile haben wir eine Variable vom Typ \verb|int| deklariert und mit dem Wert $10$ initialisiert, in der fünften Zeile eine Variable vom Typ \verb|int*|, die mit dem \verb|NULL| Zeiger initialisiert wurde.
-in der sechsten Zeile wird dann \verb|p| auf die Adresse von \verb|q| gesetzt. 
+In der vierten Zeile haben wir eine Variable vom Typ \verb|int| deklariert und mit dem Wert 10 initialisiert, in der fünften Zeile eine Variable vom Typ \verb|int*|, die mit dem \verb|NULL| Zeiger initialisiert wurde.
+In der sechsten Zeile wird dann \verb|p| auf die Adresse von \verb|q| gesetzt.
 Damit liefert die Dereferenzierung von \verb|p|, also \verb|*p|, den Wert von \verb|q|.
 Dies ist in Abbildung \ref{pointfig} illustriert.
 Zeigern dürfen nur gültige Adressen zugewiesen werden.
 Dies kann allerdings, bis auf Ausnahmen, nicht vom Compiler überprüft werden.
-Wenn doch keine gültige Adresse zugewiesen wurde, bekommt man den \emph{segmentation fault} als Laufzeitfehler.
-Dieser Quelltext weisst sehr wahrscheinlich eine ungültige Adresse zu
+Wenn doch keine gültige Adresse zugewiesen wurde, bekommt man bei Dereferenzierung den \emph{segmentation fault} als Laufzeitfehler.
+Dieser Quelltext weißt sehr wahrscheinlich eine ungültige Adresse zu:
 \begin{lstlisting}
 int *p = 42;
 \end{lstlisting}
-allerdings wird im diesen Fall der Compiler sehr wahrscheinlich\footnote{Hängt leider vom Compiler ab} eine Warnung geben, denn $42$ ist vom Typ \verb|int|, und nicht vom Typ \verb|int*|. 
+Allerdings wird im diesen Fall der Compiler sehr wahrscheinlich\footnote{Hängt leider vom Compiler ab.} eine Warnung geben, denn 42 ist vom Typ \verb|int|, und nicht vom Typ \verb|int*|.
+GCC 6.3.1 gibt folgendes aus:
+\begin{lstlisting}
+int-ptr.c:7:14: Warnung: Initialisierung erzeugt Zeiger von Ganzzahl ohne Typkonvertierung [-Wint-conversion]
+     int *p = 42;
+              ^~
+\end{lstlisting}
 Wenn der Compiler sich hier nicht beschwert, sollte man die Dokumentation studieren, um heraus zu finden, wie man diesen Typ von Warnung anschalten kann, oder, wenn das nicht möglich ist, den Compiler wechseln.
 
 
@@ -257,27 +263,30 @@ Wenn der Compiler sich hier nicht beschwert, sollte man die Dokumentation studie
 }
 %\usefont{T1}{ptm}{m}{n}
 \rput(12.740937,3.8732812){\&q liefert den Wert von p}
-\end{pspicture} 
+\end{pspicture}
 }
 \caption{\label{pointfig} Illustration Zeiger.}
 \end{figure}
 
-Zeiger sind in C doppelt wichtig, denn das wichtige Konstrukt von Feldern wird mit Hilfe von Zeigern realisiert. 
+Zeiger sind in C doppelt wichtig, denn das wichtige Konstrukt von Feldern wird mit Hilfe von Zeigern realisiert.
 Für unser Sortierbeispiel möchten wir beispielsweise nicht $n$ Variablen mit verschiedenen Namen \verb|a1|, \verb|a2|, ... deklarieren.
 Das wäre nicht nur ästetisch unschön, sondern auch extrem unpraktisch.
 Wie sollte man diese Variablennamen zum Beispiel in einer Schleife in Abhängigkeit von der Schleifenvariablen ansprechen?
 Deshalb stellt C Felder, sogenannte \emph{arrays} zur Verfügung.
-Normalweise wenn wir Zahlen sortieren möchten, möchten wir nicht jeden Zahl, als
-ein einzige Variable definieren. Auf diesem Fall gibt uns die Sprache die Arrays 
-strukturen. Die Arrays bestehen aus mehreren nacheinander stehenden elementare 
-Variablen mit den gleichen Datatypen. Für Indizierung mann muss
-die Eckige Klammer verwenden. 
+Normalweise wenn wir Zahlen sortieren möchten, möchten wir nicht jede Zahl, als
+ein einzige Variable definieren. Für diesem Fall gibt uns die Sprache die Arrays
+als Struktur. Die Arrays bestehen aus mehreren nacheinanderstehenden elementaren
+Variablen mit den gleichen Datatypen. Für Indizierung verwendet man
+die eckige Klammern.
+
 \begin{myblock}{Definition \texttt{Array}}
-Ein Array ist eine Sammlung von Datenelementen vom gleichen Typ. Die 
-Indizierung des Arrays geschieht mit positiven ganzen Zahlen von 0 bis Länge des Arrays minus eins.
+    Ein Array ist eine Sammlung von Datenelementen vom gleichen Typ. Die
+    Indizierung des Arrays geschieht mit positiven ganzen Zahlen von 0 bis
+    Länge $N$ des Arrays minus eins, also $[0, N)$.
 \end{myblock}
-Die Länge des Arrays muss zur Zeit der Übersetzung bekannt sein.
-Im Beispiel sieht das wie folgt aus: 
+
+Die Länge des Arrays muss zur Zeit der Übersetzung (Kompilierung) bekannt sein.
+Im Beispiel sieht das wie folgt aus:
 \begin{lstlisting}
 #include <stdio.h>
 
@@ -292,21 +301,22 @@ int main() {
     return 0;
 }
 \end{lstlisting}
-Hierbei wurden zwei \emph{int} Arrays erzeugt.
-Beide haben die Länge $4$.
-Die Länge des zweiten Arrays wurde mit Hilfe einer konstanten Variablen angegeben.
-Alternativ kann man auch direkt $4$ schreiben.
+Hierbei wurden zwei \texttt{int} Arrays erzeugt.
+Beide haben die Länge 4.
+Die Länge des zweiten Arrays wurde mithilfe einer konstanten Variablen angegeben.
+Alternativ kann man auch direkt 4 schreiben.
 Auf die einzelnen Elemente des Arrays wird mit Hilfe des \verb|[]| Operators zugegriffen.
-Man beachte, dass die Indizes bei $0$ anfangen, und bis $3$, also Länge des Arrays minus 1, laufen. 
+Man beachte, dass die Indizes bei $0$ anfangen, und bis $3$, also Länge des Arrays minus 1, laufen.
 
 Die Benutzung von Arrays wird in folgendem Beispiel illustriert:
-\begin{myexampleprogram}{Beispiel: \texttt{Näherung von $\pi$}}
+
+\begin{myexampleprogram}{Beispiel: Näherung von $\pi$}
   In diesem Beispiel berechnen wir $\pi$ näherungsweise.
   Dafür verwenden wir folgende Integraldarstellung von $\pi$:
   \begin{equation}
     \pi=4\cdot \int_{0}^{1} \mathrm{d}x \dfrac{1}{1+x^2}
   \end{equation}
-  Das Integral berechnen wir numerisch, indem wir die Fläche unterhalb der Kurve als eine Summe abschätzen. 
+  Das Integral berechnen wir numerisch, indem wir die Fläche unterhalb der Kurve als eine Summe abschätzen.
   Dabei bedienen wir uns der sogenannten Trapez-Regel.
   Wir teilen das Interval $[0,1]$ in $N$ gleichlange Unterintervalle auf.
   Den jeweilige linke Punkt des Intervals nennen wir $x_i$, $i=0,...,N$, wobei $x_n-x_{n-1}=\Delta=\mathrm{const}$.
@@ -322,7 +332,9 @@ Die Benutzung von Arrays wird in folgendem Beispiel illustriert:
   \begin{displaymath}
     x_i = i/N\,,\qquad i = 0, ..., N-1\,.
   \end{displaymath}
-  \textbf{Put a proper bounding box!!}
+
+  % TODO Put a proper bounding box!
+
   Definieren wir folgende Funktion
   \[
   f(x) = \frac{1}{1+x^2}\,,
@@ -332,41 +344,42 @@ Die Benutzung von Arrays wird in folgendem Beispiel illustriert:
     \int_{0}^{1} \mathrm{d}x \dfrac{1}{1+x^2}\approx \sum_{i=0}^{N-1}\frac{1}{2N}[f(x_i)+f(x_{i+1})]
   \end{equation}
   Hier ist der entsprechende C Quelltext, der Arrays benutzt:
-  \begin{lstlisting}
+\begin{lstlisting}
 #include <stdio.h>
-  const int MAX = 10000;
+const int MAX = 10000;
 
-  int main() {
-      int N = 0;
-      double f[MAX], x[MAX]; // double arrays der Laenge MAX
-      scanf("%d", &N);
-      // Pruefe die Eingabe
-      if (N >= MAX) {
-          printf("Fehler, zu vielen Stuetzstellen\n");
-          return (-1);
-      }
-      if (N < 0) {
-          printf("N muss groesser als 0 sein!\n");
-          return (-2);
-      }
-      for (int i = 0; i < N; ++i) {
-          x[i] = (double)i / (double)N;
-          f[i] = 1. / (1 + x[i] * x[i]);
-      }
-      double summe = 0.;
-      for (int i = 0; i < N - 1; ++i) {
-          summe += (f[i] + f[i + 1]);
-      }
-      summe += f[N - 1] + 0.5; // Randterm
-      printf("Die Naeherung von pi ist =%e\n", 2. / N * summe);
-      return (0);
-  }
-  \end{lstlisting}
+int main() {
+    int N = 0;
+    double f[MAX], x[MAX]; // double arrays der Laenge MAX
+    scanf("%d", &N);
+    // Pruefe die Eingabe
+    if (N >= MAX) {
+        printf("Fehler, zu vielen Stuetzstellen\n");
+        return (-1);
+    }
+    if (N < 0) {
+        printf("N muss groesser als 0 sein!\n");
+        return (-2);
+    }
+    for (int i = 0; i < N; ++i) {
+        x[i] = (double)i / (double)N;
+        f[i] = 1. / (1 + x[i] * x[i]);
+    }
+    double summe = 0.;
+    for (int i = 0; i < N - 1; ++i) {
+        summe += (f[i] + f[i + 1]);
+    }
+    summe += f[N - 1] + 0.5; // Randterm
+    printf("Die Naeherung von pi ist =%e\n", 2. / N * summe);
+    return (0);
+}
+\end{lstlisting}
   Neben der Benutzung von Arrays, haben wir noch ein weiteres neues Konzept eingeführt.
   Bei der Division von $i/N$, beide vom Typ \verb|int|, in Zeile $10$ haben wir einen expliziten \emph{cast} nach \verb|double| durchgeführt, damit keine Division ganzer Zahlen durchgeführt wird.
-  
+
   Dieses Beispiel hätten wir natürlich auch ohne Arrays durchführen können, aber es illustriert deren Benutzung.
 \end{myexampleprogram}
+
 Zum Indexoperator \verb|[]| ist es sehr wichtig zu wissen, dass dabei nicht überprüft wird, ob der Index größer ist, als die Länge des Arrays.
 Folgendes geht also im Prinzip
 \begin{lstlisting}
@@ -374,7 +387,7 @@ int list[5];
 int i = 5;
 list[i] = 3;
 \end{lstlisting}
-und wird vom Compiler übersetzt. 
+und wird vom Compiler übersetzt.
 Im besten Fall erhält man dann bei der Ausführung dieses Codes einen \emph{segmentation fault}.
 Im schlechtesten Fall ist \verb|list[5]| Speicher, auf den das Programm zugreifen kann.
 Dann erhält man keinen Laufzeitfehler und modifiziert ungewollt Speicher, den man nicht modifizieren will.
@@ -385,10 +398,31 @@ Deshalb sollte man Indizierungen immer mit großer Sorgfalt überprüfen.
 
 In C gibt es keinen elementaren Datentyp für Zeichenketten, sogenannte \emph{strings}.
 Zeichenkette werden mit Hilfe von Arrays abgebildet.
-Ein Zeichen kann in einer Variablen vom Typ \verb|char| gespeichert werden, siehe ASCII Zeichensatz.
+Ein Zeichen kann in einer Variablen vom Typ \verb|char| gespeichert werden, siehe ASCII Zeichensatz.\footnote{%
+    Die Größe des Datentyps \texttt{char} ist immer ein Byte, also 8 Bit.
+    Eigentlich hätte man diesen Typ \texttt{byte} nennen sollen. Es können $2^8
+    = 256$ verschiedene Zeichen gespeichert werden. Dies reicht für Englisch
+    und ein paar Steuerzeichen, jedoch nicht für alle Sprachen dieser Welt. Der
+    ASCII Zeichensatz nutzt die ersten 128 Zustände (also die ersten 7 Bit) für
+    das im Englischen genutzte Alphabet. Die restlichen 128 Zustände werden
+    abhängig vom  \emph{Encoding} interpretiert. Für Deutsch kann man
+    \texttt{latin-1} nutzen. Je nach Encoding wird ein Zeichen mit Wert 204
+    interpretiert. Ist das Encoding nicht die richtige, erscheinen die Umlaute
+    nicht korrekt und scheinbar willkürliche Zeichen stehen an ihrer Stelle.
+    Sprachen, die mehr als 128 verschiedene Zeichen brauche, können im oberen
+    Teil von ASCII überhaupt nicht dargestellt werden. Die Einsicht, dass es
+    mehr als 256 verschiedene Zeichen gibt, wurde im Unicode Standard
+    manifestiert. Die Konsequenz ist jedoch, dass jetzt mehr als ein Byte pro
+    Zeichen benötigt wird. UTF-8 ist inzwischen das Standard-Encoding, sodass
+    beliebig viele verschiedene Zeichen in einer Textdatei genutzt werden
+    können. Der Preis ist jedoch, dass ein Buchstabe jetzt beliebig viele Byte
+    (meist eins) nutzt. Da hier der Fokus allerdings auf Numerischen Methoden
+    liegt, wird nicht weiter auf die vielfältigen Probleme mit Encodings
+    eingegangen.
+}
 Eine Zeichenkette kann also durch eine Array von Elementen vom Typ \verb|char| erzeugt werden.
 Das Ende einer Zeichenkette wird durch das Zeichen \verb|\0| angegeben.
-Im nächsten Beispiel lesen wir eine Zeichenkette von der standard Eingabe ein, bis wir das Zeichen fuer das Ende des Strings finden und testen, ob die Kette eine Zahl enthält:
+Im nächsten Beispiel lesen wir eine Zeichenkette von der Standardeingabe ein, bis wir das Zeichen für das Ende des Strings finden und testen, ob die Kette eine Zahl enthält:
 \begin{lstlisting}
 #include <stdio.h>
 const int MAX_LENGTH = 1000;
@@ -416,17 +450,17 @@ int main() {
 }
 \end{lstlisting}
 Es wird zunächst eine Zeichenkette über die Tastatur eingelesen.
-Offensichtlich ist \verb|string| ohne den Indexoperator \verb|[]| vom Typ \verb|char*|, also Zeiger auf \verb|char|. 
+Offensichtlich ist \verb|string| ohne den Indexoperator \verb|[]| vom Typ \verb|char*|, also Zeiger auf \verb|char|.
 Dann nutzen wir eine \verb|while| Schleife mit konstant wahrem logischem Ausdruck.
-Die Schleife wird dann mit \verb|break| abgebrochen, wenn das Endstring Zeichen gefunden wurde.
+Die Schleife wird dann mit \verb|break| abgebrochen, wenn das Endstring-Zeichen gefunden wurde.
 In der Schleife wird dann jedes Element der Kette darauf überprüft, ob es eine Zahl ist.
 Dementsprechend wird die Variable \verb|ergebnis| gesetzt.
 
 Vielleicht ist es Ihnen schon aufgefallen, aber der obige Beispielquelltext ist nicht sauber programmiert.
 Der Grund ist die Tatsache, dass wir die Länge des eingelesenen Strings nicht überprüfen, und damit nicht wissen, ob die maximale Länge überschritten wurde, oder nicht.
 Es kommt zu einem sogenannten \emph{buffer overflow}.
-Im besten Fall bekommt man bei einem zu langen Array einen Laufzeitfehler. 
-Im schlechtesten Fall kann man allerdings in Speicher schreiben, der dafür nicht vorgesehen ist.
+Im besten Fall bekommt man bei einem zu langen Array einen Laufzeitfehler.
+Im schlechtesten Fall kann man allerdings in Speicher schreiben, der dafür nicht vorgesehen ist. Dies ist schnell eine Sicherheitslücke.
 Es sollte also auf jeden Fall eine solche Überprüfung vorgenommen werden!
 
 \subsection{Zeigerarithmetik}
@@ -442,27 +476,27 @@ int main() {
     printf("Das siebte Zeichen im String ist %c\n", *pointer);
     return (0);
 }
-\end{lstlisting} 
-und dann mit \verb|pointer| auf einzelne Elemente der Zeichekette zugreifen.
+\end{lstlisting}
+und dann mit \verb|pointer| auf einzelne Elemente der Zeichenkette zugreifen.
 Das ist nicht nur ein alternativer Weg, um auf die Elemente eines Arrays zuzugreifen.
-C stellt Zeiger intern als ganze Zahlen dar und auf jedem Zeigetyp sind auch arithmetische Operationen definiert.
+C stellt Zeiger intern als ganze Zahlen dar und auf jedem Zeigertyp sind auch arithmetische Operationen definiert.
 Beispielsweise ist folgendes in C korrekter Quelltext:
 \begin{lstlisting}
 int list[5];
 int *plist = NULL;
-plist = list; // equivalent zu plist = &list[0];
+plist = list; // aequivalent zu plist = &list[0];
 for (int i = 0; i < 5; i++) {
     *plist = i;
-    plistx++; // equivalent zu plist = plist + 1; oder plist += 1;
+    plistx++; // aequivalent zu plist = plist + 1; oder plist += 1;
 }
 \end{lstlisting}
-Mit unserer bisherigen Kenntnis des Operators \verb|++|, würden wir erwarten, dass der Wert von \verb|plist| um eins erhöht wird.
+Mit unserer bisherigen Kenntnis des Operators \verb|++| würden wir erwarten, dass der Wert von \verb|plist| um eins erhöht wird.
 Das ist im Prinzip auch richtig, allerdings findet die Erhöhung in Einheiten der Länge des Typs, auf den der Zeiger zeigt.
 Und damit zeigt \verb|plist++| auf das nächste Element in der Liste \verb|list|.
-Denn C reserviert für \verb|int list[5];| einen zusammenhängenden Speicherbereich der Länge fünf mal Länge von \verb|int|.
-\verb|list|, ohne den Indexoperator, ist selbst vom Typ \verb|int*|, und zeigt auf den Anfang dieses Speicherbereichs. 
-\verb|list[3]| ist dann equivalent zu folgender Dereferenzierung: \verb|*(list + 3)|.
-Und damit weisst obiger Beispielcode dem $i$ten Element von \verb|list| den Wert $i$ zu.
+Denn C reserviert für \verb|int list[5];| einen zusammenhängenden Speicherbereich der fünffachen Länge von \verb|int|.
+\verb|list|, ohne den Indexoperator, ist selbst vom Typ \verb|int*|, und zeigt auf den Anfang dieses Speicherbereichs.
+\verb|list[3]| ist dann äquivalent zu folgender Dereferenzierung: \verb|*(list + 3)|.
+Und damit weißt obiger Beispielcode dem $i$ten Element von \verb|list| den Wert $i$ zu.
 Genauso kann man den Indexoperator für Zeiger verwenden.
 Im obigen Beispiel hätten wir auch
 \begin{lstlisting}
@@ -498,7 +532,7 @@ int main() {
     return (0);
 }
 \end{lstlisting}
-Überlegen Sie Sich, was obiges Programm als Ausgabe erzeugen wird, bevor Sie diesen Quelltext übersetzen und ausführen lassen.
+Überlegen Sie sich, was obiges Programm als Ausgabe erzeugen wird, bevor Sie diesen Quelltext übersetzen und ausführen lassen.
 Die \verb|++| Operation auf einen Zeiger vom Typ \verb|int| ist in Abbildung~\ref{pointinc} illustriert.
 
 \begin{figure}[!ht]
@@ -512,7 +546,7 @@ Die \verb|++| Operation auf einen Zeiger vom Typ \verb|int| ist in Abbildung~\re
   \scalebox{0.5} % Change this value to rescale the drawing.
            {
              \begin{pspicture}(0,-2.6)(33.6,2.62)
-               
+
                \pscustom[linewidth=0.04]
                         {
                           \newpath
@@ -521,13 +555,13 @@ Die \verb|++| Operation auf einen Zeiger vom Typ \verb|int| ist in Abbildung~\re
                           \curveto(4.5,1.5)(9.0,3.)(13.5,0.5)
                         }
                         \rput(8.5,2.4){\LARGE *Pointer}
-                        
-                        
+
+
                         \psframe[linewidth=0.04,dimen=outer]( 3,-0.8)( 0.,-2.6)
                         \rput(4.5,-2.9){0x7ffc3fa500aa}
                         \rput(4.5,-1.49){0x7ffc3fa5bd20}
                         \rput(4.5,0.0){\LARGE Pointer}
-                        
+
                         \psframe[linewidth=0.04,dimen=outer]( 6,-0.8)( 3.,-2.6)
                         \psframe[linewidth=0.04,dimen=outer]( 9,-0.8)( 6.,-2.6)
                         \psframe[linewidth=0.04,dimen=outer](12,-0.8)( 9.,-2.6)
@@ -535,31 +569,31 @@ Die \verb|++| Operation auf einen Zeiger vom Typ \verb|int| ist in Abbildung~\re
                         \psframe[linewidth=0.04,dimen=outer](15,-0.8)(12.,-2.6)
                         \rput(13.5,-2.9){0x7ffc3fa5bd20}
                         \rput(13.5,0.0){\LARGE sqnum[0]}
-                        
-                        
+
+
                         \rput(16.5,-1.49){\LARGE 4}
                         \psframe[linewidth=0.04,dimen=outer](18,-0.8)(15.,-2.6)
                         \rput(16.5,-2.9){0x7ffc3fa5bd24}
                         \rput(16.5,0.0){\LARGE sqnum[1]}
-                        
-                        
+
+
                         \rput(19.5,-1.49){\LARGE 9}
                         \psframe[linewidth=0.04,dimen=outer](21,-0.8)(18.,-2.6)
                         \rput(19.5,-2.9){0x7ffc3fa5bd28}
                         \rput(19.5,0.0){\LARGE sqnum[2]}
-                        
-                        
+
+
                         \rput(22.5,-1.49){\LARGE 16}
                         \psframe[linewidth=0.04,dimen=outer](24,-0.8)(21.,-2.6)
                         \rput(22.5,-2.9){0x7ffc3fa5bd32}
                         \rput(22.5,0.0){\LARGE sqnum[3]}
              \end{pspicture}
            }
-           
+
            \vspace{1cm}
            \scalebox{0.5}{
              \begin{pspicture}(0,-2.6)(33.6,2.62)
-               
+
                \pscustom[linewidth=0.04]
                         {
                           \newpath
@@ -568,13 +602,13 @@ Die \verb|++| Operation auf einen Zeiger vom Typ \verb|int| ist in Abbildung~\re
                           \curveto(4.5,1.5)(11.5,3.)(16.5,0.5)
                         }
                         \rput(8.5,2.4){\LARGE *Pointer}
-                        
-                        
+
+
                         \psframe[linewidth=0.04,dimen=outer]( 3,-0.8)( 0.,-2.6)
                         \rput(4.5,-2.9){0x7ffc3fa500aa}
                         \rput(4.5,-1.49){0x7ffc3fa5bd24}
                         \rput(4.5,0.0){\LARGE Pointer}
-                        
+
                         \psframe[linewidth=0.04,dimen=outer]( 6,-0.8)( 3.,-2.6)
                         \psframe[linewidth=0.04,dimen=outer]( 9,-0.8)( 6.,-2.6)
                         \psframe[linewidth=0.04,dimen=outer](12,-0.8)( 9.,-2.6)
@@ -582,26 +616,26 @@ Die \verb|++| Operation auf einen Zeiger vom Typ \verb|int| ist in Abbildung~\re
                         \psframe[linewidth=0.04,dimen=outer](15,-0.8)(12.,-2.6)
                         \rput(13.5,-2.9){0x7ffc3fa5bd20}
                         \rput(13.5,0.0){\LARGE sqnum[0]}
-                        
-                        
+
+
                         \rput(16.5,-1.49){\LARGE 4}
                         \psframe[linewidth=0.04,dimen=outer](18,-0.8)(15.,-2.6)
                         \rput(16.5,-2.9){0x7ffc3fa5bd24}
                         \rput(16.5,0.0){\LARGE sqnum[1]}
-                        
-                        
+
+
                         \rput(19.5,-1.49){\LARGE 9}
                         \psframe[linewidth=0.04,dimen=outer](21,-0.8)(18.,-2.6)
                         \rput(19.5,-2.9){0x7ffc3fa5bd28}
                         \rput(19.5,0.0){\LARGE sqnum[2]}
-                        
-                        
+
+
                         \rput(22.5,-1.49){\LARGE 16}
                         \psframe[linewidth=0.04,dimen=outer](24,-0.8)(21.,-2.6)
                         \rput(22.5,-2.9){0x7ffc3fa5bd32}
                         \rput(22.5,0.0){\LARGE sqnum[3]}
-                        
-             \end{pspicture} 
+
+             \end{pspicture}
            }
            \caption{\label{pointinc} Illustration zur Inkrementieren eines Zeigers von Typ int. Oben vor der Inkrementierung, unten nach der Inkrementierung.}
 \end{figure}
@@ -613,7 +647,7 @@ int main() {
     int list[5]; // int array
     double *plist = (double *)list; // explizit cast
     *(plist + 1) = 3;
-    return (0);
+    return 0;
 }
 \end{lstlisting}
 Wenn man Zeile $3$ durch
@@ -628,15 +662,15 @@ Da \verb|plist| vom Typ Zeiger auf \verb|double| ist, bedeutet \verb|plist + 1| 
 Damit ist aber der Speicherbereicht von \verb|list| nicht mehr als \verb|int| interpretierbar.
 Obiger Code wird also undefiniertes Verhalten nach sich ziehen!
 
-Zusammenfassend können wir also die Elemente eines Arrays auf zwei verschiedene Art und Weisen indizieren
+Zusammenfassend können wir also die Elemente eines Arrays auf zwei verschiedene Arten und Weisen indizieren
 \begin{enumerate}
 \item mit dem Indexoperator \verb|[]|.
 \item mit arithmetischen Operationen.
 \end{enumerate}
 Wie schon gesagt, intern behandelt C ein Array quasi als einen Zeiger.
 Es gibt aber wichtige Unterschiede.
-Wenn \verb|array| als Array deklariert ist, so darf man dessen Adresse nicht veraendern.
-Folgendes Bespiel erläutert dies:
+Wenn \verb|array| als Array deklariert ist, so darf man dessen Adresse nicht verändern.
+Folgendes Beispiel erläutert dies:
 \begin{lstlisting}
 #include <stdio.h>
 int main() {
