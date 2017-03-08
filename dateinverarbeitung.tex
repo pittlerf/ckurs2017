@@ -448,7 +448,7 @@ Binärdatei. Rückgabewert ist \texttt{0}, wenn die Positionierung erfolgreich w
 \item \texttt{whence}: Die Position, zur die Verschiebung hinzufügen wird
 \end{enumerate}
 \end{myexampleblock}
-Unter wir geben ein Beispiel für die Verwendung der Funktions $fread$ und $fwrite$.
+Unter wir geben ein Beispiel für die Verwendung der Funktions \texttt{fread} und \texttt{fwrite}.
 \begin{lstlisting}
 #include<stdio.h>
 #include<stdlib.h>
@@ -469,18 +469,27 @@ int main(){
    }
    for (i=0; i<n; ++i)
      squares[i]=(i+1)*(i+1);
-   fwrite(squares, sizeof(int), n, kanal);
+   if ( fwrite(squares, sizeof(int), n, kanal) != sizeof(int)*n){
+     printf("Error in writing\n");
+     exit(1);
+   }
    for (i=0; i<n; ++i)
      squares[i]=0;
    rewind(kanal); 
-   fread (squares, sizeof(int), n, kanal);
+   if ( fread (squares, sizeof(int), n, kanal) != sizeof(int)*n){
+    printf("Error in read\n");
+    exit(1);
+   }
    for (i=0; i<n; ++i)
     printf("%d\n", squares[i]);
-   fclose(kanal);
+   if (fclose(kanal) != 0){
+    printf("Error in closing file\n");
+    exit(1);
+   }
 }   
 \end{lstlisting}
-Wir öffnen der Kanal nicht nur für Einlesen, sondern auch für Schreiben (Zeile 8). Achtung, wenn $temporarystorage$ 
-Datei schon exisitiert, dann ihre Inhalt wird gelöscht. Wir reservieren Speicherzellen für 100 Variable von $int$ Typ (Zeile 13).
-Danach wir speichern die Quadrats von den ersten hundert ganze Zahlen in diesem Array, und schreiben wir in den 
-Binärdatei. Denn wir postionieren den Kanal wieder auf das Anfang des Datein um  die gespeichert Date einzulesen (Ziele 24).
-In diesem Fall müssen wir Auch der Kanal freigeben.
+Wir öffnen der Kanal nicht nur für Einlesen, sondern auch für Schreiben mit \texttt{w+} (Zeile 8). Achtung, wenn \texttt{temporarystorage}
+Datei schon exisitiert, dann ihre Inhalt wird gelöscht. Wir reservieren Speicherzellen für 100 Variable von \texttt{int} Typ 
+um die Quadrats zu speichern (Zeile 13).
+Danach wir schreiben die Quadrats in einem Binärdatei. Denn wir positionieren den Kanal wieder auf das Anfang des Dateins um die gespeicherte Datei 
+einzulesen (Ziele 24). In diesem Beispiel müssen wir Auch der Kanal freigeben.
