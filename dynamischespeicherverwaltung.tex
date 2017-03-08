@@ -171,7 +171,7 @@ Diskutieren wir wieder ein Beispiel:
     const double M_PI = 3.1415;
 
     // Speicher reservieren
-    double **array2d;
+    double ** array2d;
     if( (array2d = (double **)malloc(sizeof(double *)*SPACEDIM)) == NULL) {
       printf("Fehler in malloc\n");
       return(-1);
@@ -202,18 +202,19 @@ Diskutieren wir wieder ein Beispiel:
     return(0);
   }
 \end{lstlisting}
+\verb|array2d| ist jetzt als \verb|double**| deklariert, also als Zeiger auf einen \verb|double| Zeiger. 
+Dann wird zunächst Speicher für ein Array von \verb|double*| Zeigern reserviert.
+Das geschieht in Zeile $10$.
+Man beachte, wie an dieser Stelle der Rückgabewert von \verb|malloc| auf \verb|NULL| getestet wird.
+Eine Zuweisung der Form \verb|(x = y)| hat selbst den Wert von \verb|x|.
+Anschließend wird in der Schleife, die in Zeile $14$ anfängt, für jedes Element des Arrays von \verb|double*| Zeigern selbst wieder Speicher reserviert.
+Das muss nun Speicher für \verb|double| selbst sein.
+Wieder testen wir den Rückgabewert von \verb|malloc| auf \verb|NULL|.
 
-In anderen Wörter wir brauchen Arrays vom Arrays.
-Aber wir haben gelernt, dass was wir mit einem Array machen können, können wir auch 
-mit Pointers erledigen. In diesem Fall aber wir brauchen auch Pointers auf Pointers.
-Wir zeigen in der Abbildung \ref{mem2d} was in diesem Fall passiert. Wir haben am Anfang 
-eine Variable in statischen Speicherzelle mit Typ double Pointer auf Pointer.
-Danach müssen wir Specherzellen reservieren für Pointers mit $malloc$. Wir reservieren
-Speichern für die Elementen im Mittelsäule auf der Abbildung \ref{mem2d}. $malloc$
-wird die Anfangsadresse von den reservierten Speicherzellen rückgeben. Das wird der Wert
-der Pointer auf Pointer Variable sein. Zum Ende wir müssen für jede Pointer Speicherzellen 
-für zwei $double$ Variable reservieren. Das ist alles. Wir zeigen auch das Quelltext zur diesen
-Übung.
+Es ist wichtig, sich klar zu machen, dass \verb|array2d| vom Typ \verb|double**| ist.
+Dementsprechend zeigt es auf Elemente vom Typ \verb|double*|, die dann selbst auf Elemente vom Typ \verb|double| zeigen.
+Dies ist in Abbildung~\ref{mem2d} dargestellt.
+
 \begin{figure}[!ht]
 % Generated with LaTeXDraw 2.0.8
 % Tue Feb 28 15:43:57 CET 2017
@@ -299,71 +300,82 @@ für zwei $double$ Variable reservieren. Das ist alles. Wir zeigen auch das Quel
 \rput(13., -4.1){Adresse: 0x1deb478}
 
 
-\rput(1.464063,-4.8){\large Pointer auf Pointer}
-\rput(7.271094,-4.8){\large Pointers auf  double Variablen}
-\rput(13.05875,-4.8){\large double Variablen}
+\rput(1.464063,-4.8){\large Zeiger auf double Zeiger.}
+\rput(7.271094,-4.8){\large Zeiger auf double.}
+\rput(13.05875,-4.8){\large double}
 \end{pspicture} 
 }
-\caption{\label{mem2d} Pointers auf Pointer in Betrien.}
+\caption{\label{mem2d} Illustration Zeiger auf Zeiger.}
 \end{figure}
-In der achten Zeile wir reservieren Speicherzellen für Pointers
-und danach in einer Schleife reservieren wir Speicherzellen für
-die aktuellen Fließkommazahlen. Für die indexierung wir können
-entweder mehrere eckigen Klammern $(array2d[i][j])$ oder
-die Dereferenzierung operator $(*(*(array2d+i)+j))$ verwenden.
-Sie sind in jeder Hinsicht gleichwertig. Von Zeile 15 bis 19 
-wir stellen vor, wie mann eine zwei dimenzionale Objekt
-durchführen kann. In diesem Fall wir 
-drücken die Elementen aus in Spalten-Zeil matrixmode.
 
-Zum ende, wir zeigen, wie mann diese Objekte im Funktion herstellen kann.
-Im Funkcion wir müssen der Wert von $array2d$ ändern d.h wenn wir zurück
-aus dem Funktion gekommen sind, $array2d$ muss ein neuer Wert haben.
-Um diese Übung zu erledigen, wir müssen ihre Adresse übergeben und
-die Funktion muss einer Pointer auf $**$ erhalten. Wir zeigen 
-es ausdrücklich in den unteren Quelltext. Im Allgemeinen 
-wenn wir den Wert von einem $n$ dimenzionalen Objekte in einem
-Funktion ändern wollen, müssen wir ihre Adresse übergeben, und die Funktion soll
-eine Pointer auf $n+1$ dimenzionale Object erhalten.
+Es bietet sich an für die Speicherreservierung einer zweidimensionalen Matrix eine eigene Funktion zu schreiben.
+Es ist schließlich ziemlich wahrscheinlich, dass mehr als eine solche Matrix benötigt wird.
+Der entsprechende Quelltext könnte beispielsweise so aussehen:
 \begin{lstlisting}
-#include<stdio.h>
-#include<stdlib.h>
-#include<math.h>
-
-double ** create2darray(const int dim) {
-  double ** p1 = NULL;
-  if( (p1=(double **)malloc(sizeof(double *)*dim)) == NULL) {
-    return(NULL);
-  }
-  for (int i = 0; i < dim; ++i) {
-    if( (p1[i]=(double *)malloc( sizeof(double)*dim)) == NULL) {
+  #include<stdio.h>
+  #include<stdlib.h>
+  #include<math.h>
+  
+  double ** create2darray(const int dim) {
+    double ** p1 = NULL;
+    if( (p1=(double **)malloc(sizeof(double *)*dim)) == NULL) {
       return(NULL);
     }
-  }
-  return(p1);
-}
-
-int main(){
-  const int SPACEDIM = 2;
-  const double M_PI = 3.1415;
-
-  double ** array2d;
-  if( (array2d = create2darray(SPACEDIM)) == NULL) {
-    printf("Fehler in malloc\n");
-    return(-1);
-  }
-  // Zuweisen
-  array2d[0][0]= cos(M_PI/4.); 
-  array2d[0][1]= sin(M_PI/4.); 
-  array2d[1][0]=-sin(M_PI/4.); 
-  array2d[1][1]= cos(M_PI/4.); 
-  for (int i = 0; i < SPACEDIM; ++i){
-    for (int j = 0; j < SPACEDIM; ++j) {
-      printf("%e ", array2d[i][j]);
+    for (int i = 0; i < dim; ++i) {
+      if( (p1[i]=(double *)malloc( sizeof(double)*dim)) == NULL) {
+        return(NULL);
+      }
     }
-    printf("\n");
+    return(p1);
   }
-  // hier sollte noch der Speicher freigegeben werden!
-  return(0);
-}
+  
+  int main(){
+    const int SPACEDIM = 2;
+    const double M_PI = 3.1415;
+    
+    double ** array2d;
+    if( (array2d = create2darray(SPACEDIM)) == NULL) {
+      printf("Fehler in malloc\n");
+      return(-1);
+    }
+    // Zuweisen
+    array2d[0][0]= cos(M_PI/4.); 
+    array2d[0][1]= sin(M_PI/4.); 
+    array2d[1][0]=-sin(M_PI/4.); 
+    array2d[1][1]= cos(M_PI/4.); 
+    for (int i = 0; i < SPACEDIM; ++i){
+      for (int j = 0; j < SPACEDIM; ++j) {
+        printf("%e ", array2d[i][j]);
+      }
+      printf("\n");
+    }
+    // hier sollte noch der Speicher freigegeben werden!
+    return(0);
+  }
 \end{lstlisting}
+Die Funktion \verb|create2darray| liefert als Rückgabewert eine Variable vom Typ \verb|double**|, also genau das, was wir benötigen.
+In der Funktion selbst geschieht dann das, was wir im obigen Beispiel schon gezeigt hatten.
+Mit \verb|return| wird dann das Objekt zurückgegeben, für das wir Speicher reserviert haben.
+
+An dieser Stelle sieht man einen wichtigen Unterschied zwischen einer normalen Variablen Deklaration und dem Reservieren von Speicher mit \verb|malloc|.
+Währen beispielsweise die Variable \verb|p1| in der Funktion \verb|create2darray| natürlich nur in der Funktion selbst sichtbar ist, bleibt der mit \verb|malloc| reservierte Speicher auch außerhalb der Funktion reserviert.
+Und indem wir die Adresse zu dieser Speicherstelle von der Funktion and die aufrufende Funktion übergeben, können wir den reservierten Speicherbereich auch außerhalb der Funktion nutzen.
+
+Das bedeutet aber auch, dass Speicher, der mit \verb|malloc| reserviert wurde, und dessen Adresse wir nicht mehr kennen, nicht mehr nutzbar ist.
+Auf diese Art und Weise kann man recht einfach versehentlich Programme schreiben, die den gesamten Hauptspeicher eines Rechners reservieren, ohne ihn zu nutzen.
+Das führt relativ schnell zur Unbenutzbarkeit des entsprechenden Rechners.
+Ein Beispiel für einen solchen Fehler ist der folgende (nicht besonders sinnvolle) Code Abschnitt
+\begin{lstlisting}
+  int list[50];
+  for(int i = 0; i < 50; i++) {
+    double * p = malloc(sizeof(double));
+    *p = i*i;
+    list[i] = *p + (*p)*(*p);
+  }
+  free(p); // falsch, p ist hier nicht mehr sichtbar!
+\end{lstlisting}
+In jedem Durchlauf der Schleife wird Speicher für \verb|p| reserviert, ohne ihn wieder frei zu geben.
+Nach Ende der Schleife ist keine der Adressen all dieser Reservierungen mehr verfügbar.
+D.h. man kann den Speicher weder weiter benutzen, noch kann man ihn nachträglich frei geben.
+
+\endinput
