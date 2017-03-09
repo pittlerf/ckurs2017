@@ -8,12 +8,12 @@ innere Schleife im durchschnitt also skaliert mit dem Nummer der Elementen.
 Beispielweise für eine total zufällige Eingabe der sortierende Element ist im 
 durchschnitt kleiner als die Hälfte der schon sortierten Elementen. Darum 
 wir verbrauchen  auch in der inneren Schleife Computerzeit der mit 
-dem Nummer von elementen ($n$) skaliert. Deswegen ist das Einfügesortieren
+dem Nummer von den Elementen ($n$) skaliert. Deswegen ist das Einfügesortieren
 ein $n^2$ Algorithmus.
 
 Eine mögliche entwicklung ist die Haldensortierung. In diesem Projekt werden wir 
 diese Algorithmus kennenlernen und implementieren. Die grundsätztliche Datentyp ist 
-das $heap$.
+das \texttt{heap}.
 
 \begin{myexampleblock}{Definition: \texttt{Heap}}
 Es ist ein ausgeglichener Binärebaum. Es gibt nur eine Bedingung für die Elementen:
@@ -94,15 +94,21 @@ von der $[10,12,6,5,9,13,1,7]$ Reihenfolge auf Abbildung \ref{heapexample}.
 Wie du siehst, grundsätztlich es gibt keine Beziehung zwischen Elementen von der 
 gleichen Höhe des Bäumes. Es gibt nur ein Regel: Das Kind muss kleiner sein, als ihres
 Elter. Jetzt zeigen wir, wie es im Haldensortierung verwendet werden.
-Er kann in folgen Schritten formuliert werden:
+Die Haldensortierung kann mit nur zwei Schritten formuliert werden:
 \begin{itemize}
-\item Stellen wir ein $heap$ aus den Reihenfolge der Zahlen her
+\item Stellen wir ein \texttt{heap} aus den Reihenfolge der Zahlen her
 \item Nun verschieben wir jeweils das erste Element aus, und das wird mit dem letzten Element 
 ersetzt.
-\item Das $heap$ Eigenschaft muss wiederhergestellt werden.
+\item Das \texttt{heap} Eigenschaft muss wiederhergestellt werden.
 \end{itemize}
 
-Wir verwenden verketetten Liste für die Darstellung des $heap$-s. Jedes Element muss
+Das Vorteil des Algorithmus ist dass der Zeit um das \texttt{heap} zu behandeln skaliert
+nur mit dem Höhe des Bäumes. Weil der Bäum ausgeglichen ist, ihre Größe skaliert nur mit
+\texttt{log(n)}. Wir müssen diese Operationen für alle Elementen erledigen 
+deswegen die Ganze Zeit skaliert mit \texttt{n*log(n)}. Das ist für groß genug \text{n} ist
+besser als die Einfügesortierung.
+
+Wir verwenden verketteten Liste für die Darstellung des \texttt{heap}-s. Jedes Element muss
 ein Pointer für ihre Elter, und zwei Pointer für ihre rechten und linken Nachfolger haben.
 \begin{lstlisting}
 typedef struct heap {
@@ -112,14 +118,16 @@ typedef struct heap {
    struct heap *parent; /* Verweis auf den Vorgaenger */
 } heap;
 \end{lstlisting}
-Der $parent$ Pointer ist ein NULL pointer für die Wurzel des Bäumes. Die Blätters, die keinen
-Kinder haben, haben NULL als right und left Pointers.
-
-Jetzt zeigen wir wie mann ein Heap aus einem Reihenfolge von Zahlen herstellen kann. Zuerst
+Um ein geschloßener Baum zu haben, müssen wir an die folgenden zwei Punkten achten:
+\begin{itemize}
+\item Der \texttt{parent} Zeiger ist ein \texttt{NULL} Zeiger für die Wurzel des Bäumes. 
+\item Die Blätters, die keinen Kinder haben, haben \texttt{NULL} als right und left Zeiger.
+\end{itemize}
+Jetzt zeigen wir wie mann ein \texttt{heap} aus einem Reihenfolge von Zahlen herstellen kann. Zuerst
 müssen wir den ersten freien Platz finden, dann fügen wir das Element hier ein. Danach es kann sein, dass 
-das $heap$ Eigenschaft nicht wahr ist. Darum müssen wir das $heap$ Eigenschaft überprüfen und wenn
-es notwendig ist, tauschen wir den aktuellen Wert mit dem Wert von ihrem Elter bis das $heap$ Eigenschaft 
-wahr wird.
+das \texttt{heap} Eigenschaft nicht mehr wahr ist. Darum müssen wir das \texttt{heap} Eigenschaft danach immer
+überprüfen und wenn es notwendig ist, tauschen wir den aktuellen Wert mit dem Wert von ihrem Elter bis 
+das \texttt{heap} Eigenschaft wahr wird.
 \begin{figure}[!ht]
 \begin{center}
 % Generated with LaTeXDraw 2.0.8
@@ -173,14 +181,14 @@ Die wichtigsten Schritte sind:
 \end{enumerate}
 Zuerst möchten wir den ersten freien Platz finden. Lass uns annehmen
 das Folgende Beispiel. Eine Familie möchte ein Ticket für ein Konzert kaufen.
-Aber es gibt nur eine Karte, und die Eltern dürfen nicht gehen, sie müssen sich 
+Aber es gibt nur eine Karte für Sie, und die Eltern dürfen nicht gehen, sie müssen sich 
 um ihre Kinder kümmern. Zuerst der Kopf der Familie geht zur Ticketschalter
-um das Ticket zu kaufen, und wenn er/sien  kein Kind hat, hat er Glück und
+um das Ticket zu kaufen, und wenn er/sie  kein Kind hat, hat er Glück und
 kann zum Konzert gehen. Aber wenn er Kind hat, er ist sehr Höflich, und 
-geb die Möchkligkeit für ihre Kinder zum Konzert zu gehen, in anderen Wörte, er
-stellt ihre Kinder zur Warteschlange. Weil das Kind alles tun könnte. Dies wird 
+geb die Möchkligkeit für ihre Kinder zum Konzert zu gehen. In anderen Wörten, er
+stellt ihre Kinder zur Warteschlange,  weil das Kind alles tun könnte. Dies wird 
 weitergehen bis der aktuellen Käufer keine Kind hat. Dieses Beispiel ist ähnlich 
-wie unsere Probleme: den ersten freien Platz zu finden. Nachdem Beispiel ist es 
+wie unseres Problem: den ersten freien Platz zu finden. Nachdem Beispiel ist es 
 klar, dass wir eine Datenstrukture ähnlich wie die Warteschlange verwenden müssen. 
 In der Abbildung \ref{warteschlange} wir zeigen wie die Warteschlange
 funktioniert. Das großte Unterschied zwischen Stapelspeicher und Werteschlange ist,
@@ -188,7 +196,7 @@ dass im Werteschlange das erste gekommene Element zuerst auskommen kann.
 So die Umsetzung ist ähnlich wie im Stapelspeicher. Die Untershiede sind
 \begin{enumerate}
 \item Das Typ der gespeicherte Variable
-\item Das pop() Funktion muss das letzte Element ausgeben
+\item Das \texttt{pop()} Funktion muss das letzte Element ausgeben
 \end{enumerate}
 
 Deises Endprojekt wird mehr aus 100 Zeilen Code bestehen.
