@@ -176,23 +176,52 @@ das \texttt{heap} Eigenschaft wahr wird.
 
 Die wichtigsten Schritte sind:
 \begin{enumerate}
-\item Freie Platz finden
-\item $heap$ Eigenschaft wiederherstellen
+\item Ersten freien Platz finden
+\item \texttt{heap} Eigenschaft wiederherstellen
 \end{enumerate}
 Zuerst möchten wir den ersten freien Platz finden. Lass uns annehmen
 das Folgende Beispiel. Eine Familie möchte ein Ticket für ein Konzert kaufen.
-Aber es gibt nur eine Karte für Sie, und die Eltern dürfen nicht gehen, sie müssen sich 
-um ihre Kinder kümmern. Zuerst der Kopf der Familie geht zur Ticketschalter
+Aber es gibt nur eine Karte für Sie, und die Eltern dürfen nicht gehen, weil sie sich 
+um ihre Kinder kümmern müssen. Zuerst der Kopf der Familie geht zum Ticketschalter
 um das Ticket zu kaufen, und wenn er/sie  kein Kind hat, hat er Glück und
-kann zum Konzert gehen. Aber wenn er Kind hat, er ist sehr Höflich, und 
-geb die Möchkligkeit für ihre Kinder zum Konzert zu gehen. In anderen Wörten, er
-stellt ihre Kinder zur Warteschlange,  weil das Kind alles tun könnte. Dies wird 
-weitergehen bis der aktuellen Käufer keine Kind hat. Dieses Beispiel ist ähnlich 
-wie unseres Problem: den ersten freien Platz zu finden. Nachdem Beispiel ist es 
-klar, dass wir eine Datenstrukture ähnlich wie die Warteschlange verwenden müssen. 
-In der Abbildung \ref{warteschlange} wir zeigen wie die Warteschlange
-funktioniert. Das großte Unterschied zwischen Stapelspeicher und Werteschlange ist,
-dass im Werteschlange das erste gekommene Element zuerst auskommen kann. 
+kann zum Konzert gehen. Aber wenn er/sie Kind hat, er/sie ist sehr Höflich, und 
+geb die Möchkligkeit für ihre Kind(er) zum Konzert zu gehen. Die Elter möchten 
+gute Eltern sein, deswgen ihres Kinder könnten alles tun. In anderen Wörten, er
+stellt ihre Kinder zur Warteschlange. Dies wird weitergehen bis der aktuellen Käufer 
+keine Kind hat. Dieses Beispiel ist ähnlich wie unseres Problem: den ersten freien 
+Platz zu finden. Nachdem Beispiel ist es klar, dass wir eine Datenstrukture ähnlich wie 
+die Warteschlange verwenden müssen. In der Abbildung \ref{warteschlange} wir zeigen wie 
+die Warteschlange funktioniert. Unter siehst du den Quelltext für die Suchung.
+
+
+\begin{lstlisting}
+queue* q = newqueue(*root); /*Kopf der Familien zur Warteschlange*/
+heap* currentheap; 
+while((currentheap=queue_rem(&q))!=NULL){//Ein mann kommt aus der Warteschlange
+  //Wenn er/sie nicht zwei Kind hat, bekommt ein neues Kind
+  //(Konzert Ticket in unserem Beispiel)
+  if(currentheap->left == NULL) {
+     currentheap->left  = newheap(x, currentheap);
+     currentheap = currentheap->left;
+  }
+  else if(currentheap->right == NULL) {
+     currentheap->right = newheap(x, currentheap);
+     currentheap = currentheap->right;
+  }
+  //Wenn er sie zwei Kinder hat, stellt ihnen in der 
+  //Warteschlange und geht aus, die Naeschte Kaufer kommt
+  else {
+     queue_put(currentheap->left, &q);
+     queue_put(currentheap->right,&q);
+     continue;
+  }
+  break;
+}
+\end{lstlisting}
+
+
+Das großte Unterschied zwischen Stapelspeicher und 
+Werteschlange ist, dass im Werteschlange das erste gekommene Element zuerst auskommen kann. 
 So die Umsetzung ist ähnlich wie im Stapelspeicher. Die Untershiede sind
 \begin{enumerate}
 \item Das Typ der gespeicherte Variable
@@ -201,12 +230,12 @@ So die Umsetzung ist ähnlich wie im Stapelspeicher. Die Untershiede sind
 
 Deises Endprojekt wird mehr aus 100 Zeilen Code bestehen.
 Um die Durchsichtigkeit unseres Programm zu verteidigen müssen
-wir die verschieden Teilen im getrennte Datei schreiben und
+wir die verschiedenen Teilen im getrennte Datei schreiben und
 das headerdatei verwenden. Beispielweise, das ist ganz ähnlich wie der 
-$printf$ Funktion. Im headerdatei wir müssen die Typendefinition
+verwendung von \texttt{printf} Funktion. Im headerdatei wir müssen die Typendefinition
 und die Funktiondeklarationen speichern. Achtung, die Typ deklaration
-müssen in einem Verschiedenen Datei sein, weil es Querverweise
-gibt. Beispielweise zeigen wir hier das Quelltext und die Headerdatein
+müssen in einem Verschiedenen Datei sein um Querverweise zu vermeiden
+Beispielweise zeigen wir hier das Quelltext und die Headerdatein
 für die Warteschlange:
 
 \begin{myexampleprogram}{ Programme: \texttt{Die Warteschlange}}	
@@ -306,33 +335,35 @@ void free_queue( queue **first){
 }
 \end{lstlisting}
 \end{myexampleprogram}
-Das Datei $heapqueue.h$ wird die Typdefinitionen enthalten. Wir müssen
+Das Datei \texttt{heapqueue.h} wird die Typdefinitionen enthalten. Wir müssen
 diese Headerdatei im Codetext für Warteschlange beilegen, um der Kompiler
-den Typ $heap$ verstehen zu können. Natürlich wir müssen ein eigenen 
-Headerdatei für die Warteschlange erzeugen, weil die Funktionen 
-werden in einem anderen Datei ($heap.c$) verwenden. Das Unterschied
-zwischen Stapelspeicher und Warteschlange siehst du im $queue.c$ Zeile 33-36.
+den Typ \texttt{heap} un \texttt{queue} verstehen zu können. Natürlich wir müssen 
+ein eigenen Headerdatei für die Warteschlange erzeugen, weil die Funktionen 
+werden in einem anderen Datei (\texttt{heap.c}) verwenden. Das Unterschied
+zwischen Stapelspeicher und Warteschlange siehst du im \texttt{queue.c} Zeile 33-36.
 In diesem Teil wir suchen für das letzte (freigebende) Element in
 der Warteschlange.
 
-Jetzt wir müssen das $heap$ Eigenschaft überprüfen. Das ist ganz einfach, 
-wir ziehen das eingegebenen Element oben bis das $heap$ Eigenschaft wahr wird.
+Jetzt wir müssen das \texttt{heap} Eigenschaft überprüfen. Das ist ganz einfach, 
+wir ziehen das eingegebenen Element oben bis das \texttt{heap} Eigenschaft wahr wird.
 Wir zeigen hier das in der Praxis:
 \begin{lstlisting}
 while(current_heap->parent != NULL && current_heap->parent->val < current_heap->val) 
 {
-    SWAP(current_heap->parent->val, current_heap->val);
-    current_heap = current_heap->parent;
+    int tmp=current_heap->parent->val;
+    current_heap->parent->val=current_heap->val;
+    current_heap->val=tmp;
+    current->heap=current_heap_parent;
 }
 \end{lstlisting} 
 In der dritten Zeile wir tauschen die Werte um, und danach machen
 wir ein Schritt oben mit dem Zeiger. Wir wiederholen es bis
-das $heap$ Eigenschaft wahr wird. Jetzt wir können die zwei Teilen
-zusammenstellen um ein Code für einschließen ins $heap$ bekommen.
+das \texttt{heap} Eigenschaft wahr wird. Jetzt wir können die zwei Teilen
+zusammenstellen um ein Code für einschließen ins \texttt{heap} bekommen.
 
-Wenn wir den Platz gefunden haben, prüfen wir das $heap$ Eigenschaft über
+Wenn wir den Platz gefunden haben, prüfen wir das \texttt{heap} Eigenschaft über
 (Zeile 24-26). Dann wir sind fertig, die Warteschlange wird freigegeben und
-wir beenden die Schleife mit Hilfe des Strichworts $break$.
+wir beenden die Schleife mit Hilfe des Strichworts \texttt{break}.
 \begin{lstlisting}
 void heap_insert(heap** root, int x) {
    if(*root == NULL) {
@@ -358,7 +389,9 @@ void heap_insert(heap** root, int x) {
           continue;
         }
         while(currentheap->parent != NULL && currentheap->parent->val < currentheap->val) {
-           SWAP(current_heap->parent->val, current_heap->val);
+           int tmp=current_heap->parent->val;
+           current_heap->parent->val=current_heap->val;
+           current_heap->val=tmp;
            currentheap = currentheap->parent;
         }
         break;
@@ -694,7 +727,7 @@ nächsten Schritt verändert werden.}
 \end{figure}
 
 
-Zusamennfassen wir haben drei Möglichkeiten um das $heap$ Eigenschaft wiederherstellen
+Zusamennfassen wir haben drei Möglichkeiten um das \texttt{heap} Eigenschaft wiederherstellen
 (Wir zeigen den Quelltext unter in der Praxis).
 \begin{enumerate}
 \item Das aktuelle Knote hat kein Kinder: Wir sind fertig (Zeile 4-6).
