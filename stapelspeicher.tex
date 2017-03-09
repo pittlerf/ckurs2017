@@ -1,17 +1,19 @@
-\section{Verketette Liste, der Kellerspeicher}
-Wir haben gelernt, wie wir die Speicherverwaltung verwenden können. Aber was passiert, wenn wir ein Element löschen wollen, oder
-nochein zwischen zwei schon existierten Elementen hinzufügen möchten. In anderen Wörten, wir möchten ein Dateistrukture, das
-dynamisch erhöht, oder schrumpft. Das können wir ausführen mit einer Strukture, die die Adresse des nächsten Elements enthält.
-Mann kann dieses Strukture als verkettete Liste bezeichnet. Beispielweise in der \texttt{C} Sprache ein Struktureelement kann 
-auch ein Zeiger auf demselben Element sein. Es gibt nur eine Bedingung für ein Feld im Strukture: Ihre Größe musst beim Kompilierung 
-bekannt sein. Der Zeiger auf demselben Element erfüllt deise Bedingung. Beispielweise im \texttt{C} eine mögliche verwirlichung der
-verketteten Liste zeigen wir unter:
+\section{Anwendung: Verketette Listen}
+
+Wir wenden das bisher gelernte nun auf sogenannte verkettete Listen an.
+Es handelt sich dabei um eine Datenstruktur, die es erlauben soll einfach Listenelement an belibieger Position hinzu zu fügen oder zu löschen.
+Das grundlegende Elemen ist folgendes \verb|struct|:
 \begin{lstlisting}
-struct list{
-  int element;
-  struct list *naechste;
-}
+  struct list {
+    int data;
+    struct list * next;
+  }
 \end{lstlisting}
+Es enthält einmal ein Datum, hier \verb|data| genannt, und einen Zeiger \verb|next| wieder auf ein \verb|struct list|. 
+Dieser Zeiger soll auf das nächste Element in der Liste zeigen.
+Das letzte Element soll damit auf \verb|NULL| zeigen.
+Dies ist in Abbildung~\ref{verklist} dargestellt.
+Man nennt dieses Konzept auch Stapelspeicher, weil man es sich wie den Stapel Papiere auf dem Schreibtisch vorstellen kann.
 \begin{figure}[!ht]
 % Generated with LaTeXDraw 2.0.8
 % Sun Mar 05 19:02:52 CET 2017
@@ -53,24 +55,16 @@ struct list{
 }
 \caption{Einmal Verketette Liste\label{verklist}}
 \end{figure}
-In der Abbildung \ref{verklist} wir zeigen, wie es in der Praxis
-funkzioniert. Wir werden den \texttt{NULL} pointer für das Ende der verketteten
-Liste verwenden. Es gibt mehrere Möglichkeiten um eine verkettete Liste herstellen.
-Beispielwiese wir können auch ein Zeiger für das vorherigen Element verwenden um die Liste
-auch in der andere Richtung durchgehen zu können. Mann kann das auch als
-doppelt verkettete Liste bezeichnet. Viele wichtigen Datenstukturen können mit 
-verketteten Listen darstellen. Beispielweise den Stapelspeicher.
-Der Stapelspeicher ist ein Speicher, der nur zwei operationen hat:
+
+Nun müssen wir Funktionen definieren, die Elemente im Stapelspeicher hinzufügen oder entfernen.
+Üblicherweise definiert man die folgenden zwei Funktionen:
 \begin{itemize}
-\item \texttt{push()}: Speicher ein Element im Stapelspeicher
-\item \texttt{pop()} : Gib das zuletzt gespeicherte Element Zurück
+\item \texttt{push()}: Füge ein Element im Stapelspeicher hinzu
+\item \texttt{pop()} : Entferne das zuletzt gespeicherte Element
 \end{itemize}
-Wir zeigen es in der Abbildung \ref{stapspeicher}. Die wichtigste Verwendungsmöglichkeiten
-ist im \texttt{Assembly} Programmiersprache. In diesem Sprache beim Funktionanrufen die Parameters werden 
-zum Stapelspeicher gestellt. Wenn wir von einem Funktion zurückkommen, 
-wir nehmen ein Element vom Stapelspeicher aus als Rückgabewert. Das Grundprinzip im
-Stapelspeicher ist: Den zuletzt gespeicherten Element werden wir zuerst
-zurückgeben. Es ist ein \texttt{LIFO} Speichertyp: \texttt{L}ast \texttt{I}n \texttt{F}irst \texttt{O}ut.
+dargestellt in Abbildung~\ref{stapspeicher}.
+Ein Stapelspeicher ist vom Typ \texttt{LIFO}: \texttt{L}ast \texttt{I}n \texttt{F}irst \texttt{O}ut.
+
 \begin{figure}[!ht]
 \begin{center}
 % Generated with LaTeXDraw 2.0.8
@@ -117,142 +111,100 @@ zurückgeben. Es ist ein \texttt{LIFO} Speichertyp: \texttt{L}ast \texttt{I}n \t
 \end{center}
 \end{figure}
 
-Wir werden jetzt implementieren diesen wichtigen Datenstruktur mit 
-den verketteten Listen. Zuerst stellen wir der Datenstruktur vor:
+Für die einfachere Verwendung führen wir noch folgende Typdefinition durch
 \begin{lstlisting}
-typedef struct list {
-   struct list* next;
-   int data;
-} list;
+  typedef struct list {
+    struct list* next;
+    int data;
+  } list;
 \end{lstlisting}
-Das ist natürlich eine verkettete Liste. Aber wir haben hier diesen Typ also definiert
-mit dem Strichwort \texttt{typedef}.
-\begin{myexampleblock}{Strichwort: \texttt{typedef}}
+Nun schreiben wir erst eine Funktion \verb|newlist|, die eine neue Liste erstellt und ein erstes Datum einfügt:
 \begin{lstlisting}
-typedef neuename altename;
+  list * newlist( const int x ){
+    list * q = (list *)malloc(sizeof(list));
+    if (q == NULL){
+      fprintf(stderr, "Error in Memory allocation\n");
+      exit(1);
+    }
+    // Daten zuweisen 
+    q->data=x;
+    // next zeigt auf NULL, da letztes und einziges Element
+    q->next=NULL;
+    return q;
+  }
 \end{lstlisting}
-\vspace{-0.4cm}
-Stellt ein neues Name (\texttt{neuename}) für den Typ von \texttt{altename} her.
-\end{myexampleblock}
-Der größte Vorteil in diesem Fall ist, dass wir den Strichwort \texttt{struct} 
-vor allen Variable definition verwenden müssen. Der \texttt{typedef} ändert nur
-den Datenstrukture um in dem Codetext leichter zuzugriffen. Der Quelltext wird auch
-durchsichtiger sein. Jetzt wir haben das Definition der Datenstrukture, wir können die 
-Implementierung anfangen. Zuerst besprechen wir, wie können wir eine neue Stapelelement herstellen.
-Wir müssen die zwei Operation \texttt{pop} und \texttt{push} als Funktion verwirklichen.
-Natürlich dazu müssen wir andere (kleiner) Funktionen verwenden.
-Beispielweise wir müssen eine neue Variable von Typ \texttt{list} herstellen mit dem Funktion 
-\texttt{newlist} (Den Quelltext siehst du unter).
+Der Rückgabewert dieser Funktion ist ein Zeiger auf das bisher einzige Listenelement.
+Der Zeiger \verb|next| dieses Element zeigt auf \verb|NULL|, wie wir das definiert hatten.
+Damit kann man jederzeit dieses Element als das letzte in der Liste idetifizieren.
+Im wesentlich erzeugt \verb|newlist| ein neues Listenelement, bei dem \verb|next| auf \verb|NULL| zeigt.
+Es sollte jetzt klar sein, wie man \verb|push| schreiben kann:
 \begin{lstlisting}
-list * newlist( int x ){
-   list *q=(list *)malloc(sizeof(list));
-   if (q == NULL){
-     fprintf(stderr, "Error in Memory allocation\n");
-     exit(1);
-   }
-   q->data=x;
-   q->next=NULL;
-   return q;
-}
+  void push( const int x, list ** first){
+    list *temp = newlist(x); // erzeuge ein neues Element
+    if ((*first) != NULL) {  // existiert schon eine Liste?
+      temp->next = (*first); // falls ja, setze den Zeiger
+    }
+    (*first) = temp;         // temp ist das neue erste Element
+    return;
+  }
 \end{lstlisting}
-Der obene Codeteil gib eine \texttt{list} Element zurück und hat die
-speichernde ganze Zahl als Eingabeparameter. Dieser Teil ist ganz einfach.
-Wir reservieren Speicherzellen für das neue Listelement und zuweisen
-den Eingabewert. Zum Ende wir müssen die nächste Element als ein \texttt{NULL} 
-Zeiger festlegen. Die nächste Teil ist das \texttt{push()} Funktion. Das wird
-ein neues Element zum Stapelspeichern hinzufügen.
+\verb|pop| sollte dagegen das Datum des ersten Listenelements zurückgegen und dann das erste Listenlement löschen:
 \begin{lstlisting}
-void push( int x, list ** first){
-   if ((*first) == NULL){
-       (*first)=newlist(x);
-       return;
-   }
-   list *temp=newlist(x);
-   temp->next=(*first);
-   (*first)=temp;
-}
+  int pop( list **first){
+    if ((*first) == NULL){
+      fprintf(stderr, "Es gibt kein Element im Speicher\n");
+      return 0;
+    }
+    int ret;
+    ret = (*first)->data;  // Extrahiere das Datum
+    list *temp;
+    temp = (*first)->next; // Setze den Zeiger auf das zweite elemen
+    free(*first);          // Loesche das erste
+    (*first) = temp;       // das zweite ist jetzt das erste
+    return ret;            // Gib das Datum zurueck
+  }
 \end{lstlisting}
-Wir müssen die Adresse vom Zeiger auf das Anfangsadresse des Speichers und den speichernde 
-Element als Parameter eingeben. Wenn der Stapelspeicher leer ist, wir legen die Anfangsadresse 
-mit der Adresse des neuen Elements fest. In anderem Fall wir legen den nächste Zeiger von dem neuen 
-Element mit dem originalle Anfangsadresse und die neue Anfangsadresse wird die Adresse vom neuen Element 
-sein. Darum müssen wir nicht die Anfangsadresse als Parameter abgeben, sondern ihre Adresse,
-weil wir den Wert von ihm im Funktion ändern wollen. Den logischen nächsten Schritt
-ist die implementierung des \texttt{pop} Funktions. Der Rückgabewert muss den letzten gespeicherte
-Element sein. Natürlich nachdem \texttt{pop} der Stapelspeicher muss ein Stapelspeicher sein. Das bedeuted
-dass wir die Hierarchie beibehalten müssen. Nachdem \texttt{pop} der neue Knopf der Speicher (ersten Element in Folge)
-muss das vorheriges zweiten sein. Darum hier wir auch müssen die Adresse vom Zeiger auf das ersten Element
-als Parameter eingeben. Unter kannst du die Verwirklichung im \texttt{C} sehen.
+Wenn das Stapelspeicher leer war, wird eine Fehlermeldung ausgegeben.
+Mit folgender Funktion kann die gesamte Liste ausgegeben werden:
 \begin{lstlisting}
-int pop( list **first){
-   list *temp;
-   int ret;
-   if ((*first) == NULL){
-     printf("Es gibt kein Element im Speicher\n");
-     return 0;
-   }
-   ret=(*first)->data;
-   temp=(*first)->next;
-   free(*first);
-   (*first)=temp;
-   return ret;
-}
-\end{lstlisting}
-Wenn das Stapelspeicher leer war, wir werden eine Nachricht ausdrücken. 
-Im anderen Fall wir legen den Rückgabewert mit dem Wert von dem ersten 
-Element (Zeile 8) und das neue erste Element (Zeile 11) fest. Das unnötige
-Element muss freigegeben werden (Zeile 10).
-
-Wir können auch prüfen die aktuellen Inhalt des Stapelspeichers. 
-Dafür müssen wir ein Funktion, der durch die Listelementen geht
-schreiben. Dieser Funktion wird den Speicher nicht ändern, darum 
-können wir auch den Zeiger auf dem Speicher als Parameter eingeben.
-Unter siehst du den Quelltext für das Durchgehen.
-\begin{lstlisting}
-void print_list( list *first){
-   list *temp=(first);
-   if (temp == NULL)
+  void print_list( list * first){
+    list *temp=(first);          // existiert eine Liste?
+    if (temp == NULL) {          
       return;
-   for (;;){
-      printf("%d\t", temp->data);
-      temp=temp->next;
-      if (temp == NULL)
-        break;
-   }
-   printf("\n");
-}
+    }
+    while(1) {
+      printf("%d ", temp->data); // momentanes Datum ausgeben
+      temp = temp->next;         // Zeiger auf das naechste Elemen setzen
+      if (temp == NULL) {        // Letztes Element erreicht
+        break;                   // falls ja, Abbruch
+      }
+    }
+    printf("\n");
+  }
 \end{lstlisting}
-Wir zuerst prüfen ob der Speicher leer ist oder nicht. Wenn der
-Speicher nicht leer ist, wir machen eine Schleife um die
-Listelementen durchzugehen. In jeden Iteration wir springer zum 
-nächsten Element mit der Asswieung im Zeile 7. Wenn wir am Ende des Speichers
-sind, beenden wir die Schleife.
-
-Es fehlt jetzt nur noch ein Gebrauchanweisung für unseren Stapelspeichern.
-Dies wird der \texttt{main} Funktion.
+Die Benutzung all dieser Funktionen wird mit folgendem Programm illustriert:
 \begin{lstlisting}
-int main(){
-   list *erste=NULL;
-   push(2, &erste);  print_list(erste);
-   push(4, &erste);  print_list(erste);
-   push(6, &erste);  print_list(erste);
-   pop( &erste );    print_list(erste);
-   push(8, &erste);  print_list(erste);
-   pop( &erste );    print_list(erste);
-}
+  int main() {
+    list *erste=NULL;
+    push(2, &erste);  print_list(erste);
+    push(4, &erste);  print_list(erste);
+    push(6, &erste);  print_list(erste);
+    pop( &erste );    print_list(erste);
+    push(8, &erste);  print_list(erste);
+    pop( &erste );    print_list(erste);
+    return(0);
+  }
 \end{lstlisting}
-Wir definieren zuerst ein Zeiger um die 
-Anfangsadresse des Speichers zu speichern (Zeile 2). Dann wir machen eine
-Folgen aus \texttt{push(int x)} und \texttt{pop()} Anweisungen, und im jeden Schritt wir drücken
-den aktuellen Zustand des Speichers aus. Die Ausgebe siehst du unter.
-\begin{lstlisting}
+dessen Ausgabe wie folgt aussieht:
+\begin{verbatim}
 2	
-4	2	
-6	4	2	
-4	2	
-8	4	2	
-4	2	
-\end{lstlisting}
-Wie du siehst, wenn wir die erste \texttt{pop} Anweisung ausführen, wurde die letzte 
-eingegebene Wert (6) aus dem Speicher gelöst. 
+4 2
+6 4 2	
+4 2
+8 4 2	
+4 2
+\end{verbatim}
+Wie man sieht, bei Ausführung der ersten \texttt{pop} Anweisung wird das zuletzt hinzugefügte Element mit Datum $6$ aus der Liste entfernt.
+
+\endinput
 
