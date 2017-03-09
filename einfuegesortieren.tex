@@ -19,9 +19,9 @@ int read(int array[], const int n) {
             break;
         }
     }
-    if (i == n)
+    if (i != n)
         printf("Sorry, es konnte nicht die ganze Datei eingelesen werden.\n");
-    return (i);
+    return i;
 }
 \end{lstlisting}
 Die Funktion liest bis zu $n$ Zeichen ein, bzw. bis \verb|scanf| den Rückgabewert \verb|EOF| liefert.
@@ -30,7 +30,7 @@ Die eingelesenen Zahlen werde in \verb|array| gespeichert, das by reference übe
 Der Speicher für \verb|array| muss also von der aufrufenden Funktion bereitgestellt sein.
 Der Rückgabewert unserer Funktion \verb|read| ist die Anzahl der eingelesenen Zahlen.
 
-Als nächstes schreiben wir die Funktion zum sortieren:
+Als nächstes schreiben wir die Funktion zum Sortieren:
 \begin{lstlisting}
 void sort(int sortiert[], int unsortiert[], const int n) {
     for (int i = 0; i < n; ++i) {
@@ -44,13 +44,12 @@ void sort(int sortiert[], int unsortiert[], const int n) {
                 break;
         }
     }
-    return;
 }
 \end{lstlisting}
 Diese Funktion hat drei Eingabeparameter: Das Array, dass die sortierten Zahlen enthalten soll, das Array, dass die zu sortierenden Zahlen enthält, und die Anzahl an zu sortierenden Zahlen.
 Wieder muss die aufrufende Funktion dafür Sorge tragen, dass für beide Arrays ausreichend Speicher bereitgestellt wurde.
-Überzeugen Sie Sich bei den übrigen Zeilen, dass diese wirklich die $n$ Zahlen durch einfügen in das Array \verb|sortiert|.
-Als neues Element haben wir an dieser Stelle den Rückgabewert von \verb|sort| als \verb|void| deklariert. 
+Überzeugen Sie sich bei den übrigen Zeilen, dass diese wirklich die $n$ Zahlen durch Einfügen in das Array \verb|sortiert| sortiert.
+Als neues Element haben wir an dieser Stelle den Rückgabewert von \verb|sort| als \verb|void| deklariert.
 Das bedeutet, dass die Funktion keinen Rückgabewert hat.
 
 Bleibt noch die \verb|main| Funktion, die wie folgt aussieht:
@@ -58,7 +57,7 @@ Bleibt noch die \verb|main| Funktion, die wie folgt aussieht:
 #include <stdio.h>
 
 int read(int array[], const int n);
-void Sort(int sortiert[], int unsortiert[], const int n);
+void sort(int sortiert[], int unsortiert[], const int n);
 
 int main() {
     const int MAXNUM = 10000;
@@ -81,14 +80,14 @@ Hier haben wir schon von der Möglichkeit Gebrauch gemacht, dass man Funktionen 
 Man kann also beispielsweise in eine Datei \verb|sort.c| erst den Code für die \verb|main| Funktion kopieren, und im Anschluss daran den Code für die beiden Funktionen.
 Übersetzen kann man dann mit
 \begin{verbatim}
-  gcc -std=c99 -o sort sort.c
+gcc --std=c99 -o sort sort.c
 \end{verbatim}
 Der Name der ausführbaren Datei ist dann \verb|sort|.
-Diese kann im Prinzip mit 
-\begin{verbatim}                                                                                                    
-  $> ./sort
+Diese kann im Prinzip mit
+\begin{verbatim}
+$> ./sort
 \end{verbatim}
-von der Console ausgeführt werden.
+von der Konsole ausgeführt werden.
 Allerdings brauchen wir erst noch Eingabedaten.
 Damit nicht alles von Hand eingegeben werden muss, nutzen wir die Funktionalität von Linux und leiten den Eingabestrom aus einer Datei um.
 Wir erzeugen erst eine Textdatei mit Namen \verb|data.dat| mit folgenden Zeilen
@@ -104,6 +103,6 @@ Damit kann man das Programm von der Kommandozeile wie folgt ausführen:
 $> ./sort < data.dat
 4 12 25 43 77
 \end{verbatim}
-Im zweiten Teil werden wir zeigen, wie man direkt aus C aus einer Datei einlesen kann.
+Im zweiten Teil werden wir zeigen, wie man direkt mit C aus einer Datei einlesen kann.
 
 \endinput
