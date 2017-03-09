@@ -1,0 +1,113 @@
+\section{Das math Bibliothek}
+Zur Standard \texttt{ANSI C} Sprache gehören auch mathematische Funktions and Konstanten.
+Ihre deklaration befindet sich im \texttt{math.h}. Beispielweise wir möchten 
+die Kosinunfunktion (Im Folgenden nur \texttt{cos}) eines Winkels berechnen.
+Die \texttt{cos} Funktion wird auf ganz $\mathbb{R}$ durch ihre 
+Taylorreihe mit Entwicklungsstelle 0 dargestellt:
+\begin{equation}
+cos\left(x\right)=\sum_{l=0}^{\infty} \left(-1\right)^{l} \dfrac{x^{2l}}{\left(2l\right)!}
+\end{equation}
+Natürlich im Computer wir haben eine endliche Genauigkeit mit dem wir Zahlen können
+(Sieh die Einleitung). Den Funktion 
+\begin{lstlisting}{cosineexample.c}
+double cos(double x);
+\end{lstlisting}
+wird den \texttt{cos} in \texttt{double} Genauigkeit berechnen.
+In dem unteren kleinen Quelltext wir zeigen es in der Praxis:
+\begin{lstlisting}
+#include<stdio.h>
+#include<stdlib.h>
+#include<math.h>
+int main(int argc, char *argv[]){
+  double winkle;
+  double coswinkle;
+  int n;
+  //Wenn nicht genug Parameter gibt, druecken wir einen Nachricht aus
+  if (argc < 2 ){
+     printf("Vewendung: ./print_cos angle [n]; n ist freiwillig\n");
+     exit(1);
+  }
+  winkle=atof(argv[1]);//Macht ein Fliesskommazahl aus einer Zeichenkette
+  coswinkle=cos(winkle);//Wir verwenden den StandardBibliothek Funktion
+  printf("Winkle=%e \t cos(Winkle)=%e\n", winkle, coswinkle);
+  //Wir koennen mit dem kennengelernte Kontrollstrukturen die ernaherung
+  //selbst erlidegen
+  if (argc==3){
+    int n;
+    double coswinkleapprox;
+    double winkletmp=winkle;//wir sammeln hier die Zaehler
+    int denumtmp=1;//wir sammeln hier das Nenner
+    n=atoi(argv[2]);//Macht ein ganze Zahl aus einer Zeichenkette
+    coswinkleapprox=1.;//Wir sammeln hier das Ergebnis
+    for (int i=1; i<n; ++i){
+      int sign=( ( i % 2) == 0) ? 1 : -1; //wenn es gerade ist denn
+                                          //das vorzeichen ist 1
+                                          //andersfalls -1
+      winkletmp=winkletmp*winkletmp;
+      denumtmp=denumtmp*(2*i-1)*2*i;
+      coswinkleapprox += sign*winkletmp/denumtmp;
+    }
+    printf("coswinkleapprox=%e\n", coswinkleapprox);
+  }
+}
+\end{lstlisting}
+In diesem Code wir verwenden den Standardfunktion und (wenn es nötig ist) erledigen
+die ernäherung des \texttt{cos} Funktions selbst mit summieren ihren Taylor Reihe
+bis \texttt{n}
+\begin{equation}
+cos_{approx}\left(x,n\right)=\sum_{l=0}^{n} \left(-1\right)^{l} \dfrac{x^{2l}}{\left(2l\right)!}
+\end{equation}
+Wir haben ein Eingabeparameter (der Winkel) und eine freiwillige Eingabeparameter
+was die grad der Ernäherung bestimmt. Wir müssen die Winkel als ein Parameter eingeben.
+Obwohl das Parameter eine Zeichenkette ist, können wir es in eine, Fließkommazahl konvertieren
+mit Hilfe von \texttt{double atof(char *zeichenkette)} Standardbibliothekfunktion. 
+Wir verwenden den \texttt{cos} Standardbibliothekfunktion in der Zeile 14. Wenn
+den Anwänder wollte, erledigen wir die Ernäherung im Zeilen von 19-33. Wir bekommen 
+das Grad \texttt{n} als auch ein Eingebeparameter. In Berechnung der Ernäherung wir machen 
+eine Schleife von 1 bis das aktuellen Grad. Wir müssen nicht in jedem Schritt die 
+Potenz ($x^{2i}$) und den Fakultät ($(2l)!$) berechnen, sondern auch wir können 
+ihnen in jedem Schritt in zwei Helfenvariablen (\texttt{winkletmp,denumtmp}) speichern.
+Das ist auch ein generall Konzept im Hand des Programmiers: Besser etwas mehr speicher
+wervenden um wenige Berechnungen zu erledigen. 
+Unseres Programm kann nachdem Folgenden Kompilieren:
+\vspace*{0.5cm}
+\begin{verb}
+>$  gcc -std=c99 cosineexample.c -o cos.exe -lm
+\end{verb}
+\vspace*{0.5cm}
+Mann muss achten um das \texttt{-lm} nicht zu vermeiden.
+
+Die Weitere erreichbare  Funktionen zählen wir auf im Tabelle \ref{math}. 
+\begin{table}[t]
+\caption{Elementare Datentypen\label{tabelle1}}  % title name of the table
+\centering
+  % centering table
+\begin{tabular}{|l l|}
+\hline
+\texttt{Deklaration} & \texttt{Rückgabewert} \\
+  % creating 10 columns
+\hline
+\texttt{double acos(double x);} & Arcuscosinus von \texttt{x}\\
+\texttt{double asin(double x);} & Arcussinus von \texttt{x}\\
+\texttt{double atan(double x);} & Arcustangenz von \texttt{x}\\
+\texttt{double atan2(double y,double x);} & Arcustangenz von \texttt{x/y}\\
+\texttt{double ceil(double x);} & Kleinste ganze Zahl, welche $\ge$ \texttt{x} ist \\
+\texttt{double cos(double x);} & Cosinus von \texttt{x}\\
+\texttt{double cosh(double x);} & Cosinus hyperbolicus von \texttt{x}\\
+\texttt{double exp(double x);} & $e^{x}$ wobei $e=2.7182..$\\
+\texttt{double fabs(double x);} & $\vert x\vert$\\
+\texttt{double floor(double x);} & Größte ganze Zahl, welche $\le$ \texttt{x} ist \\
+\texttt{double ldexp(double x, double y);} & $xe^{y}$ \\
+\texttt{double log(double x);} & Natürlicher Logarithmus von \texttt{x}\\
+\texttt{double log10(double x);} & Zehnerlogarithmus von \texttt{x}\\
+\texttt{double pow(double x, double y);} & $x^{y}$\\
+\texttt{double sin(double x);} & Sinus von \texttt{x}\\
+\texttt{double sinh(double x);} & Sinus hyperbolicus von \texttt{x}\\
+\texttt{double sqrt(double x);} & $\sqrt{x}$\\
+\texttt{double tan(double x);} & Tangens von \texttt{x}\\
+\texttt{double tanh(double x);} & Tangens hyperbolikus von \texttt{x}\\
+\hline
+\end{tabular}
+\caption{Funktionen von \texttt{math.h}\label{math}}
+\end{table}
+
