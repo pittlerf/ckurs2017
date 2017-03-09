@@ -1,10 +1,12 @@
-\section{Complex Datatypen}
-Wir haben gelernt, wie wir mehrere Objekte von dem gleichen Typ händeln
-können. Aber often das ist nicht genug. Wenn in unserem Problem
-wir zusammenhörende Variablen haben, müssen wir ihnen zusammen handeln
-als ein Stukture. In der C Sprache wir können neuen Datentypen aus
-den Elementaren herstellen, dafür müssen wir $struct$ Strichwort
+\section{Komplexe Datentypen}
+
+Wir haben gelernt wie wir mehrere Objekte von dem gleichen Typ nutzen
+können. Aber oft das ist nicht genug. Wenn wir in unserem Problem
+zusammengehörende Variablen haben, müssen wir sie zusammen 
+als eine Struktur behandeln. In C wir können neuen Datentypen aus
+den Elementaren herstellen, dafür müssen wir das \texttt{struct} Schlüsselwort
 verwenden.
+
 \begin{myalertblock}{struct Typdefinierung}
 \begin{lstlisting}
 struct name {
@@ -12,26 +14,28 @@ struct name {
     Type2 typename2;
     Type3 typename3;
     ...
-}
-\end {lstlisting}
-\vspace{-0.4cm}
-Verwendung, definieren Variable aus $name$ Typ:
+};
+\end{lstlisting}
+
+Um dies zu verwenden, definieren wir eine Variable vom Typ \texttt{struct name}:
+
 \begin{lstlisting}
 struct name variablename;
 \end{lstlisting}
-\vspace{-0.4cm} 
-Die Typen in einer Strukture können auch Strukture sein.
+
+Die Typen in einer Struktur können auch selbst Strukturen sein.
 Sie müssen geschlossen sein, was bedeutet, dass ihre Größe
-(wievielen Speicherzellen verwenden Sie) in der Kompilierung
+(Wie vielen Speicherzellen verwenden sie?) bei der Kompilierung
 bekannt sein muss.
 \end{myalertblock}
-Ein Strukture besteht aus Objekten von verschidenen Typen. 
-Mann kann auch ein Objejt in einer Structure mit $Record$ 
-oder $Feld$ bezeichnet.
 
-Wir können mit dem Punktoperator (.) zu den eigenen Felden
-griffen. In dem unteren kleinen Quelltext wir zeigen ein Beispiel
-für Strukture Datatyp.
+Ein Struktur besteht aus Objekten von möglicherweise verschiedenen Typen. Man
+kann auch die Objekte in einer Struktur mit \emph{Record} oder \emph{Feld}
+bezeichnen.
+
+Wir können mit dem Punktoperator (\texttt{.}) auf die Felder zugreifen. In dem
+unteren kleinen Quelltext zeigen wir ein Beispiel für den Struktur-Datentyp.
+
 \begin{lstlisting}
 #include <stdio.h>
 struct Student {
@@ -46,6 +50,7 @@ struct Student {
     zweite = {101, "Andrea Tabarrios", "6b"};
 }
 \end{lstlisting}
+
 In diesem Beispiel wir haben das Student stukture definiert in der Zeilen zwischen 2-7.
 Das musst außerhalb des $main$ Funktions sein, um alle andere Funktionen zugriffen zu können.
 In der neuenten Zeile wir haben zwei Variable von Student Typ definiert. Sie sind 
