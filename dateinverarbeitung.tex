@@ -1,8 +1,5 @@
 \section{Datein verarbeiten}
 
-
-\subsection{Das Stream Konzept}
-
 Ein- und Ausgabe in Dateien, oder allgemein Ein- und Ausgabe auf Geräten ist nicht Teil von C selbst.
 Aber die Standardbibliothek stellt diese Funktionalität zur Verfügung.
 Sie basiert auf dem Konzept von sogenannten \emph{streams}.
@@ -195,8 +192,10 @@ Dies kann man in C beispielsweise mit den Funktione \texttt{fread} und \texttt{f
   size_t fread ( void * ptr, size_t size, size_t count, FILE * stream );
   size_t fwrite ( const void * ptr, size_t size, size_t count, FILE * stream );
 \end{lstlisting}
-Dabei werden \verb|count*size| bytes direkt gelesen und im Speicherbereich abgelegt, auf den \verb|ptr| zeigt, bzw. \verb|count*size| aus dem Speicherbereich direkt geschrieben.
-Ohne das dazwischen eine Konvertierung und Interpretation stattfinden würde.
+Dabei werden \verb|count*size| bytes direkt gelesen und im Speicherbereich abgelegt, auf den \verb|ptr| zeigt, bzw. \verb|count*size| aus dem Speicherbereich direkt geschrieben, ohne, dass dazwischen eine Konvertierung und Interpretation stattfinden würde.
+Beide Funktionen liefern die Anzahl der gelesen bzw. geschriebenen Elemente der Größe \verb|size| zurück.
+Um den Erfolg der Operationen zu testen, sollte man also prüfen, ob der Rückgabewert dem Wert der Variablen \verb|count| entspricht.
+
 Um mehrfach aus einer Datei lesen zu können, kann man mit 
 \begin{lstlisting}
   void rewind(FILE *stream)

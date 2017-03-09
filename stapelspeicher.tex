@@ -158,7 +158,7 @@ Es sollte jetzt klar sein, wie man \verb|push| schreiben kann:
     int ret;
     ret = (*first)->data;  // Extrahiere das Datum
     list *temp;
-    temp = (*first)->next; // Setze den Zeiger auf das zweite elemen
+    temp = (*first)->next; // Setze den Zeiger auf das zweite Element
     free(*first);          // Loesche das erste
     (*first) = temp;       // das zweite ist jetzt das erste
     return ret;            // Gib das Datum zurueck
@@ -167,14 +167,14 @@ Es sollte jetzt klar sein, wie man \verb|push| schreiben kann:
 Wenn das Stapelspeicher leer war, wird eine Fehlermeldung ausgegeben.
 Mit folgender Funktion kann die gesamte Liste ausgegeben werden:
 \begin{lstlisting}
-  void print_list( list * first){
+  void print_list(list * first){
     list *temp=(first);          // existiert eine Liste?
     if (temp == NULL) {          
       return;
     }
     while(1) {
       printf("%d ", temp->data); // momentanes Datum ausgeben
-      temp = temp->next;         // Zeiger auf das naechste Elemen setzen
+      temp = temp->next;         // Zeiger auf das naechste Element setzen
       if (temp == NULL) {        // Letztes Element erreicht
         break;                   // falls ja, Abbruch
       }
@@ -182,6 +182,13 @@ Mit folgender Funktion kann die gesamte Liste ausgegeben werden:
     printf("\n");
   }
 \end{lstlisting}
+Warum bekommen die Funktionen \verb|push| und \verb|pop| ein Element vom Typ \verb|list **| übergeben und die Funktion \verb|print_list| lediglich ein Element vom Typ \verb|list *|?
+Es handelt sich wiederum um den Unterschied zwischen \emph{call by reference} and \emph{call by value}.
+Die Funktion \verb|print_list| soll keine Änderungen an der Liste vornehmen.
+Daher ist es ausreichend, die das Objekt selbst übergeben zu bekommen.
+\verb|push| und \verb|pop| aber sollen das erste Element der Liste verändern.
+Deshalb ist hier \emph{call by reference} das effzienteste: Es wird direkt das Objekt selbst verändert, ohne das etwas hin- oder herkopiert werden müsste.
+
 Die Benutzung all dieser Funktionen wird mit folgendem Programm illustriert:
 \begin{lstlisting}
   int main() {
