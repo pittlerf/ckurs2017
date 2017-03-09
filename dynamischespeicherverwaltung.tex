@@ -336,7 +336,7 @@ und die Funktion soll eine Pointer auf $n+1$ dimensionales Objekt erhalten.
 \begin{lstlisting}
 #include <stdio.h>
 #include <stdlib.h>
-#define SPACEDIM
+#define SPACEDIM 2
 void create2darray(double ***p1) {
     int i;
     (*p1) = (double **)malloc(sizeof(double *) * SPACEDIM);
