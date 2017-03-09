@@ -41,13 +41,16 @@ unteren kleinen Quelltext zeigen wir ein Beispiel für den Struktur-Datentyp.
 struct Student {
     int matrikelnummer;
     char *name;
-    char klasse[5];
-} int main() {
-    struct Student erste, zweite;
-    erste.matrikalnummer = 99;
+    char *klasse;
+};
+
+int main() {
+    struct Student erste;
+    erste.matrikelnummer = 99;
     erste.name = "Martin Pfeindrich";
     erste.klasse = "5a";
-    zweite = {101, "Andrea Tabarrios", "6b"};
+
+    struct Student zweite = {101, "Andrea Tabarrios", "6b"};
 }
 \end{lstlisting}
 
