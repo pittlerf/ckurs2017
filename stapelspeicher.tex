@@ -185,7 +185,7 @@ Mit folgender Funktion kann die gesamte Liste ausgegeben werden:
 Warum bekommen die Funktionen \verb|push| und \verb|pop| ein Element vom Typ \verb|list **| übergeben und die Funktion \verb|print_list| lediglich ein Element vom Typ \verb|list *|?
 Es handelt sich wiederum um den Unterschied zwischen \emph{call by reference} and \emph{call by value}.
 Die Funktion \verb|print_list| soll keine Änderungen an der Liste vornehmen.
-Daher ist es ausreichend, die das Objekt selbst übergeben zu bekommen.
+Daher ist es ausreichend, das Objekt selbst übergeben zu bekommen.
 \verb|push| und \verb|pop| aber sollen das erste Element der Liste verändern.
 Deshalb ist hier \emph{call by reference} das effzienteste: Es wird direkt das Objekt selbst verändert, ohne das etwas hin- oder herkopiert werden müsste.
 
