@@ -23,16 +23,17 @@ Sie lesen bzw. schreiben genau ein Zeichen von \verb|stdin| bzw. \texttt{stdout}
 Ihre Deklaration in \verb|stdio.h| sieht wie folgt aus:
 \begin{lstlisting}
   int getchar ();
-  int putchar (char c);
+  int putchar (int c);
 \end{lstlisting}
-Man beachte, dass \verb|int| und \verb|char| in C äquivalent sind.
+In \verb|putchar| wird ein \emph{cast} von \verb|c| nach \verb|unsigned char| durchgeführt.
+\verb|getchar| liest ein Zeichen als \verb|unsigned char| vom \verb|stdin| und führt dann einen \emph{cast} nach \verb|int| durch.
 Damit kann man beispielsweise ein Programm schreiben, dass alle eingegenen Zeichen direkt wieder auf \texttt{stdout} ausgibt:
 \begin{lstlisting}
   #include<stdlib.h>
   #include<stdio.h>
   
   int main(){
-    char c;
+    int c;
     while( (c=getchar()) != EOF) {
       putchar(c);
     }
@@ -68,155 +69,111 @@ Eine Datei, die mit \texttt{fopen} geöffnet wurde, muss mit \texttt{fclose} wie
   Der Rückgabewert ist \texttt{0}, wenn die Datei erfolgreich geschlossen werden konnte und \texttt{EOF}, wenn nicht.
 \end{myexampleblock}
 Nur, wenn \texttt{fclose} aufgerufen wurde ist sichergestellt, dass die Daten auch in die Datei geschrieben wurden.
-%% stopped here...
-In diesem Fall können wir das \texttt{fopen} Funktion verwenden um einer Kanal zu eröffnen. Vordem
-wir mit einem Datei das Arbeit anfangen, müssen wir wissen ob es ein Binärdatei oder ein Asciidatei
-ist. Ein Asciidatei ist ein Sequenz von Zeichen beenden mit \texttt{EOF}. In einem Binärdatei, wir müssen vorhand
-die Strukture des Inhalts von Datei wissen. Kann mann fragen, Warum wir bei allen Binärdateien verwenden wollen?
-Das Antwort liegt in der Genauigkeit und im Speicherplatz. Wenn wir eine 8 \texttt{byte} größe Fließkommazahl in 
-ASCII speichern würde, brauchen wir $~40$-mal mehr speichern um die gleiche Genauigkeit zu erreichen. Zuerst 
-werden wir einlesen aus Einfache Asciidatei.
-\begin{myexampleblock}{Funktion: \texttt{fscanf}}
-  \begin{lstlisting}
-    int fscanf(FILE * stream, char *format, ...);
-  \end{lstlisting}
-  \vspace{-0.4cm}
-  Formattierte Einlesung von einer Asciidatei, interpretiert von dem formattierungtext. Der Rückgabewert ist der
-  Anzahl der Argumenten die erfolgreich gefüllt waren. Als Arguments, wir müssen nicht der Wert der Variable geben
-  sondern auch ihre Adresse. Mit dem formattierungtext können wir im individuellen Weise Einlesen.
-  Die White-Space zeichen im Kanal wurden nicht gelesen (Beispielweise: Neue Zeile, Raumtaste, Tabulatorzeichen).
-  
-  Die eingelesenen Datei wurden nach den Folgenden Regeln Speichern. Die generelle Form ist:
-  \texttt{\%Spezificierungszeichen}
-  
-Die eingelesene Datei wurden nach den Folgenden Regeln Speichern. 
 
+Hat man einmal eine Datei geöffnet, muss man sich entscheiden, wie man sie ausliest oder in sie schreibt.
+Wir führen hier zunächst die sogenannte formatierte Ein- und Ausgabe ein.
+Dabei wird jedes gelesene Byte als ein ASCII Zeichen interpretiert.
+Wir haben diese Art von Ein- und Ausgabe bereits mit \verb|printf| und \verb|scanf| kennengelertn.
+Die Verallgemeinerung von \verb|scanf| für beliebige \emph{streams} ist \verb|fscanf|
+\begin{lstlisting}
+  int fscanf(FILE * stream, char *format, ...);
+\end{lstlisting}
+\verb|fscanf| bekommt als ersten Parameter den \emph{stream} übergeben.
+\verb|format| ist eine Zeichekette, wie wir sie schon von \verb|scanf| kennen.
+Daher kennen wir auch schon, dass man Variablen über spezielle Zeichfolgen, die mit \% beginnen, aus dem \emph{stream} zuweisen kann.
+Dabei stehen unter anderem die folgenden speziellen Zeichen zur Verfügung
 \begin{center}
-\begin{tabular}{|cc|}
-\hline
-\texttt{Specifizierungzeichen} & Bedeutung \\\hline
-\texttt{\%d}	&  Einlesen ein ganze Zahl in einer $in$ Variable \\
-\texttt{\%ld}  &  Einlesen ein ganze Zahl in einer $long~int$ Variable \\
-\texttt{\%f,\%e}   & Einlesen ein Fließkommazahl in einer $float$ Variable \\
-\texttt{\%lf,\%le}  & Einlesen ein Fließkommazahl in einer $double$ Variable \\
-\texttt{\%c}  & Einlesen ein Zeichen in einer $char$ Variable \\
-\texttt{\%s}  & Einlesen eine Zeichenkette in einem Charakterarray.\\
-\hline
-\end{tabular}
+  \begin{tabular}{lr}
+    \hline
+    \texttt{Specifizierungszeichen} & Bedeutung \\\hline
+    \texttt{\%d}	&  \texttt{int} \\
+    \texttt{\%ld}  &  \texttt{long int} \\
+    \texttt{\%ud}  &  \texttt{unsigned int} \\
+    \texttt{\%f,\%e}   & \texttt{float} \\
+    \texttt{\%lf,\%le}  & \texttt{double} \\
+    \texttt{\%c}  & \texttt{char} \\
+    \texttt{\%s}  & eine Zeichenkette\\
+    \hline
+  \end{tabular}
 \end{center}
-
-Die anderen Zeichen im formattierungtext wurden eingelesen, aber nicht gespeichert. 
-\end{myexampleblock}
-Zum Beispiel wir möchten die Zahlen von diesem Asciidatei einlesen.
+Alle anderen Zeichen im Formattierungstext werden eingelesen, aber nicht gespeichert. 
+Nehmen wir an, wir müssen die Zahlen aus folgender ASCII Datei einlesen:
 \begin{lstlisting}
 1212
         1222
 999             12212
 888
 \end{lstlisting}
-Wir müssen nicht achten auf die ``white space'' Zeichen, wir können Sie einfach vergessen.
-Im unteren Quelltext wir zeigen, wie es in der Praxis funktioniert.
+Dies kann mit folgendem Code gemacht werden
 \begin{lstlisting}
-#include<stdio.h>
-#include<stdlib.h>
-#include<errno.h>
-int main(int argc, char *argv[]){
-  FILE *in;
-  int d;
-  if (argc>2){
-   fprintf(stderr,"Useage: ./read_int_ascii filename\n");
-   exit(1);
+  #include<stdio.h>
+  #include<stdlib.h>
+
+  int main(int argc, char *argv[]){
+    if (argc>2 ) {                       // wurde ein Dateiname uebergeben?
+      fprintf(stderr,"Useage: ./read_int_ascii filename\n");
+      return(-3);
+    }
+    FILE * in = fopen(argv[1], "r");     // Oeffne die Datei
+    if(in == NULL) {                     // Ueberpruefe auf Fehler 
+      fprintf(stderr, "Error opening the file\n");
+      return(-2);
+    }
+    printf("Lese aus der Datei %s\n", argv[1]);
+    int d;
+    while( fscanf(in, "%d", &d) == 1 ) { // lese ein int nach dem anderen ein
+      printf("%d\n", d);
+    }
+    if (fclose(in) != 0) {               // Schliesse die Datei wieder
+      printf("Error closing the File\n");
+      return(-3);
+    }
+    return(0);
   }
-  in=fopen(argv[1], "r");
-  if (in == NULL){
-   fprintf(stderr, "Error opening the file %d\n", errno);
-   exit(1);
-  }
-  while( fscanf(in, "%d", &d) == 1 ){
-    printf("%d\n");
-  }
-  if (fclose(in) != 0){
-    printf("Error closing the File\n");
-    exit(1);
-  }
-}
 \end{lstlisting}
-Zuerst wir öffnen ein Kanal für einlesen mit dem \texttt{fopen} Fuktion in der 11-ten Zeile. Wir müssen 
-der Rückgabewert vom \texttt{fopen} überprüfen um Fehler zu vermeiden. Wenn die Rückgabewert ist das 
-\texttt{NULL} Zeiger wir haben irgendeine Fehler. Hier verwenden wir das \texttt{errno} Systemumgebungsvariable
-um Informationen über den Fehler zu erhalten. Wenn die Standardbibliothek Funktionen Fehler zurückgeben, sie auch 
-weisen den Typ des Fehlers aus mit Hilfe der \texttt{errno} Variable. Es gibt Tabellen, die für jede Wert von 
-\texttt{errno} Variable den passierten Fehler zeigen. Nachdem wir den Datei erfolgreich geöffnet haben, fangen wir 
-das Einlesen an. Wir lesen ganze Zahlen bis zum Ende des Datein (Zeile 16). Nachdem Einlesen wir brauchen den Kanal 
-nicht mehr. Zum ende muss die Kanal freigegeben werden (Zeile 19). Die Ausgabe nachhdem Ausführung siehst du unter.
-\begin{lstlisting}
+Es fällt auf, dass wir als Formatierungszeichenkette lediglich \verb|%d| verwenden, und keine Leerzeichen.
+Der Grund dafür ist, dass Leerzeichen (und Zeilenumbrüche, Tabs etc.) als Trennzeichen interpretiert werden.
+Wie viele Leerzeichen und Zeilenumbrüche zwischen den Zahlen eingefügt sind, spielt für die formatierte Eingabe keine Rolle.
+Die Ausgabe des Programms sieht dann wie folgt aus:
+\begin{verbatim}
+Lese aus der Datei numbers.txt
 1212
 1222
 999
 12212
 88
-\end{lstlisting}
-Das beweist, dass das Ergebnis unabhänging von den ``white space'' Zeichen ist. Jetzt wir können Einlesen, 
-wir möchten auch neuen Datein aus unserem Programm erzeugen. Formattierte Ausgabe in einem Datei ist ähnlich 
-wie die Eingabe. Wir können der \texttt{fprintf} Funktion aus dem Standardbibliothek verwenden um Daten 
-auszuschreiben.
-\begin{myexampleblock}{Funktion: \texttt{fprintf}}
+\end{verbatim}
+Die formatierte Ausgabe funktioniert ähnlich, nur mit der Funktion \verb|fprintf|
 \begin{lstlisting}
-int fprintf(FILE *kanal,char *formattierungtext, ....);
+  int fprintf(FILE * stream, char *format, ...);
 \end{lstlisting}
-\vspace{-0.4cm}
-Formattierte Ausgabe in einer Asciidatei, interpretiert von dem formattierungtext. Der Rückgabewert ist der
-Anzahl der ausgeschriebenen Zeichen. Als Arguments, wir müssen der Wert der Variable geben
-nicht ihre Adresse. Mit dem formattierungtext können wir im einzelnen Wiese ausdrücken.
+Die Spezifizierungszeichen sind die gleichen wie für \verb|fscanf|.
+Mit der Ausname von \verb|%lf,%le|, die für \verb|fprintf| nicht zur Verfügung stehen.
+\verb|%e| gibt eine Fließkommazahl auf \verb|double| Genauigkeit gerundet im wissenschaftlichen Format aus, \verb|%f| ebenfalls auf \verb|double| Genauigkeit gerundet als Dezimalzahl.
+Weiterhin kann man die Anzahl von Stellen etc beeinflussen, zum Beispiel
+\begin{lstlisting}
+  #include<stdio.h>
+  #include<stdlib.h>
 
-Die ausgebende Datei wurden ähnlich wie im \texttt{fscanf} verarbeiten. Die generelle Form ist:\\
-\texttt{\%Spezificierungszeichen}
-{
-\begin{center}
-\begin{tabular}{|cc|}
-\hline
-Specifizierungzeichen & Bedeutung \\\hline
-\texttt{\%d}   &  Ausgeben ein ganze Zahl \\
-\texttt{\%f,\%e}   & Ausgeben ein Fließkommazahl  \\
-\texttt{\%c}  & Ausgeben ein Zeichen  \\
-\texttt{\%s}  & Ausgeben eine Zeichenkette\\
-\hline
-\end{tabular}
-\end{center}
-}
-Im \texttt{fprintf} wir können mit \texttt{\%f} entweder der Wert von einem \texttt{float} oder \texttt{double} Fließkommazahl
-ausdrücken.
-\end{myexampleblock}
-Beispielweise, drücken wir das Quadrat der Zahlen von 0 bis 100 immer, sodass alle Zeilen werden
-aus 6 Zeichen bestehen.
-\begin{lstlisting}
-#include<stdio.h>
-#include<stdlib.h>
-#include<errno.h>
-int main(){
-  FILE *out;
-  int i;
-  out=fopen("quadrats.txt", "w");
-  if (out == NULL){
-   fprintf(stderr, "Error opening the file %d\n", errno);
-   exit(1);
+  int main(){
+    FILE *out;
+    out = fopen("quadrats.txt", "w"); // Oeffne die Datei zum Schreiben
+    if (out == NULL){
+      fprintf(stderr, "Error opening the file\n");
+      return(-1);
+    }
+    for (int i = 1; i <= 10; ++i) {
+      fprintf(out, "%.6d\n", i*i);    // Schreibe i^2 in die Datei
+    }
+    if (fclose(out) != 0){            // Schliese die Datei wieder
+      printf("Error in closing the File\n");
+      return(-2);
+    }
+    return(0);
   }
-  for (i=1;i<=100;++i){
-    fprintf(out,"%.6d\n",i*i);
-  }
-  if (fclose(out) != 0){
-    printf("Error in closing the File\n");
-    exit(1);
-  }
-}
 \end{lstlisting}
-In diesem Fall wir öffnen der Datei zum Schreiben (Zeile 7). Wir drücken 
-die Quadrats mit dem \texttt{fprintf} Funktion zum Kanal aus. In der \texttt{C} Sprache wir 
-können einstellen, wieviele Ziechen wir in der Ausdrückung verwenden möchten. 
-Mit der Anweisung \texttt{\%x.yd} die Ausdrückung beginnt im \texttt{x}-ten Zeichen, und 
-verwendet mindesten \texttt{y} zeichen. Mit dem \texttt{\%.6d} jede Quadrat wird ergänzt mit 
-\texttt{0} um 6 Zeichen zuverwenden. Die ersten Zeilen des Ergebnis befindest du unter:
-\begin{lstlisting}
+Nach dem Aufruf enthält die Datei \verb|quadrats.txt| folgendes
+\begin{verbatim}
 000001
 000004
 000009
@@ -226,108 +183,83 @@ verwendet mindesten \texttt{y} zeichen. Mit dem \texttt{\%.6d} jede Quadrat wird
 000049
 000064
 000081
-\end{lstlisting}
-Es macht sinn in einem großen Projekt die Parameters in einem Asciidatei ausdrücken, aber
-das Ergebnis muss in Binärdatei gespeichert werden. Dafür stellen wir hier vor, wie 
-mann binäredatei in \texttt{C} handeln kann. Das großte Unterschied zwischen Binäre and Asciidatei
-ist, dass wir der Binäredatei mit einem einfachen Editor nicht anschauen können. Wir müssen uns
-errinern in welchen Form wieviele Datei wir in einem Binärdatei geschrieben haben. Für ein einfaches 
-Einlesen oder Ausgaben wir können die Funktionen \texttt{fread} und \texttt{fwrite} verwenden. Wenn wir nicht nur
-Schreiben sondern auch Einlesen möchten, müssen wir der Kanal auch positionieren.  Beispielweise
-wir möchten die Festpalette als Memory verwenden: zuerst schreiben wir etwas aus, danach möchten
-wir diese Datei verwenden. In diesem Fall wir können der Kanal mit dem \texttt{rewind()} oder \texttt{fseek()}
-Funktion positionieren.
-\begin{myexampleblock}{Funktion: \texttt{fread}}
+000100
+\end{verbatim}
+Die Spezifizierung \verb|%.6d| bedeutet, dass die ganze Zahl mit sechs Stellen ausgegeben werden soll.
+Dementsprechend werden führende Nullen hinzugefügt.
+
+Formatierte Ausgabe ist sinnvoll, wenn die Dateien für Menschen lesbar sein sollen und wenn nicht viele Daten gespeichert werden müssen.
+Für den Fall von vielen Daten sollte man allerdings auf nichtformatierte Ausgabe zurückgreifen (manchmal auch als binäre Ausgabe bezeichnet).
+Dies kann man in C beispielsweise mit den Funktione \texttt{fread} und \texttt{fwrite} bewerkstelligen:
 \begin{lstlisting}
-size_t fread ( void * ptr, size_t size, size_t count, FILE * stream );
+  size_t fread ( void * ptr, size_t size, size_t count, FILE * stream );
+  size_t fwrite ( const void * ptr, size_t size, size_t count, FILE * stream );
 \end{lstlisting}
-\vspace{-0.4cm}
-Lest aus einem Binärdatei. Der Rückgabewert ist die Größe der eingelesenen Datei.\\
-Die Parameters:
-\begin{enumerate}
-\item \texttt{ptr}: Anfangsadresse, wo die eingelesene Datei gespeichert wird
-\item \texttt{size}: Größe einer einlesenden Einheit
-\item \texttt{count}: Anzahl der einlesenden Einheiten
-\item \texttt{stream}: Zeiger zum Kanal
-\end{enumerate}
-\end{myexampleblock}
-\begin{myexampleblock}{Funktion: \texttt{fwrite}}
+Dabei werden \verb|count*size| bytes direkt gelesen und im Speicherbereich abgelegt, auf den \verb|ptr| zeigt, bzw. \verb|count*size| aus dem Speicherbereich direkt geschrieben.
+Ohne das dazwischen eine Konvertierung und Interpretation stattfinden würde.
+Um mehrfach aus einer Datei lesen zu können, kann man mit 
 \begin{lstlisting}
-size_t fwrite ( const void * ptr, size_t size, size_t count, FILE * stream );
+  void rewind(FILE *stream)
 \end{lstlisting}
-\vspace{-0.4cm}
-Schreibt in einem Binärdatei. Rückgabewert ist die Größe, der ausgeschriebenen
-Datei.\\ Die Parameters:
-\begin{itemize}
-\item \texttt{ptr}: Quelladresse von den ausschreibenden Datei 
-\item \texttt{size}: Größe einer ausschreibenden Einheit
-\item \texttt{count}: Anzahl der ausschreibenden Einheiten
-\item \texttt{stream}: Zeiger Zum Kanal
-\end{itemize}
-\end{myexampleblock}
-\begin{myexampleblock}{Funktion: \texttt{rewind}}
+zum Anfang der Datei zurückkehren, oder mit
 \begin{lstlisting}
-void rewind(FILE *stream)
+  int fseek(FILE *stream, long int offset, int whence)
 \end{lstlisting}
-\vspace{-0.4cm}
-Positioniert der Kanal auf dem Anfang des Binärdateis.
-Es hat nur ein Parameter: \texttt{stream}: Zeiger zum Kanal.
-\end{myexampleblock}
-\begin{myexampleblock}{Funktion: \texttt{fseek}}
+zu einem bestimmten Punkt in der Datei gehen.
+Bei letzterer Funktion wir der \verb|offset| in Bytes relativ zu \verb|whence| gesetzt.
+\verb|whence| kann auf \verb|SEEK_SET|, \verb|SEEK_CUR| or \verb|SEEK_END| gesetzt werden, was Anfang, momentane Position oder Ende in der Datei bedeutet.
+Im folgenden ein Beispiel:
 \begin{lstlisting}
-int fseek(FILE *stream, long int offset, int whence)
+  #include<stdio.h>
+  #include<stdlib.h>
+
+  int main(){
+    FILE * outin;
+    int * squares;
+    const int n=10;
+    // Oeffne die Datei
+    outin = fopen("temporarystorage", "w+");
+    if (outin == NULL){
+      fprintf(stderr, "Error in opening the file\n");
+      return(-1);
+    }
+    // Speicher fuer squares reservieren
+    squares = (int *)malloc(sizeof(int)*n);
+    if (squares == NULL){
+      fprintf(stderr, "Error in allocating memory\n");
+      return(-2);
+    }
+    // Berechne Quadrate und speichere sie in squares
+    for (int i = 0; i < n; ++i) {
+      squares[i]=(i+1)*(i+1);
+    }
+    // Schreibe squares in die Datei
+    if ( fwrite((void*) squares, sizeof(int), n, outin) != n){
+      printf("Error in writing\n");
+      return(-3);
+    }
+    for (int i = 0; i < n; ++i) {
+      squares[i]=0;
+    }
+    rewind(outin);    // Geh wieder zum Anfang der Datei
+    // Lese die Datei wieder ein
+    if ( fread ((void*) squares, sizeof(int), n, outin) != n){
+      printf("Error in read\n");
+      return(-4);
+    }
+    for (int i = 0; i < n; ++i) {
+      printf("%d\n", squares[i]);
+    }
+    // Datei wieder schliessen
+    if (fclose(outin) != 0){
+      printf("Error in closing file\n");
+      return(-5);
+    }
+    return(0);
+  }   
 \end{lstlisting}
-\vspace{-0.4cm}
-Positioniert der Kanal auf einem Spezifisch Position in dem 
-Binärdatei. Rückgabewert ist \texttt{0}, wenn die Positionierung erfolgreich war. Die Parameters:
-\begin{enumerate}
-\item \texttt{stream}: Zeiger zum Kanal
-\item \texttt{offset}: Versatz, Verschiebung
-\item \texttt{whence}: Die Position, zur die Verschiebung hinzufügen wird
-\end{enumerate}
-\end{myexampleblock}
-Unter wir geben ein Beispiel für die Verwendung der Funktions \texttt{fread} und \texttt{fwrite}.
-\begin{lstlisting}
-#include<stdio.h>
-#include<stdlib.h>
-int main(){
-   FILE *kanal;
-   int *squares;
-   int i;
-   int n=100;
-   kanal=fopen("temporarystorage", "w+");
-   if (kanal == NULL){
-     fprintf(stderr, "Error in opening the file\n");
-     exit(1);
-   }
-   squares=(int *)malloc(sizeof(int)*n);
-   if (squares == NULL){
-     fprintf(stderr, "Error in allocating memory\n");
-     exit(1);
-   }
-   for (i=0; i<n; ++i)
-     squares[i]=(i+1)*(i+1);
-   if ( fwrite(squares, sizeof(int), n, kanal) != sizeof(int)*n){
-     printf("Error in writing\n");
-     exit(1);
-   }
-   for (i=0; i<n; ++i)
-     squares[i]=0;
-   rewind(kanal); 
-   if ( fread (squares, sizeof(int), n, kanal) != sizeof(int)*n){
-    printf("Error in read\n");
-    exit(1);
-   }
-   for (i=0; i<n; ++i)
-    printf("%d\n", squares[i]);
-   if (fclose(kanal) != 0){
-    printf("Error in closing file\n");
-    exit(1);
-   }
-}   
-\end{lstlisting}
-Wir öffnen der Kanal nicht nur für Einlesen, sondern auch für Schreiben mit \texttt{w+} (Zeile 8). Achtung, wenn \texttt{temporarystorage}
-Datei schon exisitiert, dann ihre Inhalt wird gelöscht. Wir reservieren Speicherzellen für 100 Variable von \texttt{int} Typ 
-um die Quadrats zu speichern (Zeile 13).
-Danach wir schreiben die Quadrats in einem Binärdatei. Denn wir positionieren den Kanal wieder auf das Anfang des Dateins um die gespeicherte Datei 
-einzulesen (Ziele 24). In diesem Beispiel müssen wir Auch der Kanal freigeben.
+Die Datei wird zum Schreiben und Lesen geöffnet.
+Dabei wird eine eventuell existierende Datei gleichen Namens überschrieben.
+Danach werden die Quadrate von $i=1,...,n$ zuerst in die Datei geschrieben.
+Dann gehen wir wieder zum Anfang der Datei und lesen sie dann wieder ein.
+Die eingelesenen Zahlen werden dann auf der Kommandozeile ausgegeben.

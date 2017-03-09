@@ -1,9 +1,30 @@
 \section{Complex Datatypen}
 
 Je nach Problemstellung ist es manchmal sehr hilfreich, Datenstrukturen selbst erzeugen zu können.
+C bietet dafür die Möglichkeit, und zwar auf verschiedene Weisen.
+Zunächst kann man in C einen neuen Typ definieren, z.B. einen eigenen Typ für reelle Zahlen:
+\begin{lstlisting}
+  typedef real float;
+\end{lstlisting}
+Dieser kann im Quelltext danach wie native C Typen verwendet werden
+\begin{lstlisting}
+  typedef real float;
+  int main() {
+    real x,y = 3.718;
+    return(0);
+  }
+\end{lstlisting}
+Auf den ersten Blick mag eine eigene Definition für eine Datentyp für reelle Zahle nicht besonders sinnvoll erscheinen.
+Allerdings kann man mit dieser Typdefinition zu einem späteren Zeitpunkt sehr einfach die verwendete Genauigkeit für reelle Zahlen ändern.
+Nämlich einfach, indem man die Zeile für die Typdefinition durch
+\begin{lstlisting}
+  typedef real double;
+\end{lstlisting}
+ersetzt.
+
+Eine weitere Art, einen neuen Datentyp zu definieren, ist zusammengesetzte Datentypen zu definieren.
 Ein einfaches mathematisches Beispiel ist eine Datentyp für komplexe Zahlen.
 Eine komplexe Zahl muss dabei eine Real- und Imaginärteil haben.
-
 Genau für solche Fälle stellt C die Möglichkeit zur Verfügung, zusammengesetzte Datentypen zu definieren.
 Das entsprechende Schlüsselwort ist \verb|struct|.
 Solche zusammengesetzten Datentypen in C kann man sich wie Kontainer vorstellen.
@@ -77,6 +98,29 @@ Allerdings muss dann Speicher außerhalb der Deklaration stattfinden.
 Die Verwendung von \verb|struct| ist sehr hilfreich, wenn beispielsweise eine Liste von logisch zusammengehörigen Daten bearbeiten soll, also etwa den Real- und Imaginärteil.
 Es muss dann nicht mehr jedes Element einzeln übergeben werden, sondern nur noch einmal der Kontainer.
 Der Zusammenhang der einzelnen Elemente bleibt damit erhalten.
+
+Mit einem \verb|struct| wird ebenfalls einer neuer Typ bereitgestellt.
+Der entsprechende Name enthält aber immer das Schlüsselwort \verb|struct|, in unserem Fall \verb|struct cmplx|. 
+Man kann einen \verb|struct| mit einem \verb|typedef| kombinieren, um nicht immer \verb|struct| schreiben zu müssen.
+Im Quelltext sähe das so aus:
+\begin{lstlisting}
+  struct cmplx {
+    double re, im;
+  };
+  typedef struct cmplx cmplx;
+\end{lstlisting}
+Das sieht etwas verwirrend aus, weil \verb|cmplx| zweimal auftaucht.
+Aber der Ausdruck wird klar, wenn man sich erinnert, dass \verb|struct cmplx| im Prinzip ein Typ ist.
+Und damit ist der Name \verb|cmplx| noch nicht vergeben.
+Die etwas gebräuchlichere Art obiger Typdefinition geht über die Möglichekeit eines anonymen \verb|struct|.
+Man kann nämlich auch schreiben:
+\begin{lstlisting}
+  typedef struct {
+    double re, im;
+  } cmplx;
+\end{lstlisting}
+Damit ist natürlich \verb|struct cmplx| nicht definiert, aber man kann \verb|cmplx| wie einen C Typ verwenden.
+\textbf{Bemerkung:} Die C Standardbibliothek stellt einen Typ für komplexe Zahlen zu Verfügung.
 
 Ein Beispiel aus der C Standardbibliothek \verb|time.h| ist das \verb|struct tm| für Datum und Zeit:
 \begin{lstlisting}
