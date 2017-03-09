@@ -458,25 +458,24 @@ Im nächsten Beispiel lesen wir eine Zeichenkette von der standard Eingabe ein, 
 \begin{lstlisting}
 #include<stdio.h>
 const int MAX_LENGTH = 1000;
-const int TRUE = 1;
-const int FALSE = 0;
 
-int main(){
-   char string[MAX_LENGTH];
-   int i=0;
-   char a;
-   int ergebnis = FALSE;
-   scanf("%s", string);
-   while(1) {
-     if (string[i] == '\0')
-       break;
-     if ( (string[i] >= '0') && ( string[i] <= '9') )
-       ergebnis = TRUE;
-     i++;
-   }
-   if(ergebnis) printf("Der String %s enthaelt Zahlen\n", string);
-   else printf("Der String enthaelt keine Zahlen\n");
-   return(0);
+int main() {
+  char string[MAX_LENGTH];
+  int i=0;
+  int ergebnis = 0;
+  scanf("%s", string);
+  while(1) {
+    if (string[i] == '\0' || i == MAX_LENGTH)
+      break;
+    if ( (string[i] >= '0') && ( string[i] <= '9') ) {
+      ergebnis = 1;
+      break;
+    }
+    i++;
+  }
+  if(ergebnis) printf("Der String %s enthaelt mindestens eine Zahl\n", string);
+  else printf("Der String enthaelt keine Zahlen\n");
+  return(0);
 }
 \end{lstlisting}
 Es wird zunächst eine Zeichenkette über die Tastatur eingelesen.
