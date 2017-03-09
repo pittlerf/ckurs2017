@@ -6,7 +6,7 @@ Korrekturgelesen von Martin:
 - [ ] `kontrollstrukturen.tex`
 - [x] `pointersarrays.tex`
 - [x] `einfuegesortieren.tex`
-- [ ] `dynamischespeicherverwaltung.tex`
+- [x] `dynamischespeicherverwaltung.tex`
 - [ ] `complexdatatypen.tex`
 - [ ] Daten verarbeiten (`programmierkurs_fpcu.tex`)
 - [ ] `endprojekt.tex`

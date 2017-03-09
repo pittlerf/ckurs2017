@@ -134,7 +134,7 @@ int *array = malloc(sizeof(*array) * 10);
 \end{lstlisting}
 \end{itemize}
 
-Achtung, wenn wir die reservierten Speicherzellen nicht mehr brauchen, müssen
+Achtung! Wenn wir die reservierten Speicherzellen nicht mehr brauchen, müssen
 Sie von uns freigegeben werden.
 \end{myexampleblock}
 
@@ -146,16 +146,14 @@ int *array = malloc(sizeof(int) * 10);
 
 Der Unterschied ist das Argument von \texttt{sizeof}. Der Vorteil der oberen Methode ist, dass man immer den gleichen Datentyp für \texttt{*array} und \texttt{sizeof} nimmt. Es kommt immer wieder mal vor, dass man den Datentyp nachträglich ändert, jedoch nur den Typ der Variablen ändert und das Argument von \texttt{sizeof} vergisst. Die obige Schreibweise verhindert diese Fehlerklasse.
 
-Wenn wir in einem langen Programm immer mehr Speicherzellen reservieren, 
-möglicherweise kurz können wir nicht mehr reservieren. Auf jedem Fall, wir müssen
-die reservierten Speicherzellen so bald wie möglich wieder freigeben. Dafür steht
-der Funktion $free$ zur Verfügung.
-\begin{myexampleblock}{Funktion definition \texttt{free}}
+Wenn in einem lange laufenden Programm immer mehr Speicherzellen reserviert werden, ist irgendwann kein Speicher mehr frei. Das Betriebssystem kann unserem Programm keinen Speicher mehr zur Verfügung stellen. Irgendwann gibt \texttt{malloc} dann nur noch \texttt{NULL} zurück. Daher muss jeder Speicher wieder freigegeben werden, wenn er nicht mehr gebraucht wird. Dies wird mit der Funktion \texttt{free} gemacht.
+
+\begin{myexampleblock}{Funktionsdefinition \texttt{free}}
 \begin{lstlisting}
 void free(void *memory);
 \end{lstlisting}
 \vspace{-0.7cm}
-Freigib die Speicherzellen, die mit $malloc$ reservierten wurden.
+Freigib die Speicherzellen, die mit \texttt{malloc} reservierten wurden.
 \begin{itemize}
 \item Einggabeparamter: Pointer für den Anfang der freigegebenen Speicherzellen
 \item Zum Beispiel:
@@ -166,14 +164,14 @@ free(array);
 \vspace{-0.7cm}
 \end{myexampleblock}
 
-Wir können eindimensionale Vektoren entweder mit Pointers oder mit Arrays handeln.
-Aber wie können wir mehrere dimensionale Objekte herstellen und was verstehen wir eigentlich 
-unter mehrere dimensionale Objekte? Lass uns annehmen, dass wir Vektoren in zwei Dimenzion haben,
-Beispielweise Bewegungsvektoren $\vec{r}=\left(\begin{array}{c}x\\y\end{array}\right)$. Sie sind 
-Vektoren (Eindimensionale Objekte), deren Koordinäten nur mit einem Zeichen vertreten werden
-können. In unserem Beispiel sie sind $\left(\vec{r}\right)_1=x$ und $\left(\vec{r}\right)_2=y$.
-In diesem Fall eine Lineare Operation, die aus einem Vektor ein neues herstellen, nennen
-wir zwei dimenzionale Objekte. Zum Bespiel eine Drehung mit einem Winkel $\alpha$:
+Wir können eindimensionale Vektoren entweder mit Pointer oder mit Arrays darstellen.
+Aber wie können wir mehrdimensionale Objekte herstellen und was verstehen wir eigentlich 
+unter mehrere dimensionalen Objekte? Lasst uns annehmen, dass wir Vektoren in zwei Dimensionen haben,
+beispielsweise Bewegungsvektoren $\vec{r}=\left(\begin{array}{c}x\\y\end{array}\right)$. Sie sind 
+Vektoren (eindimensionale Objekte), deren Koordinaten nur mit einem Index angegeben werden
+können. In unserem Beispiel sind sie $\left(\vec{r}\right)_1=x$ und $\left(\vec{r}\right)_2=y$.
+Eine lineare Operation, die aus einem Vektor ein neues herstellen, nennen
+wir zwei dimensionales Objekt. Zum Beispiel eine Drehung mit einem Winkel $\alpha$:
 \begin{equation}
 \left(\begin{array}{c}x^{,}\\y^{,}\end{array}\right)=
 \left(\begin{array}{cc} \cos\left(\alpha\right) & \sin\left(\alpha\right) \\
@@ -181,23 +179,26 @@ wir zwei dimenzionale Objekte. Zum Bespiel eine Drehung mit einem Winkel $\alpha
 \end{array}\right)
 \left(\begin{array}{c}x\\y\end{array}\right)
 \end{equation}
-Das rotation kann durch eine Matrix dargestellt werden. Natürlich um diese Matrices
-in C Sprache verwenden zu können, wir brauchen nur zwei dimensionale Arrays. Wir können
-dies erreichen mit einem anderen eckigen Klammern, zum Bespiel 
+Die Rotation kann durch eine Matrix dargestellt werden. Um diese Matrizen
+in C verwenden zu können, brauchen wir zweidimensionale Arrays. Wir können
+dies mit einem weiteren Paar eckigen Klammern erreichen, zum Beispiel 
 \begin{lstlisting}
 double rotate2d[2][2];
 \end{lstlisting}
-In anderen Wörter wir brauchen Arrays vom Arrays.
-Aber wir haben gelernt, dass was wir mit einem Array machen können, können wir auch 
-mit Pointers erledigen. In diesem Fall aber wir brauchen auch Pointers auf Pointers.
-Wir zeigen in der Abbildung \ref{mem2d} was in diesem Fall passiert. Wir haben am Anfang 
-eine Variable in statischen Speicherzelle mit Typ double Pointer auf Pointer.
-Danach müssen wir Specherzellen reservieren für Pointers mit $malloc$. Wir reservieren
-Speichern für die Elementen im Mittelsäule auf der Abbildung \ref{mem2d}. $malloc$
-wird die Anfangsadresse von den reservierten Speicherzellen rückgeben. Das wird der Wert
-der Pointer auf Pointer Variable sein. Zum Ende wir müssen für jede Pointer Speicherzellen 
-für zwei $double$ Variable reservieren. Das ist alles. Wir zeigen auch das Quelltext zur diesen
-Übung.
+
+In anderen Worten: Wir brauchen Arrays von Arrays. Aber wir haben gelernt, dass
+was wir mit einem Array machen können, können wir auch mit Pointern erledigen.
+In diesem Fall aber brauchen wir auch Pointer auf Pointer. Wir zeigen in der
+Abbildung~\ref{mem2d} was in diesem Fall passiert. Wir haben am Anfang eine
+Variable in einer statischen Speicherzelle mit Typ \texttt{double} Pointer auf
+Pointer. Danach müssen wir Speicherzellen reservieren für Pointer mit
+\texttt{malloc}. Wir reservieren Speicher für die Elementen im mittleren Teil
+der Abbildung~\ref{mem2d}. \texttt{malloc} wird die Anfangsadresse von den
+reservierten Speicherzellen zurückgeben. Das wird der Wert der Pointer auf
+Pointer Variable sein. Zum Ende müssen wir für jeden Pointer Speicherzellen für
+zwei \texttt{double} Variablen reservieren. Das ist alles. Folgend ist der
+Quelltext zur diesen Übung:
+
 \begin{lstlisting}
 #include <math.h>
 #include <stdio.h>
@@ -209,10 +210,10 @@ int main() {
     array2d = (double **)malloc(sizeof(double *) * SPACEDIM);
     for (i = 0; i < SPACEDIM; ++i)
         array2d[i] = (double *)malloc(sizeof(double) * SPACEDIM);
-    array2d[0][0] = cos(M_PI / 4.); /*Alternative *(*(array+0)+0) */
-    array2d[0][1] = sin(M_PI / 4.); /*Alternative *(*(array+0)+1) */
-    array2d[1][0] = -sin(M_PI / 4.); /*Alternative *(*(array+1)+0) */
-    array2d[1][1] = cos(M_PI / 4.); /*Alternative *(*(array+1)+1) */
+    array2d[0][0] = cos(M_PI / 4.);  /* Alternative *(*(array+0)+0) */
+    array2d[0][1] = sin(M_PI / 4.);  /* Alternative *(*(array+0)+1) */
+    array2d[1][0] = -sin(M_PI / 4.); /* Alternative *(*(array+1)+0) */
+    array2d[1][1] = cos(M_PI / 4.);  /* Alternative *(*(array+1)+1) */
     for (i = 0; i < SPACEDIM; ++i) {
         for (j = 0; j < SPACEDIM; ++j)
             printf("%e ", array2d[i][j]);
@@ -310,27 +311,28 @@ int main() {
 \rput(13.05875,-4.8){\large double Variablen}
 \end{pspicture} 
 }
-\caption{\label{mem2d} Pointers auf Pointer in Betrien.}
+\caption{\label{mem2d} Pointers auf Pointer}
 \end{figure}
-In der achten Zeile wir reservieren Speicherzellen für Pointers
-und danach in einer Schleife reservieren wir Speicherzellen für
-die aktuellen Fließkommazahlen. Für die indexierung wir können
-entweder mehrere eckigen Klammern $(array2d[i][j])$ oder
-die Dereferenzierung operator $(*(*(array2d+i)+j))$ verwenden.
-Sie sind in jeder Hinsicht gleichwertig. Von Zeile 15 bis 19 
-wir stellen vor, wie mann eine zwei dimenzionale Objekt
-durchführen kann. In diesem Fall wir 
-drücken die Elementen aus in Spalten-Zeil matrixmode.
 
-Zum ende, wir zeigen, wie mann diese Objekte im Funktion herstellen kann.
-Im Funkcion wir müssen der Wert von $array2d$ ändern d.h wenn wir zurück
-aus dem Funktion gekommen sind, $array2d$ muss ein neuer Wert haben.
-Um diese Übung zu erledigen, wir müssen ihre Adresse übergeben und
-die Funktion muss einer Pointer auf $**$ erhalten. Wir zeigen 
-es ausdrücklich in den unteren Quelltext. Im Allgemeinen 
-wenn wir den Wert von einem $n$ dimenzionalen Objekte in einem
-Funktion ändern wollen, müssen wir ihre Adresse übergeben, und die Funktion soll
-eine Pointer auf $n+1$ dimenzionale Object erhalten.
+In der achten Zeile reservieren wir Speicherzellen für Pointer
+und danach in einer Schleife reservieren wir Speicherzellen für
+die Fließkommazahlen. Für die Indexierung wir können
+entweder mehrere eckigen Klammern \texttt{(array2d[i][j])} oder
+den Dereferenzierungsoperator \texttt{(*(*(array2d+i)+j))} verwenden.
+Sie sind in jeder Hinsicht gleichwertig. Von Zeile 15 bis 19 
+stellen wir vor, wie man ein zweidimensionales Objekt
+auf dem Bildschirm ausgeben kann. In diesem Fall drücken 
+wir die Elementen im Spalten-Zeilen Modus aus.
+
+Zum Ende zeigen wir, wie man diese Objekte in Funktion herstellen kann. In der
+Funktion müssen wir den Wert von \texttt{array2d} ändern d.\,h. wenn wir zurück
+aus dem Funktion gekommen sind, muss \texttt{array2d} einen neuen Wert haben.
+Um diese Übung zu erledigen, müssen wir ihre Adresse übergeben und die Funktion
+muss einer Pointer auf \texttt{**} erhalten. Wir zeigen es ausdrücklich in den
+unteren Quelltext. Im Allgemeinen wenn wir den Wert von einem $n$ dimensionalen
+Objekte in einer Funktion ändern wollen, müssen wir deren Adresse übergeben,
+und die Funktion soll eine Pointer auf $n+1$ dimensionales Objekt erhalten.
+
 \begin{lstlisting}
 #include <stdio.h>
 #include <stdlib.h>
