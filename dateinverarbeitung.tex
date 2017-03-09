@@ -1,0 +1,264 @@
+\section{Datein verarbeiten}
+
+Ein- und Ausgabe in Dateien, oder allgemein Ein- und Ausgabe auf Geräten ist nicht Teil von C selbst.
+Aber die Standardbibliothek stellt diese Funktionalität zur Verfügung.
+Sie basiert auf dem Konzept von sogenannten \emph{streams}.
+Der Name kommt daher, dass Ein- und Ausgabe immer ein serieller Prozess ist.
+D.h., in Einheiten bestimmter kleinster Elemente werden die Daten sukzessive eingelesen oder ausgegeben.
+Man kann es sich also als einen Datenstrom vorstellen.
+
+Ein Strom in \verb|stdio.h| ist immer vom Typ \verb|FILE*|.
+Es gibt einige vordefinierte streams:
+\begin{enumerate}
+\item \verb|stdin| : Standardeingabe (haben wir schon implizit mit \texttt{scanf} verwendet) 
+\item \texttt{stdout} : Standardausgabe (haben wir schon implizit mit \texttt{printf} verwendet) 
+\item \texttt{stderr} : Standardfehler
+\end{enumerate} 
+Standard Ein- und Ausgabe haben wir schon implizit mit \texttt{scanf} und \texttt{printf} benutzt.
+Funktionen, die ebenfalls direkt auf \verb|stdin| und \texttt{stdout} arbeiten, sind \verb|getchar| and \verb|putchar|.
+Sie lesen bzw. schreiben genau ein Zeichen von \verb|stdin| bzw. \texttt{stdout}.
+Ihre Deklaration in \verb|stdio.h| sieht wie folgt aus:
+\begin{lstlisting}
+  int getchar ();
+  int putchar (int c);
+\end{lstlisting}
+In \verb|putchar| wird ein \emph{cast} von \verb|c| nach \verb|unsigned char| durchgeführt.
+\verb|getchar| liest ein Zeichen als \verb|unsigned char| vom \verb|stdin| und führt dann einen \emph{cast} nach \verb|int| durch.
+Damit kann man beispielsweise ein Programm schreiben, dass alle eingegenen Zeichen direkt wieder auf \texttt{stdout} ausgibt:
+\begin{lstlisting}
+  #include<stdlib.h>
+  #include<stdio.h>
+  
+  int main(){
+    int c;
+    while( (c=getchar()) != EOF) {
+      putchar(c);
+    }
+    return(0);
+  }
+\end{lstlisting}
+Wiederum wird solange eingelesen, bis das Sonderzeichen \verb|EOF| gefunden wird.
+
+Wenn wir direkt aus einer Datei lesen wollen, so müssen wir einen \emph{stream} bekanntmachen.
+Dies geht mit Hilfe der Funktion \verb|fopen|.
+\begin{myexampleblock}{Funktion: \texttt{fopen}}
+  \begin{lstlisting}
+    FILE *fopen( const char *filename, char mode);
+  \end{lstlisting}
+  \vspace{-0.4cm}
+  Öffnet eine Datei. Dabei gibt \texttt{mode} an, für welchen Zweck die Datei geöffnet werden soll:
+  \begin{itemize} 
+    \itemsep0.5ex
+  \item \texttt{"w"}: Datei zum Schreiben öffnen. Wenn sie schon existiert, wird sie überschrieben. Wenn sie nicht existiert, wird die Datei erzeugt.
+  \item \texttt{"r"}: Öffnen einer Datei ausschließlich zum lesen. Der \emph{stream} zeigt auf den Anfang der Datei.
+  \item \texttt{"{}a"}: Öffnen einer Datein zum Schreiben. Wenn sie schon existiert, wird am Ende der Datei hinzugefügt.
+  \item \texttt{"w+"}: Öffnen zum Schreiben und Lesen. Wenn die Datei schon existiert, wird sie überschrieben. Der \emph{stream} zeigt auf den Anfang der Datei.
+  \item \texttt{"r+"}: Öffnen einer Datei zum Schreiben und Lesen. Der \emph{stream} zeigt auf den Anfang der Datei.
+  \item \texttt{"{}a+"}: Öffnen einer Datei zum Lesen und Hinzufügen. Zum Lesen zeigt der \emph{stream} auf den Anfang der Datei. Geschriebenes wird immer hinzugefügt.
+  \end{itemize}
+\end{myexampleblock}  
+Eine Datei, die mit \texttt{fopen} geöffnet wurde, muss mit \texttt{fclose} wieder geschlossen werden:
+\begin{myexampleblock}{Funktion: \texttt{fclose}}
+  \begin{lstlisting}
+    int fclose(FILE *stream);
+  \end{lstlisting}
+  \vspace{-0.4cm}
+  Der Rückgabewert ist \texttt{0}, wenn die Datei erfolgreich geschlossen werden konnte und \texttt{EOF}, wenn nicht.
+\end{myexampleblock}
+Nur, wenn \texttt{fclose} aufgerufen wurde ist sichergestellt, dass die Daten auch in die Datei geschrieben wurden.
+
+Hat man einmal eine Datei geöffnet, muss man sich entscheiden, wie man sie ausliest oder in sie schreibt.
+Wir führen hier zunächst die sogenannte formatierte Ein- und Ausgabe ein.
+Dabei wird jedes gelesene Byte als ein ASCII Zeichen interpretiert.
+Wir haben diese Art von Ein- und Ausgabe bereits mit \verb|printf| und \verb|scanf| kennengelertn.
+Die Verallgemeinerung von \verb|scanf| für beliebige \emph{streams} ist \verb|fscanf|
+\begin{lstlisting}
+  int fscanf(FILE * stream, char *format, ...);
+\end{lstlisting}
+\verb|fscanf| bekommt als ersten Parameter den \emph{stream} übergeben.
+\verb|format| ist eine Zeichekette, wie wir sie schon von \verb|scanf| kennen.
+Daher kennen wir auch schon, dass man Variablen über spezielle Zeichfolgen, die mit \% beginnen, aus dem \emph{stream} zuweisen kann.
+Dabei stehen unter anderem die folgenden speziellen Zeichen zur Verfügung
+\begin{center}
+  \begin{tabular}{lr}
+    \hline
+    \texttt{Specifizierungszeichen} & Bedeutung \\\hline
+    \texttt{\%d}	&  \texttt{int} \\
+    \texttt{\%ld}  &  \texttt{long int} \\
+    \texttt{\%ud}  &  \texttt{unsigned int} \\
+    \texttt{\%f,\%e}   & \texttt{float} \\
+    \texttt{\%lf,\%le}  & \texttt{double} \\
+    \texttt{\%c}  & \texttt{char} \\
+    \texttt{\%s}  & eine Zeichenkette\\
+    \hline
+  \end{tabular}
+\end{center}
+Alle anderen Zeichen im Formattierungstext werden eingelesen, aber nicht gespeichert. 
+Nehmen wir an, wir müssen die Zahlen aus folgender ASCII Datei einlesen:
+\begin{lstlisting}
+1212
+        1222
+999             12212
+888
+\end{lstlisting}
+Dies kann mit folgendem Code gemacht werden
+\begin{lstlisting}
+  #include<stdio.h>
+  #include<stdlib.h>
+
+  int main(int argc, char *argv[]){
+    if (argc>2 ) {                       // wurde ein Dateiname uebergeben?
+      fprintf(stderr,"Useage: ./read_int_ascii filename\n");
+      return(-3);
+    }
+    FILE * in = fopen(argv[1], "r");     // Oeffne die Datei
+    if(in == NULL) {                     // Ueberpruefe auf Fehler 
+      fprintf(stderr, "Error opening the file\n");
+      return(-2);
+    }
+    printf("Lese aus der Datei %s\n", argv[1]);
+    int d;
+    while( fscanf(in, "%d", &d) == 1 ) { // lese ein int nach dem anderen ein
+      printf("%d\n", d);
+    }
+    if (fclose(in) != 0) {               // Schliesse die Datei wieder
+      printf("Error closing the File\n");
+      return(-3);
+    }
+    return(0);
+  }
+\end{lstlisting}
+Es fällt auf, dass wir als Formatierungszeichenkette lediglich \verb|%d| verwenden, und keine Leerzeichen.
+Der Grund dafür ist, dass Leerzeichen (und Zeilenumbrüche, Tabs etc.) als Trennzeichen interpretiert werden.
+Wie viele Leerzeichen und Zeilenumbrüche zwischen den Zahlen eingefügt sind, spielt für die formatierte Eingabe keine Rolle.
+Die Ausgabe des Programms sieht dann wie folgt aus:
+\begin{verbatim}
+Lese aus der Datei numbers.txt
+1212
+1222
+999
+12212
+88
+\end{verbatim}
+Die formatierte Ausgabe funktioniert ähnlich, nur mit der Funktion \verb|fprintf|
+\begin{lstlisting}
+  int fprintf(FILE * stream, char *format, ...);
+\end{lstlisting}
+Die Spezifizierungszeichen sind die gleichen wie für \verb|fscanf|.
+Mit der Ausname von \verb|%lf,%le|, die für \verb|fprintf| nicht zur Verfügung stehen.
+\verb|%e| gibt eine Fließkommazahl auf \verb|double| Genauigkeit gerundet im wissenschaftlichen Format aus, \verb|%f| ebenfalls auf \verb|double| Genauigkeit gerundet als Dezimalzahl.
+Weiterhin kann man die Anzahl von Stellen etc beeinflussen, zum Beispiel
+\begin{lstlisting}
+  #include<stdio.h>
+  #include<stdlib.h>
+
+  int main(){
+    FILE *out;
+    out = fopen("quadrats.txt", "w"); // Oeffne die Datei zum Schreiben
+    if (out == NULL){
+      fprintf(stderr, "Error opening the file\n");
+      return(-1);
+    }
+    for (int i = 1; i <= 10; ++i) {
+      fprintf(out, "%.6d\n", i*i);    // Schreibe i^2 in die Datei
+    }
+    if (fclose(out) != 0){            // Schliese die Datei wieder
+      printf("Error in closing the File\n");
+      return(-2);
+    }
+    return(0);
+  }
+\end{lstlisting}
+Nach dem Aufruf enthält die Datei \verb|quadrats.txt| folgendes
+\begin{verbatim}
+000001
+000004
+000009
+000016
+000025
+000036
+000049
+000064
+000081
+000100
+\end{verbatim}
+Die Spezifizierung \verb|%.6d| bedeutet, dass die ganze Zahl mit sechs Stellen ausgegeben werden soll.
+Dementsprechend werden führende Nullen hinzugefügt.
+
+Formatierte Ausgabe ist sinnvoll, wenn die Dateien für Menschen lesbar sein sollen und wenn nicht viele Daten gespeichert werden müssen.
+Für den Fall von vielen Daten sollte man allerdings auf nichtformatierte Ausgabe zurückgreifen (manchmal auch als binäre Ausgabe bezeichnet).
+Dies kann man in C beispielsweise mit den Funktione \texttt{fread} und \texttt{fwrite} bewerkstelligen:
+\begin{lstlisting}
+  size_t fread ( void * ptr, size_t size, size_t count, FILE * stream );
+  size_t fwrite ( const void * ptr, size_t size, size_t count, FILE * stream );
+\end{lstlisting}
+Dabei werden \verb|count*size| bytes direkt gelesen und im Speicherbereich abgelegt, auf den \verb|ptr| zeigt, bzw. \verb|count*size| aus dem Speicherbereich direkt geschrieben, ohne, dass dazwischen eine Konvertierung und Interpretation stattfinden würde.
+Beide Funktionen liefern die Anzahl der gelesen bzw. geschriebenen Elemente der Größe \verb|size| zurück.
+Um den Erfolg der Operationen zu testen, sollte man also prüfen, ob der Rückgabewert dem Wert der Variablen \verb|count| entspricht.
+
+Um mehrfach aus einer Datei lesen zu können, kann man mit 
+\begin{lstlisting}
+  void rewind(FILE *stream)
+\end{lstlisting}
+zum Anfang der Datei zurückkehren, oder mit
+\begin{lstlisting}
+  int fseek(FILE *stream, long int offset, int whence)
+\end{lstlisting}
+zu einem bestimmten Punkt in der Datei gehen.
+Bei letzterer Funktion wir der \verb|offset| in Bytes relativ zu \verb|whence| gesetzt.
+\verb|whence| kann auf \verb|SEEK_SET|, \verb|SEEK_CUR| or \verb|SEEK_END| gesetzt werden, was Anfang, momentane Position oder Ende in der Datei bedeutet.
+Im folgenden ein Beispiel:
+\begin{lstlisting}
+  #include<stdio.h>
+  #include<stdlib.h>
+
+  int main(){
+    FILE * outin;
+    int * squares;
+    const int n=10;
+    // Oeffne die Datei
+    outin = fopen("temporarystorage", "w+");
+    if (outin == NULL){
+      fprintf(stderr, "Error in opening the file\n");
+      return(-1);
+    }
+    // Speicher fuer squares reservieren
+    squares = (int *)malloc(sizeof(int)*n);
+    if (squares == NULL){
+      fprintf(stderr, "Error in allocating memory\n");
+      return(-2);
+    }
+    // Berechne Quadrate und speichere sie in squares
+    for (int i = 0; i < n; ++i) {
+      squares[i]=(i+1)*(i+1);
+    }
+    // Schreibe squares in die Datei
+    if ( fwrite((void*) squares, sizeof(int), n, outin) != n){
+      printf("Error in writing\n");
+      return(-3);
+    }
+    for (int i = 0; i < n; ++i) {
+      squares[i]=0;
+    }
+    rewind(outin);    // Geh wieder zum Anfang der Datei
+    // Lese die Datei wieder ein
+    if ( fread ((void*) squares, sizeof(int), n, outin) != n){
+      printf("Error in read\n");
+      return(-4);
+    }
+    for (int i = 0; i < n; ++i) {
+      printf("%d\n", squares[i]);
+    }
+    // Datei wieder schliessen
+    if (fclose(outin) != 0){
+      printf("Error in closing file\n");
+      return(-5);
+    }
+    return(0);
+  }   
+\end{lstlisting}
+Die Datei wird zum Schreiben und Lesen geöffnet.
+Dabei wird eine eventuell existierende Datei gleichen Namens überschrieben.
+Danach werden die Quadrate von $i=1,...,n$ zuerst in die Datei geschrieben.
+Dann gehen wir wieder zum Anfang der Datei und lesen sie dann wieder ein.
+Die eingelesenen Zahlen werden dann auf der Kommandozeile ausgegeben.

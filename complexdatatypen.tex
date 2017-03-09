@@ -1,139 +1,185 @@
 \section{Komplexe Datentypen}
 
-Wir haben gelernt wie wir mehrere Objekte von dem gleichen Typ nutzen
-können. Aber oft das ist nicht genug. Wenn wir in unserem Problem
-zusammengehörende Variablen haben, müssen wir sie zusammen 
-als eine Struktur behandeln. In C wir können neuen Datentypen aus
-den Elementaren herstellen, dafür müssen wir das \texttt{struct} Schlüsselwort
-verwenden.
-
-\begin{myalertblock}{struct Typdefinierung}
+Je nach Problemstellung ist es manchmal sehr hilfreich, Datenstrukturen selbst erzeugen zu können.
+C bietet dafür die Möglichkeit, und zwar auf verschiedene Weisen.
+Zunächst kann man in C einen neuen Typ definieren, z.B. einen eigenen Typ für reelle Zahlen:
 \begin{lstlisting}
-struct name {
-    Type1 typename1;
-    Type2 typename2;
-    Type3 typename3;
-    ...
-};
+typedef real float;
 \end{lstlisting}
-
-Um dies zu verwenden, definieren wir eine Variable vom Typ \texttt{struct name}:
-
+Dieser kann im Quelltext danach wie native C Typen verwendet werden
 \begin{lstlisting}
-struct name variablename;
-\end{lstlisting}
-
-Die Typen in einer Struktur können auch selbst Strukturen sein.
-Sie müssen geschlossen sein, was bedeutet, dass ihre Größe
-(Wie vielen Speicherzellen verwenden sie?) bei der Kompilierung
-bekannt sein muss.
-\end{myalertblock}
-
-Ein Struktur besteht aus Objekten von möglicherweise verschiedenen Typen. Man
-kann auch die Objekte in einer Struktur mit \emph{Record} oder \emph{Feld}
-bezeichnen.
-
-Wir können mit dem Punktoperator (\texttt{.}) auf die Felder zugreifen. In dem
-unteren kleinen Quelltext zeigen wir ein Beispiel für den Struktur-Datentyp.
-
-\begin{lstlisting}
-#include <stdio.h>
-struct Student {
-    int matrikelnummer;
-    char *name;
-    char *klasse;
-};
-
+typedef real float;
 int main() {
-    struct Student erste;
-    erste.matrikelnummer = 99;
-    erste.name = "Martin Pfeindrich";
-    erste.klasse = "5a";
-
-    struct Student zweite = {101, "Andrea Tabarrios", "6b"};
+    real x, y = 3.718;
+    return 0;
 }
 \end{lstlisting}
-
-In diesem Beispiel wir haben die \texttt{Student} Struktur definiert in der Zeilen zwischen 2--6.
-Das muss außerhalb der \texttt{main} Funktion sein, damit alle andere Funktionen darauf zugreifen können.
-In der neunten Zeile haben wir eine Variable von Typ \texttt{struct Student} definiert. Diese ist noch
-nicht initialisiert. In der zehnten Zeile wir greifen wir auf das Feld der Struktur mit dem Punktoperator zu. 
-
+Auf den ersten Blick mag eine eigene Definition für eine Datentyp für reelle Zahle nicht besonders sinnvoll erscheinen.
+Allerdings kann man mit dieser Typdefinition zu einem späteren Zeitpunkt sehr einfach die verwendete Genauigkeit für reelle Zahlen ändern.
+Nämlich einfach, indem man die Zeile für die Typdefinition durch
 \begin{lstlisting}
-Variablename.structurenecodname = wert;
+  typedef real double;
 \end{lstlisting}
-Natürlich die structurenrecordname oben kann also ein Struktured Typ sein, d.h wir können
-Strukturen schachteln. Wir können auch nicht nur mit dem Punktoperator initializieren, sondern
-auch mit einer Aufzählung der Werten getrennt durch die (,) Operator.
+ersetzt.
 
-Natürlich wir können nicht alle Elementare operatoren auf Selbst
-erstellte Strukturen verwenden. Wir können zwischen zwei Elementen zuweisung machen zum Beispiel.
-In diesem Fall die Werten von alle Speicherzellen, die die Strukture aufbauen werden in der
-anderen Strukturevariable copyieren. Wir können auch Arrays  Elementen von Strukturen typ, 
-und deswegen die Dereferenzierung und die adresse Operator verwendet werden.
-
-Strukuren sind hilfreich auch wenn ein Fuktion mehr ($n$) zusammenhörige Änderung machen soll. 
-Anstatt $n$ Eingabeparameter zu verwenden, genügt es, einen zu verwenden. Im Standardbibliothek
-C also hat Complex Stukture Datatypen. Zum Beispiel, die Funktions, die die Zeit verarbeiten.
-
-\begin{myexampleblock}{Definition: \texttt{struct tm}}
+Eine weitere Art, einen neuen Datentyp zu definieren, ist zusammengesetzte Datentypen zu definieren.
+Ein einfaches mathematisches Beispiel ist eine Datentyp für komplexe Zahlen.
+Eine komplexe Zahl muss dabei eine Real- und Imaginärteil haben.
+Genau für solche Fälle stellt C die Möglichkeit zur Verfügung, zusammengesetzte Datentypen zu definieren.
+Das entsprechende Schlüsselwort ist \verb|struct|.
+Solche zusammengesetzten Datentypen in C kann man sich wie Kontainer vorstellen.
+Die allgemeine Benutzung von \verb|struct| ist wie folgt:
+\begin{myalertblock}{Deklaration eines struct}
+  \begin{lstlisting}
+    struct name
+    {
+      Type1 name1;
+      Type2 name2;
+      Type3 name3;
+      ...
+    };
+  \end{lstlisting}
+  \vspace{-0.4cm}
+  Die Verwendung als Typ für eine Variable:
+  \begin{lstlisting}
+    struct name variablename;
+  \end{lstlisting}
+  \vspace{-0.4cm} 
+\end{myalertblock}
+Ein solcher Kontainer für komplexe Zahlen könnte also wie folgt aussehen:
 \begin{lstlisting}
-struct tm {
-    int tm_sec; /*Sekundums im Minute*/
-    int tm_min; /*Minutes im Uhr*/
-    int tm_hour; /*Uhr am Tag*/
-    int tm_mday; /*Tag im Monat*/
-    int tm_mon; /*Monat im Jahr*/
-    int tm_year; /*Jahren seit 1900*/
-    int tm_wday; /*Tage seit Sonntag*/
-    int tm_yday; /*Tage seit Januar 1*/
-    int tm_isdst; /*Sommerzeit ist oder nicht*/
-}
+  struct cmplx {
+    double re, im;
+  };
 \end{lstlisting}
-Das Definition befindet sich im Standardbibliothek Funktion time.h.
+mit zwei \verb|double| Elementen für den Real- und den Imaginärteil. 
+Der Zugriff auf die einzelnen Elemente erfolgt über den Namen des \verb|struct| und den Namen des Elements, getrennt durch einen Punkt.
+In unserem Beispiel für komplexe Zahlen also 
+\begin{lstlisting}
+  #include<stdio.h>
+
+  struct cmplx {
+    double re, im;
+  };
+  int main() {
+    struct cmplx z;
+    z.re = 1.0;
+    z.im = 3.4;
+    printf("z hat Realteil %e und Imaginaerteil %e\n", z.re, z.im);
+    return(0);
+  }
+\end{lstlisting}
+Also, allgemein gesprochen greift man auf die Elemente über 
+\begin{lstlisting}
+  structname.elementname = wert;
+\end{lstlisting}
+zu.
+Elemente können selbst wieder ein \verb|struct| sein.
+Einen Unterschied gibt es beim Zugriff auf Elemente, wenn man einen Zeiger auf einen \verb|struct| benutzt.
+Dort kann man direkt mit dem Pfeil Operator \verb|->| auf die Elemente zugreifen, also etwas
+\begin{lstlisting}
+  #include<stdio.h>
+
+  struct cmplx {
+    double re, im;
+  };
+  int main() {
+    struct cmplx z;
+    struct cmplx * v = &z;
+    v->re = 1.0;
+    v->im = 3.4;
+    printf("z hat Realteil %e und Imaginaerteil %e\n", v->re, v->im);
+    return(0);
+  }
+\end{lstlisting}
+Elemente eines \verb|struct| können natürlich auch Zeiger sein.
+Allerdings muss dann Speicher außerhalb der Deklaration stattfinden.
+
+Die Verwendung von \verb|struct| ist sehr hilfreich, wenn beispielsweise eine Liste von logisch zusammengehörigen Daten bearbeiten soll, also etwa den Real- und Imaginärteil.
+Es muss dann nicht mehr jedes Element einzeln übergeben werden, sondern nur noch einmal der Kontainer.
+Der Zusammenhang der einzelnen Elemente bleibt damit erhalten.
+
+Mit einem \verb|struct| wird ebenfalls einer neuer Typ bereitgestellt.
+Der entsprechende Name enthält aber immer das Schlüsselwort \verb|struct|, in unserem Fall \verb|struct cmplx|. 
+Man kann einen \verb|struct| mit einem \verb|typedef| kombinieren, um nicht immer \verb|struct| schreiben zu müssen.
+Im Quelltext sähe das so aus:
+\begin{lstlisting}
+  struct cmplx {
+    double re, im;
+  };
+  typedef struct cmplx cmplx;
+\end{lstlisting}
+Das sieht etwas verwirrend aus, weil \verb|cmplx| zweimal auftaucht.
+Aber der Ausdruck wird klar, wenn man sich erinnert, dass \verb|struct cmplx| im Prinzip ein Typ ist.
+Und damit ist der Name \verb|cmplx| noch nicht vergeben.
+Die etwas gebräuchlichere Art obiger Typdefinition geht über die Möglichekeit eines anonymen \verb|struct|.
+Man kann nämlich auch schreiben:
+\begin{lstlisting}
+  typedef struct {
+    double re, im;
+  } cmplx;
+\end{lstlisting}
+Damit ist natürlich \verb|struct cmplx| nicht definiert, aber man kann \verb|cmplx| wie einen C Typ verwenden.
+\textbf{Bemerkung:} Die C Standardbibliothek stellt einen Typ für komplexe Zahlen zu Verfügung.
+
+Ein Beispiel aus der C Standardbibliothek \verb|time.h| ist das \verb|struct tm| für Datum und Zeit:
+\begin{lstlisting}
+  struct tm{
+    int tm_sec;   // Sekunde
+    int tm_min;   // Minute
+    int tm_hour;  // Stunde
+    int tm_mday;  // Tag
+    int tm_mon;   // Monat
+    int tm_year;  // Jahr
+    int tm_wday;  // Wochetag
+    int tm_yday;  // Tag im Jahr
+    int tm_isdst; // Sommerzeit oder nicht
+  };
+\end{lstlisting}
+Damit kann über die Funktion
+\begin{myexampleblock}{Funktion: \texttt{time}}
+  \begin{lstlisting}
+    time_t time(time_t *t)
+  \end{lstlisting}
+  \vspace{-0.4cm}
+  \verb|time| gibt die Zeit in Sekunden seit 1970-01-01 00:00:00 +0000 (UTC) zurück.
+  Falls \verb|t| nicht \verb|NULL| ist, wird das Ergebnis zusätzlich in \verb|t| gespeichert.
+  \verb|time_t| ist vom Typ \verb|long int|.
 \end{myexampleblock}
-\begin{myexampleblock}{Funktion:\texttt{time}}
-\begin{lstlisting}
-time_t time(time_t *t)
-\end{lstlisting}
-\vspace{-0.4cm}
-Kehrt die Zeit in Sekundum seit (00:00:00, January 1, 1970) zurück.
-Eingabeparameter ist die Adresse ein Variable von long int Typ, in der
-das Ergebnis gespeichert wird, oder $NULL$ Pointer.
+und die Funktion
+\begin{myexampleblock}{Funktion: \texttt{localtime}}
+  \begin{lstlisting}
+    struct tm * localtime (time_t * timer);
+  \end{lstlisting}
+  \vspace{-0.4cm}
+  Eingabeparameter: Zeiger auf eine Variable vom Typ \verb|time_t|.
+  Rückgabeparameter: Zeiger auf ein \verb|struct tm|.
 \end{myexampleblock}
-\begin{myexampleblock}{Funktion:\texttt{localtime}}
-\begin{lstlisting}
-struct tm *localtime(time_t *timer);
-\end{lstlisting}
-\vspace{-0.4cm}
-Eingabeparameter :Adresse einer Variable von long int Typ (often die Rückgabeparameter vom Fuktion $time$).
-Mit den Werten von $timer$ füllt dieser Funktion die felder in der $tm$ Strukture aus, und kehrt ihn zurück.
-\end{myexampleblock}
+die beide in \verb|time.h| deklariert sind.
+Folgendes Beispiel illustriert deren Benutzung:
 \begin{lstlisting}
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-int main(void) {
+
+int main() {
     time_t now;
     struct tm *local_date_time;
     char *tagarray[7] = {"Sonntag",    "Montag",  "Dienstag", "Mittwoch",
                          "Donnerstag", "Freitag", "Samstag"};
     now = time(NULL);
     local_date_time = localtime(&now);
-    printf("Jahr ist: %d\n",
-           local_date_time->tm_year +
-               1900); /*Auch (*local_date_time).tm_year+1900 ist ok*/
-    printf("Monat ist: %d\n", local_date_time->tm_mon);
-    printf("Tage ist: %s\n", tagarray[local_date_time->tm_wday]);
-    printf("Uhr ist: %d\n", local_date_time->tm_hour);
-    printf("Min ist: %d\n", local_date_time->tm_min);
-    printf("Sek ist: %d\n", local_date_time->tm_sec);
+
+    printf("Jahr: %d\n", local_date_time->tm_year + 1900);
+    printf("Monat: %d\n", local_date_time->tm_mon);
+    printf("Tag: %s\n", tagarray[local_date_time->tm_wday]);
+    printf("Stunde: %d\n", local_date_time->tm_hour);
+    printf("Minute: %d\n", local_date_time->tm_min);
+    printf("Sekunde: %d\n", local_date_time->tm_sec);
+    return (0);
 }
 \end{lstlisting}
-In diesem Beispiel wir drücken das aktuellen Datum auf Monitor aus. Zuerst rufen wir den $time$ Funktion
-an damit wir  im $now$ das Datum als Sekunden in einem Long int Zahl haben. Danach graben wir von diesem Zahl 
-verständnisvoll Informationen aus mit dem $localtime$ Funktion. Ihre Rückgabe ist eine Pointer auf $tm$ Strukture. 
-Wir haben gelernt, wie wir zu den Strukture Elementen griffen können. Wir können auch Direkt vom Pointer
-zu den Elementen griffen mit dem $->$ Operator. Auch in der Achten Zeile wir haben ein Variable mit komplizierten
-Typ definiert als $tagarray$. Wie der Name schon sagt, das ist ein Array von Pointers auf "char". Wir verwenden
-die Struktureelement $tm\_wday$, als ein Index für diesen Array in der dreizehnten Zeile.
+Es gibt das aktuelle Datum und die aktuelle Zeit aus.
+Dabei wird zunächst die Funktion \verb|time| aufgerufen, und desse Rückgabewert dann an die Funktion \verb|localtime| übergeben.
+In beiden Funktionsaufrufen mussten wir nicht mit den $9$ Elementen von \verb|struct tm| hantieren, sondern konnten bequem den Container übergeben.
+Da \verb|local_date_time| ein Zeiger ist, greifen wir auf dessen Elemente wieder mit dem \verb|->| Operator zu.

@@ -342,3 +342,31 @@ An dieser Stelle weisen wir auf zwei davon hin:
   \end{tabular}
   \caption{Logischen operatoren \label{vergoper2}}
 \end{table}
+
+\subsubsection{Regeln zum Bilden von Ausdrücken}
+
+Eine wichtige Frage bei Operationen ist natürlich die nach der Reihenfolge.
+Es gelten im Allgemeinen die Vorrangregeln der Algebra beim Auswerten eines Ausdrucks, inklusive der Klammerregeln.
+So werden z.B. \verb|*|, \verb|/| und \verb|%| vor \verb|+| und \verb|-| ausgewertet.
+Ein unvollständiger Auszug aus der Prioritätenliste ist in Tabelle~\ref{tab:prior} zusammengefasst.
+Kleinerer Rang bedeutet dabei höhere Priorität.
+
+\begin{table}
+  \centering
+  \begin{tabular}{l r}
+    \hline
+    Rang & Operatoren \\
+    \hline
+    0 & \texttt{., ->, [], ()}\\
+    1 & \texttt{\&} (Adressoperator), \texttt{*} (Dereferenzierung)\\
+    2 & \texttt{*, / \%}\\
+    3 & \texttt{<, >, <=, >=}\\
+    4 & \texttt{==, !=}\\
+    5 & \texttt{\&\&}\\
+    6 & \texttt{||}\\
+    7 & alle Zuweisungen \texttt{=, +=, -=, ...}\\
+    \hline
+  \end{tabular}
+  \caption{Priorität von Operatoren}
+  \label{tab:prior}
+\end{table}

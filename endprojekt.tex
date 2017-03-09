@@ -8,16 +8,16 @@ innere Schleife im durchschnitt also skaliert mit dem Nummer der Elementen.
 Beispielweise für eine total zufällige Eingabe der sortierende Element ist im 
 durchschnitt kleiner als die Hälfte der schon sortierten Elementen. Darum 
 wir verbrauchen  auch in der inneren Schleife Computerzeit der mit 
-dem Nummer von elementen ($n$) skaliert. Deswegen ist das Einfügesortieren
+dem Nummer von den Elementen ($n$) skaliert. Deswegen ist das Einfügesortieren
 ein $n^2$ Algorithmus.
 
 Eine mögliche entwicklung ist die Haldensortierung. In diesem Projekt werden wir 
 diese Algorithmus kennenlernen und implementieren. Die grundsätztliche Datentyp ist 
-das $heap$.
+das \texttt{heap}.
 
 \begin{myexampleblock}{Definition: \texttt{Heap}}
 Es ist ein ausgeglichener Binärebaum. Es gibt nur eine Bedingung für die Elementen:
-jeden Element muss kleiner sein, als ihre Elter.
+jedes Element muss kleiner sein, als ihre Elter.
 \end{myexampleblock} 
 
 In einem Heap jede Element hat nur ein Elter, und kann maximal zwei Kinder
@@ -94,15 +94,21 @@ von der $[10,12,6,5,9,13,1,7]$ Reihenfolge auf Abbildung \ref{heapexample}.
 Wie du siehst, grundsätztlich es gibt keine Beziehung zwischen Elementen von der 
 gleichen Höhe des Bäumes. Es gibt nur ein Regel: Das Kind muss kleiner sein, als ihres
 Elter. Jetzt zeigen wir, wie es im Haldensortierung verwendet werden.
-Er kann in folgen Schritten formuliert werden:
+Die Haldensortierung kann mit nur zwei Schritten formuliert werden:
 \begin{itemize}
-\item Stellen wir ein $heap$ aus den Reihenfolge der Zahlen her
+\item Stellen wir ein \texttt{heap} aus den Reihenfolge der Zahlen her
 \item Nun verschieben wir jeweils das erste Element aus, und das wird mit dem letzten Element 
 ersetzt.
-\item Das $heap$ Eigenschaft muss wiederhergestellt werden.
+\item Das \texttt{heap} Eigenschaft muss wiederhergestellt werden.
 \end{itemize}
 
-Wir verwenden verketetten Liste für die Darstellung des $heap$-s. Jedes Element muss
+Das Vorteil des Algorithmus ist dass der Zeit um das \texttt{heap} zu behandeln skaliert
+nur mit dem Höhe des Bäumes. Weil der Bäum ausgeglichen ist, ihre Größe skaliert nur mit
+\texttt{log(n)}. Wir müssen diese Operationen für alle Elementen erledigen 
+deswegen die Ganze Zeit skaliert mit \texttt{n*log(n)}. Das ist für groß genug \text{n} ist
+besser als die Einfügesortierung.
+
+Wir verwenden verketteten Liste für die Darstellung des \texttt{heap}-s. Jedes Element muss
 ein Pointer für ihre Elter, und zwei Pointer für ihre rechten und linken Nachfolger haben.
 \begin{lstlisting}
 typedef struct heap {
@@ -112,14 +118,16 @@ typedef struct heap {
     struct heap *parent; /* Verweis auf den Vorgaenger */
 } heap;
 \end{lstlisting}
-Der $parent$ Pointer ist ein NULL pointer für die Wurzel des Bäumes. Die Blätters, die keinen
-Kinder haben, haben NULL als right und left Pointers.
-
-Jetzt zeigen wir wie mann ein Heap aus einem Reihenfolge von Zahlen herstellen kann. Zuerst
+Um ein geschloßener Baum zu haben, müssen wir an die folgenden zwei Punkten achten:
+\begin{itemize}
+\item Der \texttt{parent} Zeiger ist ein \texttt{NULL} Zeiger für die Wurzel des Bäumes. 
+\item Die Blätters, die keinen Kinder haben, haben \texttt{NULL} als right und left Zeiger.
+\end{itemize}
+Jetzt zeigen wir wie mann ein \texttt{heap} aus einem Reihenfolge von Zahlen herstellen kann. Zuerst
 müssen wir den ersten freien Platz finden, dann fügen wir das Element hier ein. Danach es kann sein, dass 
-das $heap$ Eigenschaft nicht wahr ist. Darum müssen wir das $heap$ Eigenschaft überprüfen und wenn
-es notwendig ist, tauschen wir den aktuellen Wert mit dem Wert von ihrem Elter bis das $heap$ Eigenschaft 
-wahr wird.
+das \texttt{heap} Eigenschaft nicht mehr wahr ist. Darum müssen wir das \texttt{heap} Eigenschaft danach immer
+überprüfen und wenn es notwendig ist, tauschen wir den aktuellen Wert mit dem Wert von ihrem Elter bis 
+das \texttt{heap} Eigenschaft wahr wird.
 \begin{figure}[!ht]
 \begin{center}
 % Generated with LaTeXDraw 2.0.8
@@ -168,37 +176,66 @@ wahr wird.
 
 Die wichtigsten Schritte sind:
 \begin{enumerate}
-\item Freie Platz finden
-\item $heap$ Eigenschaft wiederherstellen
+\item Ersten freien Platz finden
+\item \texttt{heap} Eigenschaft wiederherstellen
 \end{enumerate}
 Zuerst möchten wir den ersten freien Platz finden. Lass uns annehmen
 das Folgende Beispiel. Eine Familie möchte ein Ticket für ein Konzert kaufen.
-Aber es gibt nur eine Karte, und die Eltern dürfen nicht gehen, sie müssen sich 
-um ihre Kinder kümmern. Zuerst der Kopf der Familie geht zur Ticketschalter
-um das Ticket zu kaufen, und wenn er/sien  kein Kind hat, hat er Glück und
-kann zum Konzert gehen. Aber wenn er Kind hat, er ist sehr Höflich, und 
-geb die Möchkligkeit für ihre Kinder zum Konzert zu gehen, in anderen Wörte, er
-stellt ihre Kinder zur Warteschlange. Weil das Kind alles tun könnte. Dies wird 
-weitergehen bis der aktuellen Käufer keine Kind hat. Dieses Beispiel ist ähnlich 
-wie unsere Probleme: den ersten freien Platz zu finden. Nachdem Beispiel ist es 
-klar, dass wir eine Datenstrukture ähnlich wie die Warteschlange verwenden müssen. 
-In der Abbildung \ref{warteschlange} wir zeigen wie die Warteschlange
-funktioniert. Das großte Unterschied zwischen Stapelspeicher und Werteschlange ist,
-dass im Werteschlange das erste gekommene Element zuerst auskommen kann. 
+Aber es gibt nur eine Karte für Sie, und die Eltern dürfen nicht gehen, weil sie sich 
+um ihre Kinder kümmern müssen. Zuerst der Kopf der Familie geht zum Ticketschalter
+um das Ticket zu kaufen, und wenn er/sie  kein Kind hat, hat er Glück und
+kann zum Konzert gehen. Aber wenn er/sie Kind hat, er/sie ist sehr Höflich, und 
+geb die Möchkligkeit für ihre Kind(er) zum Konzert zu gehen. Die Elter möchten 
+gute Eltern sein, deswgen ihres Kinder könnten alles tun. In anderen Wörten, er
+stellt ihre Kinder zur Warteschlange. Dies wird weitergehen bis der aktuellen Käufer 
+keine Kind hat. Dieses Beispiel ist ähnlich wie unseres Problem: den ersten freien 
+Platz zu finden. Nachdem Beispiel ist es klar, dass wir eine Datenstrukture ähnlich wie 
+die Warteschlange verwenden müssen. In der Abbildung \ref{warteschlange} wir zeigen wie 
+die Warteschlange funktioniert. Unter siehst du den Quelltext für die Suchung.
+
+
+\begin{lstlisting}
+queue* q = newqueue(*root); /*Kopf der Familien zur Warteschlange*/
+heap* currentheap; 
+while((currentheap=queue_rem(&q))!=NULL){//Ein mann kommt aus der Warteschlange
+  //Wenn er/sie nicht zwei Kind hat, bekommt ein neues Kind
+  //(Konzert Ticket in unserem Beispiel)
+  if(currentheap->left == NULL) {
+     currentheap->left  = newheap(x, currentheap);
+     currentheap = currentheap->left;
+  }
+  else if(currentheap->right == NULL) {
+     currentheap->right = newheap(x, currentheap);
+     currentheap = currentheap->right;
+  }
+  //Wenn er sie zwei Kinder hat, stellt ihnen in der 
+  //Warteschlange und geht aus, die Naeschte Kaufer kommt
+  else {
+     queue_put(currentheap->left, &q);
+     queue_put(currentheap->right,&q);
+     continue;
+  }
+  break;
+}
+\end{lstlisting}
+
+
+Das großte Unterschied zwischen Stapelspeicher und 
+Werteschlange ist, dass im Werteschlange das erste gekommene Element zuerst auskommen kann. 
 So die Umsetzung ist ähnlich wie im Stapelspeicher. Die Untershiede sind
 \begin{enumerate}
 \item Das Typ der gespeicherte Variable
-\item Das pop() Funktion muss das letzte Element ausgeben
+\item Das \texttt{pop()} Funktion muss das letzte Element ausgeben
 \end{enumerate}
 
 Deises Endprojekt wird mehr aus 100 Zeilen Code bestehen.
 Um die Durchsichtigkeit unseres Programm zu verteidigen müssen
-wir die verschieden Teilen im getrennte Datei schreiben und
+wir die verschiedenen Teilen im getrennte Datei schreiben und
 das headerdatei verwenden. Beispielweise, das ist ganz ähnlich wie der 
-$printf$ Funktion. Im headerdatei wir müssen die Typendefinition
+verwendung von \texttt{printf} Funktion. Im headerdatei wir müssen die Typendefinition
 und die Funktiondeklarationen speichern. Achtung, die Typ deklaration
-müssen in einem Verschiedenen Datei sein, weil es Querverweise
-gibt. Beispielweise zeigen wir hier das Quelltext und die Headerdatein
+müssen in einem Verschiedenen Datei sein um Querverweise zu vermeiden
+Beispielweise zeigen wir hier das Quelltext und die Headerdatein
 für die Warteschlange:
 
 \begin{myexampleprogram}{ Programme: \texttt{Die Warteschlange}}	
@@ -226,21 +263,24 @@ void free_queue(queue **first);
 #include "heapqueue.h"
 #include <stdio.h>
 #include <stdlib.h>
+// Stellt ein neue queue element her
 queue *newqueue(heap *data) {
     queue *q = (queue *)malloc(sizeof(queue));
     q->element = data;
     q->next = NULL;
     return q;
 }
+// Schliesst ein neue Element in einem queue ein
 void queue_put(heap *data, queue **first) {
     if ((*first) == NULL) {
         (*first) = newqueue(data);
         return;
     }
-    queue *temp = newqueue(data);
-    temp->next = (*first);
+    queue *temp = newqueue(data); // Das wird das erste Element sein
+    temp->next = (*first); // Das vorherige Erste wird jetzt das zweite
     (*first) = temp;
 }
+// Loescht ein Element aus dem queue
 heap *queue_rem(queue **first) {
     queue *temp;
     heap *ret;
@@ -253,6 +293,7 @@ heap *queue_rem(queue **first) {
         (*first) = NULL;
         return ret;
     }
+    // Suchung fuer das letzte Element
     temp = (*first);
     queue *prev;
     while (temp->next != NULL) {
@@ -264,12 +305,13 @@ heap *queue_rem(queue **first) {
     free(temp);
     return (ret);
 }
+// Geht ein queue durch
 void print_queue(queue *first) {
     queue *temp = (first);
     if (temp == NULL) {
         return;
     }
-    for (;;) {
+    while (1) {
         printf("%d\t", temp->element->val);
         temp = temp->next;
         if (temp == NULL)
@@ -277,12 +319,13 @@ void print_queue(queue *first) {
     }
     printf("\n");
 }
+// Gebt ein queue frei
 void free_queue(queue **first) {
     if ((*first) == NULL)
         return;
     queue *temp = (*first);
     queue *temp2;
-    for (;;) {
+    while (1) {
         temp2 = temp->next;
         free(temp);
         temp = temp2;
@@ -292,33 +335,35 @@ void free_queue(queue **first) {
 }
 \end{lstlisting}
 \end{myexampleprogram}
-Das Datei $heapqueue.h$ wird die Typdefinitionen enthalten. Wir müssen
+Das Datei \texttt{heapqueue.h} wird die Typdefinitionen enthalten. Wir müssen
 diese Headerdatei im Codetext für Warteschlange beilegen, um der Kompiler
-den Typ $heap$ verstehen zu können. Natürlich wir müssen ein eigenen 
-Headerdatei für die Warteschlange erzeugen, weil die Funktionen 
-werden in einem anderen Datei ($heap.c$) verwenden. Das Unterschied
-zwischen Stapelspeicher und Warteschlange siehst du im $queue.c$ Zeile 33-36.
-In diesem Teil wir suchen für das letzte (freigegebene) Element in
+den Typ \texttt{heap} un \texttt{queue} verstehen zu können. Natürlich wir müssen 
+ein eigenen Headerdatei für die Warteschlange erzeugen, weil die Funktionen 
+werden in einem anderen Datei (\texttt{heap.c}) verwenden. Das Unterschied
+zwischen Stapelspeicher und Warteschlange siehst du im \texttt{queue.c} Zeile 33-36.
+In diesem Teil wir suchen für das letzte (freigebende) Element in
 der Warteschlange.
 
-Jetzt wir müssen das $heap$ Eigenschaft überprüfen. Das ist ganz einfach, 
-wir ziehen das eingegebenen Element oben bis das $heap$ Eigenschaft wahr wird.
+Jetzt wir müssen das \texttt{heap} Eigenschaft überprüfen. Das ist ganz einfach, 
+wir ziehen das eingegebenen Element oben bis das \texttt{heap} Eigenschaft wahr wird.
 Wir zeigen hier das in der Praxis:
 \begin{lstlisting}
 while (current_heap->parent != NULL &&
        current_heap->parent->val < current_heap->val) {
-    SWAP(current_heap->parent->val, current_heap->val);
-    current_heap = current_heap->parent;
+    int tmp = current_heap->parent->val;
+    current_heap->parent->val = current_heap->val;
+    current_heap->val = tmp;
+    current->heap = current_heap_parent;
 }
 \end{lstlisting} 
 In der dritten Zeile wir tauschen die Werte um, und danach machen
-wir ein Schritt oben mit der Zeige. Wir wiederholen es bis
-das $heap$ Eigenschaft wahr wird. Jetzt wir können die zwei Teilen
-zusammenstellen um ein Code für einschließen ins $heap$ bekommen.
+wir ein Schritt oben mit dem Zeiger. Wir wiederholen es bis
+das \texttt{heap} Eigenschaft wahr wird. Jetzt wir können die zwei Teilen
+zusammenstellen um ein Code für einschließen ins \texttt{heap} bekommen.
 
-Wenn wir den Platz gefunden haben, prüfen wir das $heap$ Eigenschaft über
+Wenn wir den Platz gefunden haben, prüfen wir das \texttt{heap} Eigenschaft über
 (Zeile 24-26). Dann wir sind fertig, die Warteschlange wird freigegeben und
-wir beenden die Schleife mit Hilfe des Strichworts $break$.
+wir beenden die Schleife mit Hilfe des Strichworts \texttt{break}.
 \begin{lstlisting}
 void heap_insert(heap **root, int x) {
     if (*root == NULL) {
@@ -346,9 +391,16 @@ void heap_insert(heap **root, int x) {
             }
             break;
         }
-        free_queue(&q);
+        while (currentheap->parent != NULL &&
+               currentheap->parent->val < currentheap->val) {
+            int tmp = current_heap->parent->val;
+            current_heap->parent->val = current_heap->val;
+            current_heap->val = tmp;
+            currentheap = currentheap->parent;
+        }
+        break;
     }
-    return;
+    free_queue(&q);
 }
 \end{lstlisting}
 \begin{myexampleblock}{Strichwörter: \texttt{break} und \texttt{continue}}
@@ -378,142 +430,579 @@ machen eine Schleife bis die Warteschlange leer wird. Wenn wir ein Element
 ohne zwei Kinder von der Warteschlange ausgenehmen haben, wird sind fertig, wir
 haben den Platz gefunden. Anderfalls wir schließen ihre Kinder in der Warteschlange
 ein und springen auf den nächsten Iteration mit Hilfe des Stichwort $continue$.
-\begin{myexampleprogram}{Programme: \texttt{Haldensortierung}}
-\begin{lstlisting}
-typedef struct heap {
-    int val;
-    struct heap *left;
-    struct heap *right;
-    struct heap *parent;
-} heap;
-\end{lstlisting}
-\begin{lstlisting}
-heap *newheap(int x, heap *parent) {
-    heap *ret = (heap *)malloc(sizeof(heap));
-    ret->left = NULL;
-    ret->right = NULL;
-    ret->parent = parent;
-    ret->val = x;
-    return ret;
-}
-\end{lstlisting}
-\begin{lstlisting}
-void heap_insert(heap **root, int x) {
-    if (*root == NULL) {
-        *root = newheap(x, NULL);
-    } else {
-        queue *q = newqueue(*root);
-        heap *currentheap;
 
-        while ((currentheap = queue_rem(&q)) != NULL) {
-            if (currentheap->left == NULL) {
-                currentheap->left = newheap(x, currentheap);
-                currentheap = currentheap->left;
-            } else if (currentheap->right == NULL) {
-                currentheap->right = newheap(x, currentheap);
-                currentheap = currentheap->right;
-            } else {
-                queue_put(currentheap->left, &q);
-                queue_put(currentheap->right, &q);
-                continue;
-            }
-            while (currentheap->parent != NULL &&
-                   currentheap->parent->val < currentheap->val) {
-                int temp = currentheap->parent->val;
-                currentheap->parent->val = currentheap->val;
-                currentheap->val = temp;
-                currentheap = currentheap->parent;
-            }
-            break;
-        }
-        free_queue(&q);
+Im Löschen das Prinzip ist die gleiche: Im ersten Schritt wir müssen das letzte Element 
+finden, tauschen ihren Wert mit dem Wert von der Wurzel, und zum Ende müssen wir ihn
+freigeben. Im zweiten Schritt wir müssen das $heap$ Eigenschaft wiederherstellen.
+
+Die Suchung für das letzte Element ist ähnlich wie im Einschließen Funktion. Das
+unterschied ist dass wir müssen errinern an das Letzte nicht $NULL$ Element. Als 
+Eingabe wir haben der Zeiger auf die Wurzel des $heap$-s. Du kannst die dazuhöringen
+Codeteil unter sehen.
+\begin{lstlisting}
+queue *q = newqueue(*root);
+heap *previousheap;
+heap *currentheap;
+
+while ((currentheap = queue_rem(&q)) != NULL) {
+    if (currentheap->left != NULL)
+        queue_put(currentheap->left, &q);
+    if (currentheap->right != NULL)
+        queue_put(currentheap->right, &q);
+    previousheap = currentheap;
+}
+currentheap = previousheap;
+free_queue(&q);
+\end{lstlisting}
+Grundsätzlich Wir tun das Gleiche wie im Einschließen, außer das, dass wir am Ende 
+von jeden Iteration den aktuellen Zeiger auf dem $heap$ speicher. Am Ende 
+dieser gespeicherte Zeiger wird das letzte Element sein. 
+
+Das Wiederherstellen des $heap$ Eigenschafts ist nicht so trivial als im 
+Einschließen. Dafür zeigen wir den Prozess auf Abbildung \ref{loschen}.
+Am Anfang wir haben das originalle $heap$ (Teil $a$) und wir werden
+den Wert der Wurzel mit dem Wert vom letzten Element umtauschen. Danach
+wir zeigen das aktuellen $heap$ im Teil $b$. Natürlich in diesem Fall das $heap$
+Eigenshaft ist nicht mehr wahr. Darum müssen wir den Wert der Wurzel mit der Wert, ihres
+größten Kindes umtauschen. Wir zeigen das Ergebnis im Teil $c$. Danach müssen
+wir das $heap$ Eigenschaft also in niedrigen Ebenen wiederherstellen. Das bedeutet
+wir müssen das Knote 5 auch mit ihrem größten Kind umtauschen. Dann bekommen wir
+das endgültige Ergebnis (Teil $d$).
+\begin{figure}[!ht]
+\begin{center}
+% Generated with LaTeXDraw 2.0.8
+% Mon Mar 06 15:43:52 CET 2017
+% \usepackage[usenames,dvipsnames]{pstricks}
+% \usepackage{epsfig}
+% \usepackage{pst-grad} % For gradients
+% \usepackage{pst-plot} % For axes
+\scalebox{0.5} % Change this value to rescale the drawing.
+{
+\begin{pspicture}(-5,-4)(5,5)
+{\color{red}
+\psset
+{
+    linecolor=red,
+}
+\pscircle[linewidth=0.04,dimen=outer](0,4){.5}
+\rput(0, 4){13}
+}
+\psline[linewidth=0.04cm](-0.5,3.33333)(-1,2.6666)
+\psline[linewidth=0.04cm](-.7,2.9)(-1,2.6666)
+\psline[linewidth=0.04cm](-.8,3.2)(-1,2.6666)
+
+\pscircle[linewidth=0.04,dimen=outer](-1.5,2){.5}
+\rput(-1.5, 2){10}
+\psline[linewidth=0.04cm](0.5,3.33333)(1,2.6666)
+\psline[linewidth=0.04cm](.7,2.9)(1,2.6666)
+\psline[linewidth=0.04cm](.8,3.2)(1,2.6666)
+
+\pscircle[linewidth=0.04,dimen=outer]( 1.5,2){.5}
+\rput( 1.5, 2){12}
+
+\psline[linewidth=0.04cm](-2.3,0.933333)(-1.9,1.466666)
+\psline[linewidth=0.04cm](-2.35,1.2)(-2.3,0.933333)
+\psline[linewidth=0.04cm](-2.0,1.0)(-2.3,0.933333)
+
+\pscircle[linewidth=0.04,dimen=outer](-2.7,0.4){.5}
+\psline[linewidth=0.04cm](-.8,0.933333)(-1.2,1.466666)
+\psline[linewidth=0.04cm](-0.75,1.2)(-.8,0.933333)
+\psline[linewidth=0.04cm](-1.1,1.0)(-.8,0.933333)
+
+\rput(-2.7, 0.4){7}
+\psline[linewidth=0.04cm](2.3,0.933333)(1.9,1.466666)
+\psline[linewidth=0.04cm](2.35,1.2)(2.3,0.933333)
+\psline[linewidth=0.04cm](2.0,1.0)(2.3,0.933333)
+
+\psline[linewidth=0.04cm](.8,0.933333)(1.2,1.466666)
+\psline[linewidth=0.04cm](0.75,1.2)(.8,0.933333)
+\psline[linewidth=0.04cm](1.1,1.0)(.8,0.933333)
+
+
+\pscircle[linewidth=0.04,dimen=outer](-0.8,0.4){.5}
+\rput(-0.8, 0.4){9}
+\pscircle[linewidth=0.04,dimen=outer](2.7,0.4){.5}
+\rput(2.7, .4){1}
+\pscircle[linewidth=0.04,dimen=outer](0.8,0.4){.5}
+\rput(0.8, 0.4){6}
+
+\psline[linewidth=0.04cm](-3.4,-0.533333333333333)(-3.1,-0.133333333333333)
+\psline[linewidth=0.04cm](-3.,-.3)(-3.4,-0.533333333333333)
+\psline[linewidth=0.04cm](-3.3,-.2)(-3.4,-0.533333333333333)
+
+{\color{red}
+\psset{
+linecolor=red,
+}
+\pscircle[linewidth=0.04,dimen=outer](-3.75,-1){.5}
+\rput(-3.75, -1){5}
+}
+\rput(0,-2.2){\LARGE $(a)$}
+\end{pspicture}
+}
+\quad 
+\quad
+% \usepackage{pst-plot} % For axes
+\scalebox{0.5} % Change this value to rescale the drawing.
+{
+\begin{pspicture}(-5,-4)(5,5)
+{
+\color{blue}
+\psset{
+linecolor=blue,
+}
+\pscircle[linewidth=0.04,dimen=outer](0,4){.5}
+\rput(0, 4){5}
+}
+\psline[linewidth=0.04cm](-0.5,3.33333)(-1,2.6666)
+\psline[linewidth=0.04cm](-.7,2.9)(-1,2.6666)
+\psline[linewidth=0.04cm](-.8,3.2)(-1,2.6666)
+   
+\pscircle[linewidth=0.04,dimen=outer](-1.5,2){.5}
+\rput(-1.5, 2){10}
+\psline[linewidth=0.04cm](0.5,3.33333)(1,2.6666)
+\psline[linewidth=0.04cm](.7,2.9)(1,2.6666)
+\psline[linewidth=0.04cm](.8,3.2)(1,2.6666)
+
+{
+\color{red}
+\psset{
+linecolor=red,
+}
+\pscircle[linewidth=0.04,dimen=outer]( 1.5,2){.5}
+\rput( 1.5, 2){12}
+}  
+\psline[linewidth=0.04cm](-2.3,0.933333)(-1.9,1.466666)
+\psline[linewidth=0.04cm](-2.35,1.2)(-2.3,0.933333)
+\psline[linewidth=0.04cm](-2.0,1.0)(-2.3,0.933333)
+
+\pscircle[linewidth=0.04,dimen=outer](-2.7,0.4){.5}
+\psline[linewidth=0.04cm](-.8,0.933333)(-1.2,1.466666)
+\psline[linewidth=0.04cm](-0.75,1.2)(-.8,0.933333)
+\psline[linewidth=0.04cm](-1.1,1.0)(-.8,0.933333)
+
+\rput(-2.7, 0.4){7}
+\psline[linewidth=0.04cm](2.3,0.933333)(1.9,1.466666)
+\psline[linewidth=0.04cm](2.35,1.2)(2.3,0.933333)
+\psline[linewidth=0.04cm](2.0,1.0)(2.3,0.933333)
+
+\psline[linewidth=0.04cm](.8,0.933333)(1.2,1.466666)
+\psline[linewidth=0.04cm](0.75,1.2)(.8,0.933333)
+\psline[linewidth=0.04cm](1.1,1.0)(.8,0.933333)
+
+
+\pscircle[linewidth=0.04,dimen=outer](-0.8,0.4){.5}
+\rput(-0.8, 0.4){9}
+\pscircle[linewidth=0.04,dimen=outer](2.7,0.4){.5}
+\rput(2.7, .4){1}
+\pscircle[linewidth=0.04,dimen=outer](0.8,0.4){.5}
+\rput(0.8, 0.4){6}
+\rput(0,-2.2){\LARGE $(b)$}
+
+\end{pspicture}
+
+}
+\\
+% \usepackage{pst-plot} % For axes
+\scalebox{0.5} % Change this value to rescale the drawing.
+{
+\begin{pspicture}(-5,-4)(5,5)
+{\color{blue}
+\psset{linecolor=blue,
+}
+\pscircle[linewidth=0.04,dimen=outer](0,4){.5}
+\rput(0, 4){12}
+}
+\psline[linewidth=0.04cm](-0.5,3.33333)(-1,2.6666)
+\psline[linewidth=0.04cm](-.7,2.9)(-1,2.6666)
+\psline[linewidth=0.04cm](-.8,3.2)(-1,2.6666)
+   
+\pscircle[linewidth=0.04,dimen=outer](-1.5,2){.5}
+\rput(-1.5, 2){10}
+\psline[linewidth=0.04cm](0.5,3.33333)(1,2.6666)
+\psline[linewidth=0.04cm](.7,2.9)(1,2.6666)
+\psline[linewidth=0.04cm](.8,3.2)(1,2.6666)
+
+{
+\color{blue}
+\psset{linecolor=blue,
+}
+\pscircle[linewidth=0.04,dimen=outer]( 1.5,2){.5}
+\rput( 1.5, 2){5}
+}   
+\psline[linewidth=0.04cm](-2.3,0.933333)(-1.9,1.466666)
+\psline[linewidth=0.04cm](-2.35,1.2)(-2.3,0.933333)
+\psline[linewidth=0.04cm](-2.0,1.0)(-2.3,0.933333)
+
+\pscircle[linewidth=0.04,dimen=outer](-2.7,0.4){.5}
+\psline[linewidth=0.04cm](-.8,0.933333)(-1.2,1.466666)
+\psline[linewidth=0.04cm](-0.75,1.2)(-.8,0.933333)
+\psline[linewidth=0.04cm](-1.1,1.0)(-.8,0.933333)
+
+\rput(-2.7, 0.4){7}
+\psline[linewidth=0.04cm](2.3,0.933333)(1.9,1.466666)
+\psline[linewidth=0.04cm](2.35,1.2)(2.3,0.933333)
+\psline[linewidth=0.04cm](2.0,1.0)(2.3,0.933333)
+
+\psline[linewidth=0.04cm](.8,0.933333)(1.2,1.466666)
+\psline[linewidth=0.04cm](0.75,1.2)(.8,0.933333)
+\psline[linewidth=0.04cm](1.1,1.0)(.8,0.933333)
+
+
+\pscircle[linewidth=0.04,dimen=outer](-0.8,0.4){.5}
+\rput(-0.8, 0.4){9}
+\pscircle[linewidth=0.04,dimen=outer](2.7,0.4){.5}
+\rput(2.7, .4){1}
+{
+\color{red}
+\psset{linecolor=red,}
+\pscircle[linewidth=0.04,dimen=outer](0.8,0.4){.5}
+\rput(0.8, 0.4){6}
+}
+\rput(0,-2.2){\LARGE $(c)$}
+
+\end{pspicture}
+}
+\quad
+\quad
+% \usepackage{pst-plot} % For axes
+\scalebox{0.5} % Change this value to rescale the drawing.
+{
+\begin{pspicture}(-5,-4)(5,5)
+\pscircle[linewidth=0.04,dimen=outer](0,4){.5}
+\rput(0, 4){12}
+\psline[linewidth=0.04cm](-0.5,3.33333)(-1,2.6666)
+\psline[linewidth=0.04cm](-.7,2.9)(-1,2.6666)
+\psline[linewidth=0.04cm](-.8,3.2)(-1,2.6666)
+   
+\pscircle[linewidth=0.04,dimen=outer](-1.5,2){.5}
+\rput(-1.5, 2){10}
+\psline[linewidth=0.04cm](0.5,3.33333)(1,2.6666)
+\psline[linewidth=0.04cm](.7,2.9)(1,2.6666)
+\psline[linewidth=0.04cm](.8,3.2)(1,2.6666)
+
+{
+\color{blue}
+\psset{linecolor=blue,
+}
+\pscircle[linewidth=0.04,dimen=outer]( 1.5,2){.5}
+\rput( 1.5, 2){6}
+}   
+\psline[linewidth=0.04cm](-2.3,0.933333)(-1.9,1.466666)
+\psline[linewidth=0.04cm](-2.35,1.2)(-2.3,0.933333)
+\psline[linewidth=0.04cm](-2.0,1.0)(-2.3,0.933333)
+
+\pscircle[linewidth=0.04,dimen=outer](-2.7,0.4){.5}
+\psline[linewidth=0.04cm](-.8,0.933333)(-1.2,1.466666)
+\psline[linewidth=0.04cm](-0.75,1.2)(-.8,0.933333)
+\psline[linewidth=0.04cm](-1.1,1.0)(-.8,0.933333)
+
+\rput(-2.7, 0.4){7}
+\psline[linewidth=0.04cm](2.3,0.933333)(1.9,1.466666)
+\psline[linewidth=0.04cm](2.35,1.2)(2.3,0.933333)
+\psline[linewidth=0.04cm](2.0,1.0)(2.3,0.933333)
+
+\psline[linewidth=0.04cm](.8,0.933333)(1.2,1.466666)
+\psline[linewidth=0.04cm](0.75,1.2)(.8,0.933333)
+\psline[linewidth=0.04cm](1.1,1.0)(.8,0.933333)
+
+
+\pscircle[linewidth=0.04,dimen=outer](-0.8,0.4){.5}
+\rput(-0.8, 0.4){9}
+\pscircle[linewidth=0.04,dimen=outer](2.7,0.4){.5}
+\rput(2.7, .4){1}
+{
+\color{blue}
+\psset{linecolor=blue,}
+\pscircle[linewidth=0.04,dimen=outer](0.8,0.4){.5}
+\rput(0.8, 0.4){5}
+}
+\rput(0,-2.2){\LARGE $(d)$}
+
+\end{pspicture}
+}
+\end{center}
+\caption{Beispiel für Löschen aus einem $heap$\label{loschen}. Wir haben mit Blau
+die Knoten, die im aktuellen Schritt, und mit Rot die Knoten die im 
+nächsten Schritt verändert werden.}
+\end{figure}
+
+
+Zusamennfassen wir haben drei Möglichkeiten um das \texttt{heap} Eigenschaft wiederherstellen
+(Wir zeigen den Quelltext unter in der Praxis).
+\begin{enumerate}
+\item Das aktuelle Knote hat kein Kinder: Wir sind fertig (Zeile 4-6).
+\item Das aktuelle Knote hat ein Kind: Wir müssen prüfen, ob ihre Wert kleiner ist oder nicht.
+Wenn nicht, wir müssen umtauschen. Dann wir sind fertig (Zeile 8-16).
+\item Das aktuelle Knote hat zwei Kinder. Wir müssen prüfen ob ihre Kinder sind kleiner oder nicht.
+Wenn nicht, wir müssen mit dem größten Kind umtauschen und die Prüfung fortsetzen mit dem größten Kind (Zeile 19-35).
+\end{enumerate}
+\begin{lstlisting}
+int a, b, c;
+current_heap = *root;
+while(1) {
+  if(current_heap->left == NULL) {
+    //hat kein Kinder
+    break;
+  }
+  else if(current_heap->right == NULL) {
+    //hat nur ein Kinder
+    a = current_heap->val;
+    b = current_heap->left->val;
+    if(a < b) {
+      current_heap->val = b;
+      current_heap->left->val = a;
     }
-    return;
+    break;
+  }//Hat zwei Kinder
+  else {
+    a = current_heap->val;
+    b = current_heap->left->val;
+    c = current_heap->right->val;
+    if(a >= b && a >= c) {
+      break;
+    }
+    else if(b > a && b >= c) {
+      current_heap->left->val = a;
+      current_heap->val = b;
+      current_heap = current_heap->left;
+    }
+    else {
+      current_heap->right->val = a;
+      current_heap->val = c;
+      current_heap = current_heap->right;
+    }
+  }
 }
 \end{lstlisting}
-\begin{lstlisting}
-int heap_remove(heap **root) {
-    int ret;
-    if (*root != NULL) {
-        queue *q = newqueue(*root);
-        heap *previousheap;
-        heap *currentheap;
+Jetzt sind wir Fertig mit dem $heap$ Teil.
 
-        while ((currentheap = queue_rem(&q)) != NULL) {
-            if (currentheap->left != NULL)
-                queue_put(currentheap->left, &q);
-            if (currentheap->right != NULL)
-                queue_put(currentheap->right, &q);
-            previousheap = currentheap;
-        }
-        currentheap = previousheap;
-        free_queue(&q);
+\begin{myexampleprogram}{Programme: \texttt{Haldensortierung}}
+\begin{lstlisting}{heap.h}
+void heap_insert(heap** root, int x);
+int heap_remove(heap** root);
+void print_heap(heap* root);
+heap *newheap( int x, heap *parent);
+\end{lstlisting}
+\begin{lstlisting}{heap.c}
+#include<stdio.h>
+#include<stdlib.h>
+#include"heapqueue.h"
+#include"queue.h"
+//Stellt ein neue heap her
+heap *newheap( int x, heap *parent){
+   heap *ret=(heap *)malloc(sizeof(heap));
+   ret->left=NULL;
+   ret->right=NULL;
+   ret->parent=parent;
+   ret->val=x;
+   return ret;
+}
+//Schliesst ein Element in einem heap
+void heap_insert(heap** root, int x) {
+   if(*root == NULL) {
+     *root = newheap(x, NULL);
+   }
+   else {
+     queue* q = newqueue(*root);
+     heap* current_heap;
+     //Suchung fuer die Pozition
+     while((current_heap=queue_rem(&q))!=NULL){
+       //hat kein Kinder: wir haben gefunden
+       if(current_heap->left == NULL) {
+          current_heap->left  = newheap(x, current_heap);
+          current_heap = current_heap->left;
+       }
+       //hat nur ein Kinder : wir haben auch gefunden
+       else if(current_heap->right == NULL) {
+          current_heap->right = newheap(x, current_heap);
+          current_heap = current_heap->right;
+       }
+       //hat zwei Kinder:wir muessen ein neue Iteration machen
+       else {
+          queue_put(current_heap->left, &q);
+          queue_put(current_heap->right,&q);
+          continue;
+       }
+       //In diesem Point wir haben den Pozition gefunden, und
+       //wir fangen das Heap Eigenschaft wiederherstellen
+       while(current_heap->parent != NULL && current_heap->parent->val < current_heap->val) {
+          int temp = current_heap->parent->val;
+          current_heap->parent->val = current_heap->val;
+          current_heap->val = temp;
+          current_heap = current_heap->parent;
+       }
+       //wir sind Fertig
+       break;
+     }
+     //Wir muessen das queue freigeben
+     free_queue(&q);
+   }
+}
+//Loescht ein Element aus dem heap
+int heap_remove(heap** root) {
+   int ret;
+   if(*root != NULL) {
+     queue* q = newqueue(*root);
+     heap* previous_heap;
+     heap* current_heap;
+     //Suchung fuer das Pozition
+     while ((current_heap=queue_rem(&q)) != NULL) {
+       if (current_heap->left != NULL)
+           queue_put(current_heap->left, &q);
+       if (current_heap->right != NULL)
+           queue_put(current_heap->right, &q);
+       previous_heap= current_heap;
+     }
+     //wir haben es gefunden
+     current_heap = previous_heap;
+     free_queue(&q);
+     //wenn das der Kopf ist wir geben ihre Wert aus
+     if(current_heap->parent == NULL) {
+       ret=current_heap->val;
+       free(current_heap);
+       *root = NULL;
+       return ret;
+     }
+     else {
+       //Wenn nicht, wir tauschen ihre Wert mit dem Wert vom Kopf
+       ret=(*root)->val;
+       (*root)->val = current_heap->val;
+       current_heap = current_heap->parent;
+       if(current_heap->right != NULL) {
+           free(current_heap->right);
+           current_heap->right = NULL;
+       }
+       else {
+           free(current_heap->left);
+           current_heap->left = NULL;
+       }
+       //Und fangen wir das wiederherstellen an.
+       int a, b, c;
+       current_heap = *root;
+       while(1) {
+         //kein Kinder: wir sind Fertig
+         if(current_heap->left == NULL) {
+           break;
+         }
+         //Nur ein Kinder: wir muessen nur einmal Pruefen
+         else if(current_heap->right == NULL) {
+           a = current_heap->val;
+           b = current_heap->left->val;
+           if(a < b) {
+               current_heap->val = b;
+               current_heap->left->val = a;
+           }
+           break;
+          }
+          //Zwei Kinder: wir pruefen und machen noch ein Iteration
+          else {           
+           a = current_heap->val;
+           b = current_heap->left->val;
+           c = current_heap->right->val;
+           if(a >= b && a >= c) {
+               break;
+            }
+            else if(b > a && b >= c) {
+               current_heap->left->val = a;
+               current_heap->val = b;
+               current_heap = current_heap->left;
+            }
+            else {
+               current_heap->right->val = a;
+               current_heap->val = c;
+               current_heap = current_heap->right;
+            }
 
-        if (currentheap->parent == NULL) {
-            ret = currentheap->val;
-            free(currentheap);
-            *root = NULL;
-            return ret;
-        } else {
-            ret = (*root)->val;
-            (*root)->val = currentheap->val;
-            currentheap = currentheap->parent;
-            if (currentheap->right != NULL) {
-                free(currentheap->right);
-                currentheap->right = NULL;
-            } else {
-                free(currentheap->left);
-                currentheap->left = NULL;
-            }
-            int a, b, c;
-            currentheap = *root;
-            while (1) {
-                if (currentheap->left == NULL) {
-                    break;
-                } else if (currentheap->right == NULL) {
-                    a = currentheap->val;
-                    b = currentheap->left->val;
-                    if (a < b) {
-                        currentheap->val = b;
-                        currentheap->left->val = a;
-                        currentheap = currentheap->left;
-                    } else {
-                        break;
-                    }
-                } else {
-                    a = currentheap->val;
-                    b = currentheap->left->val;
-                    c = currentheap->right->val;
-                    if (a >= b && a >= c) {
-                        break;
-                    } else if (b > a && b >= c) {
-                        currentheap->left->val = a;
-                        currentheap->val = b;
-                        currentheap = currentheap->left;
-                    } else {
-                        currentheap->right->val = a;
-                        currentheap->val = c;
-                        currentheap = currentheap->right;
-                    }
-                }
-            }
-            return ret;
+          }
         }
-    } else
-        return -1;
+     }
+     return ret;
+   }
+   else
+      return 0;
+}
+void print_heap(heap* root) {
+    if(root != NULL) {
+        queue* q = newqueue(*root);
+        heap* test;
+        while((test = queue_rem(&q))!=NULL) {
+          if (test->left != NULL)
+             queue_put(test->left, &q);
+          if (test->right != NULL)
+             queue_put(test->right, &q);
+          printf("%d ", test->val);
+        }
+        if (q!=NULL)
+         free_queue(&q);
+        printf("\n");
+    }
 }
 \end{lstlisting}
 \end{myexampleprogram}
-\subsubsection{Formattierte Eingabe und Ausgabe}
-\begin{myexampleblock}{Function definition \texttt{printf}}
-int printf(char * formattierung\_text, $\cdots$);
-\begin{itemize}
-\item Rückgabe Wert: Der Anzahl der ausgedrückten Zeichen
-\item Parameters:
-\begin{enumerate}
-\item formattierung\_text: Eine Zeichenkette, beendet mit dem \'{}\\0\'{} Zeichen, specifiziert wie mann die Daten
-audrücken will
-\end{enumerate}
-\end{itemize}
-\end{myexampleblock}
-\pagebreak
+\begin{myexampleprogram}{Das \texttt{main} Programm}
+\begin{lstlisting}{main.c}
+#include<stdio.h>
+#include<stdlib.h>
+#include"heapqueue.h"
+#include"heap.h"
+int main () {
+    heap *root = NULL;
+    int i,j;
+    heap_insert(&root, 10);
+    print_heap(root);
+    heap_insert(&root, 12);
+    print_heap(root);
+    heap_insert(&root,  6);
+    print_heap(root);
+    heap_insert(&root,  5);
+    print_heap(root);
+    heap_insert(&root,  9);
+    print_heap(root);
+    heap_insert(&root, 13);
+    print_heap(root);
+    heap_insert(&root,  1);
+    print_heap(root);
+    heap_insert(&root,  7);
+    print_heap(root);
+    printf("Start removing\n");
+    for (i=0; i<8; ++i){
+       j=heap_remove(&root);
+       printf("Removed item=%d\n", j);
+    }
+    return 0;
+}
+\end{lstlisting}
+\begin{lstlisting}{Ausgabe}
+10 
+12 10 
+12 10 6 
+12 10 6 5 
+12 10 6 5 9 
+13 10 12 5 9 6 
+13 10 12 5 9 6 1 
+13 10 12 7 9 6 1 5 
+Start removing
+Removed item=13
+Removed item=12
+Removed item=10
+Removed item=9
+Removed item=7
+Removed item=6
+Removed item=5
+Removed item=1
+\end{lstlisting}
+\end{myexampleprogram}
+%\subsubsection{Formattierte Eingabe und Ausgabe}
+%\begin{myexampleblock}{Function definition \texttt{printf}}
+%int printf(char * formattierung\_text, $\cdots$);
+%\begin{itemize}
+%\item Rückgabe Wert: Der Anzahl der ausgedrückten Zeichen
+%\item Parameters:
+%\begin{enumerate}
+%\item formattierung\_text: Eine Zeichenkette, beendet mit dem \'{}\\0\'{} Zeichen, specifiziert wie mann die Daten
+%audrücken will
+%\end{enumerate}
+%\end{itemize}
+%\end{myexampleblock}
+%\pagebreak
