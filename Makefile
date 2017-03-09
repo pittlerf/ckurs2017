@@ -1,4 +1,4 @@
-programmierkurs_fpcu.pdf: speichernausdrucken.tex definitions.tex intro.tex kontrollstrukturen.tex pointersarrays.tex programmierkurs_fpcu.tex variablen.tex Makefile endprojekt.tex einfuegesortieren.tex dynamischespeicherverwaltung.tex complexdatatypen.tex dateinverarbeitung.tex stapelspeicher.tex
+programmierkurs_fpcu.pdf: speichernausdrucken.tex definitions.tex intro.tex kontrollstrukturen.tex pointersarrays.tex programmierkurs_fpcu.tex variablen.tex Makefile endprojekt.tex einfuegesortieren.tex dynamischespeicherverwaltung.tex complexdatatypen.tex dateinverarbeitung.tex stapelspeicher.tex funktionen.tex
 	latex programmierkurs_fpcu.tex
 	latex programmierkurs_fpcu.tex
 	dvips programmierkurs_fpcu.dvi
