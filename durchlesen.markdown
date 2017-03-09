@@ -1,4 +1,4 @@
-Korrekturgelesen:
+Korrekturgelesen von Martin:
 
 - [ ] `intro.tex`
 - [ ] `speichernausdrucken.tex`
