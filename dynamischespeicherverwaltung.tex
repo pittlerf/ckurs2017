@@ -1,35 +1,62 @@
 \section{Dynamische Speicherverwaltung}
-Wir haben ein Sortieren geschrieben. Das ist Toll, aber wir können unsere Programme mindestens in drei Richtungen
-verbessern:
+
+Wir haben einen Sortieralgorithmus geschrieben. Das ist toll, aber wir können
+unsere Programme in einigen Richtungen verbessern:
+
 \begin{enumerate}
-\item In allen Fallen wir verwenden $MAXNUM$ int Variable von den Speichern. Es kann auch wenig sein (Sieh unsere
-Nachricht im read Funktion), aber es kann auch zu viel sein. Beispielweise Wenn wir nur 100 Elementen haben, verschwenden
-wir 99\% der erfordelichen Speicherzellen. Wir können dies überholen mit Hilfe der dynamischen Speicherverwaltung.
-\item
-Obwohl der Algorithmus vom Einfügesortieren sehr einfach zu verstehen ist, es ist nicht der schnellste. Wenn wir 
-$n$ Elementen sortieren wollen, die Zeit für die Sortierung skaliert quadratisch mit $n$. Wir können 
-eigene Datentypen herstellen und damit besser Algorithmen implementieren, um unseres Programm schneller zu machen.
-\item
-Wir können auch das Input Teil verbessern. Zum Beispiel direkt aus einem Datein einlesen. Außerdem wir müssen
-die logische zusammenhörende Teilen, die mehr als ~100 Zeilen haben, in eigenen Datein schreiben, und das Linker
-in der Kompilirung verwenden.
+    \item
+        In allen Fallen wir verwenden die \texttt{int} Variable \texttt{MAXNUM}
+        um die Arraylänge festzulegen. Es kann auch wenig sein (siehe unsere
+        Nachricht in der \texttt{read} Funktion), aber es kann auch zu viel
+        sein. Beispielweise wenn wir nur 100 Elemente haben, verschwenden wir
+        99\% der erforderlichen Speicherzellen. Wir können dies mithilfe der
+        dynamischen Speicherverwaltung verbessern.
+    \item
+        Obwohl der Algorithmus vom Einfügesortieren sehr einfach zu verstehen
+        ist, es ist nicht der schnellste. Wenn wir $n$ Elemente sortieren
+        wollen, skaliert die Zeit für die Sortierung quadratisch mit $n$. Wir
+        können eigene Datentypen herstellen und damit besser Algorithmen
+        implementieren, um unseres Programm schneller zu machen.
+
+        % FIXME Was haben die Datentypen mit der Skalierung zu tun?
+    \item
+        Wir können auch das Teil der Eingabe verbessern. So könnten wir zum
+        Beispiel direkt aus einer Datei einlesen.
+
+    \item
+        Um das Programmieren übersichtlicher zu machen, sollten wir
+        zusammengehörende Teile, die mehr als ungefähr 100 Zeilen haben, in
+        eigene C-Dateien auslagern. Dafür werden wir dann den Linker nutzen
+        müssen.
 \end{enumerate}
-Zuerst werden wir kennenlernen, wie wir dynamische Speichern zugriffen können. Wir können das Memory in zwei Teile teilen:
-\begin{enumerate}
-\item Statische Memory. Dieses Part haben wir auch kennengelernt. Wenn wir eine Variable definieren, wir weisen zu ihr
-Speicherzellen von diesem Platz. Es kann eigentlich mit ihrer Name zugegriffen werden. Ihre Lebensdauer und Sichtbarkeit 
-hängt von ihrem Platz in dem Quelltext ab. Beispielweise wenn wir ihn in einem Block definiert haben, wir können
-nur ihn nur im Block verwenden.
-\item Dynamische Memory. Wir müssen das reservieren (es ist nicht automatisch, wie im Fall der Statishen Memory).
-Dieses Memory wird zuverfügung stehen, bis wir Sie explizit freigeben. Das bedeutet, das ihre Lebensdauer 
-hängt nur von uns ab. Außerdem  Sie sind sichtbar für alle Programmteil, die ihre Adresse haben. Dass
-bedeutet, dass ihre Name nicht wichtig ist (wir können auch es ändern) und nur mit der Adresse zugegriffen 
-werden kann.
-\end{enumerate}
-\begin{myexampleblock}{\texttt{Block}}
+
+Zuerst werden wir kennenlernen, wie wir auf dynamischen Speicher zugreifen
+können. Wir können den Speicher in zwei Teile teilen:
+
+\begin{description}
+    \item[Statischer Speicher]
+        Diesen Teil haben wir schon kennengelernt. Wenn wir eine Variable
+        definieren, weisen wir ihr Speicherzellen von diesem Platz zu. Es kann
+        immer mit ihrem Name zugegriffen werden. Ihre Lebensdauer und
+        Sichtbarkeit hängt von ihrem Platz in dem Quelltext ab. Wenn wir eine
+        Variable in einem Block (geschweifte Klammern) definiert haben, können
+        wir sie nur innerhalb dieses Blocks verwenden.
+
+    \item[Dynamischer Speicher]
+        Diese Art Speicher müssen wir reservieren (es ist nicht automatisch,
+        wie im Fall des statischen Speichers). Speicher dieser Art wird zur
+        Verfügung stehen, bis wir ihn explizit freigeben. Das bedeutet, dass
+        dessen Lebensdauer nur von uns abhängt. Außerdem ist er für alle
+        Programmteile sichtbar, die die Adresse haben. Dass bedeutet, dass der
+        Name der Variablen nicht wichtig ist (wir können ihn auch ändern) und
+        (auch) nur mit der Adresse zugegriffen werden kann.
+\end{description}
+
+\begin{myexampleblock}{Block}
 Ein Block ist eine eine Abfolge von sequenziellen Anweisungen, die
 zwischen geschweiften Klammern sind.
 \end{myexampleblock}
+
 \begin{figure}[!ht]
 % Generated with LaTeXDraw 2.0.8
 % Tue Feb 28 11:46:41 CET 2017
@@ -68,39 +95,57 @@ zwischen geschweiften Klammern sind.
 \end{pspicture} 
 }
 \vspace{0.6cm}
-\caption{\label{abmem} Abteilung der Memory zur statischen, und dynamischen Teil.}
+\caption{\label{abmem} Aufteilung des Speichers in statischen und dynamischen Teil.}
 \end{figure}
-Um Speicher dynamische zu reservieren, können wir die Funktionen aus Standardbibliothek 
-verwenden. Beispielweise der $malloc$ Funktion. Alle Funktion in diesem Thema sind im $stdlib.h$
-definiert. Der $malloc$ Funktion wird uns eine Pointer geben, mit dem wir den Speicher erreichen können.
-Aber welchen Typ von Pointer will sie rückgeben. Wir brauchen anderen Typen jeden mal, wenn wir 
-Speicher für anderen Typen reservieren wollen. Die Sprache bietet für dieses Fall 
-der Pointer mit $void$ Typ. Natürlich wir können nicht ein Pointer von void Typ 
-dereferenzieren, aber wir können ihn zu dem angemessenen Typ casten mit casting operator: (Typ *).
-Nach jeder Reservierung müssen wir uns achten, ob es erfolgreich war, oder nicht. Wir müssen
-prüfen ob der Wert vom Pointer nicht $NULL$ ist. Wir können uns in dieser Folge von vielen Problemen 
-vermeiden. Mit $malloc$ die reservierten Speoicherzellen werden nicht initializiert sein. Um das 
-erreichen wir müssen $calloc$ Funktion verwenden.
-\begin{myexampleblock}{Funktion definition \texttt{malloc}}
+
+Um Speicher dynamisch zu reservieren, können wir die Funktionen aus der
+Standardbibliothek verwenden. Beispielsweise die \texttt{malloc} Funktion. Alle
+Funktionen zu diesem Thema sind im Header \texttt{stdlib.h} definiert. Die
+\texttt{malloc} Funktion wird uns einen Pointer geben, mit dem wir den Speicher
+erreichen können. Aber welchen Typ von Pointer wird sie zurückgeben? Je nach
+Typ der Variablen, die wir speichern wollen, brauchen wir einen anderen
+Zeigertyp. Die Sprache bietet für diesen Fall Pointer mit \texttt{void} Typ.
+Wir können ein Pointer von \texttt{void} Typ nicht dereferenzieren, da nicht
+klar ist, welchen Art von Daten die Bytes im Speicher repräsentieren sollen.
+Wir können ihn aber zu dem angemessenen Typ \emph{casten} mit dem \emph{casting
+operator}: \texttt{(Typ *)}. Weist man einen Pointer vom Typ \texttt{void *}
+einer Variable vom Typ \texttt{int *} zu, erhält man einen impliziten Cast.
+
+Nach jeder Reservierung müssen wir überprüfen, ob die Reservierung erfolgreich
+war. Wir müssen prüfen, ob der Wert des Pointers ungleich \texttt{NULL} ist. Wenn dieser Fall eintritt, konnte kein Speicher reserviert werden. Die Behandlung des Fehlers hängt von der Situation ab. Möchten wir einen sehr großen Bereich reservieren, der die Kapazität des Arbeitsspeichers übersteigt, können wir das Problem eventuell beheben. Kann unserer Algorithmus auch mit weniger Speicher auskommen, können wir dann erneut versuchen, mit weniger Speicher weiterzuarbeiten. In den meisten Fällen ist es aber sinnvoll, das Programm dann abzubrechen. Wenn schon kleine Mengen Speicher nicht mehr reserviert werden können, stehen wir mit dem Rücken an der Wand. Wir können nur noch Aufräumen und das Programm beenden.
+
+Die mit \texttt{malloc} reservierten Speicherzellen werden nicht initialisiert
+sein. Um das zu erreichen können wir die \texttt{calloc} Funktion verwenden.
+
+\begin{myexampleblock}{Funktionsdefinition \texttt{malloc}}
 \begin{lstlisting}
 void *malloc(size_t size);
 \end{lstlisting}
 \vspace{-0.7cm}
-Reserviert Speicherzellen von größe $size$.
+Reserviert Speicherzellen von Größe \texttt{size}.
 \begin{itemize}
 \itemsep0.2pt
-\item Rückgabewert: Wenn die Reservierung erfolgreichs war, ein Pointer für den Anfang der 
-reservierten Speicherzellen, anderfalls $NULL$.
-\item Eingabeparamter: size: Größe von den begehrten Speicherzellen
+\item Rückgabewert: Wenn die Reservierung erfolgreich war, ein Pointer für den Anfang der 
+reservierten Speicherzellen, andernfalls \texttt{NULL}.
+\item Eingabeparamter: \texttt{size}: Größe des angeforderten Speichers
 \item Beispielweise:
 \begin{lstlisting}
-int *array = (int *)malloc(sizeof(int) * 10);
+int *array = malloc(sizeof(*array) * 10);
 \end{lstlisting}
 \end{itemize}
-\vspace{-0.7cm}
-Achtung, wenn wir die reservierten Speicherzellen nicht mehr brauchen, müssen Sie 
-von uns freigegeben werden.
+
+Achtung, wenn wir die reservierten Speicherzellen nicht mehr brauchen, müssen
+Sie von uns freigegeben werden.
 \end{myexampleblock}
+
+Alternativ zu obigem Beispiel wäre auch folgendes möglich:
+
+\begin{lstlisting}
+int *array = malloc(sizeof(int) * 10);
+\end{lstlisting}
+
+Der Unterschied ist das Argument von \texttt{sizeof}. Der Vorteil der oberen Methode ist, dass man immer den gleichen Datentyp für \texttt{*array} und \texttt{sizeof} nimmt. Es kommt immer wieder mal vor, dass man den Datentyp nachträglich ändert, jedoch nur den Typ der Variablen ändert und das Argument von \texttt{sizeof} vergisst. Die obige Schreibweise verhindert diese Fehlerklasse.
+
 Wenn wir in einem langen Programm immer mehr Speicherzellen reservieren, 
 möglicherweise kurz können wir nicht mehr reservieren. Auf jedem Fall, wir müssen
 die reservierten Speicherzellen so bald wie möglich wieder freigeben. Dafür steht
