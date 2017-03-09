@@ -1,6 +1,9 @@
 \section{Funktionen}
 
 Es gibt viele Quelltextabschnitte, die wiederholt benutzt werden.
+Es ist sinnvoll, diese Abschnitte nicht ständig zu wiederholen.
+Das erhöht einerseits die Lesbarkeit des Quelltextes.
+Andererseits macht es Code weniger fehleranfällig, da der Abschnitt nur einmal getestet werden muss.
 Dafür existiert das Konzept von Funktionen.
 Eine Funktion haben wir schon kennen gelernt, nämlich die Funktion \verb|main|. 
 In C sind Funktionen Variablen sehr ähnlich.
@@ -40,4 +43,31 @@ Als Beispiel für eine Funktion schreiben wir einen Abschnitt, der die Fakultät
   }
 \end{lstlisting}
 Der Rückgabetyp ist als \verb|unsigned long int| gewählt, da die Fakultaet immer positiv ist, aber auch sehr groß werden kann.
+
+Funktionen sollten wohldefinierte Unterprobleme lösen.
+Ihr Umfang hängt natürlich von der Komplexität dieser Unterprobleme ab.
+Man sollte trotzdem versuchen, dass Funktionen nicht zu viel Quelltext enthalten.
+Sonst kann man mit sehr großer Wahrscheinlichkeit den Quelltext noch weiter aufspalten.
+
+Aufgerufen werden Funktionen dann im Prinzip wie folgt
+\begin{lstlisting}
+  Funktionsname ( Aktualparameterlist );
+\end{lstlisting}
+Die Aktualparameterlist enthält dabei Variablen aus dem aufrufenden Codeabschnitt.
+Dabei muss die Reihenfolge in der Funktiondeklaration eingehalten werden.
+Der C Compiler überprüft dies strickt und bricht die Übersetzung ab, falls es nicht gegeben ist.
+Beispielsweise obige Funktion zur Berechnung der Fakultät kann wie folgt im Hauptprogramm aufgerufen werden:
+\begin{lstlisting}
+  #include<stdio.h>
+
+  int main() {
+    int n = 20;
+    unsigned long int result = Fakultaet(n);
+    // oder
+    result = Fakultaet(3);
+    printf("%lud", res);
+    return(0);
+  }
+\end{lstlisting}
+
 \endinput
