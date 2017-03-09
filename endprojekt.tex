@@ -226,21 +226,24 @@ void free_queue( queue **first);
 #include<stdio.h>
 #include<stdlib.h>
 #include"heapqueue.h"
+//Stellt ein neue queue element her
 queue *newqueue( heap *data ){
    queue *q=(queue *)malloc(sizeof(queue));
    q->element=data;
    q->next=NULL;
    return q;
 }
+//Schliesst ein neue Element in einem queue ein
 void queue_put( heap *data, queue ** first){
    if ((*first) == NULL){
        (*first)=newqueue(data);
        return;
    }
-   queue *temp=newqueue(data);
-   temp->next=(*first);
+   queue *temp=newqueue(data);//Das wird das erste Element sein
+   temp->next=(*first);//Das vorherige Erste wird jetzt das zweite
    (*first)=temp;
 }
+//Loescht ein Element aus dem queue
 heap *queue_rem( queue **first){
    queue *temp;
    heap *ret;
@@ -253,6 +256,7 @@ heap *queue_rem( queue **first){
      (*first)=NULL;
      return ret;
    }
+//Suchung fuer das letzte Element
    temp=(*first);
    queue *prev;
    while ( temp->next != NULL){
@@ -264,12 +268,13 @@ heap *queue_rem( queue **first){
    free(temp);
    return (ret);
 }
+//Geht ein queue durch
 void print_queue( queue *first ){
    queue *temp=(first);
    if (temp == NULL){
      return;
    }
-   for (;;){
+   while(1){
      printf("%d\t", temp->element->val);
      temp=temp->next;
      if (temp == NULL)
@@ -277,12 +282,13 @@ void print_queue( queue *first ){
    }
    printf("\n");
 }
+//Gebt ein queue frei
 void free_queue( queue **first){
    if ((*first)== NULL)
      return;
    queue *temp=(*first);
    queue *temp2;
-   for(;;){
+   while(1){
      temp2=temp->next;
      free(temp);
      temp=temp2;
@@ -730,11 +736,18 @@ while(1) {
 Jetzt sind wir Fertig mit dem $heap$ Teil.
 
 \begin{myexampleprogram}{Programme: \texttt{Haldensortierung}}
+\begin{lstlisting}{heap.h}
+void heap_insert(heap** root, int x);
+int heap_remove(heap** root);
+void print_heap(heap* root);
+heap *newheap( int x, heap *parent);
+\end{lstlisting}
 \begin{lstlisting}{heap.c}
 #include<stdio.h>
 #include<stdlib.h>
 #include"heapqueue.h"
 #include"queue.h"
+//Stellt ein neue heap her
 heap *newheap( int x, heap *parent){
    heap *ret=(heap *)malloc(sizeof(heap));
    ret->left=NULL;
@@ -743,6 +756,7 @@ heap *newheap( int x, heap *parent){
    ret->val=x;
    return ret;
 }
+//Schliesst ein Element in einem heap
 void heap_insert(heap** root, int x) {
    if(*root == NULL) {
      *root = newheap(x, NULL);
@@ -750,37 +764,47 @@ void heap_insert(heap** root, int x) {
    else {
      queue* q = newqueue(*root);
      heap* current_heap;
+     //Suchung fuer die Pozition
      while((current_heap=queue_rem(&q))!=NULL){
+       //hat kein Kinder: wir haben gefunden
        if(current_heap->left == NULL) {
           current_heap->left  = newheap(x, current_heap);
           current_heap = current_heap->left;
        }
+       //hat nur ein Kinder : wir haben auch gefunden
        else if(current_heap->right == NULL) {
           current_heap->right = newheap(x, current_heap);
           current_heap = current_heap->right;
        }
+       //hat zwei Kinder:wir muessen ein neue Iteration machen
        else {
           queue_put(current_heap->left, &q);
           queue_put(current_heap->right,&q);
           continue;
        }
+       //In diesem Point wir haben den Pozition gefunden, und
+       //wir fangen das Heap Eigenschaft wiederherstellen
        while(current_heap->parent != NULL && current_heap->parent->val < current_heap->val) {
           int temp = current_heap->parent->val;
           current_heap->parent->val = current_heap->val;
           current_heap->val = temp;
           current_heap = current_heap->parent;
        }
+       //wir sind Fertig
        break;
      }
+     //Wir muessen das queue freigeben
      free_queue(&q);
    }
 }
+//Loescht ein Element aus dem heap
 int heap_remove(heap** root) {
    int ret;
    if(*root != NULL) {
      queue* q = newqueue(*root);
      heap* previous_heap;
      heap* current_heap;
+     //Suchung fuer das Pozition
      while ((current_heap=queue_rem(&q)) != NULL) {
        if (current_heap->left != NULL)
            queue_put(current_heap->left, &q);
@@ -788,8 +812,10 @@ int heap_remove(heap** root) {
            queue_put(current_heap->right, &q);
        previous_heap= current_heap;
      }
+     //wir haben es gefunden
      current_heap = previous_heap;
      free_queue(&q);
+     //wenn das der Kopf ist wir geben ihre Wert aus
      if(current_heap->parent == NULL) {
        ret=current_heap->val;
        free(current_heap);
@@ -797,6 +823,7 @@ int heap_remove(heap** root) {
        return ret;
      }
      else {
+       //Wenn nicht, wir tauschen ihre Wert mit dem Wert vom Kopf
        ret=(*root)->val;
        (*root)->val = current_heap->val;
        current_heap = current_heap->parent;
@@ -808,12 +835,15 @@ int heap_remove(heap** root) {
            free(current_heap->left);
            current_heap->left = NULL;
        }
+       //Und fangen wir das wiederherstellen an.
        int a, b, c;
        current_heap = *root;
        while(1) {
+         //kein Kinder: wir sind Fertig
          if(current_heap->left == NULL) {
            break;
          }
+         //Nur ein Kinder: wir muessen nur einmal Pruefen
          else if(current_heap->right == NULL) {
            a = current_heap->val;
            b = current_heap->left->val;
@@ -823,7 +853,8 @@ int heap_remove(heap** root) {
            }
            break;
           }
-          else {
+          //Zwei Kinder: wir pruefen und machen noch ein Iteration
+          else {           
            a = current_heap->val;
            b = current_heap->left->val;
            c = current_heap->right->val;
@@ -849,9 +880,9 @@ int heap_remove(heap** root) {
    else
       return 0;
 }
-void print_heap(heap** root) {
-    if(*root != NULL) {
-        queue* q = get_a_queue(*root);
+void print_heap(heap* root) {
+    if(root != NULL) {
+        queue* q = newqueue(*root);
         heap* test;
         while((test = queue_rem(&q))!=NULL) {
           if (test->left != NULL)
@@ -867,6 +898,7 @@ void print_heap(heap** root) {
 }
 \end{lstlisting}
 \end{myexampleprogram}
+\begin{myexampleprogram}{Das \texttt{main} Programm}
 \begin{lstlisting}{main.c}
 #include<stdio.h>
 #include<stdlib.h>
@@ -874,41 +906,51 @@ void print_heap(heap** root) {
 #include"heap.h"
 int main () {
     heap *root = NULL;
-    int i;
+    int i,j;
     heap_insert(&root, 10);
-    print_heap(&root);
-    heap_insert(&root, 7);
-    print_heap(&root);
-    heap_insert(&root, 1);
-    print_heap(&root);
-    heap_insert(&root, 9);
-    print_heap(&root);
-    heap_insert(&root, 2);
-    print_heap(&root);
-    heap_insert(&root, 3);
-    print_heap(&root);
+    print_heap(root);
+    heap_insert(&root, 12);
+    print_heap(root);
+    heap_insert(&root,  6);
+    print_heap(root);
+    heap_insert(&root,  5);
+    print_heap(root);
+    heap_insert(&root,  9);
+    print_heap(root);
+    heap_insert(&root, 13);
+    print_heap(root);
+    heap_insert(&root,  1);
+    print_heap(root);
+    heap_insert(&root,  7);
+    print_heap(root);
     printf("Start removing\n");
-    i=heap_remove(&root);
-    printf("Removed item=%d\n", i);
-    print_heap(&root);
-    i=heap_remove(&root);
-    printf("Removed item=%d\n", i);
-    print_heap(&root);
-    i=heap_remove(&root);
-    printf("Removed item=%d\n", i);
-    print_heap(&root);
-    i=heap_remove(&root);
-    printf("Removed item=%d\n", i);
-    print_heap(&root);
-    i=heap_remove(&root);
-    printf("Removed item=%d\n", i);
-    print_heap(&root);
-    i=heap_remove(&root);
-    printf("Removed item=%d\n", i);
-    print_heap(&root);
+    for (i=0; i<8; ++i){
+       j=heap_remove(&root);
+       printf("Removed item=%d\n", j);
+    }
     return 0;
 }
 \end{lstlisting}
+\begin{lstlisting}{Ausgabe}
+10 
+12 10 
+12 10 6 
+12 10 6 5 
+12 10 6 5 9 
+13 10 12 5 9 6 
+13 10 12 5 9 6 1 
+13 10 12 7 9 6 1 5 
+Start removing
+Removed item=13
+Removed item=12
+Removed item=10
+Removed item=9
+Removed item=7
+Removed item=6
+Removed item=5
+Removed item=1
+\end{lstlisting}
+\end{myexampleprogram}
 %\subsubsection{Formattierte Eingabe und Ausgabe}
 %\begin{myexampleblock}{Function definition \texttt{printf}}
 %int printf(char * formattierung\_text, $\cdots$);
