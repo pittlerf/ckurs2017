@@ -241,7 +241,16 @@ Um die Durchsichtigkeit unseres Programm zu verteidigen, müssen
 wir die verschiedenen Teilen im getrennten Datein schreiben und
 Headerdatein verwenden. Beispielweise, das ist ganz ähnlich wie der 
 verwendung von \texttt{printf} Standardbibliothekfunktion. In den Haderdatein
-wir müssen die Typendefinition und die Funktiondeklarationen speichern. Achtung, 
+wir müssen die Typendefinition und die Funktiondeklarationen speichern.
+Wenn wir selbstherstellten Headerdatein verwenden wollen müssen wir durch die
+folgende Anweisung beilegen:
+\begin{lstlisting}
+#include"ownheader.h"
+\end{lstlisting}
+Standardmäßig in diesem Fall der Kompiler sucht nach der Headerdatei in unserem
+Arbeitsbibliothek. Wenn wir den \texttt{<>} Zeichen für beilegen verwenden, sucht
+es für den Headerdatei in \texttt{/usr/include}.
+Achtung, 
 die Typ deklarationen müssen in einem Verschiedenen Datei sein um Querverweise zu vermeiden.
 Beispielweise zeigen wir hier das Quelltext und die Headerdatein für die Warteschlange:
 
