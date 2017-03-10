@@ -850,6 +850,10 @@ heap *newheap(int x, heap *parent);
 heap *newheap(int x, heap *parent)
 {
   heap *ret = (heap *)malloc(sizeof(heap));
+  if (heap == NULL){
+    printf("Error in memory allocation\n");
+    exit(1);
+  }
   ret->left = NULL;
   ret->right = NULL;
   ret->parent = parent;
