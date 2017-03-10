@@ -1,24 +1,25 @@
-\section{Complex Datatypen}
+\section{Komplexe Datentypen}
 
 Je nach Problemstellung ist es manchmal sehr hilfreich, Datenstrukturen selbst erzeugen zu können.
 C bietet dafür die Möglichkeit, und zwar auf verschiedene Weisen.
 Zunächst kann man in C einen neuen Typ definieren, z.B. einen eigenen Typ für reelle Zahlen:
 \begin{lstlisting}
-  typedef real float;
+typedef real float;
 \end{lstlisting}
 Dieser kann im Quelltext danach wie native C Typen verwendet werden
 \begin{lstlisting}
-  typedef real float;
-  int main() {
-    real x,y = 3.718;
-    return(0);
-  }
+typedef real float;
+int main()
+{
+  real x, y = 3.718;
+  return 0;
+}
 \end{lstlisting}
 Auf den ersten Blick mag eine eigene Definition für eine Datentyp für reelle Zahle nicht besonders sinnvoll erscheinen.
 Allerdings kann man mit dieser Typdefinition zu einem späteren Zeitpunkt sehr einfach die verwendete Genauigkeit für reelle Zahlen ändern.
 Nämlich einfach, indem man die Zeile für die Typdefinition durch
 \begin{lstlisting}
-  typedef real double;
+typedef real double;
 \end{lstlisting}
 ersetzt.
 
@@ -31,66 +32,71 @@ Solche zusammengesetzten Datentypen in C kann man sich wie Kontainer vorstellen.
 Die allgemeine Benutzung von \verb|struct| ist wie folgt:
 \begin{myalertblock}{Deklaration eines struct}
   \begin{lstlisting}
-    struct name
-    {
-      Type1 name1;
-      Type2 name2;
-      Type3 name3;
-      ...
-    };
+struct name
+{
+  Type1 name1;
+  Type2 name2;
+  Type3 name3;
+  ...
+};
   \end{lstlisting}
   \vspace{-0.4cm}
   Die Verwendung als Typ für eine Variable:
   \begin{lstlisting}
-    struct name variablename;
+struct name variablename;
   \end{lstlisting}
   \vspace{-0.4cm} 
 \end{myalertblock}
 Ein solcher Kontainer für komplexe Zahlen könnte also wie folgt aussehen:
 \begin{lstlisting}
-  struct cmplx {
-    double re, im;
-  };
+struct cmplx
+{
+  double re, im;
+};
 \end{lstlisting}
 mit zwei \verb|double| Elementen für den Real- und den Imaginärteil. 
 Der Zugriff auf die einzelnen Elemente erfolgt über den Namen des \verb|struct| und den Namen des Elements, getrennt durch einen Punkt.
 In unserem Beispiel für komplexe Zahlen also 
 \begin{lstlisting}
-  #include<stdio.h>
+#include <stdio.h>
 
-  struct cmplx {
-    double re, im;
-  };
-  int main() {
-    struct cmplx z;
-    z.re = 1.0;
-    z.im = 3.4;
-    printf("z hat Realteil %e und Imaginaerteil %e\n", z.re, z.im);
-    return(0);
-  }
+struct cmplx
+{
+  double re, im;
+};
+int main()
+{
+  struct cmplx z;
+  z.re = 1.0;
+  z.im = 3.4;
+  printf("z hat Realteil %e und Imaginaerteil %e\n", z.re, z.im);
+  return (0);
+}
 \end{lstlisting}
 Also, allgemein gesprochen greift man auf die Elemente über 
 \begin{lstlisting}
-  structname.elementname = wert;
+structname.elementname = wert;
 \end{lstlisting}
 zu.
 Elemente können selbst wieder ein \verb|struct| sein.
 Einen Unterschied gibt es beim Zugriff auf Elemente, wenn man einen Zeiger auf einen \verb|struct| benutzt.
 Dort kann man direkt mit dem Pfeil Operator \verb|->| auf die Elemente zugreifen, also etwas
 \begin{lstlisting}
-  #include<stdio.h>
+#include <stdio.h>
 
-  struct cmplx {
-    double re, im;
-  };
-  int main() {
-    struct cmplx z;
-    struct cmplx * v = &z;
-    v->re = 1.0;
-    v->im = 3.4;
-    printf("z hat Realteil %e und Imaginaerteil %e\n", v->re, v->im);
-    return(0);
-  }
+struct cmplx
+{
+  double re, im;
+};
+int main()
+{
+  struct cmplx z;
+  struct cmplx *v = &z;
+  v->re = 1.0;
+  v->im = 3.4;
+  printf("z hat Realteil %e und Imaginaerteil %e\n", v->re, v->im);
+  return (0);
+}
 \end{lstlisting}
 Elemente eines \verb|struct| können natürlich auch Zeiger sein.
 Allerdings muss dann Speicher außerhalb der Deklaration stattfinden.
@@ -104,10 +110,11 @@ Der entsprechende Name enthält aber immer das Schlüsselwort \verb|struct|, in 
 Man kann einen \verb|struct| mit einem \verb|typedef| kombinieren, um nicht immer \verb|struct| schreiben zu müssen.
 Im Quelltext sähe das so aus:
 \begin{lstlisting}
-  struct cmplx {
-    double re, im;
-  };
-  typedef struct cmplx cmplx;
+struct cmplx
+{
+  double re, im;
+};
+typedef struct cmplx cmplx;
 \end{lstlisting}
 Das sieht etwas verwirrend aus, weil \verb|cmplx| zweimal auftaucht.
 Aber der Ausdruck wird klar, wenn man sich erinnert, dass \verb|struct cmplx| im Prinzip ein Typ ist.
@@ -115,31 +122,33 @@ Und damit ist der Name \verb|cmplx| noch nicht vergeben.
 Die etwas gebräuchlichere Art obiger Typdefinition geht über die Möglichekeit eines anonymen \verb|struct|.
 Man kann nämlich auch schreiben:
 \begin{lstlisting}
-  typedef struct {
-    double re, im;
-  } cmplx;
+typedef struct
+{
+  double re, im;
+} cmplx;
 \end{lstlisting}
 Damit ist natürlich \verb|struct cmplx| nicht definiert, aber man kann \verb|cmplx| wie einen C Typ verwenden.
 \textbf{Bemerkung:} Die C Standardbibliothek stellt einen Typ für komplexe Zahlen zu Verfügung.
 
 Ein Beispiel aus der C Standardbibliothek \verb|time.h| ist das \verb|struct tm| für Datum und Zeit:
 \begin{lstlisting}
-  struct tm{
-    int tm_sec;   // Sekunde
-    int tm_min;   // Minute
-    int tm_hour;  // Stunde
-    int tm_mday;  // Tag
-    int tm_mon;   // Monat
-    int tm_year;  // Jahr
-    int tm_wday;  // Wochetag
-    int tm_yday;  // Tag im Jahr
-    int tm_isdst; // Sommerzeit oder nicht
-  };
+struct tm
+{
+  int tm_sec; // Sekunde
+  int tm_min; // Minute
+  int tm_hour; // Stunde
+  int tm_mday; // Tag
+  int tm_mon; // Monat
+  int tm_year; // Jahr
+  int tm_wday; // Wochetag
+  int tm_yday; // Tag im Jahr
+  int tm_isdst; // Sommerzeit oder nicht
+};
 \end{lstlisting}
 Damit kann über die Funktion
 \begin{myexampleblock}{Funktion: \texttt{time}}
   \begin{lstlisting}
-    time_t time(time_t *t)
+time_t time(time_t *t)
   \end{lstlisting}
   \vspace{-0.4cm}
   \verb|time| gibt die Zeit in Sekunden seit 1970-01-01 00:00:00 +0000 (UTC) zurück.
@@ -149,7 +158,7 @@ Damit kann über die Funktion
 und die Funktion
 \begin{myexampleblock}{Funktion: \texttt{localtime}}
   \begin{lstlisting}
-    struct tm * localtime (time_t * timer);
+struct tm *localtime(time_t *timer);
   \end{lstlisting}
   \vspace{-0.4cm}
   Eingabeparameter: Zeiger auf eine Variable vom Typ \verb|time_t|.
@@ -158,27 +167,29 @@ und die Funktion
 die beide in \verb|time.h| deklariert sind.
 Folgendes Beispiel illustriert deren Benutzung:
 \begin{lstlisting}
-  #include <stdlib.h>
-  #include <stdio.h>
-  #include <time.h>
-  
-  int main() {
-    time_t now;
-    struct tm *local_date_time;
-    char *tagarray[7]={"Sonntag","Montag","Dienstag","Mittwoch","Donnerstag","Freitag","Samstag"};
-    now = time(NULL);
-    local_date_time = localtime(&now);
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
 
-    printf ("Jahr: %d\n", local_date_time->tm_year+1900);
-    printf ("Monat: %d\n", local_date_time->tm_mon);
-    printf ("Tag: %s\n", tagarray[local_date_time->tm_wday]);
-    printf ("Stunde: %d\n", local_date_time->tm_hour);
-    printf ("Minute: %d\n", local_date_time->tm_min);
-    printf ("Sekunde: %d\n", local_date_time->tm_sec);
-    return(0);
-  }
+int main()
+{
+  time_t now;
+  struct tm *local_date_time;
+  char *tagarray[7] = {"Sonntag",    "Montag",  "Dienstag", "Mittwoch",
+                       "Donnerstag", "Freitag", "Samstag"};
+  now = time(NULL);
+  local_date_time = localtime(&now);
+
+  printf("Jahr: %d\n", local_date_time->tm_year + 1900);
+  printf("Monat: %d\n", local_date_time->tm_mon);
+  printf("Tag: %s\n", tagarray[local_date_time->tm_wday]);
+  printf("Stunde: %d\n", local_date_time->tm_hour);
+  printf("Minute: %d\n", local_date_time->tm_min);
+  printf("Sekunde: %d\n", local_date_time->tm_sec);
+  return (0);
+}
 \end{lstlisting}
 Es gibt das aktuelle Datum und die aktuelle Zeit aus.
 Dabei wird zunächst die Funktion \verb|time| aufgerufen, und desse Rückgabewert dann an die Funktion \verb|localtime| übergeben.
-In beiden Funktionsaufrufen mussten wir nicht mit den $9$ Elementen von \verb|struct tm| hantieren, sondern konnten bequem den Kontainer übergeben.
+In beiden Funktionsaufrufen mussten wir nicht mit den $9$ Elementen von \verb|struct tm| hantieren, sondern konnten bequem den Container übergeben.
 Da \verb|local_date_time| ein Zeiger ist, greifen wir auf dessen Elemente wieder mit dem \verb|->| Operator zu.

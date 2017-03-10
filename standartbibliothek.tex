@@ -15,40 +15,44 @@ double cos(double x);
 wird den \texttt{cos} in \texttt{double} Genauigkeit berechnen.
 In dem unteren kleinen Quelltext wir zeigen es in der Praxis:
 \begin{lstlisting}{cosineexample.c}
-#include<stdio.h>
-#include<stdlib.h>
-#include<math.h>
-int main(int argc, char *argv[]){
+#include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
+int main(int argc, char *argv[])
+{
   double winkle;
   double coswinkle;
   int n;
-  //Wenn nicht genug Parameter gibt, druecken wir einen Nachricht aus
-  if (argc < 2 ){
-     printf("Vewendung: ./print_cos angle [n]; n ist freiwillig\n");
-     exit(1);
-  }
-  winkle=atof(argv[1]);//Macht ein Fliesskommazahl aus einer Zeichenkette
-  coswinkle=cos(winkle);//Wir verwenden den StandardBibliothek Funktion
-  printf("Winkle=%e \t cos(Winkle)=%e\n", winkle, coswinkle);
-  //Wir koennen mit dem kennengelernte Kontrollstrukturen die ernaherung
-  //selbst erlidegen
-  if (argc==3){
-    int n;
-    double coswinkleapprox;
-    double winkletmp=winkle;//wir sammeln hier die Zaehler
-    int denumtmp=1;//wir sammeln hier das Nenner
-    n=atoi(argv[2]);//Macht ein ganze Zahl aus einer Zeichenkette
-    coswinkleapprox=1.;//Wir sammeln hier das Ergebnis
-    for (int i=1; i<n; ++i){
-      int sign=( ( i % 2) == 0) ? 1 : -1; //wenn es gerade ist denn
-                                          //das vorzeichen ist 1
-                                          //andersfalls -1
-      winkletmp=winkletmp*winkletmp;
-      denumtmp=denumtmp*(2*i-1)*2*i;
-      coswinkleapprox += sign*winkletmp/denumtmp;
+  // Wenn nicht genug Parameter gibt, druecken wir einen Nachricht aus
+  if (argc < 2)
+    {
+      printf("Vewendung: ./print_cos angle [n]; n ist freiwillig\n");
+      exit(1);
     }
-    printf("coswinkleapprox=%e\n", coswinkleapprox);
-  }
+  winkle = atof(argv[1]); // Macht ein Fliesskommazahl aus einer Zeichenkette
+  coswinkle = cos(winkle); // Wir verwenden den StandardBibliothek Funktion
+  printf("Winkle=%e \t cos(Winkle)=%e\n", winkle, coswinkle);
+  // Wir koennen mit dem kennengelernte Kontrollstrukturen die ernaherung
+  // selbst erlidegen
+  if (argc == 3)
+    {
+      int n;
+      double coswinkleapprox;
+      double winkletmp = winkle; // wir sammeln hier die Zaehler
+      int denumtmp = 1; // wir sammeln hier das Nenner
+      n = atoi(argv[2]); // Macht ein ganze Zahl aus einer Zeichenkette
+      coswinkleapprox = 1.; // Wir sammeln hier das Ergebnis
+      for (int i = 1; i < n; ++i)
+        {
+          int sign = ((i % 2) == 0) ? 1 : -1; // wenn es gerade ist denn
+          // das vorzeichen ist 1
+          // andersfalls -1
+          winkletmp = winkletmp * winkletmp;
+          denumtmp = denumtmp * (2 * i - 1) * 2 * i;
+          coswinkleapprox += sign * winkletmp / denumtmp;
+        }
+      printf("coswinkleapprox=%e\n", coswinkleapprox);
+    }
 }
 \end{lstlisting}
 In diesem Code wir verwenden den Standardfunktion und (wenn es nötig ist) erledigen
