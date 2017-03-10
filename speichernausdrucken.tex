@@ -1,4 +1,4 @@
-\section{Mein erstes C Programm}
+\section{Ein erstes C Programm}
 
 Ein wichtiger Schritt hin zu einem Programm ist die Formulierung des
 Verfahrens für die Lösung eines Problems als Algorithmus.
@@ -127,8 +127,11 @@ Es besteht im Allgemeinen aus Deklarationen, Anweisungen, Kontrollstrukturen und
 Das vielleicht einfachste C-Programm hat folgende Form:
 \begin{lstlisting}{Ein erstes C-Programm}
 int main() {
-    // dies ist ein Kommentar
-    return 0;
+  // dies ist ein Kommentar
+  /*
+    Dies ist ein mehrzeiliger Kommentar
+  */
+  return(0);
 }
 \end{lstlisting}
 An Hand dieses einfachen Programms können wir schon einiges über die C Sprachregeln lernen.
@@ -138,6 +141,9 @@ Da der geklammerte Bereich direkt nach \texttt{main} leer ist, bekommt die Funkt
 Schlüsselwörter, hier \texttt{int} und \texttt{main} werden durch ein oder mehrere Leerzeichen getrennt.
 Mit den geschweiften Klammern wird ein Abschnitt oder Block definiert, in diesem Fall der Block der Funktion.
 Die beiden Schrägstriche \texttt{//} lassen den Compiler alles danach folgende bis zum Zeilenende als Kommentar interpretieren.
+Wir empfehlen, nicht die mehrzeiligen Kommentare \texttt{/* */} zu verwenden.
+Der Grund dafür ist, dass wenn man einen mehrzeiligen Bereich auskommentiert, der schon einen mehrzeiligen Kommentar enthält, dann endet der Kommentarbereich beim ersten \texttt{*/}, und man bekommt eine Fehlermeldung.
+
 Die Funktion \texttt{return} beendet die Abarbeitung der Funktion und gibt einen Wert an die aufrufende Funktion zurück.
 Jede Funktion sollte immer explizit \texttt{return} aufrufen, auch wenn es keinen Rückgabewert gibt.
 Jede Deklaration oder Anweisung, in diesem Fall der Aufruf von \texttt{return}, muss mit einem Semikolon \texttt{;} abgeschlossen werden.
@@ -155,7 +161,7 @@ Dann kann man die Datei mit folgendem Aufruf auf der Console übersetzen:
 
 \vspace*{0.5cm}
 \begin{verb}
->$  gcc -std=c99 main.c -o main.exe
+>$  gcc -std=c99 -Wall -pedantic main.c -o main.exe
 \end{verb}
 \vspace*{0.5cm}
 
@@ -167,7 +173,25 @@ Dann kann man die Datei mit folgendem Aufruf auf der Console übersetzen:
 \end{verb}
 \vspace*{0.5cm}
 
-\noindent von der Console aus ausgegeführt werden. 
+\noindent von der Komanndozeile aus ausgegeführt werden. 
+In obigem Aufruf des GNU Compilers sind nicht alle Kommandozeileparameter strickt notwendig.
+Die Parameter \texttt{-Wall -pedantic} sorgen dafür, dass der Compiler möglichst viele Warnungen ausgibt und alle möglichen Probleme im Quelltext auch mitteilt.
+Wir denken, dass es gerade für Anfänger sehr wichtig ist, Quelltext so sauber wie möglich zu schreiben.
+Deshalb möchten wir dringend dazu auffordern, diese Compiler Parameter zu benutzen.
+Der Parameter \texttt{-std=c99} sorgt dafür, dass der \texttt{gcc} den C99 Standard verwendet.
+Aller Quelltext in diesem Dokument ist für diesen Standard geschrieben und übersetzt nicht für ältere Standards.
+
+Eine Alternative zum \texttt{gcc} ist der \texttt{clang} Compiler.
+Er hat einen ganz ähnlichen Aufruf
+
+\vspace*{0.5cm}
+\begin{verb}
+>$  clang -std=c99 -Wall -pedantic main.c -o main.exe
+\end{verb}
+\vspace*{0.5cm}
+
+\texttt{clang} und \texttt{gcc} sind beide freie Software.
+Ihre Installation unter Linux ist sehr leicht, aber auch unter Windows kann man, mit einigem Aufwand, wenn man unbedingt möchte beide installieren.
 
 Bisher tut unser erstes Programm noch nichts, außer Null zurückgeben. 
 Wir können es um eine Ausgabe auf den Bildschirm erweitern:

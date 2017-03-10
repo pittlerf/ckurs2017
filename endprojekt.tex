@@ -11,7 +11,7 @@ wir verbrauchen  auch in der inneren Schleife Computerzeit der mit
 dem Nummer von den Elementen ($n$) skaliert. Deswegen ist das Einfügesortieren
 ein $n^2$ Algorithmus.
 
-Eine mögliche entwicklung ist die Haldensortierung. In diesem Projekt werden wir 
+Eine mögliche Entwicklung ist die Haldensortierung. In diesem Projekt werden wir 
 diese Algorithmus kennenlernen und implementieren. Die grundsätztliche Datentyp ist 
 das \texttt{heap}.
 
@@ -20,9 +20,10 @@ Es ist ein ausgeglichener Binärebaum. Es gibt nur eine Bedingung für die Eleme
 jedes Element muss kleiner sein, als ihre Elter.
 \end{myexampleblock} 
 
-In einem Heap jede Element hat nur ein Elter, und kann maximal zwei Kinder
-haben. Der Strichwort ausgeglichen bedeuted das die Höhe des Heaps mit
-dem logarithmus von $n$ skaliert muss. Bespielweise wir zeigen ein Heap
+In einem \texttt{heap} jede Element hat nur ein Elter, und kann maximal zwei Kinder
+haben. Der Strichwort ausgeglichen bedeuted das die Höhe des \texttt{heap}s mit
+dem logarithmus von $n$ skaliert muss. In anderem Wörter jede Ebene musst voll sein, vordem
+ein neues Ebene benutzt wurde. Bespielweise wir zeigen ein \texttt{heap}
 von der $[10,12,6,5,9,13,1,7]$ Reihenfolge auf Abbildung \ref{heapexample}.
 \begin{center}
 \begin{figure}[!ht]
@@ -91,10 +92,10 @@ von der $[10,12,6,5,9,13,1,7]$ Reihenfolge auf Abbildung \ref{heapexample}.
 \caption{Ein Heap von der $[10,12,6,5,9,13,1,7]$ Reihenfolge.\label{heapexample}}
 \end{figure}
 \end{center}
-Wie du siehst, grundsätztlich es gibt keine Beziehung zwischen Elementen von der 
+Wie man sieht, grundsätztlich es gibt keine Beziehung zwischen Elementen von der 
 gleichen Höhe des Bäumes. Es gibt nur ein Regel: Das Kind muss kleiner sein, als ihres
-Elter. Jetzt zeigen wir, wie es im Haldensortierung verwendet werden.
-Die Haldensortierung kann mit nur zwei Schritten formuliert werden:
+Elter. Jetzt zeigen wir, wie es im Haldensortierung verwendet wird.
+Die Haldensortierung kann mit nur drei Schritten formuliert werden:
 \begin{itemize}
 \item Stellen wir ein \texttt{heap} aus den Reihenfolge der Zahlen her
 \item Nun verschieben wir jeweils das erste Element aus, und das wird mit dem letzten Element 
@@ -104,12 +105,12 @@ ersetzt.
 
 Das Vorteil des Algorithmus ist dass der Zeit um das \texttt{heap} zu behandeln skaliert
 nur mit dem Höhe des Bäumes. Weil der Bäum ausgeglichen ist, ihre Größe skaliert nur mit
-\texttt{log(n)}. Wir müssen diese Operationen für alle Elementen erledigen 
-deswegen die Ganze Zeit skaliert mit \texttt{n*log(n)}. Das ist für groß genug \text{n} ist
+$\mathrm{log}(n)$. Wir müssen diese Operationen für alle Elementen erledigen 
+deswegen die ganze Zeit skaliert mit $n\mathrm{log}(n)$. Das ist für groß genug $n$ ist
 besser als die Einfügesortierung.
 
 Wir verwenden verketteten Liste für die Darstellung des \texttt{heap}-s. Jedes Element muss
-ein Pointer für ihre Elter, und zwei Pointer für ihre rechten und linken Nachfolger haben.
+ein Zeiger auf ihre Elter, und zwei Zeiger auf ihre rechten und linken Nachfolger haben.
 \begin{lstlisting}
 typedef struct heap {
     int val;
@@ -124,7 +125,7 @@ Um ein geschloßener Baum zu haben, müssen wir an die folgenden zwei Punkten ac
 \item Die Blätters, die keinen Kinder haben, haben \texttt{NULL} als right und left Zeiger.
 \end{itemize}
 Jetzt zeigen wir wie mann ein \texttt{heap} aus einem Reihenfolge von Zahlen herstellen kann. Zuerst
-müssen wir den ersten freien Platz finden, dann fügen wir das Element hier ein. Danach es kann sein, dass 
+müssen wir den ersten freien Platz finden, dann schließen wir das Element hier ein. Danach es kann sein, dass 
 das \texttt{heap} Eigenschaft nicht mehr wahr ist. Darum müssen wir das \texttt{heap} Eigenschaft danach immer
 überprüfen und wenn es notwendig ist, tauschen wir den aktuellen Wert mit dem Wert von ihrem Elter bis 
 das \texttt{heap} Eigenschaft wahr wird.
@@ -177,6 +178,7 @@ das \texttt{heap} Eigenschaft wahr wird.
 Die wichtigsten Schritte sind:
 \begin{enumerate}
 \item Ersten freien Platz finden
+\item Einschließen
 \item \texttt{heap} Eigenschaft wiederherstellen
 \end{enumerate}
 Zuerst möchten wir den ersten freien Platz finden. Lass uns annehmen
@@ -184,21 +186,21 @@ das Folgende Beispiel. Eine Familie möchte ein Ticket für ein Konzert kaufen.
 Aber es gibt nur eine Karte für Sie, und die Eltern dürfen nicht gehen, weil sie sich 
 um ihre Kinder kümmern müssen. Zuerst der Kopf der Familie geht zum Ticketschalter
 um das Ticket zu kaufen, und wenn er/sie  kein Kind hat, hat er Glück und
-kann zum Konzert gehen. Aber wenn er/sie Kind hat, er/sie ist sehr Höflich, und 
-geb die Möchkligkeit für ihre Kind(er) zum Konzert zu gehen. Die Elter möchten 
-gute Eltern sein, deswgen ihres Kinder könnten alles tun. In anderen Wörten, er
+kann zum Konzert gehen. Aber wenn er/sie Kind hat, er/sie ist sehr höflich, und 
+gibt die Möchkligkeit für ihre Kind(er) zum Konzert zu gehen. Die Elter möchte 
+gute Eltern sein, deswegen ihres Kinder könnten alles tun. In anderen Wörten, er
 stellt ihre Kinder zur Warteschlange. Dies wird weitergehen bis der aktuellen Käufer 
 keine Kind hat. Dieses Beispiel ist ähnlich wie unseres Problem: den ersten freien 
 Platz zu finden. Nachdem Beispiel ist es klar, dass wir eine Datenstrukture ähnlich wie 
 die Warteschlange verwenden müssen. In der Abbildung \ref{warteschlange} wir zeigen wie 
-die Warteschlange funktioniert. Unter siehst du den Quelltext für die Suchung.
+die Warteschlange funktioniert. Unter sieht man den Quelltext für die Suchung.
 
 
 \begin{lstlisting}
 queue* q = newqueue(*root); /*Kopf der Familien zur Warteschlange*/
 heap* currentheap; 
 while((currentheap=queue_rem(&q))!=NULL){//Ein mann kommt aus der Warteschlange
-  //Wenn er/sie nicht zwei Kind hat, bekommt ein neues Kind
+  //Wenn er/sie nicht zwei Kinder hat, bekommt ein neues Kind
   //(Konzert Ticket in unserem Beispiel)
   if(currentheap->left == NULL) {
      currentheap->left  = newheap(x, currentheap);
@@ -208,12 +210,12 @@ while((currentheap=queue_rem(&q))!=NULL){//Ein mann kommt aus der Warteschlange
      currentheap->right = newheap(x, currentheap);
      currentheap = currentheap->right;
   }
-  //Wenn er sie zwei Kinder hat, stellt ihnen in der 
-  //Warteschlange und geht aus, die Naeschte Kaufer kommt
+  //Wenn er/sie zwei Kinder hat, stellt ihnen in der 
+  //Warteschlange und geht aus, die naeschte Kaeufer kommt
   else {
      queue_put(currentheap->left, &q);
      queue_put(currentheap->right,&q);
-     continue;
+     continue;//Springen zum naechsten Iteration
   }
   break;
 }
@@ -221,22 +223,21 @@ while((currentheap=queue_rem(&q))!=NULL){//Ein mann kommt aus der Warteschlange
 
 
 Das großte Unterschied zwischen Stapelspeicher und 
-Werteschlange ist, dass im Werteschlange das erste gekommene Element zuerst auskommen kann. 
+Werteschlange ist, dass im Werteschlange das erste gekommene Element zuerst ausgehen kann. 
 So die Umsetzung ist ähnlich wie im Stapelspeicher. Die Untershiede sind
 \begin{enumerate}
-\item Das Typ der gespeicherte Variable
+\item Das Typ der gespeicherte Variable: In diesem Fall ein \texttt{heap}
 \item Das \texttt{pop()} Funktion muss das letzte Element ausgeben
 \end{enumerate}
 
 Deises Endprojekt wird mehr aus 100 Zeilen Code bestehen.
-Um die Durchsichtigkeit unseres Programm zu verteidigen müssen
-wir die verschiedenen Teilen im getrennte Datei schreiben und
-das headerdatei verwenden. Beispielweise, das ist ganz ähnlich wie der 
-verwendung von \texttt{printf} Funktion. Im headerdatei wir müssen die Typendefinition
-und die Funktiondeklarationen speichern. Achtung, die Typ deklaration
-müssen in einem Verschiedenen Datei sein um Querverweise zu vermeiden
-Beispielweise zeigen wir hier das Quelltext und die Headerdatein
-für die Warteschlange:
+Um die Durchsichtigkeit unseres Programm zu verteidigen, müssen
+wir die verschiedenen Teilen im getrennten Datein schreiben und
+Headerdatein verwenden. Beispielweise, das ist ganz ähnlich wie der 
+verwendung von \texttt{printf} Standardbibliothekfunktion. In den Haderdatein
+wir müssen die Typendefinition und die Funktiondeklarationen speichern. Achtung, 
+die Typ deklarationen müssen in einem Verschiedenen Datei sein um Querverweise zu vermeiden.
+Beispielweise zeigen wir hier das Quelltext und die Headerdatein für die Warteschlange:
 
 \begin{myexampleprogram}{ Programme: \texttt{Die Warteschlange}}	
 \begin{lstlisting}{heapqueue.h}
@@ -260,102 +261,117 @@ void free_queue(queue **first);
 \end{lstlisting}
 
 \begin{lstlisting}{queue.c}
-#include "heapqueue.h"
-#include <stdio.h>
-#include <stdlib.h>
-// Stellt ein neue queue element her
-queue *newqueue(heap *data) {
-    queue *q = (queue *)malloc(sizeof(queue));
-    q->element = data;
-    q->next = NULL;
-    return q;
+#include<stdio.h>
+#include<stdlib.h>
+#include"heapqueue.h"
+//Stellt ein neue queue element her
+queue *newqueue( heap *data ){
+   queue *q=(queue *)malloc(sizeof(queue));
+   q->element=data;
+   q->next=NULL;
+   return q;
 }
-// Schliesst ein neue Element in einem queue ein
-void queue_put(heap *data, queue **first) {
-    if ((*first) == NULL) {
-        (*first) = newqueue(data);
-        return;
-    }
-    queue *temp = newqueue(data); // Das wird das erste Element sein
-    temp->next = (*first); // Das vorherige Erste wird jetzt das zweite
-    (*first) = temp;
+//Schliesst ein neue Element in einem queue ein
+void queue_put( heap *data, queue ** first){
+   //existier schon eine Liste
+   if ((*first) == NULL){//falls nein
+       (*first)=newqueue(data);//erzeuge ein neues Element
+       return;
+   }
+   //falls ja
+   queue *temp=newqueue(data);//erzeuge ein neues Element
+   temp->next=(*first);//setzte den Zeiger
+   (*first)=temp;//temp ist das neue erste Element
 }
-// Loescht ein Element aus dem queue
-heap *queue_rem(queue **first) {
-    queue *temp;
-    heap *ret;
-    if ((*first) == NULL) {
-        return NULL;
-    }
-    if ((*first)->next == NULL) {
-        ret = (*first)->element;
-        free((*first));
-        (*first) = NULL;
-        return ret;
-    }
-    // Suchung fuer das letzte Element
-    temp = (*first);
-    queue *prev;
-    while (temp->next != NULL) {
-        prev = temp;
-        temp = temp->next;
-    }
-    prev->next = NULL;
-    ret = temp->element;
-    free(temp);
-    return (ret);
+// Ein Element wird aus dem queue entfernt
+heap *queue_rem( queue **first){
+   queue *temp;
+   heap *ret;
+   if ((*first) == NULL){
+     return NULL;
+   }
+   if ((*first)->next == NULL){//Besteht nur aus ein Element
+     ret=(*first)->element;//Extrahiere das Datum
+     free((*first));//Loesche das erste
+     (*first)=NULL;
+     return ret;//Gib das datum zurueck
+   }
+//Besteht aus mehreren Elementen
+//Suchung fuer das letzte Element
+   temp=(*first);
+   queue *prev;
+   while ( temp->next != NULL){
+      prev=temp;
+      temp=temp->next;//Zeiger auf das naechste Element setzten
+   }
+   prev->next=NULL;//Setzte den Zeiger: Das Ende wird das vorletzte Element sein
+   ret=temp->element;//Extrahiere das Datum
+   free(temp);//Loeschen das letzte
+   return (ret); //Gib das Datum zurueck
 }
-// Geht ein queue durch
-void print_queue(queue *first) {
-    queue *temp = (first);
-    if (temp == NULL) {
-        return;
-    }
-    while (1) {
-        printf("%d\t", temp->element->val);
-        temp = temp->next;
-        if (temp == NULL)
-            break;
-    }
-    printf("\n");
+//Geht ein queue durch
+void print_queue( queue *first ){
+   queue *temp=(first);
+   if (temp == NULL){
+     return;
+   }
+   while(1){
+     printf("%d\t", temp->element->val);//momentanes Datum ausgeben
+     temp=temp->next;//Zeiger auf das naechste Element setzten
+     if (temp == NULL){//Letztes Element erreicht, 
+       break; //falls ja, Abbruch
+     }
+   }
+   printf("\n");
 }
-// Gebt ein queue frei
-void free_queue(queue **first) {
-    if ((*first) == NULL)
-        return;
-    queue *temp = (*first);
-    queue *temp2;
-    while (1) {
-        temp2 = temp->next;
-        free(temp);
-        temp = temp2;
-        if (temp == NULL)
-            break;
-    }
+//Gebt ein queue frei
+void free_queue( queue **first){
+   if ((*first)== NULL)
+     return;
+   queue *temp=(*first);
+   queue *temp2;
+   while(1){
+     temp2=temp->next;
+     free(temp);
+     temp=temp2;
+     if (temp == NULL)
+       break;
+   }
 }
 \end{lstlisting}
 \end{myexampleprogram}
 Das Datei \texttt{heapqueue.h} wird die Typdefinitionen enthalten. Wir müssen
 diese Headerdatei im Codetext für Warteschlange beilegen, um der Kompiler
-den Typ \texttt{heap} un \texttt{queue} verstehen zu können. Natürlich wir müssen 
+den Typ \texttt{heap} und \texttt{queue} verstehen zu können. Natürlich wir müssen 
 ein eigenen Headerdatei für die Warteschlange erzeugen, weil die Funktionen 
-werden in einem anderen Datei (\texttt{heap.c}) verwenden. Das Unterschied
-zwischen Stapelspeicher und Warteschlange siehst du im \texttt{queue.c} Zeile 33-36.
-In diesem Teil wir suchen für das letzte (freigebende) Element in
-der Warteschlange.
+in einem anderen Datei (\texttt{heap.c}) verwenden werden. Das Unterschied
+zwischen Stapelspeicher und Warteschlange sieht man im 
+\texttt{queue\_rem} Funktion. In diesem Teil wir suchen für das letzte (freigebende) 
+Element in der Warteschlange.
 
 Jetzt wir müssen das \texttt{heap} Eigenschaft überprüfen. Das ist ganz einfach, 
-wir ziehen das eingegebenen Element oben bis das \texttt{heap} Eigenschaft wahr wird.
+wir ziehen das eingegebene Element oben bis das \texttt{heap} Eigenschaft wahr wird.
 Wir zeigen hier das in der Praxis:
 \begin{lstlisting}
-while (current_heap->parent != NULL &&
-       current_heap->parent->val < current_heap->val) {
-    int tmp = current_heap->parent->val;
-    current_heap->parent->val = current_heap->val;
-    current_heap->val = tmp;
-    current->heap = current_heap_parent;
+//Prufen ob es hat Elter und wenn ja ob es goesser ist als ihre Elter
+while(current_heap->parent != NULL && current_heap->parent->val < current_heap->val) 
+{
+    //wenn ja, wir tauschen ihre Werten
+    int tmp=current_heap->parent->val;
+    current_heap->parent->val=current_heap->val;
+    current_heap->val=tmp;
+    //Fortsetzen die Pruefung mit dem Elter
+    current->heap=current_heap_parent;
 }
-\end{lstlisting} 
+\end{lstlisting}
+In der zweiten Zeile wir haben scheinbar ein Fehler gemacht. Wir verwenden
+den Wert vom Zeiger \texttt{parent} ohne Prüfung. 
+Das Geheimnis ist in der
+Folge des Ausführung und das \texttt{UND \&\&} Logischefunktion.
+Zuerst die Prüfung 
+von dem \texttt{parent} Zeiger wir ausgeführt, und wenn es falls ist, das
+ganze Ergebnis wird definitiv falls, und die Ausführung der Ausdrücke beendet. 
+So wir werden in diesem Fall den Wert vom Zeiger nicht verwenden.
 In der dritten Zeile wir tauschen die Werte um, und danach machen
 wir ein Schritt oben mit dem Zeiger. Wir wiederholen es bis
 das \texttt{heap} Eigenschaft wahr wird. Jetzt wir können die zwei Teilen
