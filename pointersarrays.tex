@@ -119,11 +119,11 @@ int *p = 42;
 \end{lstlisting}
 Allerdings wird im diesen Fall der Compiler sehr wahrscheinlich\footnote{Hängt leider vom Compiler ab.} eine Warnung geben, denn 42 ist vom Typ \verb|int|, und nicht vom Typ \verb|int*|.
 GCC 6.3.1 gibt folgendes aus:
-\begin{lstlisting}
+\begin{verbatim}
 int-ptr.c:7:14: Warnung: Initialisierung erzeugt Zeiger von Ganzzahl ohne Typkonvertierung [-Wint-conversion]
      int *p = 42;
               ^~
-\end{lstlisting}
+\end{verbatim}
 Wenn der Compiler sich hier nicht beschwert, sollte man die Dokumentation studieren, um heraus zu finden, wie man diesen Typ von Warnung anschalten kann, oder, wenn das nicht möglich ist, den Compiler wechseln.
 
 

@@ -27,10 +27,10 @@ Das Definition befindet sich im Standardbibliothek \texttt{sys/stat.h}.
 \begin{lstlisting}
 struct passwd
 {
-  char *pw_name; /*Anwaenders login Name*/
-  uid_t pw_uid; /* UID id*/
-  gid_t pw_gid; /* GID id*/
-  char *pw_dir; /*Login Direktory*/
+  char *pw_name; /* Loginname des Anwenders */
+  uid_t pw_uid; /* User ID */
+  gid_t pw_gid; /* Gruppen ID */
+  char *pw_dir; /* Login Verzeichnis */
   ...
 };
 \end{lstlisting}
@@ -70,9 +70,9 @@ auch zu einer Gruppe. Wenn in einem Computer mehrere Programmierer arbeiten, Sie
 Wir können das \texttt{gid} mit einem Name mit Hilfe von \texttt{getgrgid} Funktion verbunden.
 Es kann nötig sein zu prüfen, ob die Datein beschädigt ist, oder nicht.  Bespielweise, wir können ihre Größe
 überprüfen. Lass uns annehmen, dass wir die folgende Datei (example.txt) haben
-\begin{lstlisting}{example.txt}
+\begin{verbatim}
 Hello world
-\end{lstlisting}
+\end{verbatim}
 Wir haben die folgende \texttt{C} Code geschrieben, um Informationen über diesen Datei erhalten:
 \begin{lstlisting}
 #include <grp.h>
@@ -156,7 +156,7 @@ Der Besitzer und ihre Gruppe hat Recht für Lesen und auch Schreiben, die Andere
 In unserem Code wir determinieren die Rechten für die drei Oben Kategorie im Zeile 35. Jede Rechte wird ein 3\texttt{bit} binären
 Zahl sein. Die Rechte für Lesen gehört zum höchsten \texttt{bit}, und die Rechte von Ausführen gehört zum niedrigsten \texttt{bit}. 
 Beispielweise in unserer Ausgabe(Siehst du unter) \texttt{perms: 6} bedeutet Rechte für Schreiben und Lesen.
-\begin{lstlisting}
+\begin{verbatim}
 ./a.out example.txt
 example.txt:
   inode: 11931732
@@ -167,6 +167,6 @@ example.txt:
   atime: Fri Mar  3 12:57:38 2017
   mtime: Fri Mar  3 12:57:31 2017
   ctime: Fri Mar  3 12:57:31 2017
-\end{lstlisting}
+\end{verbatim}
 Die Größe vom Datein kann überraschend sein, weil es nur aus 11 Zeichen besteht. Aber jeden Datein enthält die 
 $EOF$(Ende des Dateins) Zeichen. Mit diesem Byte die Größe des Dateins stimmt.

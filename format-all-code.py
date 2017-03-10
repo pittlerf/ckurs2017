@@ -25,7 +25,7 @@ def format_file(filename):
     within_code = False
 
     for line in lines:
-        if line.strip() == r'\end{lstlisting}':
+        if line.strip().startswith(r'\end{lstlisting}'):
             within_code = False
 
             with open('.formatter.cpp', 'w') as f:
@@ -41,7 +41,7 @@ def format_file(filename):
         else:
             result.append(line)
 
-        if line.strip() == r'\begin{lstlisting}':
+        if line.strip().startswith(r'\begin{lstlisting}'):
             within_code = True
 
     with open(filename, 'w') as f:

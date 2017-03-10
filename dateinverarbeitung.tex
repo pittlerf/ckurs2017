@@ -1,4 +1,4 @@
-\section{Datein verarbeiten}
+\section{Dateien verarbeiten}
 
 Ein- und Ausgabe in Dateien, oder allgemein Ein- und Ausgabe auf Geräten ist nicht Teil von C selbst.
 Aber die Standardbibliothek stellt diese Funktionalität zur Verfügung.
@@ -97,12 +97,12 @@ Dabei stehen unter anderem die folgenden speziellen Zeichen zur Verfügung
 \end{center}
 Alle anderen Zeichen im Formattierungstext werden eingelesen, aber nicht gespeichert. 
 Nehmen wir an, wir müssen die Zahlen aus folgender ASCII Datei einlesen:
-\begin{lstlisting}
+\begin{verbatim}
 1212
         1222
 999             12212
 888
-\end{lstlisting}
+\end{verbatim}
 Dies kann mit folgendem Code gemacht werden
 \begin{lstlisting}
 #include <stdio.h>
