@@ -342,25 +342,36 @@ void free_queue( queue **first){
 \end{myexampleprogram}
 Das Datei \texttt{heapqueue.h} wird die Typdefinitionen enthalten. Wir müssen
 diese Headerdatei im Codetext für Warteschlange beilegen, um der Kompiler
-den Typ \texttt{heap} un \texttt{queue} verstehen zu können. Natürlich wir müssen 
+den Typ \texttt{heap} und \texttt{queue} verstehen zu können. Natürlich wir müssen 
 ein eigenen Headerdatei für die Warteschlange erzeugen, weil die Funktionen 
-werden in einem anderen Datei (\texttt{heap.c}) verwenden. Das Unterschied
-zwischen Stapelspeicher und Warteschlange siehst du im \texttt{queue.c} Zeile 33-36.
-In diesem Teil wir suchen für das letzte (freigebende) Element in
-der Warteschlange.
+in einem anderen Datei (\texttt{heap.c}) verwenden werden. Das Unterschied
+zwischen Stapelspeicher und Warteschlange sieht man im 
+\texttt{queue\_rem} Funktion. In diesem Teil wir suchen für das letzte (freigebende) 
+Element in der Warteschlange.
 
 Jetzt wir müssen das \texttt{heap} Eigenschaft überprüfen. Das ist ganz einfach, 
-wir ziehen das eingegebenen Element oben bis das \texttt{heap} Eigenschaft wahr wird.
+wir ziehen das eingegebene Element oben bis das \texttt{heap} Eigenschaft wahr wird.
 Wir zeigen hier das in der Praxis:
 \begin{lstlisting}
+//Prufen ob es hat Elter und wenn ja ob es goesser ist als ihre Elter
 while(current_heap->parent != NULL && current_heap->parent->val < current_heap->val) 
 {
+    //wenn ja, wir tauschen ihre Werten
     int tmp=current_heap->parent->val;
     current_heap->parent->val=current_heap->val;
     current_heap->val=tmp;
+    //Fortsetzen die Pruefung mit dem Elter
     current->heap=current_heap_parent;
 }
-\end{lstlisting} 
+\end{lstlisting}
+In der zweiten Zeile wir haben scheinbar ein Fehler gemacht. Wir verwenden
+den Wert vom Zeiger \texttt{parent} ohne Prüfung. 
+Das Geheimnis ist in der
+Folge des Ausführung und das \texttt{UND \&\&} Logischefunktion.
+Zuerst die Prüfung 
+von dem \texttt{parent} Zeiger wir ausgeführt, und wenn es falls ist, das
+ganze Ergebnis wird definitiv falls, und die Ausführung der Ausdrücke beendet. 
+So wir werden in diesem Fall den Wert vom Zeiger nicht verwenden.
 In der dritten Zeile wir tauschen die Werte um, und danach machen
 wir ein Schritt oben mit dem Zeiger. Wir wiederholen es bis
 das \texttt{heap} Eigenschaft wahr wird. Jetzt wir können die zwei Teilen
