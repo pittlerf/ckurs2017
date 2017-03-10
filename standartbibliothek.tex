@@ -63,7 +63,8 @@ Obwohl das Parameter eine Zeichenkette ist, können wir es in eine, Fließkommaz
 mit Hilfe von \texttt{double atof(char *zeichenkette)} Standardbibliothekfunktion. 
 Wir verwenden den \texttt{cos} Standardbibliothekfunktion in der Zeile 14. Wenn
 den Anwänder wollte, erledigen wir die Ernäherung im Zeilen von 19-33. Wir bekommen 
-das Grad \texttt{n} als auch ein Eingebeparameter. In Berechnung der Ernäherung wir machen 
+das Grad \texttt{n} als auch ein Eingebeparameter. Wir müssen es zu einem ganzen 
+Zahl konvertieren mit Hilfe von \texttt{int atoi(char *zeichenkette)}. In Berechnung der Ernäherung wir machen 
 eine Schleife von 1 bis das aktuellen Grad. Wir müssen nicht in jedem Schritt die 
 Potenz ($x^{2i}$) und den Fakultät ($(2l)!$) berechnen, sondern auch wir können 
 ihnen in jedem Schritt in zwei Helfenvariablen (\texttt{winkletmp,denumtmp}) speichern.

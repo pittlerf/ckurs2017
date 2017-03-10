@@ -220,6 +220,12 @@ while((currentheap=queue_rem(&q))!=NULL){//Ein mann kommt aus der Warteschlange
   break;
 }
 \end{lstlisting}
+\begin{myexampleblock}{Strichwörter: \texttt{break} und \texttt{continue}}
+\begin{itemize}
+\item break: Beenden eine Schleife, oder ein Selektion im $switch$.
+\item continue: Springen in einer Schleife zu dem nächsten Iteration
+\end{itemize}
+\end{myexampleblock}
 
 
 Das großte Unterschied zwischen Stapelspeicher und 
@@ -368,24 +374,25 @@ In der zweiten Zeile wir haben scheinbar ein Fehler gemacht. Wir verwenden
 den Wert vom Zeiger \texttt{parent} ohne Prüfung. 
 Das Geheimnis ist in der
 Folge des Ausführung und das \texttt{UND \&\&} Logischefunktion.
-Zuerst die Prüfung 
-von dem \texttt{parent} Zeiger wir ausgeführt, und wenn es falls ist, das
+Zuerst die Prüfung von dem \texttt{parent} Zeiger wir ausgeführt, und wenn es falls ist, das
 ganze Ergebnis wird definitiv falls, und die Ausführung der Ausdrücke beendet. 
 So wir werden in diesem Fall den Wert vom Zeiger nicht verwenden.
 In der dritten Zeile wir tauschen die Werte um, und danach machen
 wir ein Schritt oben mit dem Zeiger. Wir wiederholen es bis
 das \texttt{heap} Eigenschaft wahr wird. Jetzt wir können die zwei Teilen
-zusammenstellen um ein Code für einschließen ins \texttt{heap} bekommen.
+zusammenstellen um ein Code für Einschließen ins \texttt{heap} bekommen.
 
 Wenn wir den Platz gefunden haben, prüfen wir das \texttt{heap} Eigenschaft über
 (Zeile 24-26). Dann wir sind fertig, die Warteschlange wird freigegeben und
 wir beenden die Schleife mit Hilfe des Strichworts \texttt{break}.
 \begin{lstlisting}
 void heap_insert(heap** root, int x) {
+   //wenn das heap leer war
    if(*root == NULL) {
      *root = newheap(x, NULL);
    }
    else {
+     //wenn nicht, suchen wir fuer das ersten freie Platz
      queue* q = newqueue(*root);
      heap* currentheap;
 
@@ -404,33 +411,34 @@ void heap_insert(heap** root, int x) {
           queue_put(currentheap->right,&q);
           continue;
         }
+        //wir haben es gefunden
+        //uberpruefung des heap-s Eigenschaft
         while(currentheap->parent != NULL && currentheap->parent->val < currentheap->val) {
            int tmp=current_heap->parent->val;
            current_heap->parent->val=current_heap->val;
            current_heap->val=tmp;
            currentheap = currentheap->parent;
         }
+        //wir sind Fertig
         break;
-
+    
      }
      free_queue(&q);
    }
    return;
 }
 \end{lstlisting}
-\begin{myexampleblock}{Strichwörter: \texttt{break} und \texttt{continue}}
-\begin{itemize}
-\item break: Beenden eine Schleife, oder ein Selektion im $switch$.
-\item continue: Springen in einer Schleife zu dem nächsten Iteration
-\end{itemize}
-\end{myexampleblock}
-In diesem Codeteil wir haben der Funktion $newheap$ verwendet. Dieser Funktion
-erzeugt ein neues $heap$ Element und hat zwei Eingabeparameter: ein für den neuen 
-Wert, und ein Zeiger für ihre Elter. Die aktuellen Quelltext für diese Funktion 
-siehst du unter:
+In diesem Codeteil wir haben der Funktion \texttt{newheap} verwendet. Dieser Funktion
+erzeugt ein neues \texttt{heap} Element und hat zwei Eingabeparameter: ein für den neuen 
+Wert, und ein Zeiger für ihre Elter. Die aktuellen Quelltext für diesen Funktion 
+sieht man unter:
 \begin{lstlisting}
 heap *newheap( int x, heap *parent){
    heap *ret=(heap *)malloc(sizeof(heap));
+   if (ret == NULL){
+     printf("Error in memory allocation\n");
+     exit(1);
+   }
    ret->left=NULL;
    ret->right=NULL;
    ret->parent=parent;
@@ -438,49 +446,53 @@ heap *newheap( int x, heap *parent){
    return ret;
 }
 \end{lstlisting}
-Wenn das $heap$ leer ist, das Programm ist ganz einfach. Wir einschließen ein neues 
-Element als die neue Wurzel (Zeile 3). Anderfalls wir suchen für den ersten freien Platz
-(Siehe die Diskussion oben). Wir schließen die Wurzel in einem Warteschlange, und 
+Wenn das \texttt{heap} leer ist, das \texttt{heap\_insert} ist ganz einfach. Wir einschließen ein neues 
+Element als die neue Wurzel (Zeile 4, Achtung, den \texttt{parent} Zeiger der Wurzel muss \texttt{NULL} sein). 
+Anderfalls wir suchen für den ersten freien Platz
+(Sieht die Diskussion oben). Wir schließen die Wurzel in einem Warteschlange, und 
 machen eine Schleife bis die Warteschlange leer wird. Wenn wir ein Element
 ohne zwei Kinder von der Warteschlange ausgenehmen haben, wird sind fertig, wir
 haben den Platz gefunden. Anderfalls wir schließen ihre Kinder in der Warteschlange
-ein und springen auf den nächsten Iteration mit Hilfe des Stichwort $continue$.
+ein und springen auf den nächsten Iteration mit Hilfe des Stichwort \texttt{continue}.
 
-Im Löschen das Prinzip ist die gleiche: Im ersten Schritt wir müssen das letzte Element 
+In der Entfernung das Prinzip ist die gleiche: Im ersten Schritt wir müssen das letzte Element 
 finden, tauschen ihren Wert mit dem Wert von der Wurzel, und zum Ende müssen wir ihn
-freigeben. Im zweiten Schritt wir müssen das $heap$ Eigenschaft wiederherstellen.
+freigeben. Im zweiten Schritt wir müssen das \texttt{heap} Eigenschaft wiederherstellen.
 
-Die Suchung für das letzte Element ist ähnlich wie im Einschließen Funktion. Das
-unterschied ist dass wir müssen errinern an das Letzte nicht $NULL$ Element. Als 
-Eingabe wir haben der Zeiger auf die Wurzel des $heap$-s. Du kannst die dazuhöringen
+Die Suchung für das letzte Element ist ähnlich wie im \texttt{heap\_insert} Funktion. Das
+unterschied ist dass wir müssen errinern an das Letzte nicht \texttt{NULL} Element. Als 
+Eingabe wir haben der Zeiger auf die Wurzel des \texttt{heap}-s. Du kannst die dazuhöringen
 Codeteil unter sehen.
 \begin{lstlisting}
+//Schliesst den Kopf in der Warteschlange
 queue* q = newqueue(*root);
 heap* previousheap;
 heap* currentheap;
-
+//Bis der Warteschlange leer wird
 while ((currentheap=queue_rem(&q)) != NULL) {
   if (currentheap->left != NULL)
      queue_put(currentheap->left, &q);
   if (currentheap->right != NULL)
      queue_put(currentheap->right, &q);
-  previousheap= currentheap;
+  previousheap= currentheap;//Setzt den Zeiger zum letzten Element
 }
-currentheap = previousheap;
-free_queue(&q);
+currentheap = previousheap;//Das wird das letzte Element sein
+free_queue(&q);//Wir muessen den queue freigeben
 \end{lstlisting}
-Grundsätzlich Wir tun das Gleiche wie im Einschließen, außer das, dass wir am Ende 
-von jeden Iteration den aktuellen Zeiger auf dem $heap$ speicher. Am Ende 
+
+Grundsätzlich wir tun das Gleiche wie im Einschließen, außer das, dass wir am Ende 
+von jeden Iteration den aktuellen Zeiger auf dem \texttt{heap} speicher. Am Ende 
 dieser gespeicherte Zeiger wird das letzte Element sein. 
 
-Das Wiederherstellen des $heap$ Eigenschafts ist nicht so trivial als im 
+Das Wiederherstellen des \texttt{heap} Eigenschafts ist nicht so trivial als im 
 Einschließen. Dafür zeigen wir den Prozess auf Abbildung \ref{loschen}.
-Am Anfang wir haben das originalle $heap$ (Teil $a$) und wir werden
+Am Anfang wir haben das originalle \texttt{heap} (Teil $a$) und wir werden
 den Wert der Wurzel mit dem Wert vom letzten Element umtauschen. Danach
-wir zeigen das aktuellen $heap$ im Teil $b$. Natürlich in diesem Fall das $heap$
+wir zeigen das aktuellen \texttt{heap} im Teil $b$. Natürlich in diesem Fall das \texttt{heap}
 Eigenshaft ist nicht mehr wahr. Darum müssen wir den Wert der Wurzel mit der Wert, ihres
-größten Kindes umtauschen. Wir zeigen das Ergebnis im Teil $c$. Danach müssen
-wir das $heap$ Eigenschaft also in niedrigen Ebenen wiederherstellen. Das bedeutet
+größten Kindes umtauschen. Wir zeigen das Ergebnis im Teil $c$. Jetzt
+das \texttt{heap} Eigenschaft ist wahr auf den höhsten Ebenen. Nun müssen
+wir das \texttt{heap} Eigenschaft also in niedrigen Ebenen wiederherstellen. Das bedeutet
 wir müssen das Knote 5 auch mit ihrem größten Kind umtauschen. Dann bekommen wir
 das endgültige Ergebnis (Teil $d$).
 \begin{figure}[!ht]
@@ -769,7 +781,7 @@ while(1) {
       current_heap->left->val = a;
     }
     break;
-  }//Hat zwei Kinder
+  }//Hat zwei Kinder: Tauschen mit dem groessten
   else {
     a = current_heap->val;
     b = current_heap->left->val;
@@ -790,7 +802,7 @@ while(1) {
   }
 }
 \end{lstlisting}
-Jetzt sind wir Fertig mit dem $heap$ Teil.
+Jetzt sind wir Fertig mit dem \texttt{heap} Teil.
 
 \begin{myexampleprogram}{Programme: \texttt{Haldensortierung}}
 \begin{lstlisting}{heap.h}
