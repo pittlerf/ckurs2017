@@ -37,17 +37,20 @@ Der logische Ausdruck kann prinzipiell alle Operatoren enthalten, bzw. auch verk
 Da C intern einen logischen Ausdruck als ganze Zahl darstellt, bei dem $0$ falsch und $\neq 0$ wahr entspricht, kann man anstelle des logischen Ausdrucks auch einen ganzzahligen Ausdruck verwenden.
 Im Allgemeinen hat das \emph{if-else} Konstrukt folgendes Aussehen:
 \begin{lstlisting}{if-else Statement}
-if (logischer Ausdruck) {
+if (logischer Ausdruck)
+  {
     // falls wahr
     Anweisung1;
     Anweisung2;
     ...;
-} else {
+  }
+else
+  {
     // sonst
     Anweisung3;
     Anweisung4;
     ...;
-}
+  }
 \end{lstlisting}
 Dabei kann \verb|Anweisung1| zum Beispiel auch wieder ein \emph{if-else} Ausdruck sein. 
 Man kann \emph{if-else} also beliebig schachteln.

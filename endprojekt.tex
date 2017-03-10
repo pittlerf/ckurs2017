@@ -246,15 +246,17 @@ Beispielweise zeigen wir hier das Quelltext und die Headerdatein für die Wartes
 
 \begin{myexampleprogram}{ Programme: \texttt{Die Warteschlange}}	
 \begin{lstlisting}{heapqueue.h}
-typedef struct heap {
-    int val;
-    struct heap *left;
-    struct heap *right;
-    struct heap *parent;
+typedef struct heap
+{
+  int val;
+  struct heap *left;
+  struct heap *right;
+  struct heap *parent;
 } heap;
-typedef struct queue {
-    struct queue *next;
-    heap *element;
+typedef struct queue
+{
+  struct queue *next;
+  heap *element;
 } queue;
 \end{lstlisting}
 \begin{lstlisting}{queue.h}
@@ -266,82 +268,96 @@ void free_queue(queue **first);
 \end{lstlisting}
 
 \begin{lstlisting}{queue.c}
-#include<stdio.h>
-#include<stdlib.h>
-#include"heapqueue.h"
-//Stellt ein neue queue element her
-queue *newqueue( heap *data ){
-   queue *q=(queue *)malloc(sizeof(queue));
-   q->element=data;
-   q->next=NULL;
-   return q;
+#include "heapqueue.h"
+#include <stdio.h>
+#include <stdlib.h>
+// Stellt ein neue queue element her
+queue *newqueue(heap *data)
+{
+  queue *q = (queue *)malloc(sizeof(queue));
+  q->element = data;
+  q->next = NULL;
+  return q;
 }
-//Schliesst ein neue Element in einem queue ein
-void queue_put( heap *data, queue ** first){
-   //existier schon eine Liste
-   if ((*first) == NULL){//falls nein
-       (*first)=newqueue(data);//erzeuge ein neues Element
-       return;
-   }
-   //falls ja
-   queue *temp=newqueue(data);//erzeuge ein neues Element
-   temp->next=(*first);//setzte den Zeiger
-   (*first)=temp;//temp ist das neue erste Element
+// Schliesst ein neue Element in einem queue ein
+void queue_put(heap *data, queue **first)
+{
+  // existier schon eine Liste
+  if ((*first) == NULL)
+    { // falls nein
+      (*first) = newqueue(data); // erzeuge ein neues Element
+      return;
+    }
+  // falls ja
+  queue *temp = newqueue(data); // erzeuge ein neues Element
+  temp->next = (*first); // setzte den Zeiger
+  (*first) = temp; // temp ist das neue erste Element
 }
 // Ein Element wird aus dem queue entfernt
-heap *queue_rem( queue **first){
-   queue *temp;
-   heap *ret;
-   if ((*first) == NULL){
-     return NULL;
-   }
-   if ((*first)->next == NULL){//Besteht nur aus ein Element
-     ret=(*first)->element;//Extrahiere das Datum
-     free((*first));//Loesche das erste
-     (*first)=NULL;
-     return ret;//Gib das datum zurueck
-   }
-//Besteht aus mehreren Elementen
-//Suchung fuer das letzte Element
-   temp=(*first);
-   queue *prev;
-   while ( temp->next != NULL){
-      prev=temp;
-      temp=temp->next;//Zeiger auf das naechste Element setzten
-   }
-   prev->next=NULL;//Setzte den Zeiger: Das Ende wird das vorletzte Element sein
-   ret=temp->element;//Extrahiere das Datum
-   free(temp);//Loeschen das letzte
-   return (ret); //Gib das Datum zurueck
+heap *queue_rem(queue **first)
+{
+  queue *temp;
+  heap *ret;
+  if ((*first) == NULL)
+    {
+      return NULL;
+    }
+  if ((*first)->next == NULL)
+    { // Besteht nur aus ein Element
+      ret = (*first)->element; // Extrahiere das Datum
+      free((*first)); // Loesche das erste
+      (*first) = NULL;
+      return ret; // Gib das datum zurueck
+    }
+  // Besteht aus mehreren Elementen
+  // Suchung fuer das letzte Element
+  temp = (*first);
+  queue *prev;
+  while (temp->next != NULL)
+    {
+      prev = temp;
+      temp = temp->next; // Zeiger auf das naechste Element setzten
+    }
+  prev->next =
+      NULL; // Setzte den Zeiger: Das Ende wird das vorletzte Element sein
+  ret = temp->element; // Extrahiere das Datum
+  free(temp); // Loeschen das letzte
+  return (ret); // Gib das Datum zurueck
 }
-//Geht ein queue durch
-void print_queue( queue *first ){
-   queue *temp=(first);
-   if (temp == NULL){
-     return;
-   }
-   while(1){
-     printf("%d\t", temp->element->val);//momentanes Datum ausgeben
-     temp=temp->next;//Zeiger auf das naechste Element setzten
-     if (temp == NULL){//Letztes Element erreicht, 
-       break; //falls ja, Abbruch
-     }
-   }
-   printf("\n");
+// Geht ein queue durch
+void print_queue(queue *first)
+{
+  queue *temp = (first);
+  if (temp == NULL)
+    {
+      return;
+    }
+  while (1)
+    {
+      printf("%d\t", temp->element->val); // momentanes Datum ausgeben
+      temp = temp->next; // Zeiger auf das naechste Element setzten
+      if (temp == NULL)
+        { // Letztes Element erreicht,
+          break; // falls ja, Abbruch
+        }
+    }
+  printf("\n");
 }
-//Gebt ein queue frei
-void free_queue( queue **first){
-   if ((*first)== NULL)
-     return;
-   queue *temp=(*first);
-   queue *temp2;
-   while(1){
-     temp2=temp->next;
-     free(temp);
-     temp=temp2;
-     if (temp == NULL)
-       break;
-   }
+// Gebt ein queue frei
+void free_queue(queue **first)
+{
+  if ((*first) == NULL)
+    return;
+  queue *temp = (*first);
+  queue *temp2;
+  while (1)
+    {
+      temp2 = temp->next;
+      free(temp);
+      temp = temp2;
+      if (temp == NULL)
+        break;
+    }
 }
 \end{lstlisting}
 \end{myexampleprogram}
@@ -823,198 +839,227 @@ Jetzt sind wir Fertig mit dem $heap$ Teil.
 
 \begin{myexampleprogram}{Programme: \texttt{Haldensortierung}}
 \begin{lstlisting}{heap.h}
-void heap_insert(heap** root, int x);
-int heap_remove(heap** root);
-void print_heap(heap* root);
-heap *newheap( int x, heap *parent);
+void heap_insert(heap **root, int x);
+int heap_remove(heap **root);
+void print_heap(heap *root);
+heap *newheap(int x, heap *parent);
 \end{lstlisting}
 \begin{lstlisting}{heap.c}
-#include<stdio.h>
-#include<stdlib.h>
-#include"heapqueue.h"
-#include"queue.h"
-//Stellt ein neue heap her
-heap *newheap( int x, heap *parent){
-   heap *ret=(heap *)malloc(sizeof(heap));
-   ret->left=NULL;
-   ret->right=NULL;
-   ret->parent=parent;
-   ret->val=x;
-   return ret;
+#include "heapqueue.h"
+#include "queue.h"
+#include <stdio.h>
+#include <stdlib.h>
+// Stellt ein neue heap her
+heap *newheap(int x, heap *parent)
+{
+  heap *ret = (heap *)malloc(sizeof(heap));
+  ret->left = NULL;
+  ret->right = NULL;
+  ret->parent = parent;
+  ret->val = x;
+  return ret;
 }
-//Schliesst ein Element in einem heap
-void heap_insert(heap** root, int x) {
-   if(*root == NULL) {
-     *root = newheap(x, NULL);
-   }
-   else {
-     queue* q = newqueue(*root);
-     heap* current_heap;
-     //Suchung fuer die Pozition
-     while((current_heap=queue_rem(&q))!=NULL){
-       //hat kein Kinder: wir haben gefunden
-       if(current_heap->left == NULL) {
-          current_heap->left  = newheap(x, current_heap);
-          current_heap = current_heap->left;
-       }
-       //hat nur ein Kinder : wir haben auch gefunden
-       else if(current_heap->right == NULL) {
-          current_heap->right = newheap(x, current_heap);
-          current_heap = current_heap->right;
-       }
-       //hat zwei Kinder:wir muessen ein neue Iteration machen
-       else {
-          queue_put(current_heap->left, &q);
-          queue_put(current_heap->right,&q);
-          continue;
-       }
-       //In diesem Point wir haben den Pozition gefunden, und
-       //wir fangen das Heap Eigenschaft wiederherstellen
-       while(current_heap->parent != NULL && current_heap->parent->val < current_heap->val) {
-          int temp = current_heap->parent->val;
-          current_heap->parent->val = current_heap->val;
-          current_heap->val = temp;
-          current_heap = current_heap->parent;
-       }
-       //wir sind Fertig
-       break;
-     }
-     //Wir muessen das queue freigeben
-     free_queue(&q);
-   }
-}
-//Loescht ein Element aus dem heap
-int heap_remove(heap** root) {
-   int ret;
-   if(*root != NULL) {
-     queue* q = newqueue(*root);
-     heap* previous_heap;
-     heap* current_heap;
-     //Suchung fuer das Pozition
-     while ((current_heap=queue_rem(&q)) != NULL) {
-       if (current_heap->left != NULL)
-           queue_put(current_heap->left, &q);
-       if (current_heap->right != NULL)
-           queue_put(current_heap->right, &q);
-       previous_heap= current_heap;
-     }
-     //wir haben es gefunden
-     current_heap = previous_heap;
-     free_queue(&q);
-     //wenn das der Kopf ist wir geben ihre Wert aus
-     if(current_heap->parent == NULL) {
-       ret=current_heap->val;
-       free(current_heap);
-       *root = NULL;
-       return ret;
-     }
-     else {
-       //Wenn nicht, wir tauschen ihre Wert mit dem Wert vom Kopf
-       ret=(*root)->val;
-       (*root)->val = current_heap->val;
-       current_heap = current_heap->parent;
-       if(current_heap->right != NULL) {
-           free(current_heap->right);
-           current_heap->right = NULL;
-       }
-       else {
-           free(current_heap->left);
-           current_heap->left = NULL;
-       }
-       //Und fangen wir das wiederherstellen an.
-       int a, b, c;
-       current_heap = *root;
-       while(1) {
-         //kein Kinder: wir sind Fertig
-         if(current_heap->left == NULL) {
-           break;
-         }
-         //Nur ein Kinder: wir muessen nur einmal Pruefen
-         else if(current_heap->right == NULL) {
-           a = current_heap->val;
-           b = current_heap->left->val;
-           if(a < b) {
-               current_heap->val = b;
-               current_heap->left->val = a;
-           }
-           break;
-          }
-          //Zwei Kinder: wir pruefen und machen noch ein Iteration
-          else {           
-           a = current_heap->val;
-           b = current_heap->left->val;
-           c = current_heap->right->val;
-           if(a >= b && a >= c) {
-               break;
+// Schliesst ein Element in einem heap
+void heap_insert(heap **root, int x)
+{
+  if (*root == NULL)
+    {
+      *root = newheap(x, NULL);
+    }
+  else
+    {
+      queue *q = newqueue(*root);
+      heap *current_heap;
+      // Suchung fuer die Pozition
+      while ((current_heap = queue_rem(&q)) != NULL)
+        {
+          // hat kein Kinder: wir haben gefunden
+          if (current_heap->left == NULL)
+            {
+              current_heap->left = newheap(x, current_heap);
+              current_heap = current_heap->left;
             }
-            else if(b > a && b >= c) {
-               current_heap->left->val = a;
-               current_heap->val = b;
-               current_heap = current_heap->left;
+          // hat nur ein Kinder : wir haben auch gefunden
+          else if (current_heap->right == NULL)
+            {
+              current_heap->right = newheap(x, current_heap);
+              current_heap = current_heap->right;
             }
-            else {
-               current_heap->right->val = a;
-               current_heap->val = c;
-               current_heap = current_heap->right;
+          // hat zwei Kinder:wir muessen ein neue Iteration machen
+          else
+            {
+              queue_put(current_heap->left, &q);
+              queue_put(current_heap->right, &q);
+              continue;
             }
-
-          }
+          // In diesem Point wir haben den Pozition gefunden, und
+          // wir fangen das Heap Eigenschaft wiederherstellen
+          while (current_heap->parent != NULL &&
+                 current_heap->parent->val < current_heap->val)
+            {
+              int temp = current_heap->parent->val;
+              current_heap->parent->val = current_heap->val;
+              current_heap->val = temp;
+              current_heap = current_heap->parent;
+            }
+          // wir sind Fertig
+          break;
         }
-     }
-     return ret;
-   }
-   else
-      return 0;
+      // Wir muessen das queue freigeben
+      free_queue(&q);
+    }
 }
-void print_heap(heap* root) {
-    if(root != NULL) {
-        queue* q = newqueue(*root);
-        heap* test;
-        while((test = queue_rem(&q))!=NULL) {
+// Loescht ein Element aus dem heap
+int heap_remove(heap **root)
+{
+  int ret;
+  if (*root != NULL)
+    {
+      queue *q = newqueue(*root);
+      heap *previous_heap;
+      heap *current_heap;
+      // Suchung fuer das Pozition
+      while ((current_heap = queue_rem(&q)) != NULL)
+        {
+          if (current_heap->left != NULL)
+            queue_put(current_heap->left, &q);
+          if (current_heap->right != NULL)
+            queue_put(current_heap->right, &q);
+          previous_heap = current_heap;
+        }
+      // wir haben es gefunden
+      current_heap = previous_heap;
+      free_queue(&q);
+      // wenn das der Kopf ist wir geben ihre Wert aus
+      if (current_heap->parent == NULL)
+        {
+          ret = current_heap->val;
+          free(current_heap);
+          *root = NULL;
+          return ret;
+        }
+      else
+        {
+          // Wenn nicht, wir tauschen ihre Wert mit dem Wert vom Kopf
+          ret = (*root)->val;
+          (*root)->val = current_heap->val;
+          current_heap = current_heap->parent;
+          if (current_heap->right != NULL)
+            {
+              free(current_heap->right);
+              current_heap->right = NULL;
+            }
+          else
+            {
+              free(current_heap->left);
+              current_heap->left = NULL;
+            }
+          // Und fangen wir das wiederherstellen an.
+          int a, b, c;
+          current_heap = *root;
+          while (1)
+            {
+              // kein Kinder: wir sind Fertig
+              if (current_heap->left == NULL)
+                {
+                  break;
+                }
+              // Nur ein Kinder: wir muessen nur einmal Pruefen
+              else if (current_heap->right == NULL)
+                {
+                  a = current_heap->val;
+                  b = current_heap->left->val;
+                  if (a < b)
+                    {
+                      current_heap->val = b;
+                      current_heap->left->val = a;
+                    }
+                  break;
+                }
+              // Zwei Kinder: wir pruefen und machen noch ein Iteration
+              else
+                {
+                  a = current_heap->val;
+                  b = current_heap->left->val;
+                  c = current_heap->right->val;
+                  if (a >= b && a >= c)
+                    {
+                      break;
+                    }
+                  else if (b > a && b >= c)
+                    {
+                      current_heap->left->val = a;
+                      current_heap->val = b;
+                      current_heap = current_heap->left;
+                    }
+                  else
+                    {
+                      current_heap->right->val = a;
+                      current_heap->val = c;
+                      current_heap = current_heap->right;
+                    }
+                }
+            }
+        }
+      return ret;
+    }
+  else
+    return 0;
+}
+void print_heap(heap *root)
+{
+  if (root != NULL)
+    {
+      queue *q = newqueue(*root);
+      heap *test;
+      while ((test = queue_rem(&q)) != NULL)
+        {
           if (test->left != NULL)
-             queue_put(test->left, &q);
+            queue_put(test->left, &q);
           if (test->right != NULL)
-             queue_put(test->right, &q);
+            queue_put(test->right, &q);
           printf("%d ", test->val);
         }
-        if (q!=NULL)
-         free_queue(&q);
-        printf("\n");
+      if (q != NULL)
+        free_queue(&q);
+      printf("\n");
     }
 }
 \end{lstlisting}
 \end{myexampleprogram}
 \begin{myexampleprogram}{Das \texttt{main} Programm}
 \begin{lstlisting}{main.c}
-#include<stdio.h>
-#include<stdlib.h>
-#include"heapqueue.h"
-#include"heap.h"
-int main () {
-    heap *root = NULL;
-    int i,j;
-    heap_insert(&root, 10);
-    print_heap(root);
-    heap_insert(&root, 12);
-    print_heap(root);
-    heap_insert(&root,  6);
-    print_heap(root);
-    heap_insert(&root,  5);
-    print_heap(root);
-    heap_insert(&root,  9);
-    print_heap(root);
-    heap_insert(&root, 13);
-    print_heap(root);
-    heap_insert(&root,  1);
-    print_heap(root);
-    heap_insert(&root,  7);
-    print_heap(root);
-    printf("Start removing\n");
-    for (i=0; i<8; ++i){
-       j=heap_remove(&root);
-       printf("Removed item=%d\n", j);
+#include "heap.h"
+#include "heapqueue.h"
+#include <stdio.h>
+#include <stdlib.h>
+int main()
+{
+  heap *root = NULL;
+  int i, j;
+  heap_insert(&root, 10);
+  print_heap(root);
+  heap_insert(&root, 12);
+  print_heap(root);
+  heap_insert(&root, 6);
+  print_heap(root);
+  heap_insert(&root, 5);
+  print_heap(root);
+  heap_insert(&root, 9);
+  print_heap(root);
+  heap_insert(&root, 13);
+  print_heap(root);
+  heap_insert(&root, 1);
+  print_heap(root);
+  heap_insert(&root, 7);
+  print_heap(root);
+  printf("Start removing\n");
+  for (i = 0; i < 8; ++i)
+    {
+      j = heap_remove(&root);
+      printf("Removed item=%d\n", j);
     }
-    return 0;
+  return 0;
 }
 \end{lstlisting}
 \begin{verbatim}

@@ -5,10 +5,11 @@ Auch dies ist am einfachsten an Hand eines Beispiels zu verstehen
 \begin{lstlisting}{Erste Variablen Deklaration und Zuweisung}
 #include <stido.h>
 
-int main() {
-    int n;
-    n = 4;
-    printf("Wir werden n zahlen sortieren:\n");
+int main()
+{
+  int n;
+  n = 4;
+  printf("Wir werden n zahlen sortieren:\n");
 }
 \end{lstlisting}
 Im Vergleich zu unserem letzten Beispiel sind zwei Zeilen hinzugekommen. 
@@ -37,10 +38,11 @@ Deklaration und Zuweisung können auch in einer Anweisung geschehen, man kann al
 \begin{lstlisting}{Erste Variablen Deklaration und Zuweisung}
 #include <stido.h>
 
-int main() {
-    int n = 4;
-    printf("Wir werden n zahlen sortieren :\n");
-    return 0;
+int main()
+{
+  int n = 4;
+  printf("Wir werden n zahlen sortieren :\n");
+  return 0;
 }
 \end{lstlisting}
 schreiben. 
@@ -169,11 +171,12 @@ Beispielsweise wird folgender Code ohne Beanstandung übersetzt
 \begin{lstlisting}{Erste Variablen Deklaration und Zuweisung}
 #include <stido.h>
 
-int main() {
-    // so etwas sollte man nicht schreiben!
-    int n = 4.5;
-    printf("Wir werden n Zahlen sortieren :\n");
-    return 0;
+int main()
+{
+  // so etwas sollte man nicht schreiben!
+  int n = 4.5;
+  printf("Wir werden n Zahlen sortieren :\n");
+  return 0;
 }
 \end{lstlisting}
 obwohl hier implizit die reelle Zahl $4.5$ durch Abschneiden in eine ganze Zahl umgewandelt wird.
