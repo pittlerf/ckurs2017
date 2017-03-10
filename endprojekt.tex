@@ -976,6 +976,10 @@ void print_heap(heap* root) {
 }
 \end{lstlisting}
 \end{myexampleprogram}
+Im \texttt{main} werden wir das \texttt{heap} verwenden
+und darum müssen wir ihres Headerdatei beilegen mit Hilfe
+des Strichwort \texttt{\#include\"{}\"{}}. Unter sieht man den
+Quelltext in der Praxis.
 \begin{myexampleprogram}{Das \texttt{main} Programm}
 \begin{lstlisting}{main.c}
 #include<stdio.h>
@@ -983,9 +987,9 @@ void print_heap(heap* root) {
 #include"heapqueue.h"
 #include"heap.h"
 int main () {
-    heap *root = NULL;
+    heap *root = NULL; //Erzeugen ein Zeiger auf das erste Element
     int i,j;
-    heap_insert(&root, 10);
+    heap_insert(&root, 10); //Schliessen wir den Element 10 ein 
     print_heap(root);
     heap_insert(&root, 12);
     print_heap(root);
@@ -1001,7 +1005,7 @@ int main () {
     print_heap(root);
     heap_insert(&root,  7);
     print_heap(root);
-    printf("Start removing\n");
+    printf("Start removing\n");//Fangen wir die Entfernung der Elementen an
     for (i=0; i<8; ++i){
        j=heap_remove(&root);
        printf("Removed item=%d\n", j);
@@ -1009,6 +1013,28 @@ int main () {
     return 0;
 }
 \end{lstlisting}
+Um diesen Programme zu komplieren, wir müssen zuerst Object code aus allen verschieden 
+Datein mit Hilfe von \texttt{gcc} erzeugen. Diesen Objekten werden nicht ausführbaren sein. 
+Dann wir werden das linker verwenden um ein ausführbaren Datein aus diesen Objekten zu erzeugen.
+Hier zeigen wir das in der Praxis:
+\\
+\begin{verb}
+>$  gcc -c queue.c
+\end{verb}\\
+\begin{verb} 
+>$  gcc -c heap.c
+\end{verb}\\
+\begin{verb}
+>$  gcc -c main.c
+\end{verb}\\
+\begin{verb}
+>$  gcc main.o heap.o queue.o -o heapsort.exe
+\end{verb}\\
+Die Anwendung\\
+\begin{verb}
+>$ ./heapsort.exe
+\end{verb}\\
+gibt die folgende Ausgabe:
 \begin{lstlisting}{Ausgabe}
 10 
 12 10 
