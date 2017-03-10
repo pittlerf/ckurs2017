@@ -10,17 +10,21 @@ Der entsprechende Quelltext könnte so aussehen:
 \begin{lstlisting}
 #include <stdio.h>
 
-int main() {
-    int a = 4;
-    unsigned int absolutevalue = 0;
-    if (a > 0) {
-        absolutevalue = a;
-    } else {
-        // falls a <= 0
-        absolutvalue = -a;
+int main()
+{
+  int a = 4;
+  unsigned int absolutevalue = 0;
+  if (a > 0)
+    {
+      absolutevalue = a;
     }
-    printf("Der Absolutwert von a ist %u\n", absolutevalue);
-    return (0);
+  else
+    {
+      // falls a <= 0
+      absolutvalue = -a;
+    }
+  printf("Der Absolutwert von a ist %u\n", absolutevalue);
+  return (0);
 }
 \end{lstlisting}
 In Abhängigkeit davon, ob \verb|a > 0| zu wahr ausgewertet wird oder nicht, wird in diesem Beispiel entweder der Codeblock nach dem \verb|if| oder der nach dem \verb|else| ausgeführt.
@@ -58,26 +62,28 @@ Dann wird, in Abhängigkeit vom eingegebenen Wert eine Ausgabe auf dem Bildschir
 \begin{lstlisting}
 #include <stdio.h>
 
-int main() {
-    int n = 0;
-    scanf("%d", &n);
-    switch (n) {
-        case 0:
-            printf("Der Eingabewert ist 0\n");
-            break;
-        case 1:
-            printf("Der Eingabewert ist 1\n");
-        case 2:
-            printf("Der Eingabewert ist 1 oder 2\n");
-            break;
-        case 3:
-            printf("Der Eingabewert ist 3\n");
-            break;
-        default:
-            printf("Der Eingabewert ist groesser als 3 oder kleiner als 0\n");
-            break;
+int main()
+{
+  int n = 0;
+  scanf("%d", &n);
+  switch (n)
+    {
+      case 0:
+        printf("Der Eingabewert ist 0\n");
+        break;
+      case 1:
+        printf("Der Eingabewert ist 1\n");
+      case 2:
+        printf("Der Eingabewert ist 1 oder 2\n");
+        break;
+      case 3:
+        printf("Der Eingabewert ist 3\n");
+        break;
+      default:
+        printf("Der Eingabewert ist groesser als 3 oder kleiner als 0\n");
+        break;
     }
-    return (0);
+  return (0);
 }
 \end{lstlisting}
 Das Konstrukt wird mit dem Schlüsselwort \verb|switch| eingeleitet.
@@ -88,18 +94,19 @@ Wenn $1$ eingegeben wird, wird Zeile $11$ und $13$ ausgeführt.
 Und, wenn keines von $0,1,2,3$ eingegeben wird, also keine der Möglichkeiten passt, so wird der \verb|default| Zweig ausgeführt, und damit Zeile $19$.
 Im Allgemeinen sieht das also so aus:
 \begin{lstlisting}
-switch (int) {
+switch (int)
+  {
     case Wert1:
-        Anweisung1;
-        ....;
-        break; // optional
+      Anweisung1;
+      ....;
+      break; // optional
     case Wert2:
-        Anweisung2;
-        ....;
-        break; // optional
-        ....default : Anweisung3;
-        break; // optional
-}
+      Anweisung2;
+      ....;
+      break; // optional
+      ....default : Anweisung3;
+      break; // optional
+  }
 \end{lstlisting}
 
 Eine wesentlich wichtigere Kontrollstruktur sind sogenannt \emph{for} Schleifen.
@@ -108,19 +115,22 @@ Dann können wir das mit folgendem Quelltext machen:
 \begin{lstlisting}
 #include <stdio.h>
 
-int main() {
-    int n;
-    int summe = 0;
-    scanf("%d\n", &n);
-    if (n < 0) {
-        printf("Die Eingabe muss groesser oder gleich 0 sein!\n");
-        return (-1);
+int main()
+{
+  int n;
+  int summe = 0;
+  scanf("%d\n", &n);
+  if (n < 0)
+    {
+      printf("Die Eingabe muss groesser oder gleich 0 sein!\n");
+      return (-1);
     }
-    for (int i = 0; i < n; ++i) {
-        summe += i;
+  for (int i = 0; i < n; ++i)
+    {
+      summe += i;
     }
-    printf("Die Summe der Zahlen von 0 bis %d ist %d\n", n - 1, summe);
-    return (0);
+  printf("Die Summe der Zahlen von 0 bis %d ist %d\n", n - 1, summe);
+  return (0);
 }
 \end{lstlisting}
 Hierbei lesen wir zunächst den Wert von $n$ mit Hilfe von \verb|scanf| ein.
@@ -138,11 +148,12 @@ Da \verb|summe| außerhalb der Schleife deklariert und initialisiert wurde, ist 
 Allgemein sieht die \emph{for} Schleife wie folgt aus:
 \begin{myalertblock}{For Schleife}
 \begin{lstlisting}
-for (Ausdruck1; Ausdruck2; Ausdruck3) {
+for (Ausdruck1; Ausdruck2; Ausdruck3)
+  {
     Anweisung1;
     Anweisung2;
     ...;
-}
+  }
 \end{lstlisting}
 \vspace{-1cm}
 \begin{enumerate}
@@ -163,23 +174,26 @@ In einem solchen Fall kann man die Schleife mit Hilfe von \verb|break| explizit 
 \begin{lstlisting}
 #include <stdio.h>
 
-int main() {
-    int n;
-    int summe = 0;
-    int i = 0;
-    scanf("%d", &n);
-    if (n < 0) {
-        printf("Die Eingabe muss groesser oder gleich 0 sein!\n");
-        return (-1);
+int main()
+{
+  int n;
+  int summe = 0;
+  int i = 0;
+  scanf("%d", &n);
+  if (n < 0)
+    {
+      printf("Die Eingabe muss groesser oder gleich 0 sein!\n");
+      return (-1);
     }
-    for (;;) {
-        if (i == n)
-            break;
-        summe += i;
-        i++;
+  for (;;)
+    {
+      if (i == n)
+        break;
+      summe += i;
+      i++;
     }
-    printf("Die Summe der Zahlen von 0 bis %d ist %d\n", n - 1, summe);
-    return (0);
+  printf("Die Summe der Zahlen von 0 bis %d ist %d\n", n - 1, summe);
+  return (0);
 }
 \end{lstlisting}
 C kennt zwei weitere Schleifenkonstrukte, nämlich die \verb|while| und die \verb|do-while| Schleife.
@@ -187,9 +201,10 @@ Während die \verb|while| Schleife die Abbruchbedingung vor dem Ausführen des S
 Das macht den großen Unterschied zwischen den beiden aus, die im folgenden nocheinmal allgemein dargestellt sind.
 \begin{myalertblock}{while Konstrukt}
 \begin{lstlisting}
-while (logischer Ausdruck) {
+while (logischer Ausdruck)
+  {
     Anweisungen;
-}
+  }
 \end{lstlisting}
 \vspace{-0.5cm}
 Die Anweisungen werden also so lange ausgeführt, wie der logische Ausdruck zu \emph{true} ausgewertet wird.
@@ -197,9 +212,11 @@ Die Anweisungen werden also so lange ausgeführt, wie der logische Ausdruck zu \
 
 \begin{myalertblock}{do-while Konstrukt}
 \begin{lstlisting}
-do {
+do
+  {
     Anweisungen;
-} while (logischer Ausdruck)
+  }
+while (logischer Ausdruck)
 \end{lstlisting}
 \vspace{-0.5cm}
 Die Anweisungen werden so lange ausgeführt, wie der logische Ausdruck zu wahr ausgewertet wird, allerdings mindestens einmal.

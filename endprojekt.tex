@@ -112,11 +112,12 @@ besser als die Einfügesortierung.
 Wir verwenden verketteten Liste für die Darstellung des \texttt{heap}-s. Jedes Element muss
 ein Zeiger auf ihre Elter, und zwei Zeiger auf ihre rechten und linken Nachfolger haben.
 \begin{lstlisting}
-typedef struct heap {
-    int val;
-    struct heap *left; /* Verweis auf linken Nachfolger  */
-    struct heap *right; /* Verweis auf rechten Nachfolger */
-    struct heap *parent; /* Verweis auf den Vorgaenger */
+typedef struct heap
+{
+  int val;
+  struct heap *left; /* Verweis auf linken Nachfolger  */
+  struct heap *right; /* Verweis auf rechten Nachfolger */
+  struct heap *parent; /* Verweis auf den Vorgaenger */
 } heap;
 \end{lstlisting}
 Um ein geschloßener Baum zu haben, müssen wir an die folgenden zwei Punkten achten:
@@ -197,28 +198,32 @@ die Warteschlange funktioniert. Unter sieht man den Quelltext für die Suchung.
 
 
 \begin{lstlisting}
-queue* q = newqueue(*root); /*Kopf der Familien zur Warteschlange*/
-heap* currentheap; 
-while((currentheap=queue_rem(&q))!=NULL){//Ein mann kommt aus der Warteschlange
-  //Wenn er/sie nicht zwei Kinder hat, bekommt ein neues Kind
-  //(Konzert Ticket in unserem Beispiel)
-  if(currentheap->left == NULL) {
-     currentheap->left  = newheap(x, currentheap);
-     currentheap = currentheap->left;
+queue *q = newqueue(*root); /*Kopf der Familien zur Warteschlange*/
+heap *currentheap;
+while ((currentheap = queue_rem(&q)) != NULL)
+  { // Ein mann kommt aus der Warteschlange
+    // Wenn er/sie nicht zwei Kinder hat, bekommt ein neues Kind
+    //(Konzert Ticket in unserem Beispiel)
+    if (currentheap->left == NULL)
+      {
+        currentheap->left = newheap(x, currentheap);
+        currentheap = currentheap->left;
+      }
+    else if (currentheap->right == NULL)
+      {
+        currentheap->right = newheap(x, currentheap);
+        currentheap = currentheap->right;
+      }
+    // Wenn er/sie zwei Kinder hat, stellt ihnen in der
+    // Warteschlange und geht aus, die naeschte Kaeufer kommt
+    else
+      {
+        queue_put(currentheap->left, &q);
+        queue_put(currentheap->right, &q);
+        continue; // Springen zum naechsten Iteration
+      }
+    break;
   }
-  else if(currentheap->right == NULL) {
-     currentheap->right = newheap(x, currentheap);
-     currentheap = currentheap->right;
-  }
-  //Wenn er/sie zwei Kinder hat, stellt ihnen in der 
-  //Warteschlange und geht aus, die naeschte Kaeufer kommt
-  else {
-     queue_put(currentheap->left, &q);
-     queue_put(currentheap->right,&q);
-     continue;//Springen zum naechsten Iteration
-  }
-  break;
-}
 \end{lstlisting}
 
 
@@ -353,16 +358,17 @@ Jetzt wir müssen das \texttt{heap} Eigenschaft überprüfen. Das ist ganz einfa
 wir ziehen das eingegebene Element oben bis das \texttt{heap} Eigenschaft wahr wird.
 Wir zeigen hier das in der Praxis:
 \begin{lstlisting}
-//Prufen ob es hat Elter und wenn ja ob es goesser ist als ihre Elter
-while(current_heap->parent != NULL && current_heap->parent->val < current_heap->val) 
-{
-    //wenn ja, wir tauschen ihre Werten
-    int tmp=current_heap->parent->val;
-    current_heap->parent->val=current_heap->val;
-    current_heap->val=tmp;
-    //Fortsetzen die Pruefung mit dem Elter
-    current->heap=current_heap_parent;
-}
+// Prufen ob es hat Elter und wenn ja ob es goesser ist als ihre Elter
+while (current_heap->parent != NULL &&
+       current_heap->parent->val < current_heap->val)
+  {
+    // wenn ja, wir tauschen ihre Werten
+    int tmp = current_heap->parent->val;
+    current_heap->parent->val = current_heap->val;
+    current_heap->val = tmp;
+    // Fortsetzen die Pruefung mit dem Elter
+    current->heap = current_heap_parent;
+  }
 \end{lstlisting}
 In der zweiten Zeile wir haben scheinbar ein Fehler gemacht. Wir verwenden
 den Wert vom Zeiger \texttt{parent} ohne Prüfung. 
@@ -381,42 +387,54 @@ Wenn wir den Platz gefunden haben, prüfen wir das \texttt{heap} Eigenschaft üb
 (Zeile 24-26). Dann wir sind fertig, die Warteschlange wird freigegeben und
 wir beenden die Schleife mit Hilfe des Strichworts \texttt{break}.
 \begin{lstlisting}
-void heap_insert(heap **root, int x) {
-    if (*root == NULL) {
-        *root = newheap(x, NULL);
-    } else {
-        queue *q = newqueue(*root);
-        heap *currentheap;
-
-        while ((currentheap = queue_rem(&q)) != NULL) {
-            if (currentheap->left == NULL) {
-                currentheap->left = newheap(x, currentheap);
-                currentheap = currentheap->left;
-            } else if (currentheap->right == NULL) {
-                currentheap->right = newheap(x, currentheap);
-                currentheap = currentheap->right;
-            } else {
-                queue_put(currentheap->left, &q);
-                queue_put(currentheap->right, &q);
-                continue;
-            }
-            while (currentheap->parent != NULL &&
-                   currentheap->parent->val < currentheap->val) {
-                SWAP(current_heap->parent->val, current_heap->val);
-                currentheap = currentheap->parent;
-            }
-            break;
-        }
-        while (currentheap->parent != NULL &&
-               currentheap->parent->val < currentheap->val) {
-            int tmp = current_heap->parent->val;
-            current_heap->parent->val = current_heap->val;
-            current_heap->val = tmp;
-            currentheap = currentheap->parent;
-        }
-        break;
+void heap_insert(heap **root, int x)
+{
+  if (*root == NULL)
+    {
+      *root = newheap(x, NULL);
     }
-    free_queue(&q);
+  else
+    {
+      queue *q = newqueue(*root);
+      heap *currentheap;
+
+      while ((currentheap = queue_rem(&q)) != NULL)
+        {
+          if (currentheap->left == NULL)
+            {
+              currentheap->left = newheap(x, currentheap);
+              currentheap = currentheap->left;
+            }
+          else if (currentheap->right == NULL)
+            {
+              currentheap->right = newheap(x, currentheap);
+              currentheap = currentheap->right;
+            }
+          else
+            {
+              queue_put(currentheap->left, &q);
+              queue_put(currentheap->right, &q);
+              continue;
+            }
+          while (currentheap->parent != NULL &&
+                 currentheap->parent->val < currentheap->val)
+            {
+              SWAP(current_heap->parent->val, current_heap->val);
+              currentheap = currentheap->parent;
+            }
+          break;
+        }
+      while (currentheap->parent != NULL &&
+             currentheap->parent->val < currentheap->val)
+        {
+          int tmp = current_heap->parent->val;
+          current_heap->parent->val = current_heap->val;
+          current_heap->val = tmp;
+          currentheap = currentheap->parent;
+        }
+      break;
+    }
+  free_queue(&q);
 }
 \end{lstlisting}
 \begin{myexampleblock}{Strichwörter: \texttt{break} und \texttt{continue}}
@@ -430,13 +448,14 @@ erzeugt ein neues $heap$ Element und hat zwei Eingabeparameter: ein für den neu
 Wert, und ein Zeiger für ihre Elter. Die aktuellen Quelltext für diese Funktion 
 siehst du unter:
 \begin{lstlisting}
-heap *newheap(int x, heap *parent) {
-    heap *ret = (heap *)malloc(sizeof(heap));
-    ret->left = NULL;
-    ret->right = NULL;
-    ret->parent = parent;
-    ret->val = x;
-    return ret;
+heap *newheap(int x, heap *parent)
+{
+  heap *ret = (heap *)malloc(sizeof(heap));
+  ret->left = NULL;
+  ret->right = NULL;
+  ret->parent = parent;
+  ret->val = x;
+  return ret;
 }
 \end{lstlisting}
 Wenn das $heap$ leer ist, das Programm ist ganz einfach. Wir einschließen ein neues 
@@ -460,13 +479,14 @@ queue *q = newqueue(*root);
 heap *previousheap;
 heap *currentheap;
 
-while ((currentheap = queue_rem(&q)) != NULL) {
+while ((currentheap = queue_rem(&q)) != NULL)
+  {
     if (currentheap->left != NULL)
-        queue_put(currentheap->left, &q);
+      queue_put(currentheap->left, &q);
     if (currentheap->right != NULL)
-        queue_put(currentheap->right, &q);
+      queue_put(currentheap->right, &q);
     previousheap = currentheap;
-}
+  }
 currentheap = previousheap;
 free_queue(&q);
 \end{lstlisting}
@@ -756,40 +776,48 @@ Wenn nicht, wir müssen mit dem größten Kind umtauschen und die Prüfung forts
 \begin{lstlisting}
 int a, b, c;
 current_heap = *root;
-while(1) {
-  if(current_heap->left == NULL) {
-    //hat kein Kinder
-    break;
+while (1)
+  {
+    if (current_heap->left == NULL)
+      {
+        // hat kein Kinder
+        break;
+      }
+    else if (current_heap->right == NULL)
+      {
+        // hat nur ein Kinder
+        a = current_heap->val;
+        b = current_heap->left->val;
+        if (a < b)
+          {
+            current_heap->val = b;
+            current_heap->left->val = a;
+          }
+        break;
+      } // Hat zwei Kinder
+    else
+      {
+        a = current_heap->val;
+        b = current_heap->left->val;
+        c = current_heap->right->val;
+        if (a >= b && a >= c)
+          {
+            break;
+          }
+        else if (b > a && b >= c)
+          {
+            current_heap->left->val = a;
+            current_heap->val = b;
+            current_heap = current_heap->left;
+          }
+        else
+          {
+            current_heap->right->val = a;
+            current_heap->val = c;
+            current_heap = current_heap->right;
+          }
+      }
   }
-  else if(current_heap->right == NULL) {
-    //hat nur ein Kinder
-    a = current_heap->val;
-    b = current_heap->left->val;
-    if(a < b) {
-      current_heap->val = b;
-      current_heap->left->val = a;
-    }
-    break;
-  }//Hat zwei Kinder
-  else {
-    a = current_heap->val;
-    b = current_heap->left->val;
-    c = current_heap->right->val;
-    if(a >= b && a >= c) {
-      break;
-    }
-    else if(b > a && b >= c) {
-      current_heap->left->val = a;
-      current_heap->val = b;
-      current_heap = current_heap->left;
-    }
-    else {
-      current_heap->right->val = a;
-      current_heap->val = c;
-      current_heap = current_heap->right;
-    }
-  }
-}
 \end{lstlisting}
 Jetzt sind wir Fertig mit dem $heap$ Teil.
 

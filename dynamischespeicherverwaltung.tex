@@ -40,7 +40,7 @@ Der Speicher, der einem Programm zugeteilt ist, kann in zwei Kategorien untertei
 \end{enumerate}
 Wenn wir also in einem Programm zum Beispiel einen Zeiger
 \begin{lstlisting}
-  int * list;
+int *list;
 \end{lstlisting}
 deklarieren, so liegt dieser Zeiger selbst im statischen Speicherbereich.
 Er kann aber auf Speicher zeigen, der im dynamischen Speicherbereich liegt.
@@ -92,7 +92,7 @@ Das Reservieren erledigt die Funktion \verb|malloc|, was für \emph{memory alloc
 \verb|malloc| hat die folgenden Syntax:
 \begin{myexampleblock}{Definition \texttt{malloc}}
   \begin{lstlisting}
-    void * malloc(size_t size);
+void *malloc(size_t size);
   \end{lstlisting}
   \vspace{-0.7cm}
   Reserviert Speicherzellen von der Größe \verb|size| bytes.
@@ -103,7 +103,7 @@ Das Reservieren erledigt die Funktion \verb|malloc|, was für \emph{memory alloc
   \item Eingabeparameter \verb|size|: die Größe des zu reservierenden Speicherbereiches in bytes.
   \item Beispielcode:
     \begin{lstlisting}
-      int *array=(int *)malloc(sizeof(int)*10);
+int *array = (int *)malloc(sizeof(int) * 10);
     \end{lstlisting}
   \end{itemize}
   \vspace{-0.7cm}
@@ -125,7 +125,7 @@ Wie schon angedeutet, dynamisch reservierter Speicher muss wieder freigegeben we
 Dafür gibt es die Funktion \verb|free|:
 \begin{myexampleblock}{Funktion definition \texttt{free}}
   \begin{lstlisting}
-    void free(void *memory);
+void free(void *memory);
   \end{lstlisting}
   \vspace{-0.7cm}
   Gibt einen mit \verb|malloc| reservierten Speicherbereich wieder frei.
@@ -133,8 +133,8 @@ Dafür gibt es die Funktion \verb|free|:
   \item Einggabeparameter: Zeiger auf einen Speicherbereich, der mit \verb|malloc| reserviert wurde.
   \item Beispiel:
     \begin{lstlisting}
-      int *array=(int *)malloc(sizeof(int)*10);
-      free(array);
+int *array = (int *)malloc(sizeof(int) * 10);
+free(array);
     \end{lstlisting}
   \end{itemize}
   \vspace{-0.7cm}
@@ -165,41 +165,47 @@ Diskutieren wir wieder ein Beispiel:
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
-int main() {
-    const int SPACEDIM = 2;
-    const double M_PI = 3.1415;
+int main()
+{
+  const int SPACEDIM = 2;
+  const double M_PI = 3.1415;
 
-    // Speicher reservieren
-    double **array2d;
-    if ((array2d = (double **)malloc(sizeof(double *) * SPACEDIM)) == NULL) {
-        printf("Fehler in malloc\n");
-        return (-1);
+  // Speicher reservieren
+  double **array2d;
+  if ((array2d = (double **)malloc(sizeof(double *) * SPACEDIM)) == NULL)
+    {
+      printf("Fehler in malloc\n");
+      return (-1);
     }
-    for (int i = 0; i < SPACEDIM; ++i) {
-        if ((array2d[i] = (double *)malloc(sizeof(double) * SPACEDIM)) ==
-            NULL) {
-            printf("Fehler in malloc\n");
-            return (-2);
+  for (int i = 0; i < SPACEDIM; ++i)
+    {
+      if ((array2d[i] = (double *)malloc(sizeof(double) * SPACEDIM)) == NULL)
+        {
+          printf("Fehler in malloc\n");
+          return (-2);
         }
     }
-    // Werte zuweisen
-    array2d[0][0] = cos(M_PI / 4.);
-    array2d[0][1] = sin(M_PI / 4.);
-    array2d[1][0] = -sin(M_PI / 4.);
-    array2d[1][1] = cos(M_PI / 4.);
-    // Ausgabe
-    for (int i = 0; i < SPACEDIM; ++i) {
-        for (int j = 0; j < SPACEDIM; ++j) {
-            printf("%e ", array2d[i][j]);
+  // Werte zuweisen
+  array2d[0][0] = cos(M_PI / 4.);
+  array2d[0][1] = sin(M_PI / 4.);
+  array2d[1][0] = -sin(M_PI / 4.);
+  array2d[1][1] = cos(M_PI / 4.);
+  // Ausgabe
+  for (int i = 0; i < SPACEDIM; ++i)
+    {
+      for (int j = 0; j < SPACEDIM; ++j)
+        {
+          printf("%e ", array2d[i][j]);
         }
-        printf("\n");
+      printf("\n");
     }
-    // Speicher freigeben
-    for (int i = 0; i < SPACEDIM; ++i) {
-        free(array2d[i]);
+  // Speicher freigeben
+  for (int i = 0; i < SPACEDIM; ++i)
+    {
+      free(array2d[i]);
     }
-    free(array2d);
-    return (0);
+  free(array2d);
+  return (0);
 }
 \end{lstlisting}
 \verb|array2d| ist jetzt als \verb|double**| deklariert, also als Zeiger auf einen \verb|double| Zeiger. 
@@ -316,41 +322,49 @@ Der entsprechende Quelltext könnte beispielsweise so aussehen:
 #include <stdio.h>
 #include <stdlib.h>
 
-double **create2darray(const int dim) {
-    double **p1 = NULL;
-    if ((p1 = (double **)malloc(sizeof(double *) * dim)) == NULL) {
-        return (NULL);
+double **create2darray(const int dim)
+{
+  double **p1 = NULL;
+  if ((p1 = (double **)malloc(sizeof(double *) * dim)) == NULL)
+    {
+      return (NULL);
     }
-    for (int i = 0; i < dim; ++i) {
-        if ((p1[i] = (double *)malloc(sizeof(double) * dim)) == NULL) {
-            return (NULL);
+  for (int i = 0; i < dim; ++i)
+    {
+      if ((p1[i] = (double *)malloc(sizeof(double) * dim)) == NULL)
+        {
+          return (NULL);
         }
     }
-    return (p1);
+  return (p1);
 }
 
-int main() {
-    const int SPACEDIM = 2;
-    const double M_PI = 3.1415;
+int main()
+{
+  const int SPACEDIM = 2;
+  const double M_PI = 3.1415;
 
-    double **array2d;
-    if ((array2d = create2darray(SPACEDIM)) == NULL) {
-        printf("Fehler in malloc\n");
-        return (-1);
+  double **array2d;
+  if ((array2d = create2darray(SPACEDIM)) == NULL)
+    {
+      printf("Fehler in malloc\n");
+      return (-1);
     }
-    // Zuweisen
-    array2d[0][0] = cos(M_PI / 4.);
-    array2d[0][1] = sin(M_PI / 4.);
-    array2d[1][0] = -sin(M_PI / 4.);
-    array2d[1][1] = cos(M_PI / 4.);
-    for (int i = 0; i < SPACEDIM; ++i) {
-        for (int j = 0; j < SPACEDIM; ++j) {
-            printf("%e ", array2d[i][j]);
+  // Zuweisen
+  array2d[0][0] = cos(M_PI / 4.);
+  array2d[0][1] = sin(M_PI / 4.);
+  array2d[1][0] = -sin(M_PI / 4.);
+  array2d[1][1] = cos(M_PI / 4.);
+  for (int i = 0; i < SPACEDIM; ++i)
+    {
+      for (int j = 0; j < SPACEDIM; ++j)
+        {
+          printf("%e ", array2d[i][j]);
         }
-        printf("\n");
+      printf("\n");
     }
-    // hier sollte noch der Speicher freigegeben werden!
-    return (0);
+  // hier sollte noch der Speicher freigegeben werden!
+  return (0);
 }
 \end{lstlisting}
 Die Funktion \verb|create2darray| liefert als Rückgabewert eine Variable vom Typ \verb|double**|, also genau das, was wir benötigen.
@@ -367,11 +381,12 @@ Das führt relativ schnell zur Unbenutzbarkeit des entsprechenden Rechners.
 Ein Beispiel für einen solchen Fehler ist der folgende (nicht besonders sinnvolle) Code Abschnitt
 \begin{lstlisting}
 int list[50];
-for (int i = 0; i < 50; i++) {
+for (int i = 0; i < 50; i++)
+  {
     double *p = malloc(sizeof(double));
     *p = i * i;
     list[i] = *p + (*p) * (*p);
-}
+  }
 free(p); // falsch, p ist hier nicht mehr sichtbar!
 \end{lstlisting}
 In jedem Durchlauf der Schleife wird Speicher für \verb|p| reserviert, ohne ihn wieder frei zu geben.

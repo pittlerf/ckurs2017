@@ -4,10 +4,11 @@ Wir wenden das bisher gelernte nun auf sogenannte verkettete Listen an.
 Es handelt sich dabei um eine Datenstruktur, die es erlauben soll einfach Listenelement an belibieger Position hinzu zu fügen oder zu löschen.
 Das grundlegende Elemen ist folgendes \verb|struct|:
 \begin{lstlisting}
-  struct list {
-    int data;
-    struct list * next;
-  }
+struct list
+{
+  int data;
+  struct list *next;
+}
 \end{lstlisting}
 Es enthält einmal ein Datum, hier \verb|data| genannt, und einen Zeiger \verb|next| wieder auf ein \verb|struct list|. 
 Dieser Zeiger soll auf das nächste Element in der Liste zeigen.
@@ -113,25 +114,28 @@ Ein Stapelspeicher ist vom Typ \texttt{LIFO}: \texttt{L}ast \texttt{I}n \texttt{
 
 Für die einfachere Verwendung führen wir noch folgende Typdefinition durch
 \begin{lstlisting}
-  typedef struct list {
-    struct list* next;
-    int data;
-  } list;
+typedef struct list
+{
+  struct list *next;
+  int data;
+} list;
 \end{lstlisting}
 Nun schreiben wir erst eine Funktion \verb|newlist|, die eine neue Liste erstellt und ein erstes Datum einfügt:
 \begin{lstlisting}
-  list * newlist( const int x ){
-    list * q = (list *)malloc(sizeof(list));
-    if (q == NULL){
+list *newlist(const int x)
+{
+  list *q = (list *)malloc(sizeof(list));
+  if (q == NULL)
+    {
       fprintf(stderr, "Error in Memory allocation\n");
       exit(1);
     }
-    // Daten zuweisen 
-    q->data=x;
-    // next zeigt auf NULL, da letztes und einziges Element
-    q->next=NULL;
-    return q;
-  }
+  // Daten zuweisen
+  q->data = x;
+  // next zeigt auf NULL, da letztes und einziges Element
+  q->next = NULL;
+  return q;
+}
 \end{lstlisting}
 Der Rückgabewert dieser Funktion ist ein Zeiger auf das bisher einzige Listenelement.
 Der Zeiger \verb|next| dieses Element zeigt auf \verb|NULL|, wie wir das definiert hatten.
@@ -139,48 +143,56 @@ Damit kann man jederzeit dieses Element als das letzte in der Liste idetifiziere
 Im wesentlich erzeugt \verb|newlist| ein neues Listenelement, bei dem \verb|next| auf \verb|NULL| zeigt.
 Es sollte jetzt klar sein, wie man \verb|push| schreiben kann:
 \begin{lstlisting}
-  void push( const int x, list ** first){
-    list *temp = newlist(x); // erzeuge ein neues Element
-    if ((*first) != NULL) {  // existiert schon eine Liste?
+void push(const int x, list **first)
+{
+  list *temp = newlist(x); // erzeuge ein neues Element
+  if ((*first) != NULL)
+    { // existiert schon eine Liste?
       temp->next = (*first); // falls ja, setze den Zeiger
     }
-    (*first) = temp;         // temp ist das neue erste Element
-    return;
-  }
+  (*first) = temp; // temp ist das neue erste Element
+  return;
+}
 \end{lstlisting}
 \verb|pop| sollte dagegen das Datum des ersten Listenelements zurückgegen und dann das erste Listenlement löschen:
 \begin{lstlisting}
-  int pop( list **first){
-    if ((*first) == NULL){
+int pop(list **first)
+{
+  if ((*first) == NULL)
+    {
       fprintf(stderr, "Es gibt kein Element im Speicher\n");
       return 0;
     }
-    int ret;
-    ret = (*first)->data;  // Extrahiere das Datum
-    list *temp;
-    temp = (*first)->next; // Setze den Zeiger auf das zweite Element
-    free(*first);          // Loesche das erste
-    (*first) = temp;       // das zweite ist jetzt das erste
-    return ret;            // Gib das Datum zurueck
-  }
+  int ret;
+  ret = (*first)->data; // Extrahiere das Datum
+  list *temp;
+  temp = (*first)->next; // Setze den Zeiger auf das zweite Element
+  free(*first); // Loesche das erste
+  (*first) = temp; // das zweite ist jetzt das erste
+  return ret; // Gib das Datum zurueck
+}
 \end{lstlisting}
 Wenn das Stapelspeicher leer war, wird eine Fehlermeldung ausgegeben.
 Mit folgender Funktion kann die gesamte Liste ausgegeben werden:
 \begin{lstlisting}
-  void print_list(list * first){
-    list *temp=(first);          // existiert eine Liste?
-    if (temp == NULL) {          
+void print_list(list *first)
+{
+  list *temp = (first); // existiert eine Liste?
+  if (temp == NULL)
+    {
       return;
     }
-    while(1) {
+  while (1)
+    {
       printf("%d ", temp->data); // momentanes Datum ausgeben
-      temp = temp->next;         // Zeiger auf das naechste Element setzen
-      if (temp == NULL) {        // Letztes Element erreicht
-        break;                   // falls ja, Abbruch
-      }
+      temp = temp->next; // Zeiger auf das naechste Element setzen
+      if (temp == NULL)
+        { // Letztes Element erreicht
+          break; // falls ja, Abbruch
+        }
     }
-    printf("\n");
-  }
+  printf("\n");
+}
 \end{lstlisting}
 Warum bekommen die Funktionen \verb|push| und \verb|pop| ein Element vom Typ \verb|list **| übergeben und die Funktion \verb|print_list| lediglich ein Element vom Typ \verb|list *|?
 Es handelt sich wiederum um den Unterschied zwischen \emph{call by reference} and \emph{call by value}.
@@ -191,16 +203,23 @@ Deshalb ist hier \emph{call by reference} das effzienteste: Es wird direkt das O
 
 Die Benutzung all dieser Funktionen wird mit folgendem Programm illustriert:
 \begin{lstlisting}
-  int main() {
-    list *erste=NULL;
-    push(2, &erste);  print_list(erste);
-    push(4, &erste);  print_list(erste);
-    push(6, &erste);  print_list(erste);
-    pop( &erste );    print_list(erste);
-    push(8, &erste);  print_list(erste);
-    pop( &erste );    print_list(erste);
-    return(0);
-  }
+int main()
+{
+  list *erste = NULL;
+  push(2, &erste);
+  print_list(erste);
+  push(4, &erste);
+  print_list(erste);
+  push(6, &erste);
+  print_list(erste);
+  pop(&erste);
+  print_list(erste);
+  push(8, &erste);
+  print_list(erste);
+  pop(&erste);
+  print_list(erste);
+  return (0);
+}
 \end{lstlisting}
 dessen Ausgabe wie folgt aussieht:
 \begin{verbatim}
