@@ -5,7 +5,7 @@ die Kosinusfunktion (Im Folgenden nur \texttt{cos}) eines Winkels berechnen.
 Die \texttt{cos} Funktion wird auf ganz $\mathbb{R}$ durch ihre 
 Taylorreihe mit Entwicklungsstelle 0 dargestellt:
 \begin{equation}
-cos\left(x\right)=\sum_{l=0}^{\infty} \left(-1\right)^{l} \dfrac{x^{2l}}{\left(2l\right)!}
+\mathrm{cos}\left(x\right)=\sum_{l=0}^{\infty} \left(-1\right)^{l} \dfrac{x^{2l}}{\left(2l\right)!}
 \end{equation}
 Natürlich im Computer wir haben eine endliche Genauigkeit mit dem wir Zahlen können
 (Sieh die Einleitung). Den Funktion 
@@ -59,7 +59,7 @@ In diesem Code wir verwenden den Standardfunktion und (wenn es nötig ist) erled
 die ernäherung des \texttt{cos} Funktions selbst mit summieren ihren Taylor Reihenfolge
 bis \texttt{n}
 \begin{equation}
-cos_{approx}\left(x,n\right)=\sum_{l=0}^{n} \left(-1\right)^{l} \dfrac{x^{2l}}{\left(2l\right)!}
+\mathrm{cos}_{approx}\left(x,n\right)=\sum_{l=0}^{n} \left(-1\right)^{l} \dfrac{x^{2l}}{\left(2l\right)!}
 \end{equation}
 Wir haben ein Eingabeparameter (der Winkel) und eine freiwillige Eingabeparameter
 was die grad der Ernäherung bestimmt. Wir müssen die Winkel als ein Parameter eingeben.
