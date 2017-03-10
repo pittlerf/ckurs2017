@@ -113,15 +113,19 @@ Ein Stapelspeicher ist vom Typ \texttt{LIFO}: \texttt{L}ast \texttt{I}n \texttt{
 \end{figure}
 
 Für die einfachere Verwendung führen wir noch folgende Typdefinition durch
-\begin{lstlisting}
+\begin{lstlisting}{list.h}
 typedef struct list
 {
   struct list *next;
   int data;
 } list;
 \end{lstlisting}
+und fangen an, verschiedene Dateien zu verwenden.
+Unsere Definition speichern wir in einer sogenannte \emph{header} Datei, die üblicherweise die Endung \texttt{.h} erhält.
 Nun schreiben wir erst eine Funktion \verb|newlist|, die eine neue Liste erstellt und ein erstes Datum einfügt:
-\begin{lstlisting}
+\begin{lstlisting}{newlist.c}
+#include"list.h"
+
 list *newlist(const int x)
 {
   list *q = (list *)malloc(sizeof(list));
@@ -137,12 +141,16 @@ list *newlist(const int x)
   return q;
 }
 \end{lstlisting}
+und speichern sie in \texttt{newlist.c}.
+Damit der von uns definierte Datentyp bekannt ist, müssen wir die header Datei \texttt{list.h} einbeziehen.
 Der Rückgabewert dieser Funktion ist ein Zeiger auf das bisher einzige Listenelement.
 Der Zeiger \verb|next| dieses Element zeigt auf \verb|NULL|, wie wir das definiert hatten.
 Damit kann man jederzeit dieses Element als das letzte in der Liste idetifizieren.
 Im wesentlich erzeugt \verb|newlist| ein neues Listenelement, bei dem \verb|next| auf \verb|NULL| zeigt.
 Es sollte jetzt klar sein, wie man \verb|push| schreiben kann:
-\begin{lstlisting}
+\begin{lstlisting}{push.c}
+#include"list.h"
+
 void push(const int x, list **first)
 {
   list *temp = newlist(x); // erzeuge ein neues Element
@@ -154,8 +162,11 @@ void push(const int x, list **first)
   return;
 }
 \end{lstlisting}
+die wir in der Datei \texttt{push.c} speichern.
 \verb|pop| sollte dagegen das Datum des ersten Listenelements zurückgegen und dann das erste Listenlement löschen:
-\begin{lstlisting}
+\begin{lstlisting}{pop.c}
+#include"list.h"
+
 int pop(list **first)
 {
   if ((*first) == NULL)
@@ -172,9 +183,12 @@ int pop(list **first)
   return ret; // Gib das Datum zurueck
 }
 \end{lstlisting}
-Wenn das Stapelspeicher leer war, wird eine Fehlermeldung ausgegeben.
+Wenn das Stapelspeicher leer ist, wird eine Fehlermeldung ausgegeben.
 Mit folgender Funktion kann die gesamte Liste ausgegeben werden:
-\begin{lstlisting}
+\begin{lstlisting}{print_list.c}
+#include<stdio.h>
+#include"list.h"
+
 void print_list(list *first)
 {
   list *temp = (first); // existiert eine Liste?
@@ -201,8 +215,27 @@ Daher ist es ausreichend, das Objekt selbst übergeben zu bekommen.
 \verb|push| und \verb|pop| aber sollen das erste Element der Liste verändern.
 Deshalb ist hier \emph{call by reference} das effzienteste: Es wird direkt das Objekt selbst verändert, ohne das etwas hin- oder herkopiert werden müsste.
 
+Mit all den Funktionsdefinitionen müssen wir die header Datei \texttt{list.h} nocheinmal modifizieren, damit die Prototypen der Funktionen auch in einem Hauptprogramm bekannt sind.
+Wir fügen die Prototypen einfach hinzu:
+\begin{lstlisting}{list.h}
+typedef struct list
+{
+  struct list *next;
+  int data;
+} list;
+
+list *newlist(const int x);
+void push(const int x, list **first);
+int pop(list **first);
+void print_list(list *first);
+\end{lstlisting}
+
+
 Die Benutzung all dieser Funktionen wird mit folgendem Programm illustriert:
-\begin{lstlisting}
+\begin{lstlisting}{main.c}
+#include<stdlib.h>
+#include"list.h"
+
 int main()
 {
   list *erste = NULL;
@@ -221,7 +254,16 @@ int main()
   return (0);
 }
 \end{lstlisting}
-dessen Ausgabe wie folgt aussieht:
+Die Übersetzung geht dann wie folgt:
+
+\vspace*{0.5cm}
+\begin{verbatim}
+>$  gcc -std=c99 -Wall -pedantic push.c pop.c print_list.c newlist.c main.c \
+     -o main.exe
+\end{verbatim}
+\vspace*{0.5cm}
+
+\noindent Die Ausgabe dieses Programs sieht wie folgt aus:
 \begin{verbatim}
 2	
 4 2
