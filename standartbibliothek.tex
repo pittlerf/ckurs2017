@@ -1,7 +1,7 @@
 \section{Das math Bibliothek}
 Zur Standard \texttt{ANSI C} Sprache gehören auch mathematische Funktions and Konstanten.
 Ihre deklaration befindet sich im \texttt{math.h}. Beispielweise wir möchten 
-die Kosinunfunktion (Im Folgenden nur \texttt{cos}) eines Winkels berechnen.
+die Kosinusfunktion (Im Folgenden nur \texttt{cos}) eines Winkels berechnen.
 Die \texttt{cos} Funktion wird auf ganz $\mathbb{R}$ durch ihre 
 Taylorreihe mit Entwicklungsstelle 0 dargestellt:
 \begin{equation}
@@ -9,12 +9,12 @@ cos\left(x\right)=\sum_{l=0}^{\infty} \left(-1\right)^{l} \dfrac{x^{2l}}{\left(2
 \end{equation}
 Natürlich im Computer wir haben eine endliche Genauigkeit mit dem wir Zahlen können
 (Sieh die Einleitung). Den Funktion 
-\begin{lstlisting}{cosineexample.c}
+\begin{lstlisting}
 double cos(double x);
 \end{lstlisting}
 wird den \texttt{cos} in \texttt{double} Genauigkeit berechnen.
 In dem unteren kleinen Quelltext wir zeigen es in der Praxis:
-\begin{lstlisting}
+\begin{lstlisting}{cosineexample.c}
 #include<stdio.h>
 #include<stdlib.h>
 #include<math.h>
