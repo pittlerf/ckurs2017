@@ -1,0 +1,133 @@
+\documentclass{article}[12pt]
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[ngerman]{babel}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{lipsum}
+
+\usepackage{amsfonts}
+\usepackage[intlimits]{amsmath}
+\usepackage{cite}
+\usepackage{epsfig}
+
+\usepackage[usenames,dvipsnames]{pstricks}
+\usepackage{pstricks-add}
+\usepackage{epsfig}
+\usepackage{pst-grad} % For gradients
+\usepackage{pst-plot} % For axes
+
+\addtolength{\hoffset}{-1.5cm}
+\addtolength{\textwidth}{3cm}
+\usepackage{listings}
+\usepackage{color}
+\definecolor{mygreen}{rgb}{0,0.6,0}
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\definecolor{mymauve}{rgb}{0.58,0,0.82}
+\PassOptionsToPackage{svgnames}{xcolor}
+\usepackage{tcolorbox}
+\usepackage{lipsum}
+\tcbuselibrary{skins,breakable}
+\usetikzlibrary{shadings,shadows}
+
+\lstset{ %
+  backgroundcolor=\color{white},   % choose the background color; you must add \usepackage{color} or \usepackage{xcolor}; should come as last argument
+  basicstyle=\footnotesize,        % the size of the fonts that are used for the code
+  breakatwhitespace=false,         % sets if automatic breaks should only happen at whitespace
+  breaklines=true,                 % sets automatic line breaking
+  captionpos=b,                    % sets the caption-position to bottom
+  commentstyle=\color{mygreen},    % comment style
+  deletekeywords={...},            % if you want to delete keywords from the given language
+  escapeinside={\%*}{*)},          % if you want to add LaTeX within your code
+  extendedchars=true,              % lets you use non-ASCII characters; for 8-bits encodings only, does not work with UTF-8
+  frame=single,                    % adds a frame around the code
+  keepspaces=true,                 % keeps spaces in text, useful for keeping indentation of code (possibly needs columns=flexible)
+  keywordstyle=\color{blue},       % keyword style
+  language=C,                      % the language of the code
+  morekeywords={*,...},            % if you want to add more keywords to the set
+  numbers=left,                    % where to put the line-numbers; possible values are (none, left, right)
+  numbersep=5pt,                   % how far the line-numbers are from the code
+  numberstyle=\tiny\color{mygray}, % the style that is used for the line-numbers
+  rulecolor=\color{black},         % if not set, the frame-color may be changed on line-breaks within not-black text (e.g. comments (green here))
+  showspaces=false,                % show spaces everywhere adding particular underscores; it overrides 'showstringspaces'
+  showstringspaces=false,          % underline spaces within strings only
+  showtabs=false,                  % show tabs within strings adding particular underscores
+  stepnumber=1,                    % the step between two line-numbers. If it's 1, each line will be numbered
+  stringstyle=\color{mymauve},     % string literal style
+  tabsize=2,                       % sets default tabsize to 2 spaces
+  title=\lstname                   % show the filename of files included with \lstinputlisting; also try caption instead of title
+}
+
+\usepackage{amssymb}
+
+\newenvironment{myexampleblock}[1]{%
+    \tcolorbox[beamer,%
+    noparskip,breakable,
+    colback=White,colframe=ForestGreen,%
+    colbacklower=LimeGreen!75!White,%
+    title=#1]}%
+    {\endtcolorbox}
+
+\newenvironment{myalertblock}[1]{%
+    \tcolorbox[beamer,%
+    noparskip,breakable,
+    colback=White,colframe=Bittersweet,%
+    colbacklower=Peach!75!White,%
+    title=#1]}%
+    {\endtcolorbox}
+
+\newenvironment{myblock}[1]{%
+    \tcolorbox[beamer,%
+    noparskip,breakable,
+    colback=White,colframe=RoyalBlue,%
+    colbacklower=TealBlue!75!White,%
+    title=#1]}%
+    {\endtcolorbox}
+
+\newenvironment{myexampleprogram}[1]{%
+    \tcolorbox[beamer,%
+    noparskip,breakable,
+    colback=White,colframe=Goldenrod,%
+    colbacklower=Yellow!75!White,%
+    title=#1]}%
+    {\endtcolorbox}
+%--------
+%\usepackage[magyar]{babel}
+\title{Zufallszahlgenerator}
+\begin{document}
+\maketitle
+Zufällige nummer sind sehr wichtig für uns. In numerischen Physik wir verwenden Zufallszahlen ganz often. Zum Beispiel 
+in die einfachsten method für Integration von mehreren variablen Funkctions müssen wir Monte Carlo algorithm verwenden. Die
+enthalten Statements, die vom Werte der zufälligen Variablen abhängt. In dieser Aufgabe wir müssen eine Zufallszahlgenerator
+schreiben. Es gibt mehrere methode dazu, aber alle stammt aus linear Kongruenzen:
+\begin{equation}
+I_{j+1}=a I_{j} \left( \mathrm{mod} m\right).
+\label{basics}
+\end{equation}
+Diesen Instruktion macht eine neue Zufallszahl ($I_{j+1}$)  aus einem original ($I_j$). Der qualität der Zufallszahl generator
+hängt von dem Eingangsparameters $(a,m)$ ab. Eine gute Zufallszahlgenerator hat große Period, die Zeit zwischen den beiden gleichen
+Zufallszahlen muss sehr groß sein. Park und Miller hat die folgenden parameter für a und m gewählt:
+\begin{equation}
+a=16807, m=2^{31}-1=2147483647. 
+\end{equation}
+Leider direkte implementation der Zufallszahlgenerator mit deisen parameters ist nicht möglich in \texttt{C}. Der Grund ist
+dass wir nicht Zahlen größer als $m$ speichern können. Glücklicherweise gibt es eine Möglichkeit das Problem umzugehen. 
+Wir faktorizieren $m$:
+\begin{equation}
+m= aq + r; r= m \left(\mathrm{mod}a\right); q= \left[m/a\right]
+\end{equation}
+Damit können wir die Gleichung (\ref{basics}) auch bewerten mit ($q,r$):
+\begin{equation}
+a I_j \left( \mathrm{mod} m\right)=  
+\left\{ \begin{array}{rc}
+a\left(I_j \mathrm{mod} q\right) -r \left[I_j/q\right] & \mathrm{wenn~es~}>0~\mathrm{ist} \\ 
+a\left(I_j \mathrm{mod} q\right) -r \left[I_j/q\right] + m & \mathrm{andernfalls} \\ 
+\end{array}\right.
+\label{algo}
+\end{equation}
+wo $r=2836,q=127773$ ist. Implementieren Sie das Zufallszahlgenerator nach eq.\ref{algo}. Ändern Sie die Algorithm
+um die Zahlen zwischen 0 und 1 zu sein werden.
+Es ist wichtig zu test unser Ergebnis. Wir müssen kontrollieren die Verteilung (Distribution) der Zufallszahlgenerator.
+Wir möchten gleichmäßige Vertailung erreichen. Wir werden eine Histogramms machen aus dem Zufallszahlen. Wir teilen 
+das Interval in $n$ Teilen und zahlen wie oft die Zufallszahl in jedem Interval sinkt. Machen Sie ein Histogramm aus 
+den Verfügbaren daten und prüfen wie gleichmäßig der Verteilung ist!
+\end{document}
