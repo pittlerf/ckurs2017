@@ -128,6 +128,9 @@ Das vielleicht einfachste C-Programm hat folgende Form:
 \begin{lstlisting}{Ein erstes C-Programm}
 int main() {
   // dies ist ein Kommentar
+  /*
+    Dies ist ein mehrzeiliger Kommentar
+  */
   return(0);
 }
 \end{lstlisting}
@@ -138,6 +141,9 @@ Da der geklammerte Bereich direkt nach \texttt{main} leer ist, bekommt die Funkt
 Schlüsselwörter, hier \texttt{int} und \texttt{main} werden durch ein oder mehrere Leerzeichen getrennt.
 Mit den geschweiften Klammern wird ein Abschnitt oder Block definiert, in diesem Fall der Block der Funktion.
 Die beiden Schrägstriche \texttt{//} lassen den Compiler alles danach folgende bis zum Zeilenende als Kommentar interpretieren.
+Wir empfehlen, nicht die mehrzeiligen Kommentare \texttt{/* */} zu verwenden.
+Der Grund dafür ist, dass wenn man einen mehrzeiligen Bereich auskommentiert, der schon einen mehrzeiligen Kommentar enthält, dann endet der Kommentarbereich beim ersten \texttt{*/}, und man bekommt eine Fehlermeldung.
+
 Die Funktion \texttt{return} beendet die Abarbeitung der Funktion und gibt einen Wert an die aufrufende Funktion zurück.
 Jede Funktion sollte immer explizit \texttt{return} aufrufen, auch wenn es keinen Rückgabewert gibt.
 Jede Deklaration oder Anweisung, in diesem Fall der Aufruf von \texttt{return}, muss mit einem Semikolon \texttt{;} abgeschlossen werden.
