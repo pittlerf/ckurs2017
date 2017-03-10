@@ -171,7 +171,7 @@ Dann kann man die Datei mit folgendem Aufruf auf der Console übersetzen:
 In obigem Aufruf des GNU Compilers sind nicht alle Kommandozeileparameter strickt notwendig.
 Die Parameter \texttt{-Wall -pedantic} sorgen dafür, dass der Compiler möglichst viele Warnungen ausgibt und alle möglichen Probleme im Quelltext auch mitteilt.
 Wir denken, dass es gerade für Anfänger sehr wichtig ist, Quelltext so sauber wie möglich zu schreiben.
-Deshalb möchten wir dringend XXX, diese Compiler Parameter zu benutzen.
+Deshalb möchten wir dringend dazu auffordern, diese Compiler Parameter zu benutzen.
 Der Parameter \texttt{-std=c99} sorgt dafür, dass der \texttt{gcc} den C99 Standard verwendet.
 Aller Quelltext in diesem Dokument ist für diesen Standard geschrieben und übersetzt nicht für ältere Standards.
 
@@ -183,6 +183,9 @@ Er hat einen ganz ähnlichen Aufruf
 >$  clang -std=c99 -Wall -pedantic main.c -o main.exe
 \end{verb}
 \vspace*{0.5cm}
+
+\texttt{clang} und \texttt{gcc} sind beide freie Software.
+Ihre Installation unter Linux ist sehr leicht, aber auch unter Windows kann man, mit einigem Aufwand, wenn man unbedingt möchte beide installieren.
 
 Bisher tut unser erstes Programm noch nichts, außer Null zurückgeben. 
 Wir können es um eine Ausgabe auf den Bildschirm erweitern:
