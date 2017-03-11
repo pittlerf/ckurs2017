@@ -274,5 +274,25 @@ Die Übersetzung geht dann wie folgt:
 \end{verbatim}
 Wie man sieht, bei Ausführung der ersten \texttt{pop} Anweisung wird das zuletzt hinzugefügte Element mit Datum $6$ aus der Liste entfernt.
 
+Bisher ist noch nicht ersichtlich geworden, welchen Vorteil es haben kann den Quelltext auf verschiedene Dateien zu verteilen.
+Obige Übersetzung kann auch wie folgt durchgeführt werden:
+
+\vspace*{0.5cm}
+\begin{verbatim}
+>$  gcc -std=c99 -Wpedantic -c push.c -o push.o
+>$  gcc -std=c99 -Wpedantic -c pop.c -o pop.o
+>$  gcc -std=c99 -Wpedantic -c print_list.c -o print_list.o
+>$  gcc -std=c99 -Wpedantic -c newlist.c -o newlist.o
+>$  gcc -std=c99 -Wpedantic -c main.c -o main.o
+>$  gcc -std=c99 push.o pop.o print_list.o newlist.o main.o -o main.exe
+\end{verbatim}
+\vspace*{0.5cm}
+
+Der Parameter \texttt{-c} bewirkt, dass nur Maschinencode erzeugt wird, ohne eventuelle Referezen auf nur deklarierte Funktionen oder Variablen aufzulösen.
+Dies geschieht dann erst in der letzten Zeile, die man \emph{linken} nennt.
+Der große Vorteil dabei ist, dass wenn sich \texttt{push.c} ändert, nicht alles andere auch neu übersetzt werden muss, sondern nur das linken wiederholt werden muss.
+Dies ist natürlich bei einem so kleinen Projekt wie unserem Beispiel kein richtiger Vorteil.
+Aber bei einem großen Projekt mit mehreren hunderttausend Zeilen Code wird diese Trennung sehr wichtig.
+\textbf{Bemerkung}: Diese Prozedur kann mit Hilfe von \texttt{make} oder verwandten Programmen automatisiert werden.
 \endinput
 
