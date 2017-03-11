@@ -31,7 +31,7 @@ Das entsprechende Schlüsselwort ist \verb|struct|.
 Solche zusammengesetzten Datentypen in C kann man sich wie Kontainer vorstellen.
 Die allgemeine Benutzung von \verb|struct| ist wie folgt:
 \begin{myalertblock}{Deklaration eines struct}
-  \begin{lstlisting}
+\begin{lstlisting}
 struct name
 {
   Type1 name1;
@@ -39,12 +39,12 @@ struct name
   Type3 name3;
   ...
 };
-  \end{lstlisting}
+\end{lstlisting}
   \vspace{-0.4cm}
   Die Verwendung als Typ für eine Variable:
-  \begin{lstlisting}
+\begin{lstlisting}
 struct name variablename;
-  \end{lstlisting}
+\end{lstlisting}
   \vspace{-0.4cm} 
 \end{myalertblock}
 Ein solcher Kontainer für komplexe Zahlen könnte also wie folgt aussehen:
@@ -147,9 +147,9 @@ struct tm
 \end{lstlisting}
 Damit kann über die Funktion
 \begin{myexampleblock}{Funktion: \texttt{time}}
-  \begin{lstlisting}
+\begin{lstlisting}
 time_t time(time_t *t)
-  \end{lstlisting}
+\end{lstlisting}
   \vspace{-0.4cm}
   \verb|time| gibt die Zeit in Sekunden seit 1970-01-01 00:00:00 +0000 (UTC) zurück.
   Falls \verb|t| nicht \verb|NULL| ist, wird das Ergebnis zusätzlich in \verb|t| gespeichert.
@@ -157,9 +157,9 @@ time_t time(time_t *t)
 \end{myexampleblock}
 und die Funktion
 \begin{myexampleblock}{Funktion: \texttt{localtime}}
-  \begin{lstlisting}
+\begin{lstlisting}
 struct tm *localtime(time_t *timer);
-  \end{lstlisting}
+\end{lstlisting}
   \vspace{-0.4cm}
   Eingabeparameter: Zeiger auf eine Variable vom Typ \verb|time_t|.
   Rückgabeparameter: Zeiger auf ein \verb|struct tm|.

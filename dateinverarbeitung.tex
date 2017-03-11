@@ -44,9 +44,9 @@ Wiederum wird solange eingelesen, bis das Sonderzeichen \verb|EOF| gefunden wird
 Wenn wir direkt aus einer Datei lesen wollen, so müssen wir einen \emph{stream} bekanntmachen.
 Dies geht mit Hilfe der Funktion \verb|fopen|.
 \begin{myexampleblock}{Funktion: \texttt{fopen}}
-  \begin{lstlisting}
+\begin{lstlisting}
 FILE *fopen(const char *filename, char mode);
-  \end{lstlisting}
+\end{lstlisting}
   \vspace{-0.4cm}
   Öffnet eine Datei. Dabei gibt \texttt{mode} an, für welchen Zweck die Datei geöffnet werden soll:
   \begin{itemize} 
@@ -61,9 +61,9 @@ FILE *fopen(const char *filename, char mode);
 \end{myexampleblock}  
 Eine Datei, die mit \texttt{fopen} geöffnet wurde, muss mit \texttt{fclose} wieder geschlossen werden:
 \begin{myexampleblock}{Funktion: \texttt{fclose}}
-  \begin{lstlisting}
+\begin{lstlisting}
 int fclose(FILE *stream);
-  \end{lstlisting}
+\end{lstlisting}
   \vspace{-0.4cm}
   Der Rückgabewert ist \texttt{0}, wenn die Datei erfolgreich geschlossen werden konnte und \texttt{EOF}, wenn nicht.
 \end{myexampleblock}

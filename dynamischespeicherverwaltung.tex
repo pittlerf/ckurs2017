@@ -91,9 +91,9 @@ Um Speicher dynamisch zu reservieren, nutzt man Funktionen aus der Standardbibli
 Das Reservieren erledigt die Funktion \verb|malloc|, was für \emph{memory allocation} steht.
 \verb|malloc| hat die folgenden Syntax:
 \begin{myexampleblock}{Definition \texttt{malloc}}
-  \begin{lstlisting}
+\begin{lstlisting}
 void *malloc(size_t size);
-  \end{lstlisting}
+\end{lstlisting}
   \vspace{-0.7cm}
   Reserviert Speicherzellen von der Größe \verb|size| bytes.
   \begin{itemize}
@@ -102,9 +102,9 @@ void *malloc(size_t size);
     reservierten Speicherbereiches, anderfalls \verb|NULL|.
   \item Eingabeparameter \verb|size|: die Größe des zu reservierenden Speicherbereiches in bytes.
   \item Beispielcode:
-    \begin{lstlisting}
+\begin{lstlisting}
 int *array = (int *)malloc(sizeof(int) * 10);
-    \end{lstlisting}
+\end{lstlisting}
   \end{itemize}
   \vspace{-0.7cm}
   Man beachte, dass der reservierte Speicherbereich mit der Funktion \verb|free| (siehe unten) wieder freigegeben werden muss, wenn er nicht mehr benötigt wird. 
@@ -124,18 +124,18 @@ Die Größe eine Typs in byte liefert die Funktion \verb|sizeof|.
 Wie schon angedeutet, dynamisch reservierter Speicher muss wieder freigegeben werden, wenn er nicht mehr benötigt wird.
 Dafür gibt es die Funktion \verb|free|:
 \begin{myexampleblock}{Funktion definition \texttt{free}}
-  \begin{lstlisting}
+\begin{lstlisting}
 void free(void *memory);
-  \end{lstlisting}
+\end{lstlisting}
   \vspace{-0.7cm}
   Gibt einen mit \verb|malloc| reservierten Speicherbereich wieder frei.
   \begin{itemize}
   \item Einggabeparameter: Zeiger auf einen Speicherbereich, der mit \verb|malloc| reserviert wurde.
   \item Beispiel:
-    \begin{lstlisting}
+\begin{lstlisting}
 int *array = (int *)malloc(sizeof(int) * 10);
 free(array);
-    \end{lstlisting}
+\end{lstlisting}
   \end{itemize}
   \vspace{-0.7cm}
 \end{myexampleblock}
