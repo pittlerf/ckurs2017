@@ -473,6 +473,74 @@ Im besten Fall bekommt man bei einem zu langen Array einen Laufzeitfehler.
 Im schlechtesten Fall kann man allerdings in Speicher schreiben, der dafür nicht vorgesehen ist. Dies ist schnell eine Sicherheitslücke.
 Es sollte also auf jeden Fall eine solche Überprüfung vorgenommen werden!
 
+\subsubsection{\texttt{sprintf} und \texttt{snprintf}}
+
+Die Manipulation von Zeichenketten ist oft ein wichtiger Bestandteil eines Programms, zum Beispiel um Ausgabedateinamen abh\"{a}ngig vom Wert einer Variable zu machen.
+
+Hierf\"{u}r stehen in C die beiden Funktionen \texttt{sprintf} aund \texttt{snprintf} zur Verf\"{u}gung, welche wie das schon kennengelernte \texttt{printf} funktioniern.
+Im Gegensatz zu \texttt{printf}, schreiben diese Funktionen jedoch direkt in eine im Speicher befindliche Zeichenkette.
+
+\begin{lstlisting}
+#include <stdio.h>
+const int MAX_LENGTH = 1000;
+const int SHORT_LENGTH = 50;
+
+int main()
+{
+  char string[MAX_LENGTH];
+  const int i = 42;
+  sprintf(string, "The Answer to the Ultimate Question of Life, The Universe, and Everything is %d.\n\n", i);
+  printf("%s", string);
+  
+  int rval;
+  char short_string[SHORT_LENGTH];
+  
+  /* eine kurze Zeichenkette wird in short_string geschrieben
+     und der Rueckgabewert wird ueberprueft */
+  rval = snprintf(short_string, SHORT_LENGTH-1, "This is a test string.\n\n");
+  if(rval >= SHORT_LENGTH) 
+    printf("snprintf: The string was not completely written!\n");
+  else 
+    printf("snprintf: wrote %d characters\n", rval);
+  printf("%s",short_string);
+  
+  /* eine ueberlange Zeichenkette wird in short_string
+     geschrieben und der Rueckgaberwert wird ueberprueft */
+  rval = snprintf(short_string, SHORT_LENGTH-1, "The Answer to the Ultimate Question of Life, The Universe, and Everything is %d.\n", i);
+  if(rval >= SHORT_LENGTH) 
+    printf("snprintf: The string was not completely written!\n");
+  
+  printf("%s\n\n",short_string);
+  
+  // ACHTUNG: hier wird fremder Speicher ueberschrieben 
+  sprintf(short_string, "The Answer to the Ultimate Question of Life, The Universe, and Everything is %d.\n", i);
+  printf("%s",short_string); 
+  
+  return 0;
+}
+\end{lstlisting}
+
+Ebenso wie bei \texttt{scanf}, besteht jedoch die Gefahr eines buffer overflows, wenn mit \texttt{sprintf} mehr Zeichen geschrieben werden, als eigentlich allokiert wurden.
+Dies resultiert im schlimmsten Fall \emph{nicht} in einem Programmabsturz sondern darin, dass irgendeine Speicherstelle überschrieben wird.
+
+Es ist deshalb Vorsicht geboten und \texttt{snprintf} sollte \texttt{sprintf} vorgezogen werden, da ersteres es erlaubt, die L\"{a}nge der geschriebenen Zeichenkette zu beschr\"{a}nken.
+Desweiteren kann man durch \"{U}berpr\"{u}fung des R\"{u}ckgabewertes der Funktion feststellen, ob die Zeichenkette in den vorhandenen Speicher gepasst hat und so direkt auf den Fehler reagieren.
+
+\noindent Ausgabe:
+\begin{lstlisting}
+$ ./test
+The Answer to the Ultimate Question of Life, The Universe, and Everything is 42.
+
+snprintf: wrote 24 characters
+This is a test string.
+
+snprintf: The string was not completely written!
+The Answer to the Ultimate Question of Life, The
+
+The Answer to the Ultimate Question of Life, The Universe, and Everything is 42.
+\end{lstlisting}
+
+
 \subsection{Zeigerarithmetik}
 
 Man kann auch eine Zeichenkette initialisieren:
