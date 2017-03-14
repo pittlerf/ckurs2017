@@ -495,8 +495,6 @@ int main()
   int rval;
   char short_string[SHORT_LENGTH];
   
-  /* eine kurze Zeichenkette wird in short_string geschrieben
-     und der Rueckgabewert wird ueberprueft */
   rval = snprintf(short_string, SHORT_LENGTH-1, "This is a test string.\n\n");
   if(rval >= SHORT_LENGTH) 
     printf("snprintf: The string was not completely written!\n");
@@ -504,8 +502,7 @@ int main()
     printf("snprintf: wrote %d characters\n", rval);
   printf("%s",short_string);
   
-  /* eine ueberlange Zeichenkette wird in short_string
-     geschrieben und der Rueckgaberwert wird ueberprueft */
+  /* ueberlange Zeichenkette wird in short_string geschrieben, Rueckgaberwert wird ueberprueft */
   rval = snprintf(short_string, SHORT_LENGTH-1, "The Answer to the Ultimate Question of Life, The Universe, and Everything is %d.\n", i);
   if(rval >= SHORT_LENGTH) 
     printf("snprintf: The string was not completely written!\n");
