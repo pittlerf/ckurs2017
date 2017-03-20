@@ -1,0 +1,129 @@
+\documentclass{article}[12pt]
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[ngerman]{babel}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{lipsum}
+
+\usepackage{amsfonts}
+\usepackage[intlimits]{amsmath}
+\usepackage{cite}
+\usepackage{epsfig}
+
+\usepackage[usenames,dvipsnames]{pstricks}
+\usepackage{pstricks-add}
+\usepackage{epsfig}
+\usepackage{pst-grad} % For gradients
+\usepackage{pst-plot} % For axes
+
+\addtolength{\hoffset}{-1.5cm}
+\addtolength{\textwidth}{3cm}
+\usepackage{listings}
+\usepackage{color}
+\definecolor{mygreen}{rgb}{0,0.6,0}
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\definecolor{mymauve}{rgb}{0.58,0,0.82}
+\PassOptionsToPackage{svgnames}{xcolor}
+\usepackage{tcolorbox}
+\usepackage{lipsum}
+\tcbuselibrary{skins,breakable}
+\usetikzlibrary{shadings,shadows}
+\usepackage{siunitx}
+\lstset{ %
+  backgroundcolor=\color{white},   % choose the background color; you must add \usepackage{color} or \usepackage{xcolor}; should come as last argument
+  basicstyle=\footnotesize,        % the size of the fonts that are used for the code
+  breakatwhitespace=false,         % sets if automatic breaks should only happen at whitespace
+  breaklines=true,                 % sets automatic line breaking
+  captionpos=b,                    % sets the caption-position to bottom
+  commentstyle=\color{mygreen},    % comment style
+  deletekeywords={...},            % if you want to delete keywords from the given language
+  escapeinside={\%*}{*)},          % if you want to add LaTeX within your code
+  extendedchars=true,              % lets you use non-ASCII characters; for 8-bits encodings only, does not work with UTF-8
+  frame=single,                    % adds a frame around the code
+  keepspaces=true,                 % keeps spaces in text, useful for keeping indentation of code (possibly needs columns=flexible)
+  keywordstyle=\color{blue},       % keyword style
+  language=C,                      % the language of the code
+  morekeywords={*,...},            % if you want to add more keywords to the set
+  numbers=left,                    % where to put the line-numbers; possible values are (none, left, right)
+  numbersep=5pt,                   % how far the line-numbers are from the code
+  numberstyle=\tiny\color{mygray}, % the style that is used for the line-numbers
+  rulecolor=\color{black},         % if not set, the frame-color may be changed on line-breaks within not-black text (e.g. comments (green here))
+  showspaces=false,                % show spaces everywhere adding particular underscores; it overrides 'showstringspaces'
+  showstringspaces=false,          % underline spaces within strings only
+  showtabs=false,                  % show tabs within strings adding particular underscores
+  stepnumber=1,                    % the step between two line-numbers. If it's 1, each line will be numbered
+  stringstyle=\color{mymauve},     % string literal style
+  tabsize=2,                       % sets default tabsize to 2 spaces
+  title=\lstname                   % show the filename of files included with \lstinputlisting; also try caption instead of title
+}
+
+\usepackage{amssymb}
+
+\newenvironment{myexampleblock}[1]{%
+    \tcolorbox[beamer,%
+    noparskip,breakable,
+    colback=White,colframe=ForestGreen,%
+    colbacklower=LimeGreen!75!White,%
+    title=#1]}%
+    {\endtcolorbox}
+
+\newenvironment{myalertblock}[1]{%
+    \tcolorbox[beamer,%
+    noparskip,breakable,
+    colback=White,colframe=Bittersweet,%
+    colbacklower=Peach!75!White,%
+    title=#1]}%
+    {\endtcolorbox}
+
+\newenvironment{myblock}[1]{%
+    \tcolorbox[beamer,%
+    noparskip,breakable,
+    colback=White,colframe=RoyalBlue,%
+    colbacklower=TealBlue!75!White,%
+    title=#1]}%
+    {\endtcolorbox}
+
+\newenvironment{myexampleprogram}[1]{%
+    \tcolorbox[beamer,%
+    noparskip,breakable,
+    colback=White,colframe=Goldenrod,%
+    colbacklower=Yellow!75!White,%
+    title=#1]}%
+    {\endtcolorbox}
+%--------
+%\usepackage[magyar]{babel}
+\title{Umgekehrte Polnische Rechner}
+\begin{document}
+\maketitle
+In diesem Aufgabe wir werden eine Taschenrechner herstellen. In diesem Fall zuerst komman die
+Argumenten und danach der darauf anzuwendende Operator.
+
+Bespielweise im infix:
+\begin{lstlisting}
+(9 - 3 * 5)/(1 + 3 * 2 - 4)  // infix  
+\end{lstlisting}
+Beispielweise im postfix:
+\begin{lstlisting}
+9 3 5 * - 1 3 2 * + 4 - // postfix
+\end{lstlisting}
+Wir einlesen die Zeichen nacheinander.
+Die wichtigsten Punkten sind die Folgenden:
+\begin{itemize}
+\item 
+Wenn wir einen Zahl haben, setzen wir es auf den Stack.
+\item 
+Wenn wir einen Operator haben, nehmen wir die Argumentem aus dem Stack aus, darauf anwenden wir den Operator.
+Das ersten ausgenommenen Element wird steht Rechts und the zweiten ausgenommenen Element wird
+steht Links von dem Operator.
+Setzen wir das Ergebnis auf den Stack.
+\item
+Wenn wir Fertig sind, das Ergebnis wird der Kopf des Stacks
+\end{itemize}
+Wir müssen achten über die Folgenden:
+\begin{itemize}
+\item Wir müssen Zeichenketten analisieren bis dem end Zeichen.
+\item Wir müssen beachten das ein Zahl aus mehreren Zeichen bestehen kann.
+\item Es kann auch Fließkommazahl sein
+\item Das Rechner muss Multiplikation, Addition, Subtraktion, Division handeln
+\end{itemize}
+\end{document}
