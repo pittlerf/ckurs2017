@@ -96,7 +96,7 @@
 \begin{document}
 \maketitle
 Was macht die folgende Quelltext?
-\begin{lstlisting}
+\begin{lstlisting}{Beispiel1.c}
 #include<stdio.h>
 int main(){
   int zahl,temp,zeichen,ergebnis=0;
@@ -117,5 +117,30 @@ int main(){
   }
 }
 \end{lstlisting}
-Was bedeutet für ein Zahl ein Amstrong Zahl sein?
+Was bedeutet für ein Zahl ein Amstrong Zahl sein?\\
+\begin{lstlisting}{Beispiel2.c}
+#include <stdio.h>
+int main()
+{
+  int a, b, x;
+  printf("Gib mir bitte zwei ganze Zahl");
+  scanf("%d %d", &a, &b);
+
+  if ( a > b ){
+    x=a;
+  }
+  else{
+    x=b;
+  }
+  while(1)
+  {
+    if( (x %a ==0 ) && ( x%b == 0) )
+    {
+      printf("%d\n", x);
+      break;
+    }
+    ++x;
+  }
+}
+\end{lstlisting}
 \end{document}
