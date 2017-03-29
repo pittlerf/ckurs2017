@@ -1,0 +1,191 @@
+\documentclass{article}[12pt]
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[ngerman]{babel}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{lipsum}
+
+\usepackage{amsfonts}
+\usepackage[intlimits]{amsmath}
+\usepackage{cite}
+\usepackage{epsfig}
+
+\usepackage[usenames,dvipsnames]{pstricks}
+\usepackage{pstricks-add}
+\usepackage{epsfig}
+\usepackage{pst-grad} % For gradients
+\usepackage{pst-plot} % For axes
+
+\addtolength{\hoffset}{-1.5cm}
+\addtolength{\textwidth}{3cm}
+\usepackage{listings}
+\usepackage{color}
+\definecolor{mygreen}{rgb}{0,0.6,0}
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\definecolor{mymauve}{rgb}{0.58,0,0.82}
+\PassOptionsToPackage{svgnames}{xcolor}
+\usepackage{tcolorbox}
+\usepackage{lipsum}
+\tcbuselibrary{skins,breakable}
+\usetikzlibrary{shadings,shadows}
+\usepackage{siunitx}
+\lstset{ %
+  backgroundcolor=\color{white},   % choose the background color; you must add \usepackage{color} or \usepackage{xcolor}; should come as last argument
+  basicstyle=\footnotesize,        % the size of the fonts that are used for the code
+  breakatwhitespace=false,         % sets if automatic breaks should only happen at whitespace
+  breaklines=true,                 % sets automatic line breaking
+  captionpos=b,                    % sets the caption-position to bottom
+  commentstyle=\color{mygreen},    % comment style
+  deletekeywords={...},            % if you want to delete keywords from the given language
+  escapeinside={\%*}{*)},          % if you want to add LaTeX within your code
+  extendedchars=true,              % lets you use non-ASCII characters; for 8-bits encodings only, does not work with UTF-8
+  frame=single,                    % adds a frame around the code
+  keepspaces=true,                 % keeps spaces in text, useful for keeping indentation of code (possibly needs columns=flexible)
+  keywordstyle=\color{blue},       % keyword style
+  language=C,                      % the language of the code
+  morekeywords={*,...},            % if you want to add more keywords to the set
+  numbers=left,                    % where to put the line-numbers; possible values are (none, left, right)
+  numbersep=5pt,                   % how far the line-numbers are from the code
+  numberstyle=\tiny\color{mygray}, % the style that is used for the line-numbers
+  rulecolor=\color{black},         % if not set, the frame-color may be changed on line-breaks within not-black text (e.g. comments (green here))
+  showspaces=false,                % show spaces everywhere adding particular underscores; it overrides 'showstringspaces'
+  showstringspaces=false,          % underline spaces within strings only
+  showtabs=false,                  % show tabs within strings adding particular underscores
+  stepnumber=1,                    % the step between two line-numbers. If it's 1, each line will be numbered
+  stringstyle=\color{mymauve},     % string literal style
+  tabsize=2,                       % sets default tabsize to 2 spaces
+  title=\lstname                   % show the filename of files included with \lstinputlisting; also try caption instead of title
+}
+
+\usepackage{amssymb}
+
+\newenvironment{myexampleblock}[1]{%
+    \tcolorbox[beamer,%
+    noparskip,breakable,
+    colback=White,colframe=ForestGreen,%
+    colbacklower=LimeGreen!75!White,%
+    title=#1]}%
+    {\endtcolorbox}
+
+\newenvironment{myalertblock}[1]{%
+    \tcolorbox[beamer,%
+    noparskip,breakable,
+    colback=White,colframe=Bittersweet,%
+    colbacklower=Peach!75!White,%
+    title=#1]}%
+    {\endtcolorbox}
+
+\newenvironment{myblock}[1]{%
+    \tcolorbox[beamer,%
+    noparskip,breakable,
+    colback=White,colframe=RoyalBlue,%
+    colbacklower=TealBlue!75!White,%
+    title=#1]}%
+    {\endtcolorbox}
+
+\newenvironment{myexampleprogram}[1]{%
+    \tcolorbox[beamer,%
+    noparskip,breakable,
+    colback=White,colframe=Goldenrod,%
+    colbacklower=Yellow!75!White,%
+    title=#1]}%
+    {\endtcolorbox}
+%--------
+%\usepackage[magyar]{babel}
+\title{Handeln Zeichenketten}
+\begin{document}
+\maketitle
+\begin{itemize}
+\item Funktion \texttt{strlen}:
+\begin{lstlisting}
+size_t strlen(const char *str);
+\end{lstlisting}
+Soll die länge vom \texttt{str} zurückgeben.
+Achtung nur 
+\begin{lstlisting}
+return sizeof(str);
+\end{lstlisting}
+ist nicht richtig, dies wird die Nummer der allokierten Speichherzellen zurückgeben. Das ist gar nicht die länge
+der aktuellen Zeichenkette. Die länge ist definiert als das Nummer der Zeichen bis die Endstring-Zeichen.
+Beispielweise verwendung:
+\begin{lstlisting}
+#include<stdio.h>
+size_t strlen( const char *src){
+   int i=0;
+/*Du sollst dies schreiben */
+   return (size_t)i;
+}
+int main(){
+   char source[100]="Hausaufgabe";
+   int lange=strlen(source);
+   printf("%d\n", lange);
+}
+\end{lstlisting}
+Die Ausgabe soll:
+\begin{lstlisting}
+11
+\end{lstlisting}
+sein.
+\item Funktion \texttt{strcpy}:
+\begin{lstlisting}
+char *strcpy(char *destination, char *source);
+\end{lstlisting}
+Copieren die Zeichenkette \texttt{source} zur \texttt{destination} (Die Endstring-Zeichen soll auch inbegriffen sein). 
+Achtung, \texttt{destination} musst genug allokierten Speicherzellen haben um die \texttt{source} zu Speciher, und 
+diese Speicherzellen sollen nicht überlappen mit den Speicherzellen von \texttt{source}.
+Beispielweise verwendung:
+\begin{lstlisting}
+#include<stdio.h>
+char *strcpy( char *dest, char *src){
+/* Du sollst diesen Teil schreiben */   
+   return dest;
+}
+int main(){
+   char source[100]="Hausaufgabe";
+   char destination[100];
+   strcpy(destination, source);
+   printf("%s\n", destination);
+}
+\end{lstlisting}
+Die Ausgabe soll:
+\begin{lstlisting}
+Hausaufgabe
+\end{lstlisting}
+sein.
+\item Funktion \texttt{strchr}
+\begin{lstlisting}
+char * strchr ( char * str, int character );
+\end{lstlisting}
+Such für das Zeichen \texttt{character} im Zeichenkette \texttt{str}. Es sucht für das erste Ereignis.
+Wenn das Zeichen gefunden ist, die Rückgabewert is ein Zeiger auf dem ersten Ereignis, sonst das NULL 
+Zeiger. Möglicher verwendung:
+\begin{lstlisting}
+/* strchr example */
+#include <stdio.h>
+char * strchr ( char * str, int character ){
+/* Du sollst es schreiben*/
+}
+int main ()
+{
+  char str[] = "Das ist eine einfache Zeichenkette";
+  char * pch;
+  printf ("Wir suchen fuer 's' Zeichen im \"%s\"...\n",str);
+  pch=strchr(str,'s');
+  while (pch!=NULL)
+  {
+    printf ("gefunden am Postion %d\n",pch-str+1);
+    pch=strchr(pch+1,'s');
+  }
+  return 0;
+}
+\end{lstlisting}
+Die Ausgabe soll:
+\begin{lstlisting}
+Wir suchen fuer 's' Zeichen im "Das ist eine einfache Zeichenkette"...
+gefunden am Postion 3
+gefunden am Postion 6
+\end{lstlisting}
+sein.
+
+\end{itemize}
+\end{document}
