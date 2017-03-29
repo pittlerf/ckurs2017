@@ -1,4 +1,4 @@
-TUTORIALS=tutorial1 tutorial3 tutorial4 tutorial5
+TUTORIALS=tutorial1 tutorial2 tutorial3 tutorial4 tutorial5
 
 all: programmierkurs_fpcu.pdf $(addsuffix .pdf, $(TUTORIALS))
 
