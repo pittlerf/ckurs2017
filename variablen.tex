@@ -2,7 +2,7 @@
 
 Wie schon angedeutet werden Daten in C in Variablen bzw. Objekten gespeichert.
 Auch dies ist am einfachsten an Hand eines Beispiels zu verstehen
-\begin{lstlisting}{Erste Variablen Deklaration und Zuweisung}
+\begin{lstlisting}{Erste Variablendeklaration und -zuweisung}
 #include <stido.h>
 
 int main()
@@ -10,6 +10,7 @@ int main()
   int n;
   n = 4;
   printf("Wir werden n zahlen sortieren:\n");
+  return(0);
 }
 \end{lstlisting}
 Im Vergleich zu unserem letzten Beispiel sind zwei Zeilen hinzugekommen. 
@@ -35,18 +36,18 @@ Deklariert man in einem Unterblock eine Variable mit dem Namen einer Variablen a
 In unserem Beispiel von oben heißt das, dass die Variable \texttt{n} nur in der Funktion \texttt{main} sichtbar ist. 
 Es ist wichtig, dass jeder Benutzung einer Variablen, beispielsweise in einer Zuweisung, die Deklaration der Variablen vorangehen muss.
 Deklaration und Zuweisung können auch in einer Anweisung geschehen, man kann also auch
-\begin{lstlisting}{Erste Variablen Deklaration und Zuweisung}
+\begin{lstlisting}{Erste Variablendeklaration und -zuweisung: Variante 2}
 #include <stido.h>
 
 int main()
 {
   int n = 4;
   printf("Wir werden n zahlen sortieren :\n");
-  return 0;
+  return(0);
 }
 \end{lstlisting}
 schreiben. 
-Man spricht dann auch von Initialisierung der Variablen \texttt{n}.
+Man spricht dann auch von der Initialisierung der Variablen \texttt{n}.
 Variablen, die außerhalb aller Funktionen deklariert werden, bezeichnet man als \emph{global}.
 Sie sind in allen Funktionen, die nach der globalen Deklaration definiert werden, sichtbar und zugreifbar.
 
@@ -165,10 +166,11 @@ long double& & &8 &  &  \\[1ex]
 C Compiler führen im Prinzip eine strenge Typenkontrolle durch.
 Das ist eine sehr nützliche Eigenschaft der Compiler, wenn es auch manchmal etwas mühsam ist. 
 Man kann dies durch einen expliziten \emph{cast} umgehen.
+Beispielsweise wandelt \texttt{int n=4; double x = (double)n;} die ganze Zahl \texttt{n} in eine Fließkommazahl mit \texttt{double} Genauigkeit um.
 Dafür sollte man aber sehr genau wissen, was man tut.
-Leider ist die Typkontrolle vom Compiler abhängig und meist wird bei einer Zuweisung ein impliziter \emph{cast} durchgeführt.
+Leider ist die Typenkontrolle vom Compiler abhängig und meist wird bei einer Zuweisung ein impliziter \emph{cast} durchgeführt, wenn nötig und möglich.
 Beispielsweise wird folgender Code ohne Beanstandung übersetzt
-\begin{lstlisting}{Erste Variablen Deklaration und Zuweisung}
+\begin{lstlisting}{Ungenaue Variablenzuweisung}
 #include <stido.h>
 
 int main()
@@ -208,13 +210,13 @@ Wie schon oben erwähnt, können mehrere Anweisung in der gleichen Zeile stehen,
 \subsection{Konstanten}
 
 C erlaubt auch, Variablen als konstant zu deklarieren. 
-Dies bedeutet, dass sich der einmal zugewiesene Wert einer solchen als \verb|const| deklarierten Variablen nicht äender darf.
+Dies bedeutet, dass sich der einmal zugewiesene Wert einer solchen als \verb|const| deklarierten Variablen nicht ändern darf.
 Im Quelltext sieht das wie folgt aus
 \begin{lstlisting}
 const int n = 5;
 \end{lstlisting}
 Die Benutzung von \verb|const| kann große Vorteile haben.
-Erstens, wenn wir wissen, dass sich eine Variable nicht mehr äendern wird und wir sie als  \verb|const| deklariert haben, dann kann der Compiler das überprüfen und eine Fehlermeldung ausgeben, wenn wir versehentlich den Wert der Variablen doch ändern.
+Erstens, wenn wir wissen, dass sich eine Variable nicht mehr ändern wird und wir sie als  \verb|const| deklariert haben, dann kann der Compiler das überprüfen und eine Fehlermeldung ausgeben, wenn wir versehentlich den Wert der Variablen doch ändern.
 Zweitens ist der Wert von \verb|const| Variablen zur Zeit der Übersetzung bekannt und erlaubt dem Compiler einige Optimierungen.
 Im Allgemeinen sollte man \verb|const| immer verwenden, wenn die Variable sich nicht mehr ändern soll.
 
@@ -225,10 +227,10 @@ Natürlich hängt es vom Variablentyp ab, welche Operationen dafür definiert si
 Man unterscheidet drei verschiedene Typen von Operationen:
 \begin{itemize}
 \item Infix:\\
-  Derx Operator steht zwischen den Variablen. Zum Bespiel: \verb|a+b|. 
+  Derx Operator steht zwischen den Variablen. Zum Beispiel: \verb|a+b|. 
   Dieser Ausdruck nimmt die jeweiligen Werte von \verb|a| und \verb|b|, summiert sie und gibt das Ergebnis zurück.
 \item Präfix:\\
-  Der Operator steht vor der Variablen. Zum Bespiel: \verb|++a|. 
+  Der Operator steht vor der Variablen. Zum Beispiel: \verb|++a|. 
   Dieser Ausdruck erhöht den Wert von \verb|a| um $1$ und gibt danach den neuen Wert von \verb|a| zurück.
 \item Postfix:\\
   Der Operator steht nach der Variablen. Zum Beispiel: \verb|a--|. 
@@ -255,7 +257,7 @@ Diese Zeichenkette wird unverändert in den standard output kopiert.
 Die Ausnahme sind Zeichenfolgen, die mit einem Prozentzeichen \% beginnen.
 Die auf das \% folgenden Zeichen werden von \texttt{printf} in bestimmter Weise interpretiert.
 \verb|%d| beispielsweise steht für eine ganze Zahl vom Typ \texttt{int}. 
-Bei genau einem \% in der Zeichkette erwartet \texttt{printf} dann genau eine Variable als zweiten Parameter nach der Zeichenkette vom entsprechenden Typ, hier also vom Typ \texttt{int}.
+Bei genau einem \% in der Zeichenkette erwartet \texttt{printf} dann genau eine Variable als zweiten Parameter nach der Zeichenkette vom entsprechenden Typ, hier also vom Typ \texttt{int}.
 Man kann sich leicht überlegen, dass obiges Programm die Zahlenfolge $2,3,4,4$ ausgibt.
 
 Im Allgemeinen gibt es drei verschiedene Typen von Operatoren
@@ -302,15 +304,15 @@ float a = 7. / 3;
     \hline
     Zuweisung & \verb|a = b| & Werte von \verb|b| \\
     Addition & \verb|a + b| & Summe von \verb|a| und \verb|b| \\
-    Subraktion & \verb|a - b| & Differenz von \verb|a| und \verb|b| \\
+    Subtraktion & \verb|a - b| & Differenz von \verb|a| und \verb|b| \\
     Multiplikation & \verb|a * b| & Produkt von \verb|a| und \verb|b| \\
     Division & \verb|a / b| & Quotient von \verb|a| und \verb|b| \\
     Zuweisung und Addition & \verb|a += b| & Werte von \verb|a+b| \\
-    Zuweisung und Subtracton & \verb|a -= b| & Werte von \verb|a-b| \\
-    Zuweisung und Multiplication & \verb|a *= b| & Werte von \verb|a*b| \\
+    Zuweisung und Subtraktion & \verb|a -= b| & Werte von \verb|a-b| \\
+    Zuweisung und Multiplikation & \verb|a *= b| & Werte von \verb|a*b| \\
     Zuweisung und Division & \verb|a /= b| & Werte von \verb|a/b| \\
     Modulo & \verb|a % b| & \verb|a| modulo \verb|b| \\
-    Inckrement & \verb|++a, a++| & Präfix: \verb|a|+1, Postfix: \verb|a| \\
+    Inkrement & \verb|++a, a++| & Präfix: \verb|a|+1, Postfix: \verb|a| \\
     Dekrement & \verb|--a, a--| & Präfix: \verb|a|-1, Postfix: \verb|a| \\
     Positiver Vorzeichenoperator & \verb|+a| & Wert von \verb|a| \\
     Negativer Vorzeichenoperator & \verb|-a| & Wert von \verb|-a|  \\
@@ -344,12 +346,12 @@ float a = 7. / 3;
     \hline
     Logisches UND & \verb|a && b|  &   \verb|a| und \verb|b| \\
 
-    logische ODER & \verb'a || b'  &   \verb|a| oder \verb|b| \\
+    Logisches ODER & \verb'a || b'  &   \verb|a| oder \verb|b| \\
 
     Negation      & \verb|!a|      &   nicht \verb|a| \\
     \hline
   \end{tabular}
-  \caption{Logischen operatoren \label{vergoper2}}
+  \caption{Logischen Operatoren \label{vergoper2}}
 \end{table}
 
 \subsubsection{Regeln zum Bilden von Ausdrücken}

@@ -3,12 +3,12 @@
 Ein wichtiger Schritt hin zu einem Programm ist die Formulierung des
 Verfahrens für die Lösung eines Problems als Algorithmus.
 \begin{myblock}{Definition: Algorithmus}
-Ein \textbf{Algorithmus} ist eine präzise Vorschrift, um aus vorgebenen
+Ein \textbf{Algorithmus} ist eine präzise Vorschrift, um aus vorgegebenen
 Eingaben in endlich vielen Schritten eine bestimmte Ausgabe zu
 ermitteln.
 \end{myblock}
 
-Hat man dies geschafft, so muss der Algorithmus in die jeweilige Programmiersprache, hier also C, umgesezt werden.
+Hat man dies geschafft, so muss der Algorithmus in die jeweilige Programmiersprache, hier also C, umgesetzt werden.
 Betrachten wir als Beispiel folgendes Problem:
 Wir haben Daten $x_0, x_1,\ldots,x_{n-1}$ von einem Datentyp für den wir eine Operation größer-gleich (oder kleiner-gleich) und kleiner (größer) definiert haben.
 Man beachte, dass wir ab jetzt bei der Indizierung der C Konvention folgen und von $0$ bis $n-1$ indizieren.
@@ -40,10 +40,10 @@ Das heißt mit einem Bit kann man genau zwei Zustände darstellen.
 Fasst man 8 Bits zu einem Byte zusammen, so kann man $2^8=256$ Zustände darstellen.
 Größere Speicherbereiche nennt man
 \begin{itemize}
-\item Byte:  1Byte $2^{8 }$ zustände
-\item Word:  2Byte $2^{16}$ zustände
-\item Dword: 4Byte $2^{32}$ zustände
-\item Qword: 8Byte $2^{64}$ zustände
+\item Byte:  1Byte $2^{8 }$ Zustände
+\item Word:  2Byte $2^{16}$ Zustände
+\item Dword: 4Byte $2^{32}$ Zustände
+\item Qword: 8Byte $2^{64}$ Zustände
 \end{itemize}
 Beispielsweise kann Text in einer Datei im ASCII Format gespeichert. 
 Das bedeutet, dass jedes Zeichen genau ein Byte in Anspruch nimmt.
@@ -82,7 +82,7 @@ entsprechenden Zahlensystem sind. Auf modernen Rechnern ist
 üblicherweise $a_i\in\{0,1\}$ im Dualsystem mit Basis $E=2$.
 
 Bei der Abbildung der reellen Zahlen auf die Menge der Maschinenzahlen
-muss fast immer eine Rundungsoperation vorgenomme werden. Dabei geht
+muss fast immer eine Rundungsoperation vorgenommen werden. Dabei geht
 Information verloren, eine Rückabbildung ist nicht eindeutig möglich.
 
 \begin{myexampleblock}{Zahlendarstellung}
@@ -103,7 +103,7 @@ $\delta_M$ für die der Rechner
 \begin{equation}
 1 + \delta_M = 1
 \end{equation}
-liefert. Für die Abbildung der rellen Zahlen auf Maschinenzahlen gilt
+liefert. Für die Abbildung der reellen Zahlen auf Maschinenzahlen gilt
 dann notwendigerweise
 \begin{equation}
 -\delta_M \leq \delta x\leq \delta_M\,.
@@ -112,9 +112,9 @@ dann notwendigerweise
 
 \subsection{C Quelltext für den Algorithmus Einfügesortieren}
 
-Daten werden im C Quelltext durch sogenannte Variablen representiert. 
+Daten werden im C Quelltext durch sogenannte Variablen repräsentiert. 
 Auf Variablen können wir Operation ausführen, oder sie an Funktionen übergeben.
-Zunächst stellen wir jetzt vor, wie man Variablen deklariert, ihnen einen Wert zuweisst und wie man sie beispielsweise auf dem Monitor ausgeben kann.
+Zunächst stellen wir jetzt vor, wie man Variablen deklariert, ihnen einen Wert zuweist und wie man sie beispielsweise auf dem Monitor ausgeben kann.
 C kennt beispielsweise Datentypen für ganze Zahlen und für reelle Zahlen.
 Beispiele sind \texttt{int} für ganze und \texttt{float} für reelle Zahlen.
 Diese sind in verschiedenen Längen verfügbar.
@@ -156,9 +156,9 @@ Das erhöht die Lesbarkeit des Quelltextes.
 Gute Editoren stellen Einrückungs Schemas zur Verfügung.
 
 Wie übersetzt man nun dieses Programm?
-Wir zeigen dies hier beispielhaft für Linux und den GNU C compiler \texttt{gcc}.
+Wir zeigen dies hier beispielhaft für Linux und den GNU C Compiler \texttt{gcc}.
 Angenommen, obiger Quelltext ist in einer Datei \texttt{main.c} im momentanen Arbeitsverzeichnis gespeichert.
-Dann kann man die Datei mit folgendem Aufruf auf der Console übersetzen:
+Dann kann man die Datei mit folgendem Aufruf auf der Kommandozeile übersetzen:
 
 \vspace*{0.5cm}
 \begin{verb}
@@ -174,8 +174,8 @@ Dann kann man die Datei mit folgendem Aufruf auf der Console übersetzen:
 \end{verb}
 \vspace*{0.5cm}
 
-\noindent von der Komanndozeile aus ausgegeführt werden. 
-In obigem Aufruf des GNU Compilers sind nicht alle Kommandozeileparameter strickt notwendig.
+\noindent von der Kommandozeile aus ausgeführt werden. 
+In obigem Aufruf des GNU Compilers sind nicht alle Kommandozeilenparameter strickt notwendig.
 Die Parameter \texttt{-Wall -pedantic} sorgen dafür, dass der Compiler möglichst viele Warnungen ausgibt und alle möglichen Probleme im Quelltext auch mitteilt.
 Wir denken, dass es gerade für Anfänger sehr wichtig ist, Quelltext so sauber wie möglich zu schreiben.
 Deshalb möchten wir dringend dazu auffordern, diese Compiler Parameter zu benutzen.
@@ -203,20 +203,21 @@ int main()
 {
   // Ausgabe auf dem Bildschirm
   printf("Hallo Welt\n");
-  return 0;
+  return (0);
 }
 \end{lstlisting}
 Es sind zwei Dinge dazugekommen:
 Erstens haben wir eine sogenannte Header-Datei, in diesem Fall \texttt{stdio.h} eingebunden.
 Das ist nötig, damit der C-Compiler die Funktion \texttt{printf} kennt.
 Zweitens ist der Aufruf von \texttt{printf} hinzugekommen.
-Die Funktion \texttt{printf} gibt in diesem Fall den String "Hallo Welt" auf dem Standard Ausgabegerät aus, was normalerweise die Console selbst ist, wenn das Programm von der Console aufgerufen wird. 
+Die Funktion \texttt{printf} gibt in diesem Fall den String \glqq Hallo Welt\grqq\ auf dem Standard Ausgabegerät aus, was normalerweise die Kommandozeile selbst ist, wenn das Programm von der Kommandozeile aufgerufen wird. 
 Wir werden die Funktion \texttt{printf} später noch im Detail diskutieren.
-In diesem Bespiel kopiert \texttt{printf} die Zeichenkette unverändert zum standard output.
+In diesem Beispiel kopiert \texttt{printf} die Zeichenkette unverändert zum standard output.
 \verb|\n| erzeugt einen Zeilenumbruch.
 Wieder wird der Aufruf von \texttt{printf} mit einem Semikolon \texttt{;} abgeschlossen.
+Man beachte, dass \texttt{return} die Klammern um den Rückgabewert nicht benötigt, es ginge also auch \texttt{return 0;}.
 
-Der Rückgabewert von \texttt{main} kann übrigens an der Console wie folgt abgefragt werden
+Der Rückgabewert von \texttt{main} kann übrigens an der Kommandozeile wie folgt abgefragt werden
 
 \vspace*{0.5cm}
 \begin{verbatim}
