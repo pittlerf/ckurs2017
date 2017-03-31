@@ -45,7 +45,7 @@ void increment(int a, int b)
 {
   a++;
   b++;
-  return 0;
+  return;
 }
 
 int main()
@@ -54,7 +54,7 @@ int main()
   int ret = 0;
   printf("Wert vor der Funktion a=%d, b=%d\n", a, b);
   ret = increment(a, b); // die Variablen in unserem Block werden
-  // nicht veraendert!
+                         // nicht veraendert!
   printf("Wert nach der Funktion a=%d, b=%d\n", a, b);
   return ret;
 }
@@ -73,7 +73,7 @@ void increment(int *a, int *b)
 {
   (*a)++;
   (*b)++;
-  return 0;
+  return;
 }
 
 int main()
@@ -82,7 +82,7 @@ int main()
   int ret = 0;
   printf("Wert vor der Funktion a=%d, b=%d\n", a, b);
   ret = increment(&a, &b); // die Variablen in unserem Block werden
-  // nicht veraendert!
+                           // direkt veraendert!
   printf("Wert nach der Funktion a=%d, b=%d\n", a, b);
   return ret;
 }
@@ -113,14 +113,15 @@ Dies ist in Abbildung \ref{pointfig} illustriert.
 Zeigern dürfen nur gültige Adressen zugewiesen werden.
 Dies kann allerdings, bis auf Ausnahmen, nicht vom Compiler überprüft werden.
 Wenn doch keine gültige Adresse zugewiesen wurde, bekommt man bei Dereferenzierung den \emph{segmentation fault} als Laufzeitfehler.
-Dieser Quelltext weißt sehr wahrscheinlich eine ungültige Adresse zu:
+Dieser Quelltext weist sehr wahrscheinlich eine ungültige Adresse zu:
 \begin{lstlisting}
 int *p = 42;
 \end{lstlisting}
 Allerdings wird im diesen Fall der Compiler sehr wahrscheinlich\footnote{Hängt leider vom Compiler ab.} eine Warnung geben, denn 42 ist vom Typ \verb|int|, und nicht vom Typ \verb|int*|.
 GCC 6.3.1 gibt folgendes aus:
 \begin{verbatim}
-int-ptr.c:7:14: Warnung: Initialisierung erzeugt Zeiger von Ganzzahl ohne Typkonvertierung [-Wint-conversion]
+int-ptr.c:7:14: Warnung: Initialisierung erzeugt Zeiger 
+           von Ganzzahl ohne Typkonvertierung [-Wint-conversion]
      int *p = 42;
               ^~
 \end{verbatim}
@@ -563,7 +564,7 @@ plist = list; // aequivalent zu plist = &list[0];
 for (int i = 0; i < 5; i++)
   {
     *plist = i;
-    plistx++; // aequivalent zu plist = plist + 1; oder plist += 1;
+    plist++; // aequivalent zu plist = plist + 1; oder plist += 1;
   }
 \end{lstlisting}
 Mit unserer bisherigen Kenntnis des Operators \verb|++| würden wir erwarten, dass der Wert von \verb|plist| um eins erhöht wird.

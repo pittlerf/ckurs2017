@@ -2,11 +2,11 @@
 
 In diesem Skript wird die Programmiersprache C eingeführt. 
 C ist eine Programmiersprache, die in vielen Bereichen zum Einsatz kommt und viele Möglichkeiten bietet.
-Im Allgemeinen besteht Programieren aus dem Schreiben von Quelltext (auch \emph{code}) in einer Programmiersprache, der dann in ausführbaren Maschinencode übersetzt werden muss. 
+Im Allgemeinen besteht Programmieren aus dem Schreiben von Quelltext (auch \emph{Code}) in einer Programmiersprache, der dann in ausführbaren Maschinencode übersetzt werden muss. 
 Den letzten Schritt nennt man Übersetzen (auch \emph{compilieren}), und das Programm, das diese Aufgabe übernimmt \emph{Compiler}.
 
 C gehört zu den Programmiersprachen, für die zunächst der gesamte Quelltext geschrieben werden muss, um ihn dann zu Übersetzen. 
-Der übersetzte code kann dann ausgeführt werden, man spricht auch vom ausführbaren Programm.
+Der übersetzte Code kann dann ausgeführt werden, man spricht auch vom ausführbaren Programm.
 Es gibt mehrere Gründe, sich für C als Programmiersprache zu entscheiden, unter anderem:
 \begin{itemize}
 \item C erzeugt meist effizienten Maschinencode:\\
@@ -29,23 +29,23 @@ Dabei muss man zwei wichtige Konzepte verstehen:
 \item Datentypen
 \item Funktionen
 \end{enumerate}
-Zum Bespiel: Wenn wir die Zahlen sortieren wollen, müssen wir zunächst entscheiden, ob wir ganze oder reelle Zahlen betrachten wollen.
+Zum Beispiel: Wenn wir die Zahlen sortieren wollen, müssen wir zunächst entscheiden, ob wir ganze oder reelle Zahlen betrachten wollen.
 Auf jedem Datentyp sind Operationen definiert, die wir nutzen können.
 Wir werden alle C-Datentypen kennenlernen, und die dafür zur Verfügung stehenden Operationen.
 Um den Fluss des Programms zu beeinflussen, bracht man allerdings mehr als Operationen auf Daten. 
 Dafür werden wir die C-Kontrollstrukturen einführen.
 
 Ein weiteres wichtiges Konzept sind Funktionen.
-Im allgemeinen stellen Funktionen (im idealfall kurze) mit Namen versehene Abschnitte im Programm dar, die dann über den Namen wieder aus dem Quelltext aufgerufen werden können.
+Im allgemeinen stellen Funktionen (im Idealfall kurze) mit Namen versehene Abschnitte im Programm dar, die dann über den Namen wieder aus dem Quelltext aufgerufen werden können.
 Das kleinste ausführbare C-Programm besteht aus genau einer Funktion, wie wir sehen werden.
 Funktionen bekommen Daten als Eingabe, führen bestimmte Operationen auf diesen Eingabedaten aus und liefern dann einen Rückgabewert.
 Die oben bereits erwähnten Bibliotheken stellen im wesentlichen Funktionen zur Verfügung.
 So wird zum Beispiel die Ein- und Ausgabe von Text in C über Bibliotheksfunktionen realisiert.
 Wir werden zeigen, wie man Funktionen definiert und aufruft.
-Mit all diesem Wissen schreiben wir dann ein erstes etwas kompizierteres Programm.
+Mit all diesem Wissen schreiben wir dann ein erstes etwas komplizierteres Programm.
 
-In dem zweiten Teil des Skrtips werden wir komplexere Möglichkeiten von C einführen.
-Dabei wird es vor allem Speicherverwaltung und zusammengesetzte Datentypen gehen.
+In dem zweiten Teil des Skripts werden wir komplexere Möglichkeiten von C einführen.
+Dabei wird es vor allem um Speicherverwaltung und zusammengesetzte Datentypen gehen.
 Das Verständnis von dynamischer Speicherverwaltung in C kann in vielen Situationen sehr hilfreich sein.
 Man denke nur an das Sortierproblem: Wenn nicht von Anfang an klar ist, welche Länge die zu sortierenden Zahlenreihen haben werden, dann sollte man in der Lage sein, diese Länge dynamisch anzupassen
 Der dabei am häufigsten auftretende Laufzeitfehler des Programms ist der sogenannte \emph{segmentation fault}, also ein Zugriff auf eine Sektion im Speicher, auf die nicht zugegriffen werden darf.
@@ -59,7 +59,7 @@ Das ist unter anderem auch wichtig, weil damit unter Umständen Programme effizi
 Wir werden dies am Beispiel eines schnelleren Sortier-Algorithmus aufzeigen.
 
 Schließlich, ein sehr wichtiger Punkt beim Programmieren ist das Kommentieren und das Codedesign.
-Dies erhöht die Wiederverwendbarkeit von Code und erlaubt es auch code zu verstehen, den man vor einem Jahr geschrieben hat.
+Dies erhöht die Wiederverwendbarkeit von Code und erlaubt es auch Code zu verstehen, den man vor einem Jahr geschrieben hat.
 Insbesondere werden wir diskutieren, wie man Quelltext in verschiedene Dateien verteilt.
 
 Die Sprache C verändert sich im Laufe der Zeit.

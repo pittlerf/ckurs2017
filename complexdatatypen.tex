@@ -4,11 +4,11 @@ Je nach Problemstellung ist es manchmal sehr hilfreich, Datenstrukturen selbst e
 C bietet dafür die Möglichkeit, und zwar auf verschiedene Weisen.
 Zunächst kann man in C einen neuen Typ definieren, z.B. einen eigenen Typ für reelle Zahlen:
 \begin{lstlisting}
-typedef real float;
+typedef float real;
 \end{lstlisting}
 Dieser kann im Quelltext danach wie native C Typen verwendet werden
 \begin{lstlisting}
-typedef real float;
+typedef float real;
 int main()
 {
   real x, y = 3.718;
@@ -19,7 +19,7 @@ Auf den ersten Blick mag eine eigene Definition für eine Datentyp für reelle Z
 Allerdings kann man mit dieser Typdefinition zu einem späteren Zeitpunkt sehr einfach die verwendete Genauigkeit für reelle Zahlen ändern.
 Nämlich einfach, indem man die Zeile für die Typdefinition durch
 \begin{lstlisting}
-typedef real double;
+typedef double real;
 \end{lstlisting}
 ersetzt.
 
@@ -99,7 +99,7 @@ int main()
 }
 \end{lstlisting}
 Elemente eines \verb|struct| können natürlich auch Zeiger sein.
-Allerdings muss dann Speicher außerhalb der Deklaration stattfinden.
+Allerdings muss dann Speicher außerhalb der Deklaration des \texttt{struct} reserviert werden.
 
 Die Verwendung von \verb|struct| ist sehr hilfreich, wenn beispielsweise eine Liste von logisch zusammengehörigen Daten bearbeiten soll, also etwa den Real- und Imaginärteil.
 Es muss dann nicht mehr jedes Element einzeln übergeben werden, sondern nur noch einmal der Kontainer.
@@ -140,7 +140,7 @@ struct tm
   int tm_mday; // Tag
   int tm_mon; // Monat
   int tm_year; // Jahr
-  int tm_wday; // Wochetag
+  int tm_wday; // Wochentag
   int tm_yday; // Tag im Jahr
   int tm_isdst; // Sommerzeit oder nicht
 };
