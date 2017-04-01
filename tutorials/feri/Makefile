@@ -1,4 +1,4 @@
-TUTORIALS:=$(basename *.tex)
+TUTORIALS:=$(basename $(wildcard *.tex))
 
 all: $(addsuffix .pdf, $(TUTORIALS))
 
