@@ -1,2 +1,2 @@
-Montag   03.04: lars/2016/ProgKurs-Tag01.tex   (solution not available)
+Montag   03.04: lars/2016/ProgKurs-Tag01.tex   (solution available)
 Dienstag 04.04: lars/2016/ProgKurs-Tag02.tex   (solution not available)
