@@ -1,0 +1,464 @@
+\setcounter{minutecounter}{0}
+
+\section*{Allgemeine Informationen}
+
+\subsection{Administrativa}
+
+\iflecturer
+\begin{framed}
+  \minutes{5}
+
+  \slide{}
+\end{framed}
+\fi %iflecturer
+
+\begin{itemize}
+ \item{Vorlesung 03.04-13.04, 10-12 Uhr, \textbf{PI HS1}}
+ \begin{itemize}
+   \item{06.04: \textbf{HS HISKP} }
+ \end{itemize}
+ \item{Bartosz Kostrzewa, bartosz\_kostrzewa@fastmail.com, Raum 3.009 HISKP}
+ \begin{itemize}
+   \item{Sprechzeiten: Täglich 17:00-17:45 Uhr}
+ \end{itemize}
+ \item{Tutoren: Martin~Ueding, Ferenc~Pittler, Simon~Schlepphorst, Marcel~Nitsch, Florian~Taubert}
+ \item{Tutorien finden statt in:}
+ \begin{itemize}
+   \item{Astro CIP Pool (Raum 0.007) [AifA, Auf dem Hügel 71]}
+   \item{HISKP SR1 [HISKP, Nußallee 14-16]}
+ \end{itemize}
+\end{itemize}
+
+\subsection{Lernziele}
+
+\iflecturer
+\begin{framed}
+  \minutes{5}
+
+  \slide{}
+\end{framed}
+\fi %iflecturer
+
+Ziele dieser Vorlesung sind, unter Anderem:
+
+\begin{itemize}
+  \item{Verständnis der immer weiter steigenden Signifikanz der Programmierung in der Physik}
+  \item{Algorithmen entwickeln und verstehen}
+  \item{Algorithmen in Quelltext übertragen}
+  \item{Erstes Kennenlernen der sogennanten \emph{imperativen} Programmierung}
+  \item{Kennenlernen der Daten- und Kontrollstrukturen von C99}
+  \vspace{0.5cm}
+  \item{Praktischer Einsatz des C-Compilers zur Übersetzung des Quelltextes in ausführbaren Maschinencode}
+  \item{Erstellen eigener C-Programme in den Tutorien}
+  \begin{itemize}
+    \item{einfache Beispielprogrammen $\rightarrow$ kompliziertere Programme aus merheren Quelltextdateien}
+    \item{Verwendung externer Bilbiotheken}
+  \end{itemize}
+  \vspace{0.5cm}
+  \item{Vorbereitung auf \emph{physik441: Computerphysik} (SoSe 2017), \emph{physics760: Computational Physics} (WiSe 2017/2018), etwaige Bachelor- und Masterarbeiten}
+\end{itemize}
+
+\iflecturer
+\begin{framed}
+  $\Rightarrow$ Programmierkenntnisse abfragen!!
+\end{framed}
+\fi
+
+\section{Vorlesung 1}
+
+\subsection{Motivation}
+
+\iflecturer
+\begin{framed}
+  \minutes{10}
+  
+  \stepslide{5}
+\end{framed}
+\fi
+
+Programmierung ist in den letzten 40 Jahren eine essenzielle Fähigkeit für Physiker geworden.
+Sowohl in der Theorie, als auch im Experiment sind gut entwickelte Programmierkenntnisse nicht mehr wegzudenken.
+Physiker treiben die Verarbeitung von riesigen Datenmengen voran, sei dies aus Experimenten wie dem LHC oder aus großangelegten Computersimulationen, z.B. in der Gitter-QCD.
+Auch die Entwicklung neuer Experimente stellt erhebliche Anforderungen an den Programmierer.
+Ein Beispiel sind spezielle Filter, sogenante \emph{Trigger}, welche am LHC in Nanosekunden darüber entscheiden ob ein \emph{Event} interessant ist, oder ob es verworfen werden soll.
+Würde dies nicht gemacht, wäre es unmöglich die vom LHC produzierten Datenmengen zu speichern und auszuwerten.
+Um die Software für diese Trigger zu schreiben, wird einerseits ein genaues Verständnis der Physik vorausgesetzt, andererseits aber auch die Beherrschung verschiedenster Konzepte des Hochgeschwindigkeitsrechnens und der Informatik.
+
+Von Physikern werden einige der ambitioniertesten Simulationen auf Großrechnern durchgeführt.
+In der Gitter-QCD, z.B., schreibt man Software zur Simulation der starken Wechselwirkung, welche auf tausenden bis hundertausenden von Rechnereinheiten parallel läuft.
+Andere Theoretiker, die sich mit der Quantenfeldtheorie befassen, erstellen komplexe Bibliotheken zur Auswertung hochkomplizierter Integrale und tragen aktiv zu Entwicklungen in der angewandten Mathematik bei.
+
+Phänomenologen, Experimentatoren, aber auch Theoretiker benötigen zusätzlich zu den oben ganennten, spezialisierten Softwarepaketen, Programme zur Daten- und Projektverwaltung und viele weitere Softwarepakete.
+Obwohl es für einige dieser Aufgaben kommerzielle Angebote gibt, wird in sehr vielen Fällen spezielle, dem Fachbereich angepasste Software entwickelt, um diese Probleme zu lösen.
+Auch hier sind es oft Wissenschaftler, die solche Programme schreiben und dann pflegen.
+
+\subsection{Rechnerarchitektur}
+
+\iflecturer
+\begin{framed}
+  \minutes{5}
+  
+  \blackboard{}
+\end{framed}
+\fi
+
+\subsection{Daten- und Speichertypen}
+
+\iflecturer
+\begin{framed}
+  \minutes{10}
+  
+  \blackboard{}
+\end{framed}
+\fi
+
+\subsubsection{Dualsystem}
+
+\iflecturer
+\begin{framed}
+  \blackboard{}
+\end{framed}
+\fi
+
+Variablen werden vom Rechner im Binärformat gespeichert, das heißt, dass eine Speicherzelle nur entweder den Wert 0 oder 1 annehmen kann.
+
+Die Zahl $321$, gespeichert als Ganzzahl, wird dann, z.B., so dargestellt:
+
+\begin{align*}
+  321_{10} & = 0000 \, 0001 \, 0100 \, 0001_{2} \\
+           & = 0\cdot2^{15} + \ldots + 1\cdot2^8 + 0\cdot2^7 + 1*\cdot2^6 + 0\cdot2^5 + 0\cdot2^4 + 0\cdot2^3 + 0\cdot2^2 + 0\cdot2^1 + 1\cdot2^0
+\end{align*}
+
+Jede im Binärformat gespeicherte Stelle wird als \emph{Bit} bezeichnet, $8$ Bits sind ein \emph{Byte}, $2$ Byte sind ein \emph{Word}, $4$ Byte ein \emph{Doubleword (Dword)} und $8$ Byte ein \emph{Quadword (Qword)}. 
+
+\subsubsection{Fließkommazahlen (Maschinenzahlen)}
+
+\iflecturer
+\begin{framed}
+  \blackboard{}
+\end{framed}
+\fi
+
+Nur eine Teilmenge, $\mathcal{M}$, der reellen Zahlen ist auf dem Rechner darstellbar.
+Der IEEE-Standard definiert folgendes Format:
+\begin{equation*}
+  x = \operatorname{sign}(x) \cdot a \cdot E^{e-k} \, ,
+\end{equation*}
+wobei $E\in\mathbb{N}, N>1$ die Basis, $k\in\mathbb{N}$ die Genauigkeit und $e$ im Exponentenbereich $e_\mathrm{min} < e < e_\mathrm{max}$ liegt mit $e_\mathrm{min}, e_\mathrm{max}\in \mathbb{Z}$.
+Die Mantisse $a\in\mathbb{N}_0$ ist definiert als:
+\begin{equation*}
+  a = a_1 E^{k-1} + a_2 E^{k-2} + \ldots + a_k E^0 \, ,
+\end{equation*}
+wobei $k$ die Mantissenlänge darstellt.
+Auf modernen Rechnern ist fast immer $a_i\in{0,1} $.
+
+Bei der Abbildung der reellen Zahlen auf die Menge der Maschinenzahlen
+muss fast immer eine Rundungsoperation vorgenomme werden. Dabei geht
+Information verloren, eine Rückabbildung ist nicht eindeutig möglich.
+
+\begin{framed}
+  \begin{enumerate}
+  \item Die Abbildung der Zahl $0,1$ im Dezimalsystem auf das
+    Dualsystem $0,1_{10} = 0,000110011001100\ldots_2$ ist ein unendlicher
+    periodischer Dualbruch und damit mit endlicher Stellenzahl nicht
+    exakt darstellbar.
+  \item beim Addieren zweier $k$-stelliger Zahlen entsteht im
+    Allgemeinen eine $k+1$ stellige Zahl. Überschreitet bei einem
+    solchen Schritt $k+1$ die maximal verfügbare Stellenzahl, so kommt
+    es zu einem sogenannten Überlauf (Englisch: \emph{overflow}), der
+    zum Fehlschlagen eines Verfahrens führt.
+  \end{enumerate}
+\end{framed}
+
+Als Maschinengenauigkeit bezeichnet man die größte reelle Zahl
+$\delta_M$ für die der Rechner
+\begin{equation}
+1 + \delta_M = 1
+\end{equation}
+liefert. Für die Abbildung der rellen Zahlen auf Maschinenzahlen gilt
+dann notwendigerweise
+\begin{equation}
+-\delta_M \leq \delta x\leq \delta_M\,.
+\end{equation}
+
+\subsection{First Contact}
+
+\iflecturer
+\begin{framed}
+  \minutes{5}
+\end{framed}
+\fi
+
+All diese Aufgaben haben gemein, dass man als Programmierer eine Problemstellung in eine, dem Rechner verständliche, Sprache bringen muss.
+Diesem Prozess unterliegt die Formulierung von sogenannten Algorithmen.
+Dies sind präzise Vorschriften, welche in endlich vielen Schritten für eine gewisse Eingabe, eine gewisse Ausgabe liefern sollen.
+
+Nachdem man eine Problemstellung so aufgeteilt hat, dass man sie anhand von Algorithmen darstellen kann, beginnt man damit, diese in eine Programmiersprache zu übertragen und die Konstrukte der Programmiersprache dazu zu nutzen, Daten- und Programmfluß zu steuern.
+Die Auswahl an verfügbaren Programmiersprachen ist groß und diese unterscheiden sich z.B. darin, welche Kontrollstrukturen und Programmkonstrukte die Sprache zur Verfügung stellt, wann geschriebene Befehle ausgeführt werden, wie Datentypen und Variablen identifiziert werden oder wie genau man die Rechnerarchitektur verstehen muss, um die Sprache zu nutzen.
+Im Allgemeinen nutzt man als Programmiere immer mehrere Programmiersprachen.
+
+In dieser Vorlesung arbeiten wir ausschließlich mit C und um genauer zu sein, mit C99.
+Dies hat den großen Vorteil, dass es in der Wissenschaft sehr viel Software gibt, die entweder in C geschrieben ist oder auf Komponenten aufbaut, die wiederum in C geschrieben sind.
+Desweiteren gibt es viele Sprachen, welche C syntaktisch gleichen und ein Verständnis von C erlaubt es, diese anderen Sprachen schnell zu erlernen.
+Schlussendlich sind Programme die in C geschrieben sind oft, relativ gesehen, schnell.
+Dies bedeutet nicht, dass man nicht auch langsame Software in C schreiben kann.
+
+Die Verwendung von C hat jedoch auch einige Nachteile.
+\begin{itemize}
+ \item{Es handelt sich um eine relativ alte Programmiersprache, die viele moderne Konstrukte nicht unterstützt. In anderen Programmiersprachen erlauben es diese Konstrukte, komplizierte Software mit weniger Aufwand zu entwickeln. Desweiteren werden viele Details, die man in C berücksichtigen muss, automatisch vom Compiler erledigt.}
+ \item{C zwingt den Programmierer oft, genau darüber nachzudenken, was der Rechner eigentlich im Hintergrund macht. Dies passiert z.B., bei der Speicherverwaltung.}
+\end{itemize}
+
+\subsection{Von Deutsch zu Pseudocode}
+
+\iflecturer
+\begin{framed}
+  \minutes{10}
+  
+  \blackboard{} (Einfügensortieren beschreiben)
+  
+  \slide{} (Einfügensortieren Pseudocode)
+\end{framed}
+\fi
+
+Gegeben sei eine unsortierte Liste U mit Elementen ${x_i}$, $i \in \lbrace 0,\ldots, n-1 \rbrace$.
+Ziel ist es, für diese Liste eine Permutation der Indizierung, $\sigma(i)$ zu finden, welche die Elemente der Liste nach dem Kriterium kleiner-gleich (oder größer-gleich) sortiert, mit dem Ergebnis, dass
+\begin{equation*}
+  x_{\sigma(0)} \leq x_{\sigma(1)} \leq \ldots \leq x_{\sigma(n-1)} \, .
+\end{equation*}
+
+Ein möglicher Ansatz:
+\begin{enumerate}
+ \item{Man beginne mit zwei Listen, der unsortierten, U, und einer zweiten Liste, S, welche zu Beginn leer ist}
+ \item{Man verschiebe das jeweils erste Element der Liste U in die Liste S und füge es dabei so ein, dass S immer sortiert ist.}
+ \item{\textbf{2.} wird so lange wiederholt, bis U leer ist.}
+\end{enumerate}
+
+In der Praxis wird dieser Algorithmus entweder destruktiv implementiert, wobei die Anfangslemente der Liste U nach und nach einfach vertauscht werden, oder so, wie oben beschrieben, aber ohne die Elemente aus der Liste U zu löschen.
+Bei der Übertragung eines Problems in Quelltext, auch \emph{code} genannt, ist der Schritt über sogenannten Pseudocode, insbesondere für kompliziertere Problemstellungen, sehr hilfreich.
+Ein Pseudocode für diesen Algorithmus könnte so aussehen:
+
+\begin{algorithm}[H]
+\caption{Einfügensortieren}
+\label{alg:einfuegsort}
+\include{algos/einfuegensortieren}
+\end{algorithm}
+
+\noindent Die fettgedruckten Teile des Pseudocodes entsprechen Kontrollstrukturen, welche den Programmfluss steuern und nachher in die ensprechenen Kontrollstrukturen der Programmiersprache abgebildet werden.
+Variablen verschiedener Datentypen und daraus zusammengesetzte Datenstrukturen dienen dann als Speicher für die verarbeiteten Eingabedaten und die generierten Ausgabedaten.
+Schlussendlich gibt es natürlich noch arithmetische und logische Operationen welche anhand von Operatoren dargestellt werden.
+
+Wir werden die Datentypen, Operatoren und Kontrollstrukturen gleich kennenlernen, zuerst aber, wollen wir ein einfaches C-Programm erstellen.
+Auch das Konzept der Funktionen werden wir in dieser Vorlesung behandeln.
+
+\subsection{Die Struktur eines C-Programms}
+
+\iflecturer
+\begin{framed}
+  \minutes{10}
+
+\slide{} (Die Struktur eines C-Programms)
+
+$\Rightarrow$ Hello world live implementieren, kompilieren und ausführen
+\end{framed}
+\fi
+
+\subsubsection{Quelltext und Kompilieren}
+
+C-Programme bestehen aus Quelltextdateien welche vom \emph{Compiler} in Maschinencode übersetzt (auch \emph{kompiliert}) werden müssen.
+Diese Maschinencodeschnipsel werden dann vom \emph{Linker} (meist Teil des Compilers) zu ausführbaren Programmen \emph{verlinkt}.
+Man unterscheidet hier zwischen \emph{Header}-Dateien, die Funktionen und Datentypen beschreiben und \emph{Quelltextdateien}, in welchen die Funktionen \emph{implementiert} sind.
+Diese Trennung erlaubt es, C-Programme modular zu gestalten.
+
+\begin{framed}
+ \iflecturer
+ \textbf{$\Rightarrow$ make note about comments, indentation!!}
+ \fi
+\end{framed}
+
+\subsection{Variablen und Datentypen}
+\iflecturer
+\begin{framed}
+  \minutes{10}
+\end{framed}
+\fi
+
+Um in C eine Variable zu \emph{deklarieren} (dem Compiler bekannt zu machen), muss für die Variable ein Name und ein Datentyp gewählt werden.
+C stellt eine Reihe elementarer Datentypen zur Verfügung.
+Diese unterscheiden sich z.B. darin, dass sie als Speicher für ganz-zahlige oder reelle Zahlen dienen.
+Die hier gezeigten Größen sind nur für die ganzzahligen Datentypen relativ unabhängig vom Compiler
+
+\iflecturer
+\begin{framed}
+  \slide{} (Variablen deklarieren und definieren)
+\end{framed}
+\fi
+
+\subsubsection{Einwurf: Lesbarkeit und Kommentare}
+
+Die Lesbarkeit des Quelltextes ist ein wichtiger Aspekt der Programmierung.
+In C werden Programmteile durch geschweifte Klammern in Blöcke aufgeteilt.
+Die Hierarchie dieser Blöcke und Unterblöcke solltte 
+
+Ein weiterer wichtiger Aspekt ist die Dokumentation des Quelltextes.
+Besonders wenn nicht-triviale Strukturen auftreten, oder man arbiträre Entscheidungen trifft (z.B. eine Konstante auf einen bestimmten Wert setzt), sollte man dies beschreiben oder Begründen.
+
+Einzeilige Kommentare werden in C99 mit \texttt{//} eingeführt und mehrzeilige Kommentare kann man mit \texttt{/* [...] */} in den Quelltext schreiben.
+
+\iflecturer
+\begin{framed}
+  \noindent\textbf{Hinweis darauf, dass wir noch Programme kennenlernen werden, die aus mehrere Quelltextdateien bestehen}
+\end{framed}
+\fi
+
+\iflecturer
+\begin{framed}
+  \slide{} (Einrücken und Kommentare)
+\end{framed}
+\fi
+
+\subsubsection{Datentypen}
+ 
+\iflecturer
+\begin{framed}
+  \blackboard{} (Listen von Datentypen)
+\end{framed}
+\fi
+
+\begin{table}[H]
+ \footnotesize \hspace{-1cm}
+\begin{tabular}{|l c c rrr|}
+  % creating 10 columns
+\hline
+Name & & Varianten & Größe in Byte & Minimaler Wert & Maximaler Wert
+  % inserting double-line Audio &Audibility & Decision & \multicolumn{7}{c}{Sum of Extracted Bits} 
+\\[0.5ex]   
+\hline % inserts single-line % Entering 1 st row
+                       & & int &4 & $-2,147,483,648$ & $2,147,483,647$ \\[-0.0ex]
+                       & & short & 2 & $-32,768$ & $32,767$ \\[-0.0ex]
+\raisebox{1ex}{int}  & & unsigned short& 2 & $0$ & $65535$ \\[-0.0ex]
+                       & & unsigned& 4 & $0$ & $ +4,294,967,295$ \\[1ex]
+                       & & long      & 4 &  $-2,147,483,648$ & $2,147,483,647$ \\
+                       & & long long & 8 & $-9,223,372,036,854,775,807$ & $9,223,372,036,854,775,807$ \\
+\hline
+% Entering 2nd row
+                            & & signed & 1 & $-128$ & $127$ \\[-1ex]
+\raisebox{1.5ex}{char} &    & unsigned & 1 & $0$ & $255$  \\[1ex]
+\hline
+% Entering 3rd row
+float & & & 4 &  &  \\
+double& & & 8 &  &  \\
+long double& & &8 &  &  \\[1ex]
+
+% [1ex] adds vertical space
+\hline                          % inserts single-line
+\end{tabular}
+\end{table}
+
+Der bei der Deklaration gewählte Datentyp ist für die Dauer der Existenz der Variable festgelegt und kann nicht geändert werden.
+In C können jedoch Variablen verschiedener Typen einander zugewiesen werden.
+Hierfür wird, wenn man eine Variable eines größerwertigen Typs einer kleinerwertigen Variable zuweist, erstere gekürzt, was zu Problemen führen kann.
+In die umgekehrte Richtung funktioniert die Konversion meist richtig, es sollte aber klar sein, dass man einem vorzeichenlosen Datentyp keinen negative Wert zuweisen kann.
+
+\subsection{Operatoren}
+\iflecturer
+\begin{framed}
+\minutes{15}
+\end{framed}
+\fi
+
+Mathematische und logische Operationen werden in C mithilfe von Operatoren dargestellt.
+Man unterscheidet zwischen \emph{unären}, \emph{binären} und \emph{ternären} Operatoren, welche jeweils ein, zwei oder drei Argumente haben.
+Desweiteren unterscheidet man zwischen \emph{infix}, \emph{präfix} und \emph{postfix} Operatoren.
+
+\iflecturer
+\begin{framed}
+  \blackboard{}
+\end{framed}
+\fi
+
+\subsubsection{Arithmetische Operatoren}
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{l c c}
+    \hline
+    Operator & Ausdruck & Auswertung \\
+    \hline
+    Zuweisung & \verb|a = b| & Werte von \verb|b| \\
+    Addition & \verb|a + b| & Summe von \verb|a| und \verb|b| \\
+    Subtraktion & \verb|a - b| & Differenz von \verb|a| und \verb|b| \\
+    Multiplikation & \verb|a * b| & Produkt von \verb|a| und \verb|b| \\
+    Division & \verb|a / b| & Quotient von \verb|a| und \verb|b| \\
+    Zuweisung und Addition & \verb|a += b| & Werte von \verb|a+b| \\
+    Zuweisung und Subtraktion & \verb|a -= b| & Werte von \verb|a-b| \\
+    Zuweisung und Multiplikation & \verb|a *= b| & Werte von \verb|a*b| \\
+    Zuweisung und Division & \verb|a /= b| & Werte von \verb|a/b| \\
+    Modulo & \verb|a % b| & \verb|a| modulo \verb|b| \\
+    Inkrement & \verb|++a, a++| & Präfix: \verb|a|+1, Postfix: \verb|a| \\
+    Dekrement & \verb|--a, a--| & Präfix: \verb|a|-1, Postfix: \verb|a| \\
+    Positiver Vorzeichenoperator & \verb|+a| & Wert von \verb|a| \\
+    Negativer Vorzeichenoperator & \verb|-a| & Wert von \verb|-a|  \\
+    \hline
+  \end{tabular}
+%   \caption{Arithmetische Operatoren \label{oper}}
+\end{table}
+
+\subsubsection{Vergleichsoperatoren}
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{l c}
+    \hline
+    Operator & Ausdruck \\
+    \hline
+    Prüft auf Gleichheit & \verb|a == b|  \\
+    Prüft auf Ungleichheit & \verb|a != b| \\
+    Prüft, ob \verb|a| echt größer als \verb|b| ist & \verb|a > b| \\
+    Prüft, ob \verb|a| echt kleiner als \verb|b| ist & \verb|a < b| \\
+    Prüft, ob \verb|a| größer gleich \verb|b| ist & \verb|a >= b| \\
+    Prüft, ob \verb|a| kleiner gleich \verb|b| ist & \verb|a <= b| \\
+    \hline
+  \end{tabular}
+%   \caption{Vergleichsoperatoren \label{vergoper}}
+\end{table}
+
+\subsubsection{Logische Operatoren}
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{l c c}
+    \hline
+    Operator & Ausdruck & Wert \\
+    \hline
+    Logisches UND & \verb|a && b|  &   \verb|a| und \verb|b| \\
+
+    Logisches ODER & \verb'a || b'  &   \verb|a| oder \verb|b| \\
+
+    Negation      & \verb|!a|      &   nicht \verb|a| \\
+    \hline
+  \end{tabular}
+%   \caption{Logische Operatoren \label{vergoper2}}
+\end{table}
+
+\subsubsection{Priorität von Operatoren}
+\begin{table}[H]
+  \centering
+  \begin{tabular}{l r}
+    \hline
+    Rang & Operatoren \\
+    \hline
+    0 & \texttt{., ->, [], ()}\\
+    1 & \texttt{\&} (Adressoperator), \texttt{*} (Dereferenzierung)\\
+    2 & \texttt{*, / \%}\\
+    3 & \texttt{<, >, <=, >=}\\
+    4 & \texttt{==, !=}\\
+    5 & \texttt{\&\&}\\
+    6 & \texttt{||}\\
+    7 & alle Zuweisungen \texttt{=, +=, -=, ...}\\
+    \hline
+  \end{tabular}
+%   \caption{Priorität von Operatoren}
+%   \label{tab:prior}
+\end{table}                                                                                                                                       
+

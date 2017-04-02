@@ -1,0 +1,20 @@
+\begin{algorithmic}
+  \Procedure{insertionsort}{$U,S$}
+    \State \textbf{Input:} Lists $U,S$
+    \State \textbf{Output:} List $S$
+    \For {$i=0$ \textbf{to} \textbf{length}(U)-$1$}
+      \State $S_i \gets U_i$
+      \State $j \gets i$
+      \While {$j > 0$}
+        \If{ $S_j < S_{j-1}$}
+          \State $t \gets S_j$
+          \State $S_j \gets S_{j-1}$
+          \State $S_{j-1} \gets t$
+          \State $j \gets j-1$
+        \Else
+          \State \textbf{break}
+        \EndIf
+      \EndWhile
+    \EndFor
+  \EndProcedure
+\end{algorithmic}
