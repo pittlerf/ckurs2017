@@ -2,7 +2,7 @@ COMMONDEPS := bibliography.bib Makefile $(wildcard algos/*.tex)
 SLIDEDEPS := slidespreamble.tex
 LECTUREDEPS := $(wildcard vorlesung?.tex) preamble.tex
 
-all: Vorlesungsnotizen.pdf Vorlesungsnotizen-student.pdf slides.pdf
+all: Vorlesungsnotizen.pdf Vorlesungsnotizen-student.pdf slides.pdf publish
 
 Vorlesungsnotizen.pdf: Vorlesungsnotizen.tex $(COMMONDEPS) $(LECTUREDEPS)
 	latexmk -bibtex -pdf -pdflatex="pdflatex -interaction=nonstopmode" -use-make Vorlesungsnotizen.tex
@@ -20,5 +20,9 @@ clean:
 	latexmk -CA
 	rm Vorlesungsnotizen-student.tex
 	rm slides.nav slides.snm slides.vrb
+
+publish: slides.pdf
+	mkdir -p publish
+	cp slides.pdf publish/c-kurs-2017-Folien.pdf
 
 .PHONY: clean
