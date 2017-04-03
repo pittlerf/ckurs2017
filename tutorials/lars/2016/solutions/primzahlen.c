@@ -8,7 +8,7 @@
 int main(int argc, char **argv)
 {
   // Zahl, die eventuell eine Primzahl ist, im Pseudocode $c$ genannt.
-  int kandidat = 27;
+  int const kandidat = 27;
 
   // Bis wir einen Teiler gefunden haben, nehmen wir an, dass es sich um eine
   // Primzahl handelt.

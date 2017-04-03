@@ -4,7 +4,7 @@
 
 int main()
 {
-  double pi = 3.14159265359;
+  double const pi = 3.14159265359;
   double x = 1.645; /* Wir berechnen cos(x) */
   double sum = 0; /* Die bisher berechnete Summe */
   double summand = 1; /* Der derzeitige Summand */

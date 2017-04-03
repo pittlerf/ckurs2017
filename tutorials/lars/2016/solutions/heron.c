@@ -5,7 +5,7 @@
 int main()
 {
   /* Dies ist die Zahl, aus der wir die Wurzel ziehen wollen. */
-  double a = 7;
+  double const a = 7;
 
   /* Diese Variablen sind die letzten beiden Folgenglieder der Folge, die
      gegen die Wurzel aus a konvergiert. Zu beginn setzen wir x auf 2, damit
