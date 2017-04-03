@@ -1,0 +1,351 @@
+\documentclass{article}[12pt]
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[ngerman]{babel}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{lipsum}
+
+\usepackage{amsfonts}
+\usepackage[intlimits]{amsmath}
+\usepackage{cite}
+\usepackage{epsfig}
+
+\usepackage[usenames,dvipsnames]{pstricks}
+\usepackage{pstricks-add}
+\usepackage{epsfig}
+\usepackage{pst-grad} % For gradients
+\usepackage{pst-plot} % For axes
+
+\addtolength{\hoffset}{-1.5cm}
+\addtolength{\textwidth}{3cm}
+\usepackage{listings}
+\usepackage{color}
+\definecolor{mygreen}{rgb}{0,0.6,0}
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\definecolor{mymauve}{rgb}{0.58,0,0.82}
+\PassOptionsToPackage{svgnames}{xcolor}
+\usepackage{tcolorbox}
+\usepackage{lipsum}
+\tcbuselibrary{skins,breakable}
+\usetikzlibrary{shadings,shadows}
+\usepackage{siunitx}
+\lstset{ %
+  backgroundcolor=\color{white},   % choose the background color; you must add \usepackage{color} or \usepackage{xcolor}; should come as last argument
+  basicstyle=\footnotesize,        % the size of the fonts that are used for the code
+  breakatwhitespace=false,         % sets if automatic breaks should only happen at whitespace
+  breaklines=true,                 % sets automatic line breaking
+  captionpos=b,                    % sets the caption-position to bottom
+  commentstyle=\color{mygreen},    % comment style
+  deletekeywords={...},            % if you want to delete keywords from the given language
+  escapeinside={\%*}{*)},          % if you want to add LaTeX within your code
+  extendedchars=true,              % lets you use non-ASCII characters; for 8-bits encodings only, does not work with UTF-8
+  frame=single,                    % adds a frame around the code
+  keepspaces=true,                 % keeps spaces in text, useful for keeping indentation of code (possibly needs columns=flexible)
+  keywordstyle=\color{blue},       % keyword style
+  language=C,                      % the language of the code
+  morekeywords={*,...},            % if you want to add more keywords to the set
+  numbers=left,                    % where to put the line-numbers; possible values are (none, left, right)
+  numbersep=5pt,                   % how far the line-numbers are from the code
+  numberstyle=\tiny\color{mygray}, % the style that is used for the line-numbers
+  rulecolor=\color{black},         % if not set, the frame-color may be changed on line-breaks within not-black text (e.g. comments (green here))
+  showspaces=false,                % show spaces everywhere adding particular underscores; it overrides 'showstringspaces'
+  showstringspaces=false,          % underline spaces within strings only
+  showtabs=false,                  % show tabs within strings adding particular underscores
+  stepnumber=1,                    % the step between two line-numbers. If it's 1, each line will be numbered
+  stringstyle=\color{mymauve},     % string literal style
+  tabsize=2,                       % sets default tabsize to 2 spaces
+  title=\lstname                   % show the filename of files included with \lstinputlisting; also try caption instead of title
+}
+
+\usepackage{amssymb}
+
+\newenvironment{codelisting}{\fontfamily{pcr}\selectfont%
+\lstset{commentstyle=\textit}\lstset{language=c}}{\fontfamily{ptm}\selectfont}
+
+
+\usepackage{algorithm,algorithmic}
+
+\floatname{algorithm}{Algorithmus}
+\newcommand{\SET}{\textbf{set}\ }
+\newcommand{\CHOOSE}{\textbf{choose}\ }
+\newcommand{\GOTO}{\textbf{goto}\ }
+\renewcommand{\algorithmicrequire}{\textbf{Input:}}
+\renewcommand{\algorithmicensure}{\textbf{Output:}}
+\renewcommand{\listalgorithmname}{Algorithms}
+\renewcommand{\algorithmiccomment}[1]{\\/* #1 */}
+
+\newenvironment{myexampleblock}[1]{%
+    \tcolorbox[beamer,%
+    noparskip,breakable,
+    colback=White,colframe=ForestGreen,%
+    colbacklower=LimeGreen!75!White,%
+    title=#1]}%
+    {\endtcolorbox}
+
+\newenvironment{myalertblock}[1]{%
+    \tcolorbox[beamer,%
+    noparskip,breakable,
+    colback=White,colframe=Bittersweet,%
+    colbacklower=Peach!75!White,%
+    title=#1]}%
+    {\endtcolorbox}
+
+\newenvironment{myblock}[1]{%
+    \tcolorbox[beamer,%
+    noparskip,breakable,
+    colback=White,colframe=RoyalBlue,%
+    colbacklower=TealBlue!75!White,%
+    title=#1]}%
+    {\endtcolorbox}
+
+\newenvironment{myexampleprogram}[1]{%
+    \tcolorbox[beamer,%
+    noparskip,breakable,
+    colback=White,colframe=Goldenrod,%
+    colbacklower=Yellow!75!White,%
+    title=#1]}%
+    {\endtcolorbox}
+%--------
+%\usepackage[magyar]{babel}
+\title{Solutions to Lars's Übung $2$}
+\begin{document}
+\maketitle
+\section{Aufgabe 1}
+\begin{codelisting}
+\begin{lstlisting}[numbers=left,numberstyle=\tiny,frame=tlrb,showstringspaces=false]
+/* Summe der ersten n Zahlen.
+ * (c) 2015 Clelia und Johannes */
+
+#include <stdio.h>
+
+int main () {
+    int n = 10;      /* Addiere bis zu dieser Zahl */
+    int i;
+    int summe;       /* speichert Zwischenergebnis */   
+    
+    i = 0;
+    
+    while (i < n) {
+      summe =+ i     /* addiere ite Zahl auf summe */
+    }    
+    printf ("Das Ergebnis ist %f.\n", summe);
+    return 0;
+}
+\end{lstlisting}
+\end{codelisting}
+First of all we have to check whether the actual implementations compile. Using \texttt{gcc} we get the following 
+error messages:
+\begin{lstlisting}
+temp2.c: In function 'main':
+temp2.c:15:5: error: expected ';' before '}' token
+     }
+     ^
+temp2.c:16:13: warning: format '%f' expects argument of type 'double', but argument 2 has type 'int' [-Wformat=]
+     printf ("Das Ergebnis ist %f.\n"
+\end{lstlisting}
+The first error message misses the end of the instruction at the 15-th line. The second message is only a warning.
+It warns us that we print with \texttt{\%f} a variable of \texttt{int} typ. This should be \texttt{\%d}.
+The source code, that can be successfully compiled look like the following:
+\begin{codelisting}
+\begin{lstlisting}[numbers=left,numberstyle=\tiny,frame=tlrb,showstringspaces=false]
+/* Summe der ersten n Zahlen.
+ * (c) 2015 Clelia und Johannes */
+
+#include <stdio.h>
+
+int main () {
+    int n = 10;      /* Addiere bis zu dieser Zahl */
+    int i;
+    int summe;       /* speichert Zwischenergebnis */
+
+    i = 0;
+
+    while (i < n) {
+      summe =+ i;     /* addiere ite Zahl auf summe */
+    }
+    printf ("Das Ergebnis ist %d.\n", summe);
+    return 0;
+}
+\end{lstlisting}
+\end{codelisting}
+However, even if the code compiles it does not guarantee a meaningfull output. Running the code, it seems it runs
+forever. This is because the statements in \texttt{while} actually never became falls, since \texttt{i} is not incremented
+inside \texttt{while}.This should be done with \texttt{i++;}.Besides this, we have to initialize all variables correctly. 
+This can be done together with the declaration. Comitting the above changes our code will give meaningfull results.
+\begin{codelisting}
+\begin{lstlisting}[numbers=left,numberstyle=\tiny,frame=tlrb,showstringspaces=false]
+/* Summe der ersten n Zahlen.
+ * (c) 2015 Clelia und Johannes */
+
+#include <stdio.h>
+
+int main () {
+    int n = 10;      /* Addiere bis zu dieser Zahl */
+    int i=0;         /* initializierung */
+    int summe=0;      /* speichert Zwischenergebnis */
+
+    while (i < n) {
+      summe =+ i;     /* addiere ite Zahl auf summe */
+      i++;
+    }
+    printf ("Das Ergebnis ist %d.\n", summe);
+    return 0;
+}
+\end{lstlisting}
+\end{codelisting}
+Although our code now gives meaningfull results, this does not mean, that it gives back the corrct results. First of all
+at the twelwth line we assign \texttt{i} to the \texttt{summe} variable, instead of incrementing it with \texttt{i}. Second
+in the sum we also have to the into account \texttt{n} itself, so the statements in the \texttt{while} should be less or equal
+to \texttt{n}.
+\begin{codelisting}
+\begin{lstlisting}[numbers=left,numberstyle=\tiny,frame=tlrb,showstringspaces=false]
+/* Summe der ersten n Zahlen.
+ * (c) 2015 Clelia und Johannes */
+
+#include <stdio.h>
+
+int main () {
+    int n = 10;      /* Addiere bis zu dieser Zahl */
+    int i=0;         /* initializierung */
+    int summe=0;     /* speichert Zwischenergebnis */
+
+    while (i <= n) {
+      summe += i;     /* addiere ite Zahl auf summe */
+      i++;
+    }
+    printf ("Das Ergebnis ist %d.\n", summe);
+    return 0;
+}
+\end{lstlisting}
+\end{codelisting}
+This can be of course faster, using the well-known closed formula for the summ of the first \texttt{n} numbers.
+\begin{codelisting}
+\begin{lstlisting}[numbers=left,numberstyle=\tiny,frame=tlrb,showstringspaces=false]
+/* Summe der ersten n Zahlen.
+ * (c) 2015 Clelia und Johannes */
+
+#include <stdio.h>
+
+int main () {
+    int n = 10;      /* Addiere bis zu dieser Zahl */
+    int i=0;         /* initializierung */
+    int summe=0;     /* speichert Zwischenergebnis */
+
+    summe=n*(n+1)/2;
+    printf ("Das Ergebnis ist %d.\n", summe);
+    return 0;
+}
+\end{lstlisting}
+\end{codelisting}
+\section{Aufgabe 2}
+\begin{lstlisting}
+#include<stdio.h>
+#include<math.h>//should be included (sqrt), compiled with -lm
+int primetest(int c){
+   int n=2;
+   while  ( ((double)n<sqrt((double)c)) && (c%n != 0)){
+//until we have not reach one divisor of c, or its square root
+//we increase n
+      n++;
+   }
+//if we have not found any divisor, then it is a prime
+   if (c%n != 0)
+     return 1;
+//if we have then it is not, we give back 0
+   else
+     return 0;
+}
+//looking for the first prime after n
+int firstprimeaftern(int n){
+   int c=n;
+//start a loop at n until the number gets a prime
+   while( primetest(c) == 0 ){
+//if it is not a prime yet, increase it by one
+     ++c;
+   }
+   printf("First prime number after %d is %d\n", n, c);
+   return c;
+}
+int main(){
+   int m=31;
+   int testres=primetest(m);
+   int a,b,c;
+   a=firstprimeaftern(20000);
+   b=firstprimeaftern(30000);
+   c=firstprimeaftern(40000);
+   printf("%d\n", testres);
+   printf("Solution b1 %d\n",a);
+   printf("Solution b2 %d\n",b);
+   printf("Solution b3 %d\n",c);
+}
+\end{lstlisting}
+\section{Aufgabe 3}
+\begin{lstlisting}
+//Implementing the square root
+#include<stdio.h>
+#include<math.h>//should be included because fabs
+double sqrtown( double a){
+  double x=2;
+  double fx=1;
+//looking for the fix point of the mapping f:0.5*(x+a/x)
+//fabs(x-fx) = | x-fx | : measure how far we are from the fixpoint
+  while ( fabs(x-fx)>1e-10){
+     x=fx;
+     fx=0.5*(x+a/x);
+  }
+//When we habe found it, we just print it out and give it back
+  printf("Root is %f\n", x);
+  return x;
+}
+int main(){
+  double x=8.;
+  double root=sqrtown(x);
+  printf("Root of %e is %e\n", x, root);
+}
+\end{lstlisting}
+\section{Aufgabe 4}
+\begin{lstlisting}
+#include<stdio.h>
+int gcr( int a, int b){
+//do a loop "forever"
+   while (1){
+//if one of the numbers get zero: we end the loop and 
+//return the other one: that will be the Greatest common factor.
+     if (a==0) return b;
+     if (b==0) return a;
+//if not we make a new iteration with b, a%b, when a>b
+//                            or with a, b%a in the other case
+     if (a>b)
+       a= a%b;
+     else
+       b= b%a;
+   }
+}
+int main(){
+   int a=15;
+   int b=20;
+   int fn=gcr(a,b);
+   printf("n=%d\n",fn);
+}
+\end{lstlisting}
+\section{Aufgabe 5}
+You can find it in the script.
+\section{Aufgabe 6}
+\begin{lstlisting}
+//we calculate an approximation to the summ of the 1/k**2 infinite series
+#include<stdio.h>
+#include<math.h>
+int main(){
+  int k=1;//we summ from 1
+  double sum=0.;//very important initialization
+  //we summ the one over squares till the 
+  //successive elements differ larger
+  //then 10**-8
+  while( fabs(1./(k+1)-1./(double)k)>1e-8){
+    sum+=1./(double)(k*k);
+    ++k;
+  }
+  printf("%e\n",sum);
+}
+\end{lstlisting}
+\end{document}
