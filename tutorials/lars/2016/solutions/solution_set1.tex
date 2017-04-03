@@ -1,0 +1,377 @@
+\documentclass{article}[12pt]
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[ngerman]{babel}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{lipsum}
+
+\usepackage{amsfonts}
+\usepackage[intlimits]{amsmath}
+\usepackage{cite}
+\usepackage{epsfig}
+
+\usepackage[usenames,dvipsnames]{pstricks}
+\usepackage{pstricks-add}
+\usepackage{epsfig}
+\usepackage{pst-grad} % For gradients
+\usepackage{pst-plot} % For axes
+
+\addtolength{\hoffset}{-1.5cm}
+\addtolength{\textwidth}{3cm}
+\usepackage{listings}
+\usepackage{color}
+\definecolor{mygreen}{rgb}{0,0.6,0}
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\definecolor{mymauve}{rgb}{0.58,0,0.82}
+\PassOptionsToPackage{svgnames}{xcolor}
+\usepackage{tcolorbox}
+\usepackage{lipsum}
+\tcbuselibrary{skins,breakable}
+\usetikzlibrary{shadings,shadows}
+\usepackage{siunitx}
+\lstset{ %
+  backgroundcolor=\color{white},   % choose the background color; you must add \usepackage{color} or \usepackage{xcolor}; should come as last argument
+  basicstyle=\footnotesize,        % the size of the fonts that are used for the code
+  breakatwhitespace=false,         % sets if automatic breaks should only happen at whitespace
+  breaklines=true,                 % sets automatic line breaking
+  captionpos=b,                    % sets the caption-position to bottom
+  commentstyle=\color{mygreen},    % comment style
+  deletekeywords={...},            % if you want to delete keywords from the given language
+  escapeinside={\%*}{*)},          % if you want to add LaTeX within your code
+  extendedchars=true,              % lets you use non-ASCII characters; for 8-bits encodings only, does not work with UTF-8
+  frame=single,                    % adds a frame around the code
+  keepspaces=true,                 % keeps spaces in text, useful for keeping indentation of code (possibly needs columns=flexible)
+  keywordstyle=\color{blue},       % keyword style
+  language=C,                      % the language of the code
+  morekeywords={*,...},            % if you want to add more keywords to the set
+  numbers=left,                    % where to put the line-numbers; possible values are (none, left, right)
+  numbersep=5pt,                   % how far the line-numbers are from the code
+  numberstyle=\tiny\color{mygray}, % the style that is used for the line-numbers
+  rulecolor=\color{black},         % if not set, the frame-color may be changed on line-breaks within not-black text (e.g. comments (green here))
+  showspaces=false,                % show spaces everywhere adding particular underscores; it overrides 'showstringspaces'
+  showstringspaces=false,          % underline spaces within strings only
+  showtabs=false,                  % show tabs within strings adding particular underscores
+  stepnumber=1,                    % the step between two line-numbers. If it's 1, each line will be numbered
+  stringstyle=\color{mymauve},     % string literal style
+  tabsize=2,                       % sets default tabsize to 2 spaces
+  title=\lstname                   % show the filename of files included with \lstinputlisting; also try caption instead of title
+}
+
+\usepackage{amssymb}
+
+\newenvironment{codelisting}{\fontfamily{pcr}\selectfont%
+\lstset{commentstyle=\textit}\lstset{language=c}}{\fontfamily{ptm}\selectfont}
+
+
+\usepackage{algorithm,algorithmic}
+
+\floatname{algorithm}{Algorithmus}
+\newcommand{\SET}{\textbf{set}\ }
+\newcommand{\CHOOSE}{\textbf{choose}\ }
+\newcommand{\GOTO}{\textbf{goto}\ }
+\renewcommand{\algorithmicrequire}{\textbf{Input:}}
+\renewcommand{\algorithmicensure}{\textbf{Output:}}
+\renewcommand{\listalgorithmname}{Algorithms}
+\renewcommand{\algorithmiccomment}[1]{\\/* #1 */}
+
+\newenvironment{myexampleblock}[1]{%
+    \tcolorbox[beamer,%
+    noparskip,breakable,
+    colback=White,colframe=ForestGreen,%
+    colbacklower=LimeGreen!75!White,%
+    title=#1]}%
+    {\endtcolorbox}
+
+\newenvironment{myalertblock}[1]{%
+    \tcolorbox[beamer,%
+    noparskip,breakable,
+    colback=White,colframe=Bittersweet,%
+    colbacklower=Peach!75!White,%
+    title=#1]}%
+    {\endtcolorbox}
+
+\newenvironment{myblock}[1]{%
+    \tcolorbox[beamer,%
+    noparskip,breakable,
+    colback=White,colframe=RoyalBlue,%
+    colbacklower=TealBlue!75!White,%
+    title=#1]}%
+    {\endtcolorbox}
+
+\newenvironment{myexampleprogram}[1]{%
+    \tcolorbox[beamer,%
+    noparskip,breakable,
+    colback=White,colframe=Goldenrod,%
+    colbacklower=Yellow!75!White,%
+    title=#1]}%
+    {\endtcolorbox}
+%--------
+%\usepackage[magyar]{babel}
+\title{Solutions to Lars's Übung $1$}
+\begin{document}
+\maketitle
+\section{Aufgabe 1:Debugging}
+\begin{codelisting}
+\begin{lstlisting}[numbers=left,numberstyle=\tiny,frame=tlrb,showstringspaces=false]
+ * Hello World Program.
+ * (c) 2015 Clelia und Johannes */
+
+#include <stdio.h>
+
+double main () {
+    pritnf ("Hallo Welt\n")
+    return 0;
+}
+\end{lstlisting}
+\end{codelisting}
+For debugging your code the easiest thing you can do is try to compile it, and read the compilers error messages.
+When you try to compile this example you will get a lot of error messages. We just show only the first of them:
+\begin{lstlisting}
+hello_world.c:1:10: error: expected '=', ',', ';', 'asm' or '__attribute__' before 'World'
+  * Hello World Program.
+\end{lstlisting}
+Usually it is a good practice to start the debugging with the first error message, because the later ones could be 
+just induced by the first one. This happens also in this simple example. The compiler shows that something goes wrong 
+in line 1. Actually this is the wrong useage of comments. They should be within \texttt{/*} and \texttt{*/}. So the corrected
+version is:
+\begin{codelisting}
+\begin{lstlisting}[numbers=left,numberstyle=\tiny,frame=tlrb,showstringspaces=false]
+/* Hello World Program.
+ * (c) 2015 Clelia und Johannes */
+
+#include <stdio.h>
+
+double main () {
+    pritnf ("Hallo Welt\n")
+    return 0;
+}
+\end{lstlisting}
+\end{codelisting}
+When you try to compile this one, this would not work as well. But fortunately we have much less error messeages:
+\begin{lstlisting}
+hello_world.c: In function 'main':
+hello_world.c:7:5: warning: implicit declaration of function 'pritnf' [-Wimplicit-function-declaration]
+     pritnf ("Hallo Welt\n")
+     ^
+hello_world.c:8:5: error: expected ';' before 'return'
+     return 0;
+\end{lstlisting}
+The warning message tells you that the compiler was not able to find the definition of your function \texttt{pritnf}
+in the standard libraries. This kind of warnings occur when you have made a typo in the name of your function. Here
+it is also the case: you should use \texttt{printf}:
+\begin{codelisting}
+\begin{lstlisting}[numbers=left,numberstyle=\tiny,frame=tlrb,showstringspaces=false]
+/* Hello World Program.
+ * (c) 2015 Clelia und Johannes */
+
+#include <stdio.h>
+
+double main () {
+    printf ("Hallo Welt\n")
+    return 0;
+}
+\end{lstlisting}
+\end{codelisting} 
+Almost done, only one error message remained:
+\begin{lstlisting}
+hello_world.c:8:5: error: expected ';' before 'return'
+     return 0;
+\end{lstlisting}
+This is also a very common error. It says that before the 8-th line the instruction was not closed. In \texttt{C}
+after every instruction you should use \texttt{;}. This will show to the compiler the end of your instruction, not the
+new line. Now we actually finished (with respect to the compiler).
+\begin{codelisting}
+\begin{lstlisting}[numbers=left,numberstyle=\tiny,frame=tlrb,showstringspaces=false]
+/* Hello World Program.
+ * (c) 2015 Clelia und Johannes */
+
+#include <stdio.h>
+
+double main () {
+    printf ("Hallo Welt\n");
+    return 0;
+}
+\end{lstlisting}
+\end{codelisting}
+Now our code will be compiled and we can let it run. The output will the the famous \texttt{Hello Welt} message.
+In the final code, one can complain about the type of the return value of \texttt{main}. This has to be
+an integer (type \texttt{int}), but actually the checking of this returned value is beyond the scope of
+this introductory kurs.
+\section{Aufgabe 2: Simple code}
+Implement the following function in \texttt{C} ($n$ is an integer)
+\[
+	f(n) = \left\{ \begin{array}{ll}
+	\frac{n}{2} & \text{if } n \text{ even} \\
+	\frac{n+1}{2} & \text{if } n \text{ odd} \\
+	\end{array}
+	\right.
+\]
+
+First you should find out the type your input parameter and the type of your output. As the exercise says
+the input should be a variable of \texttt{int} type. The return value should also be \texttt{int}, because
+the function \texttt{f} returns an integer for every possible $n$-s. Now comes the rest, the actual
+implementation of \texttt{f}. As the definition of the function suggests, you should use the \texttt{if} 
+statement in the implementation.
+\begin{lstlisting}{fn.c}
+#include<stdio.h>
+int f(int n){
+   if ( n % 2 == 0 )  //When n is even
+     return n/2;
+   else                //n is not even: i.e. it should be odd
+     return (n+1)/2;
+}
+int main(){
+   int n=3;
+   int fn=f(n);
+   printf("n=%d\tf(n)=%d\n", n, fn);
+}
+\end{lstlisting}
+For function call you should use the funtion name and in brackets you should enumerate its
+arguments separated by commas. Here the function \texttt{f} has only one argument. In order
+to store the return value a variable should stay on the left hand side of the function call. 
+\section{Aufgabe 4}
+\begin{algorithm}[H]
+\caption{}
+\algsetup{indent=1.5em}
+\begin{algorithmic}[1]
+\REQUIRE Integer non-negative number $c\in\mathbb{N}$
+\ENSURE Either \verb|YES| or \verb|NO|.
+\STATE \SET $n := 2$.
+\IF{$n>\sqrt{c}$} \label{1Start}
+\RETURN \verb|YES|
+\ENDIF
+\IF{$n$ teilt $c$}
+\RETURN \verb|NO|
+\ENDIF
+\STATE \SET $n := n + 1$
+\STATE \GOTO \ref{1Start}
+\end{algorithmic}
+\end{algorithm}
+One first has to look at the input and output parameters. Here the input is a natural number ($c\in\mathbb{N}$) and the output is a 
+binary one (one can think of (\texttt{yes} , \texttt{no}), or (1,0))). From this we can conclude that the Algorithm test some property 
+of the natural numbers. Lets look it in detail.  
+
+In the first row we initialize an integer variable($n$) with initial value equal to 2. The we check whether the square root of c is smaller
+than two. These will be the case for the following $c$-s:
+\begin{equation}
+1,2,3
+\end{equation}
+So these numbers \texttt{share} the property tested by the algorithm, what about the other ones?. We check whether they can be divided by two (without 
+remainder). So the numbers
+\begin{equation}
+4,6,8,10,12,14,16,\ldots
+\end{equation}
+\texttt{do not} share the property asked by the algorithm. For the other possible $c$-s we make a next round: Increase $n$ by one, and continue from 
+the second row. Now it should be clear, that the property we are looking after is whether the number is prime or not. 
+
+In general: Starting from $n=2$ we check whether $c$ can be divided with any numbers smaller than its square root\footnote{For a natural number its
+largest possible divisor is its square root} (with zero remainder). If not, it is obviously a prime.
+
+\begin{algorithm}[H]
+\caption{}
+\algsetup{indent=1.5em}
+\begin{algorithmic}[1]
+\REQUIRE Ganze Zahlen $a,b\in\mathbb{N}$
+\ENSURE Eine ganze Zahl $k\in\mathbb{N}$
+\IF{$a=0$} 
+\RETURN $b$
+\ENDIF
+\IF{$b=0$} \label{3Start}
+\RETURN $a$
+\ENDIF
+\IF{$a>b$}
+\STATE \SET $a = a - b$
+\ELSE 
+\STATE \SET $b = b - a$
+\ENDIF
+\STATE \GOTO \ref{3Start}
+\end{algorithmic}
+\end{algorithm} 
+This algorithm assign to its two integer input parameters an another integer number. Let start again with checking what happens in 
+a simple case. For example: $a=12$, $b=9$. First we check which is the greatest of the two, that is $a$ in the present case. Then we 
+subtract the smaller number (now $b$) from the larger one (now $a$). After this first iteration we have $a=3,b=9$. We basically
+do these two operation until one of the numbers (either $a$ or $b$) gets zero. The history of $a,b$ values is the following:
+\begin{enumerate}
+\item $a=12, b=9$
+\item $a= 3, b=9$
+\item $a= 3, b=6$
+\item $a= 3, b=3$
+\item $a= 3, b=0$
+\end{enumerate} 
+So the result will be $3$ which is actually the greatest common factor (GCR) of the two input numbers. The algorithm 
+is also called Euclid's Algorithm. In each iteration we check which is the greatest of the two numbers, and replace
+the larger one with the subtraction of the two. We stop, when any of the two numbers get zero, and give back the other one.
+To decrease the number of iterations we can replace the subtraction in line 8 and 10 with the modulo operator.
+\begin{algorithm}[H]
+\caption{}
+\algsetup{indent=1.5em}
+\begin{algorithmic}[1]
+\REQUIRE Ganze Zahlen $a,b\in\mathbb{N}$
+\ENSURE Eine ganze Zahl $k\in\mathbb{N}$
+\IF{$a=0$}
+\RETURN $b$
+\ENDIF
+\IF{$b=0$} \label{3Start}
+\RETURN $a$
+\ENDIF
+\IF{$a>b$}
+\STATE \SET $a = a \% b$
+\ELSE
+\STATE \SET $b = b \% a$
+\ENDIF
+\STATE \GOTO \ref{3Start}
+\end{algorithmic}
+\end{algorithm}
+The whole algorithm is based on the following identity:
+\begin{equation}
+\label{gcf}
+GCF\left(a,b\right)=GCF\left(a\%b,b\right),
+\end{equation}
+where it was assumed that $a\ge b$. As soon
+as one of the elements in eq. \ref{gcf} becomes zero, we 
+can simply read the greatest common factor, it is the 
+other element.
+\section{Aufgabe 5}
+\begin{algorithm}[H]
+\caption{}
+\algsetup{indent=1.5em}
+\begin{algorithmic}[1]
+\REQUIRE Reelle Zahl $a\in\mathbb{R}_{\ge 0}$
+\ENSURE Reine reelle Zahl $x\in\mathbb{R}$
+\STATE \SET $x := 2$ und $y := 1$.
+\IF{$|x-y|\le 10^{-10}$} \label{2Start} 
+\RETURN $x$
+\ENDIF
+\STATE \SET $x := y$
+\STATE \SET $y := \frac{1}{2} \cdot \left(x+\frac{a}{x}\right)$
+\STATE \GOTO \ref{2Start}
+\end{algorithmic}
+\end{algorithm}
+This will be the most difficult one, because here one maps a real number to another one, and with simply tries it is 
+hard to guess the actual form of the mapping. What's happening, is that you have a function $f$ (a mapping) with the 
+following rules:
+\begin{equation}
+f(x)=\frac{1}{2}\left(x+\frac{a}{x}\right)
+\end{equation}
+and you do the following iterations:
+\begin{enumerate}
+\item $x=y;y=f(x)$
+\item $x=y;y=f(x)$
+\end{enumerate}
+We do this till 
+\begin{equation}
+\vert x-f(x) \vert \le 10^{-10}
+\end{equation}
+In a mathematical sense we are looking for the fixpoint values of the function $f$. With the present form of $f$ we can
+easily calculate the fixpoint $x$ by solving an algebraic equation:
+\begin{equation}
+\frac{1}{2} \cdot \left(x+\frac{a}{x}\right)=x
+\end{equation}
+which results to:
+\begin{equation}
+x=\sqrt{a}
+\end{equation}
+Therefore this algorithm for every real positive $a$ gives back its square root.
+Advanced question: How should we modify the code in order to work also for non-positive $a$-s?
+In order to work for a general complex number?
+\end{document}
