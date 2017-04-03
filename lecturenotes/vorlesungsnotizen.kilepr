@@ -4,7 +4,7 @@ img_extIsRegExp=false
 img_extensions=.eps .jpg .jpeg .png .pdf .ps .fig .gif
 kileprversion=2
 kileversion=2.1.3
-lastDocument=Vorlesungsnotizen.tex
+lastDocument=slides.tex
 masterDocument=
 name=Vorlesungsnotizen
 pkg_extIsRegExp=false
@@ -152,10 +152,10 @@ order=6
 
 [item:slides.tex]
 archive=true
-column=51
+column=0
 encoding=UTF-8
 highlight=LaTeX
-line=346
+line=206
 mode=LaTeX
 open=true
 order=1
@@ -172,10 +172,10 @@ order=2
 
 [item:vorlesung1.tex]
 archive=true
-column=26
+column=37
 encoding=UTF-8
 highlight=LaTeX
-line=319
+line=189
 mode=LaTeX
 open=true
 order=3
@@ -265,10 +265,10 @@ JumpList=
 ViMarks=.,43,2,[,43,2,],43,2
 
 [view-settings,view=0,item:slides.tex]
-CursorColumn=51
-CursorLine=346
+CursorColumn=0
+CursorLine=206
 JumpList=
-ViMarks=.,346,50,[,346,46,],346,50
+ViMarks=.,206,0,[,206,0,],206,0
 
 [view-settings,view=0,item:slidespreamble.tex]
 CursorColumn=18
@@ -277,10 +277,10 @@ JumpList=
 ViMarks=.,8,17,[,8,17,],8,17
 
 [view-settings,view=0,item:vorlesung1.tex]
-CursorColumn=26
-CursorLine=319
+CursorColumn=37
+CursorLine=189
 JumpList=
-ViMarks=.,319,25,[,319,0,],319,25
+ViMarks=.,189,36,[,189,36,],189,36
 
 [view-settings,view=0,item:vorlesung2.tex]
 CursorColumn=11
