@@ -490,9 +490,7 @@ double power( const double, const int );
 \end{lstlisting}
 \end{block}
 \begin{block}{}
-\begin{lstlisting}
   Die \emph{Funktionsdefinition} beschreibt erst, wie diese Funktion ihre Aufgabe erfüllt.
-\end{lstlisting}
 \end{block}
 Funktionsdeklarationen führen einerseits zu lesbarerem Code, finden aber andererseits Verwendung in der \emph{modularen Programmierung}, die wir in den nächsten Tagen kennenlernen werden.
 
@@ -572,12 +570,12 @@ a[1] = 0.0001; // 0.0001 im zweiten Element von v abspeichern
 \end{block}
 \begin{lstlisting}
 int ganzzahl; double dezimalzahl;
-scanf("%d %f\n",&ganzzahl, &dezimalzahl);
+scanf("%d %f",&ganzzahl, &dezimalzahl);
 \end{lstlisting}
 \textbf{Probieren wir mal, ob wir so unser Summenprogramm weiter verallgemeinern können.} (\verb|test_scanf.c| und \verb|sum_xn_eingabe.c|)
 \end{frame}
 
-\begin{frame}[fragle]{Preview: Zeiger auf Daten}{Vorlesung \arabic{lecturecounter}}
+\begin{frame}[fragile]{Preview: Zeiger auf Daten}{Vorlesung \arabic{lecturecounter}}
 \begin{block}{Zeigervariablen}
   Eine Zeigervariable speichert die Adresse einer Variable für einen bestimmten Datenyp.
 \end{block}
