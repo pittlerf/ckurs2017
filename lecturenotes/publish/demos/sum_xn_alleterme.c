@@ -2,7 +2,9 @@
 int main(void){
   const double x = 0.8;
   const int nmax = 100;
-  // Initialisierung funktioniert nur mit numerische Konstante für ANZAHL
+  /* Initialisierung funktioniert nur mit numerische Konstante für ANZAHL
+     hier wird das erste Element explizit, alle anderen implizit auf 0.0
+     initialisiert */
   double S[100] = {0.0};
   double xn = 1.0;
   // Arrays sind von 0 bis n-1 indiziert!
