@@ -16,7 +16,7 @@ int main(void){
 // Funktion wird defnitiert
 double sum_xn(const double x, const unsigned int nmax, const double tolerance){
   if( fabs(x) > 1 ){
-    printf("sum_sn - Fehler: ein Aufruf mit |x|>1 ist nicht moeglich!\nDas Programm wird beendet.")
+    printf("sum_sn - Fehler: ein Aufruf mit |x|>1 ist nicht moeglich!\nDas Programm wird beendet.");
     exit(55);
   }
   double S = 0.0;
