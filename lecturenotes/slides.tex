@@ -272,7 +272,7 @@ Wir wollen folgende unendliche Summe berechnen:
 
 \begin{lstlisting}
 const double x = 0.8;         // x ist eine Konstante
-double S = 0.0;               // x^0 = 1.0
+double S = 0.0;               // S_0 = 0
 double xn = 1.0;              // x^0 = 1.0
 while( xn > 1.0e-12 ){        // Test auf x^n > 1,0 * 10^{-12}
   S = S + xn;
@@ -519,8 +519,8 @@ TYP rekursion( TYP arg ){
 \end{block}
 \begin{block}{Debugging-Symbole mit einbinden und Programm in \texttt{gdb} ausführen}
 \begin{verbatim}
-$ gcc -Wall -Wpedantic -g -ggdb -o sum_xn_rekursiv_DEBUG \
-  sum_xn_rekursiv.c
+$ gcc -Wall -Wpedantic -g -ggdb -std=c99 \
+  -o sum_xn_rekursiv_DEBUG sum_xn_rekursiv.c
 $ gdb ./sum_xn_rekursiv_DEBUG
 GNU gdb (Ubuntu 7.11.1-0ubuntu1~16.04) 7.11.1
 (gdb) run
