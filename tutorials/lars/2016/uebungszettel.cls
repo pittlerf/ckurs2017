@@ -16,6 +16,7 @@
 \RequirePackage{currfile}
 \RequirePackage{substr}
 \RequirePackage{enumitem}
+\RequirePackage{hyperref}
 
 \theoremstyle{definition}
 \newtheorem{aufg}{Aufgabe}
@@ -42,10 +43,10 @@
 \cohead{\utitle}
 %\rohead{\includegraphics[height=25px]{aware_sw}}
 %\lofoot{http://www.ah-effect.net/ \quad C-Kurs von Lars}
-\cofoot{}
-%\rofoot{ProgKurs Physik 2014}
+%\cofoot{}
+\cofoot{ Übungszettel von Lars Wallenborn: \url{http://www.ah-effekt.net} \\ \url{https://github.com/ThorProgKurs/uebungen} }
 \setheadsepline{.5pt} % Linie unter dem Head
-\setfootsepline{.2pt} % Ganzunten
+%\setfootsepline{3pt} % Ganzunten
 %---------------------------------------------
 
 \usepackage{algorithm,algorithmic}

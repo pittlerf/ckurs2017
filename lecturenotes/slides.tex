@@ -193,19 +193,6 @@ An nicht-trivialen Stellen des Programmcodes ist es zudem wichtig, dass man Komm
 \end{block}
 \end{frame}
 
-\stepcounter{lecturecounter}
-
-% \begin{frame}{Fragen zu Vorlesung 1}
-%   In der letzten Vorlesung:
-%   \begin{itemize}
-%     \item{Rechnerarchitektur}
-%     \item{Dualsystem}
-%     \item{Fließkommazahlen}
-%     \item{Einführung in Algorithmen und Pseudocode}
-%   \end{itemize}
-% 
-% \end{frame}
-
 \begin{frame}[fragile]{Bedingte Ausführung: \texttt{if / else} Statement}{Vorlesung \arabic{lecturecounter}}
 \begin{block}{}
   Das \texttt{if / else} statement erlaubt es, den Programmfluss abhängig vom momentanen Zustand zu steuern.
@@ -285,7 +272,7 @@ Wir wollen folgende unendliche Summe berechnen:
 
 \begin{lstlisting}
 const double x = 0.8;         // x ist eine Konstante
-double S = 0.0;               // x^0 = 1.0
+double S = 0.0;               // S_0 = 0
 double xn = 1.0;              // x^0 = 1.0
 while( xn > 1.0e-12 ){        // Test auf x^n > 1,0 * 10^{-12}
   S = S + xn;
@@ -354,35 +341,106 @@ for( double xn = 1.0; xn > 1.0e-12; xn *= x){
 \end{lstlisting}
 \end{frame}
 
+\stepcounter{lecturecounter}
 
-\begin{frame}[fragile]{Funktionen (1/3): Definition}{Vorlesung \arabic{lecturecounter}}
+\begin{frame}{Fragen zu Vorlesung 1}
+  In der letzten Vorlesung:
+  \begin{itemize}
+    \item{Rechnerarchitektur}
+    \item{Dualsystem}
+    \item{Fließkommazahlen}
+    \item{(sehr knappe) Einführung in Algorithmen und Pseudocode}
+    \item{Erstes C-Programm}
+    \item{Kompilieren und Ausführen}
+    \item{Datentypen}
+    \item{Operatoren}
+    \item{Kontrollstrukturen}
+    \begin{itemize}
+      \item{\texttt{if / else if / else}}
+      \item{Schleifen}
+      \begin{itemize}
+        \item{\texttt{do-while}, \texttt{while}}
+        \item{\texttt{for}}
+      \end{itemize}
+    \end{itemize}
+  \end{itemize}
+  \textbf{Heute:} Biete: mehr Demos. Suche: mehr kritische Fragen, fallen Sie mir ins Wort, bitte! Auch die Tutoren!
+\end{frame}
+
+\begin{frame}{Wieso eigentlich C?}{Vorlesung 1 Addendum}
+  In den nächsten beiden Tagen wird Ihnen vielleicht klar werden, dass einige Aspekte von C doch komplizierter sind, als man glaubt. Wieso also C nutzen und nicht Python?
+  \vspace{0.3cm}
+  \begin{itemize}
+    \item{C und C++ schaffen einen Spagat zwischen Nähe an der Hardware und einer relativ einfachen Sprachsyntax.}
+    \begin{itemize}
+      \item{Wissenschaftliche Software muss oft so schnell wie möglich sein.}
+      \item{Effiziente Programmierung und gute Compiler machen dies in C und C++ möglich.}
+    \end{itemize}
+    \vspace{0.4cm}
+    \item{In der Wissenschaft gibt es unglaublich viel Software die ursprünglich in C geschrieben wurde oder immer noch geschrieben wird. In Bacheror- Master- oder Doktorarbeiten, werden Sie damit in Kontakt kommen und müssen die ``hässlichen'' Grundlagen ein Mal gesehen haben.}
+    \vspace{0.4cm}
+    \item{Andere Sprachen machen ``unter der Motorhaube'' nichts anderes als C. Zu verstehen, was genau der Rechner da tun muss, hilft zu verstehen, wieso einige Dinge ineffizient sein könnten.}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Textausgabe Mini-Intro}{Vorlesung \arabic{lecturecounter}}
+  \begin{block}{\texttt{printf} und die Formatspezifikation}
+    \texttt{printf} ist eine Funktion zur \emph{formatierten} Textausgabe in der Konsole.
+    Um verschiedene Datentypen auszugeben, muss man Platzhalter nutzen.
+  \end{block}
+  \begin{center}
+  \begin{tabular}{lr}
+    \hline
+    \texttt{Platzhalter} & Bedeutung \\\hline
+    \texttt{\%d}        &  \texttt{int} \\
+    \texttt{\%ld}  &  \texttt{long int} \\
+    \texttt{\%lld} &  \texttt{long long int} \\
+    \texttt{\%ud}  &  \texttt{unsigned int} \\
+    \texttt{\%llu} &  \texttt{long long unsigned int} \\
+    \texttt{\%f,\%e}   & \texttt{float} \\
+    \texttt{\%lf,\%le}  & \texttt{double} \\
+    \hline
+  \end{tabular}
+  \end{center}  
+  \begin{block}{}
+    $\Rightarrow$ Mal ausprobieren! (\verb|test_printf.c|)
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Funktionen}{Vorlesung \arabic{lecturecounter}}
+  \begin{block}{}
+    C-Programme bestehen im Wesentlichen aus Funktionsdefinitionen und Funktionsaufrufen, sowie eingebauten und eigenen Datentypen. Ein komplexes C-Programm ruft viele Funktionen auf, welche wiederum Funktionen aufrufen.
+  \end{block}
+  \centering
+  \includegraphics[height=7cm]{graphics/call_graph}
+\end{frame}
+
+\begin{frame}[fragile]{Funktionen: Definition}{Vorlesung \arabic{lecturecounter}}
 \begin{block}{}
 In der letzten Vorlesung hatten wir ein Programm entwickelt um eine Annäherung an die unendliche Summe
 \begin{equation*}
   S=\sum_{n=0}^\infty x^n, \quad |x| < 1
 \end{equation*}
-zu bestimmen. Wir können mit einer Funktion die Berechnung verallgemeinern.
+zu bestimmen.
 \end{block}
 \begin{lstlisting}
-double sum_xn( const double x, const unsigned int nmax, 
-               const double tolerance ){
-  double S = 0.0;
-  double xn = 1.0;
-  for( unsigned int n = 0; n < nmax; ++n ){  
-    S += xn;
-    if( xn < tolerance ){
-      break;                        
-    }                               
-  xn *= x; 
-  }
-  return S;
+const double x = 0.8;
+double S = 0.0;
+double xn = 1.0;
+for( unsigned int n = 0; n < 1000; ++n ){  // max. 1000 Iterationen
+  S = S + xn;
+  if( xn < 1.0e-12 ){
+    break;                        // aus der Schleife ausbrechen
+  }                               // selbst wenn n < 1000
+  xn = xn * x;
 }
 \end{lstlisting}
+\textbf{Wir wollen nun mit einer Funktion die Berechnung auslagern und verallgemeinern.} (\verb|sum_xn_funktion.c|)
 \end{frame}
 
-\begin{frame}[fragile]{Funktionen (2/3): Funktionskopf und Signatur}{Vorlesung \arabic{lecturecounter}}
+\begin{frame}[fragile]{Funktionen: Funktionskopf und Signatur}{Vorlesung \arabic{lecturecounter}}
 \begin{block}{}
-  Eine Funktion wird dem Compiler bekannt gemacht, indem ihr Name und die Datentypen ihrer Argumente festelegt werden. $\Rightarrow$ \emph{Funktionsdeklaration}
+  Eine Funktion wird dem Compiler bekannt gemacht, indem ihr Name und die Datentypen ihrer Argumente festgelegt werden. $\Rightarrow$ \emph{Funktionsdeklaration}
 \end{block}
 
 \begin{lstlisting}
@@ -403,7 +461,129 @@ float  teilen( float  zaehler, float  nenner ){ [...] } // OK
 \end{lstlisting}
 \end{frame}
 
-% \begin{frame}[fragile]{Funktionen (3/3): Funktionsaufruf und Rekursion}{Vorlesung \arabic{lecturecounter}}
-% \end{frame}
+\begin{frame}[fragile]{Funktionen: Funktionsaufruf und Rückgabewert}{Vorlesung \arabic{lecturecounter}}
+\begin{block}{}
+Hat eine Funktion einen Rückgabewert, so kann man diesen beim Aufruf einer Variable zuweisen:
+\begin{lstlisting}
+double result = teilen( 8.0, 3.2 );  
+\end{lstlisting}
+\end{block}
+\begin{block}{}
+Man kann den Rückgabewert aber auch einer anderen Funktion als Argument übergeben:
+\begin{lstlisting}
+addieren( teilen(8.0, 3.2), 4.5 );
+\end{lstlisting}
+\begin{itemize}
+  \item{Was macht dieser Code?} 
+\end{itemize}
+\end{block}
+\begin{block}{}
+Oder aber man ignoriert den Rückgabewert, wie wir es bei \texttt{printf([...])} getan haben (Gesamtzahl der geschriebenen Zeichen).
+\end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Funktionen: Deklaration und Definition}{Vorlesung \arabic{lecturecounter}}
+\begin{block}{}
+  Die \emph{Funktionsdeklaration} informiert den Compiler über die Existenz und Signatur einer Funktion
+\begin{lstlisting}
+double power( const double, const int );
+\end{lstlisting}
+\end{block}
+\begin{block}{}
+  Die \emph{Funktionsdefinition} beschreibt erst, wie diese Funktion ihre Aufgabe erfüllt.
+\end{block}
+Funktionsdeklarationen führen einerseits zu lesbarerem Code, finden aber andererseits Verwendung in der \emph{modularen Programmierung}, die wir in den nächsten Tagen kennenlernen werden.
+
+\textbf{Erstmal ein Beispiel.} (\verb|funktion_deklaration.c|)
+\end{frame}
+
+\begin{frame}[fragile]{Funktionen: Rekursion}{Vorlesung \arabic{lecturecounter}}
+  \begin{block}{Rekursion}
+    Eine Funktion, die sich selbst aufruft, nennt man \emph{rekursiv}. Rekursion kann man oft nutzen, um Aufgaben auf fast magische Art und Weise zu lösen. Leider birgt Rekursion auch viele Gefahren.
+  \end{block}
+\begin{lstlisting}
+TYP rekursion( TYP arg ){
+  if( [...] ){ // Ziel erreicht!
+    return arg;
+  } else {
+    return rekursion( arg ); // noch einmal tiefer verschachteln!
+  }
+}
+\end{lstlisting}
+   \textbf{Versuchen wir mal, unsere Summe rekursiv auszurechnen!} (\verb|sum_xn_rekursiv.c|)
+\end{frame}
+ 
+\begin{frame}[fragile]{\texttt{gdb} und \texttt{valgrind}}
+\begin{block}{}
+  Nanu, was ist denn da schiefgegangen? Ein Debugger, ist ein Programm, mit dem man Fehler in anderen Programmen versuchen kann nachzuvollziehen.
+\end{block}
+\begin{block}{Debugging-Symbole mit einbinden und Programm in \texttt{gdb} ausführen}
+\begin{verbatim}
+$ gcc -Wall -Wpedantic -g -ggdb -std=c99 \
+  -o sum_xn_rekursiv_DEBUG sum_xn_rekursiv.c
+$ gdb ./sum_xn_rekursiv_DEBUG
+GNU gdb (Ubuntu 7.11.1-0ubuntu1~16.04) 7.11.1
+(gdb) run
+\end{verbatim}
+\end{block}
+
+\begin{block}{\texttt{valgrind}}
+Ein weiteres nützliches Programm ist \texttt{valgrind}. Es ist eigentlich kein Debugger im eigentlichen Sinne, ist aber spezialisiert darauf, Speicherfehler zu erkennen.
+\begin{verbatim}
+$ valgrind ./sum_xn_rekursiv_DEBUG
+\end{verbatim}
+\end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Statische Arrays}{Vorlesung \arabic{lecturecounter}}
+  \begin{block}{}
+    Oft brauchen wir viele Daten des gleichen Datentyps. Diese kann man praktisch in \emph{Arrays} abspeichern.
+  \end{block}
+
+\begin{lstlisting}
+DATENTYP NAME[ANZAHL];
+\end{lstlisting}
+Hierbei muss, selbst in C99, \texttt{ANZAHL} fast immer eine numerische Konstante sein!
+
+\begin{lstlisting}
+double a[3];  // Array mit 3 double deklarieren
+
+double b[3] = {1.0, 2.3, 9.9};  /* Array mit 3 double deklarieren
+                                   und initialisieren */
+
+double c[4] = {4.5, 7.3}; /* Die ersten beiden Elemente mit 
+                             4.5 und 7.3 initialisieren,
+                             alle anderen werden mit 0.0 
+                             initialisiert */
+                                   
+a[1] = 0.0001; // 0.0001 im zweiten Element von v abspeichern
+\end{lstlisting}
+\textbf{$\Rightarrow$ Wir möchten nun für unsere Annäherung an die unendliche Summe alle Terme abspeichern und ausgeben!} (\verb|sum_xn_alleterme.c|)
+\end{frame}
+
+\begin{frame}[fragile]{Mini-Intro: Texteingabe}{Vorlesung \arabic{lecturecounter}}
+\begin{block}{Der Adressoperator \texttt{\&}}
+  Für jede Variable, jedes Datentyps, gibt \texttt{\&} die Speicheradresse der Variable zurück. (Um genauer zu sein, ist der Rückgabewert ein Zeiger auf ein Objekt des ensprechenden Datentyps)
+\end{block}
+\begin{block}{Eingabe mit \texttt{scanf}}
+  Die Funktion \texttt{scanf} kann als umgekehrtes \texttt{printf} verstanden werden.
+\end{block}
+\begin{lstlisting}
+int ganzzahl; double dezimalzahl;
+scanf("%d %lf",&ganzzahl, &dezimalzahl);
+\end{lstlisting}
+\textbf{Probieren wir mal, ob wir so unser Summenprogramm weiter verallgemeinern können.} (\verb|test_scanf.c| und \verb|sum_xn_eingabe.c|)
+\end{frame}
+
+\begin{frame}[fragile]{Preview: Zeiger auf Daten}{Vorlesung \arabic{lecturecounter}}
+\begin{block}{Zeigervariablen}
+  Eine Zeigervariable speichert die Adresse einer Variable für einen bestimmten Datenyp.
+\end{block}
+\begin{block}{Dereferenzierungsoperator \texttt{*}}
+  Dieser Operator gibt Zugriff zu den Daten, auf die der Zeiger zeigt.
+\end{block}
+$\Rightarrow$ \textbf{Tafelbild +} (\texttt{zeiger\_preview.c})
+\end{frame}
+
 
 \end{document}

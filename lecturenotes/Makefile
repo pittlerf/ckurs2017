@@ -2,7 +2,7 @@ COMMONDEPS := bibliography.bib Makefile $(wildcard algos/*.tex)
 SLIDEDEPS := slidespreamble.tex
 LECTUREDEPS := $(wildcard vorlesung?.tex) preamble.tex
 
-all: Vorlesungsnotizen.pdf Vorlesungsnotizen-student.pdf slides.pdf publish
+all: Vorlesungsnotizen.pdf Vorlesungsnotizen-student.pdf slides.pdf
 
 Vorlesungsnotizen.pdf: Vorlesungsnotizen.tex $(COMMONDEPS) $(LECTUREDEPS)
 	latexmk -bibtex -pdf -pdflatex="pdflatex -interaction=nonstopmode" -use-make Vorlesungsnotizen.tex
