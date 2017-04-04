@@ -107,7 +107,7 @@ encoding=UTF-8
 highlight=Makefile
 line=12
 mode=Makefile
-open=true
+open=false
 order=5
 
 [item:Vorlesungsnotizen.tex]
@@ -128,7 +128,7 @@ highlight=LaTeX
 line=3
 mode=LaTeX
 open=true
-order=7
+order=6
 
 [item:bibliography.bib]
 archive=true
@@ -148,14 +148,14 @@ highlight=LaTeX
 line=43
 mode=LaTeX
 open=true
-order=6
+order=5
 
 [item:slides.tex]
 archive=true
-column=50
+column=192
 encoding=UTF-8
 highlight=LaTeX
-line=52
+line=567
 mode=LaTeX
 open=true
 order=1
@@ -172,20 +172,20 @@ order=2
 
 [item:vorlesung1.tex]
 archive=true
-column=37
+column=3
 encoding=UTF-8
 highlight=LaTeX
-line=189
+line=503
 mode=LaTeX
 open=true
 order=3
 
 [item:vorlesung2.tex]
 archive=true
-column=11
+column=31
 encoding=UTF-8
 highlight=LaTeX
-line=37
+line=59
 mode=LaTeX
 open=true
 order=4
@@ -198,7 +198,7 @@ highlight=LaTeX
 line=58
 mode=LaTeX
 open=true
-order=8
+order=7
 
 [item:vorlesung4.tex]
 archive=true
@@ -208,7 +208,7 @@ highlight=LaTeX
 line=4
 mode=LaTeX
 open=true
-order=9
+order=8
 
 [item:vorlesung5.tex]
 archive=true
@@ -218,7 +218,7 @@ highlight=LaTeX
 line=15
 mode=LaTeX
 open=true
-order=10
+order=9
 
 [item:vorlesung8.tex]
 archive=true
@@ -228,7 +228,7 @@ highlight=LaTeX
 line=0
 mode=LaTeX
 open=true
-order=11
+order=10
 
 [item:vorlesungsnotizen.kilepr]
 archive=true
@@ -265,10 +265,10 @@ JumpList=
 ViMarks=.,43,2,[,43,2,],43,2
 
 [view-settings,view=0,item:slides.tex]
-CursorColumn=50
-CursorLine=52
+CursorColumn=192
+CursorLine=567
 JumpList=
-ViMarks=.,52,33,[,52,33,],52,49
+ViMarks=.,567,191,[,567,191,],567,191
 
 [view-settings,view=0,item:slidespreamble.tex]
 CursorColumn=18
@@ -277,16 +277,16 @@ JumpList=
 ViMarks=.,8,17,[,8,17,],8,17
 
 [view-settings,view=0,item:vorlesung1.tex]
-CursorColumn=37
-CursorLine=189
+CursorColumn=3
+CursorLine=503
 JumpList=
-ViMarks=.,189,36,[,189,36,],189,36
+ViMarks=.,0,0,[,0,0,],-1,-1
 
 [view-settings,view=0,item:vorlesung2.tex]
-CursorColumn=11
-CursorLine=37
+CursorColumn=31
+CursorLine=59
 JumpList=
-ViMarks=.,87,35,[,87,28,],87,35
+ViMarks=.,59,31,[,59,31,],59,31
 
 [view-settings,view=0,item:vorlesung3.tex]
 CursorColumn=3

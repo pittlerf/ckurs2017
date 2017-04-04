@@ -12,6 +12,9 @@ all_aux := $(all_tex:%.tex=%.aux)
 scrap_aux := $(filter $(wildcard *.aux), $(all_aux))
 scrap_main := $(filter $(wildcard programmierkurs_fpcu.*), $(addprefix programmierkurs_fpcu., dvi log pdf ps toc))
 
+publish: programmierkurs_fpcu.pdf
+	cp programmierkurs_fpcu.pdf lecturenotes/publish/skript.pdf
+
 .PHONY: clean
 clean:
 	rm -f -- $(scrap_aux) $(scrap_main)
