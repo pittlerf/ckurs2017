@@ -15,12 +15,13 @@
 \newcommand{\averx}{\langle x \rangle}
 \newcommand{\Raverx}{\averx_\mathrm{ren}}
 
-\usefonttheme{professionalfonts}
-\setbeamertemplate{navigation symbols}{}
-
 \usetheme{Boadilla}
 \usecolortheme[named=DarkBlue]{structure}
 \useinnertheme{rounded}
+
+\usefonttheme{professionalfonts}
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{enumerate items}[square]
 
 \usepackage{algorithm}
 \usepackage{algorithmicx}
@@ -62,6 +63,7 @@
   stepnumber=1,                    % the step between two line-numbers. If it's 1, each line will be numbered
   stringstyle=\color{mymauve},     % string literal style
   tabsize=2,	                   % sets default tabsize to 2 spaces
+  moredelim=**[is][\color{red}]{@}{@},
   %title=\lstname                   % show the filename of files included with \lstinputlisting; also try caption instead of title
 }
 

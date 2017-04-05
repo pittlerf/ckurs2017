@@ -719,63 +719,163 @@ $\Rightarrow$ (\texttt{test\_argc.c})
     \begin{itemize}
       \item{Bei \texttt{**argv} (oder auch \texttt{*argv[]}) handelt es sich um ein Array von Strings (ein Array von \texttt{char}-Arrays).}
       \item{C bietet einige Funktionen, die es erlauben aus Strings andere Datentypen auszulesen.}
-      \item{\texttt{sscanf} ist eine mit \texttt{scanf} verwandte Funktion}
+      \item{\texttt{sscanf} ist eine mit \texttt{scanf} verwandte Funktion zum Auslesen einzelner Elementer aus formatierten Texten in Variablen}
       \item{Für Kommandozeilenargumente ist es oft praktischer einfachere Funktionen zu nutzen.}
       \begin{itemize}
         \item{\verb|atoi, atof, strtod, strtol, strtoul, strtoull|}
       \end{itemize}
+      \item{Aber Vorsicht: \texttt{atoi} und \texttt{atof} prüfen nicht auf Fehler!\n}
     \end{itemize}
   \end{block}
   $\Rightarrow$ (\texttt{test\_read\_argv.c})
 \end{frame}
 
-% \stepcounter{lecturecounter}
-% \begin{frame}[fragile]{Fragen zu Vorlesung 3}{Vorlesung \arabic{lecturecounter}}
-% \end{frame}
-% 
-% \begin{frame}[fragile]{Modulare Programmierung}{Vorlesung \arabic{lecturecounter}}
-% \begin{block}{}
-%   \begin{itemize}
-%     \item{Einzelne Funktionen können in C in separaten Quelltextdateien stehen und unabhängig voneinander kompiliert werden.}
-%     \item{Wir können dies wieder anhand unserer Summenfunktion darstellen.}
-%   \end{itemize}
-% \begin{enumerate}
-%   \item{Funktionen in separate Dateien auslagern}
-%   \item{Einzelne Module kompilieren}
-%   \item{Module zu Programm verlinken}
-% \end{enumerate}
-% \end{block}
-% \begin{itemize}
-%   \item{ \textt{sum\_xn(...)} $\rightarrow$ \texttt{sum\_xn.c} }
-%   \item{
-% \end{itemize}
-% 
-% \end{frame}
-% 
-% \begin{frame}[fragile]{Compiler und Linker}{Vorlesung \arabic{lecturecounter}}
-% \end{frame}
-% 
-% \begin{frame}[fragile]{Der C-Präprozessor}{Vorlesung \arabic{lecturecounter}}
-% \begin{block}{}
-%   \begin{itemize}
-%     \item{Wir haben bisher einen Teil des Kompilierprozesses ausgelassen: den Präprozessor.}
-%     \item{Bevor der Compiler seinen Dienst verrichtet, wird der Quelltext vom Präprozessor bearbeitet.}
-%   \end{itemize}
-% \end{block}
-% \begin{block}{Präprozessorkonstanten und Makros}
-%   Makros sind Platzhalter für Codeblöcke, welche vom Präprozessor beim Durchlauf in den Quelltext eingefügt werden.
-% \end{block}
-% \end{frame}
-% 
-% \begin{frame}[fragile]{Header-Dateien}{Vorlesung \arabic{lecturecounter}}
-% Wir haben Header-Dateien
-% \begin{lstlisting}
-%   
-% \end{lstlisting}
-% \end{frame}
-% 
-% \begin{frame}[fragile]{Ein echtes modulares Programm}{Vorlesung \arabic{lecturecounter}}
-% 
-% \end{frame}
-% 
+\stepcounter{lecturecounter}
+
+\begin{frame}[fragile]{Fragen zu Vorlesung 3?}{Vorlesung \arabic{lecturecounter}}
+  \begin{itemize}
+    \item{Zeiger auf Variablen verschiedener Typen}
+    \item{Arrays und Zeiger}
+    \item{Zeichenketten}
+    \item{Zeichenketten bearbeiten}
+    \item{Kommandozeilenargumente}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Modulare Programmierung}{Vorlesung \arabic{lecturecounter}}
+\includegraphics[width=\textwidth,page=2,trim=0 10cm 0 2cm,clip=true]{graphics/c_kurs_tafel}
+\begin{block}{}
+  \begin{itemize}
+    \item{Einzelne Funktionen können in C in separaten Quelltextdateien stehen und unabhängig voneinander kompiliert werden.}
+  \end{itemize}
+\begin{enumerate}
+  \item{Funktionen in separate Dateien auslagern}
+  \item{Einzelne Module kompilieren \texttt{gcc -c modulX.c}}
+  \item{Module zu Programm verlinken \texttt{gcc -o programm modul1.o modul2.o}}
+\end{enumerate}
+\end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Modulare Programmierung: Quell- und \emph{Header}-dateien}{Vorlesung \arabic{lecturecounter}}
+\small $x$ sei ein Array, welches die $1D$ Position eines Teilchens zur Zeit $t$ enthält. Wir wollen die kinetische Energie berechnen. Die einzelnen \texttt{x[i]} liegen im Abstand von $dt=0.01$.
+\begin{columns}[T]
+  \column{0.49\textwidth}
+    \begin{lstlisting}
+#include "AblT.h"
+double 
+kinEnerg( double *x, 
+          double m, 
+          unsigned int t ) {
+  double v = AblT( x, t );
+  return 0.5*m*v*v;
+}
+    \end{lstlisting}
+    \\ \texttt{kinEnerg.c}
+    \vspace{0.1cm}
+    \begin{lstlisting}
+double AblT( double *x, 
+             unsigned int t ){
+  double dt = 0.01;
+  return (x[t+1]-x[t])/dt;
+}
+    \end{lstlisting}
+    \texttt{AblT.c}
+  \column{0.49\textwidth}
+    \begin{lstlisting}
+double kinEnerg( double*, double,
+                 unsigned int );
+    \end{lstlisting}
+    \texttt{kinEnerg.h}
+    \vspace{2.4cm}
+    \begin{lstlisting}
+double AblT( double*, 
+             unsigned int );
+    \end{lstlisting}
+    \texttt{AblT.h}  
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Compiler und Linker}{Vorlesung \arabic{lecturecounter}}
+  Die Kompilerung und das \emph{Linken} sind unabhängige Schritte bei der Erstellung eines ausführbaren Programms.
+\begin{block}{Kompilierung}
+  \begin{verbatim}
+    # erstellt kinErg.o Objketdatei
+$ gcc -c kinEnerg.c
+
+    # erstellt AblT.o   Objektdatei
+$ gcc -c AblT.c       
+
+    # erstellt teilchen.o   Objektdatei
+$ gcc -c teilchen.c       
+
+    # erstellt ausführbares Programm
+$ gcc -o teilchen teilchen.o AblT.o kinEnerg.o 
+  \end{verbatim}
+\end{block}
+$\Rightarrow$ ( \verb|teilchen/kinErg.c teilchen/AblT.c teilchen/teilchen.c|)
+\end{frame}
+
+\begin{frame}[fragile]{Modulare Programmierung: Interface und Implementierung}{Vorlesung \arabic{lecturecounter}}
+Trennung Interface/Implementierung $\rightarrow$ Implementierung austauschbar!
+\begin{columns}[T]
+  \column{0.49\textwidth}
+    \begin{lstlisting}
+#include "AblT.h"
+double 
+kinEnerg( double *x, 
+          double m, 
+          unsigned int t ) {
+  double v = AblT( x, t );
+  return 0.5*m*v*v;
+}
+    \end{lstlisting}
+    \\ \texttt{kinEnerg.c}
+    \vspace{0.1cm}
+    \begin{lstlisting}
+double AblT( double *x, 
+             unsigned int t ){
+  double dt = 0.01;
+  return @(x[t+1]-x[t-1])/(2*dt)@;
+}
+    \end{lstlisting}
+    \texttt{AblT\_symmetrisch.c}
+  \column{0.49\textwidth}
+    \begin{lstlisting}
+double kinEnerg( double*, double,
+                 unsigned int );
+    \end{lstlisting}
+    \texttt{kinEnerg.h}
+    \vspace{2.4cm}
+    \begin{lstlisting}
+double AblT( double*, 
+             unsigned int );
+    \end{lstlisting}
+    \texttt{AblT.h}  
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Zusammengesetzte Datenstrukturen}{Vorlesung \arabic{lecturecounter}}
+\end{frame}
+
+\begin{frame}[fragile]{Der C-Präprozessor}{Vorlesung \arabic{lecturecounter}}
+\begin{block}{}
+  \begin{itemize}
+    \item{Wir haben bisher einen Teil des Kompilierprozesses ausgelassen: den Präprozessor.}
+    \item{Bevor der Compiler seinen Dienst verrichtet, wird der Quelltext vom Präprozessor bearbeitet.}
+  \end{itemize}
+\end{block}
+\begin{block}{Präprozessorkonstanten und Makros}
+  Ein Makro ist ein Stück Code mit einem Namen, welches vom Präprozessor beim Durchlauf in den Quelltext eingefügt wird.
+\end{block}
+\begin{lstlisting}
+// MY_PI wird der Wert des Textes bis zum Ende der Zeile zugewiesen
+#define MY_PI 3.1415
+\end{lstlisting}
+\begin{itemize}
+  \item{Schreiben wir jetzt in unserem Programm \verb|MY_PI|, ersetzt der Präprozessor, bevor die Datei kompiliert wird, \verb|MY_PI| durch \texttt{3.1415}}
+  \item{Mit den Präprozessorkommandos \verb|#ifdef| und \verb|#ifndef| kann man im Präprozessor die Existenz eines Makros überpüfen}
+\end{itemize}
+$\Rightarrow$ (\verb|test_makros.c|)
+\end{frame}
+
 \end{document}
