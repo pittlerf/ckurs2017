@@ -631,7 +631,7 @@ int *b = a; /* 'b' hat auch den Datentyp (int*) und zeigt jetzt
   \begin{block}{}
     \begin{itemize}
       \item{Die Manipulation von Zeichenketten (auch \emph{strings}) ist in vielen Programmen von zentraler Bedeutung, z.B. um Dateinamen für Ausgabedateien zu setzen.}
-      \item{In C werden einfache strings in \texttt{char}-Arrays gespeichert. Da \texttt{char} nur 2B groß ist, stehen einem bloß 255 verschiedene Zeichen zur Verfügung.}
+      \item{In C werden einfache strings in \texttt{char}-Arrays gespeichert. Da \texttt{char} nur 1B groß ist, stehen einem bloß 255 verschiedene Zeichen zur Verfügung.}
       \item{Strings werden in C \emph{null-terminiert}: Am Ende eines Strings steht ein spezielles Zeichen, welches man auch selbst mit '\textbackslash 0' einfügen kann.}
       \item{Ein C String ist also ein \texttt{char}-Array der Länge $n$ für maximal $n-1$ Zeichen.}
     \end{itemize}
@@ -658,17 +658,40 @@ int *b = a; /* 'b' hat auch den Datentyp (int*) und zeigt jetzt
   \begin{block}{}
     Wie wir gesehen haben, existieren Variablen in C -- sofern es sich nicht um globale Variablen handelt -- nur innerhalb eines Blocks. Aus Effizienzgründen ist es oft aber unratsam, Kopien großer Datenstrukturen hin- und herzuschieben.
   \end{block}
+  Wir können aus der Funktion \texttt{inkrement}, nicht einfach so auf \texttt{x} aus der Funktion \texttt{main} zugreifen.
   \begin{lstlisting}
 int inkrement(int n){
-  x += n;
+  x += n; // Fehler: 'inkrement' kennt 'x' nicht!
 }  
 int main(void){
   int x = 22;
-  inkrement(4); // Fehler: inkrement kennt 'x' nicht!
+  inkrement(4); // Fehler: 'inkrement' kennt 'x' nicht!
+  return 0;
 } 
-  \end{lstlisting}
+\end{lstlisting}
+\vspace{-0.4cm}
   \begin{block}{}
     Mithilfe von Zeigern, können wir Funktionen direkt auf Daten anwenden, welche in einem anderen Block deklariert wurden. (wie bei \texttt{scanf} gemacht)
+  \end{block}
+  $\Rightarrow$  nächste Folie
+\end{frame}
+
+\begin{frame}[fragile]{\emph{Pass-by-reference}: Zeiger an Funktionen übergeben}{Vorlesung \arabic{lecturecounter}}
+  \begin{block}{}
+    Übergeben wir die Adresse von \texttt{x} an die Funktion, hat diese direkten Zugriff auf die Variable \texttt{x} aus der \texttt{main}-Funktion.
+  \end{block}
+  \begin{lstlisting}
+int inkrement(int *z_x, int n){
+  *z_x += n;
+}  
+int main(void){
+  int x = 22;
+  inkrement(&x, 4); // x wird von 'inkrement' um 4 inkrementiert
+}
+\end{lstlisting}
+\vspace{-0.4cm}
+  \begin{block}{}
+    Das können wir auch anhand unserer Summenfunktion zeigen:
   \end{block}
   $\Rightarrow$ (\verb|sum_xn_by_reference.c|)
 \end{frame}
