@@ -4,9 +4,7 @@ Dienstag   04.04: lars/2016/ProgKurs-Tag02.tex   (solution not available)
 
 Mittwoch   05.04: lars/2016/ProgKurs-Tag03.tex   (solution not avaialble)
 
-Donnerstag 06.04: feri/tutorial1.tex             (solution not available)
-                  feri/tutorial2.tex             (solution not available)
-                                                 (german requires revision)
+Donnerstag 06.04: lars/2016/ProgKurs-Tag04.tex   (solution not avaialble)
 
 Freitag    07.04: lars/2016/ProgKurs-Tag05.tex   (solution not available)
 
