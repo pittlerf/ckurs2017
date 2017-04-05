@@ -92,47 +92,37 @@
     {\endtcolorbox}
 %--------
 %\usepackage[magyar]{babel}
-\title{Conway Spiel des Lebens}
+\title{Conway's Spiel des Lebens}
 \begin{document}
 \maketitle
-Wir haben ein Universum, dass durch eine zweidimensionale Gitter dargestellt ist. Jede Gitterzelle kann 
-zwei Zustand einnehmen:
+Wir haben ein Universum, dass durch ein zweidimensionale Gitter dargestellt wird. Jede Gitterzelle kann einen von zwei
+Zust\"anden einnehmen:
 \begin{itemize}
 \item Lebendig
 \item Tot
 \end{itemize}
-In dem Spiel wir entwickeln dieses Universum und folgen die Zuständen der Gitterzellen.
-Wir haben die folgenden Prinipen für die Entwicklung:
-\begin{enumerate}
-\item Wenn eine lebendige Zelle zu viel lebendige Nachbarn hat, sie wird getötet. Überbevölkerung. Beispielweise, es gibt keine
-Platz mehr für Sie auf dem Markt.
-\item Wenn eine lebendige Zelle zu wenig lebendige Nachbarn hat, sie wird getötet. Unterbevölkerung. Beispielweise, es gibt keine Markten, 
-zu denen Sie ihre Produkten verkaufen kann.
-\item Wenn eine Tote Zelle genug lebendige Nachbarn hat, sie wird wiederbelebt. Beispielweise, es lohnt sich zu wieder öffnen ein Geschäft, wenn 
-es genug Käufer gibt. 
-\end{enumerate}
-In der Entwicklung wir gehen durch die ganze Gitter und ändern die Zuständen der Zellen nach den folgenden Regeln;
+Im Spiel entwickeln wir dieses Universum.\\
+Die Entwicklung erfolgt nach folgenden Regeln:
 \begin{enumerate}
 \item Eine lebendige Zelle stirbt, wenn sie weniger als zwei lebendige Nachbarzellen hat.
 \item Eine lebendige Zelle mit zwei oder drei lebendigen Nachbarn lebt weiter.
 \item Eine lebendige Zelle mit mehr als drei lebenden Nachbarzellen stirbt im nächsten Zeitschritt.
 \item Eine tote Zelle wird wiederbelebt, wenn sie genau drei lebende Nachbarzellen hat.
 \end{enumerate}
-In dieser Aufgabe wir werden die obenen Regeln implementieren. In dem Spiel am Anfang haben wir ein zweidimensionale Gitter. In jedem Knoten wir haben
-ein system der zwei verschiedene Zustände haben kann:
+In dieser Aufgabe werden wir diese Regeln implementieren. Wir starten das Spiel mit einem 2D-Gitter. In jedem Knoten wir haben
+ein System das zwei verschiedene Zustände haben kann:
 \begin{equation}
-Zelle(x,y) = \left\{\begin{array}{rc} 1 & \mathrm{Zelle~ist~Lebende} \\0  & \mathrm{Zelle~ist~Tot} \\
+Zelle(x,y) = \left\{\begin{array}{rc} 1 & \mathrm{Zelle~ist~Lebendig} \\0  & \mathrm{Zelle~ist~Tot} \\
 \end{array}\right. (x\in[0\cdots L-1], y\in[0,\cdots L-1])
 \end{equation}
-Im Computer die zweidimensionale Universe ist als ein zweidimensionale Array
-dargestellt. In diesem Array werden wir die zustände der Zellen speichern. Die Größe dieses Arrays ist von der Anzahl der Zellen bestimmt. 
-Wir haben schon nicht über zweidimensionale Arrays gesprochen, trotzdem können wir diese Aufgabe erledigen. Jede zweidimensionale Array
-kann durch die Folgenden zu einem eindimensional Array transformiert werden:
+Im Computer stellen wir das zweidimensionale Universum als ein zweidimensionale Array dar. In diesem Array werden wir die Zustände der Zellen speichern. Die Größe dieses Arrays ist von der Anzahl der Zellen bestimmt. 
+Wir haben zwar noch nicht über zweidimensionale Arrays gesprochen, trotzdem können wir diese Aufgabe erledigen. Jedes zweidimensionale Array
+kann zu einem eindimensional Array transformiert werden:
 \begin{equation}
 array2d(x,y)= array1d(x+L*y)
 \end{equation}
-Hier L ist die Größe des Gitters. In der Entwicklung die Regeln müssen auf jede Gitterzelle im Simulationsbereich angewendet werden.
-Wir haben in sowohl in $x$ als auxh in $y$ Richtungen periodische Randbedingungen:
+Hier ist L die Größe des Gitters. In der Entwicklung werden die Regeln auf jede Gitterzelle im Simulationsbereich angewendet.
+Wir haben in sowohl in $x$ als auch in $y$ Richtungen periodische Randbedingungen:
 \begin{equation}
 Zelle(x,y)= Zelle(x+L,y) (x\in[0\cdots L-1], y\in[0,\cdots L-1])
 \end{equation}
@@ -153,19 +143,19 @@ Eine Zelle ($(x,y)$) hat acht Nachbarn:
 Wir müssen drei verschieden Funktionen implementieren:
 \begin{itemize}
 \item Entwicklung: Gibt ein neues Gitter zurück
-\item Ausdrücken: Drückt das Gitter auf Monitor
+\item Ausdrucken: Gibt das Gitter auf Monitor aus
 \item Spiel: Initializiert und mach eine undendliche Schleife
 \end{itemize}
-Beim Entwicklung wir müssen achten, dass wir die Origninale Gitter nicht im Prozess von der Entwicklung ändern darf. Ansonst unser Ergebnis wird falsch sein.
+Beim der Entwicklung müssen wir darauf achten, dass wir das Origninalgitter nicht ver\"andern. Ansonst wird unser Ergebnis falsch sein.
 
 Beim Ausdrücken wir können die Folgenden Steuerzeichen als Argument vom \texttt{printf()} verwenden:
 \begin{enumerate}
 \item \textbackslash$e[1;1H$\textbackslash$e[2J$: Löschen den Bildschirm
-\item \textbackslash$033[H$: Positionierung des Kurzors auf die links obene Ecke
+\item \textbackslash$033[H$: Positionierung des Cursers auf die links obene Ecke
 \item \textbackslash$033[E$; Beginn ein neue Zeile
-\item \textbackslash$033[107m$\textbackslash$033[34m$: Hintergrund im Weiß, zeichen im Blau
+\item \textbackslash$033[107m$\textbackslash$033[34m$: Hintergrund Weiß, Zeichen in Blau
 \item \textbackslash$033[m$: Zurück zum Standard
 \end{enumerate}
-Zur Initializierung wir können unsere Zufallszahlgenerator verwenden. Beispielweise wenn den
-Zufallszahl kleiner als 0.5 ist, die Zelle wird Tot sein, anderfalls es wird Lebendig sein.
+Zur Initializierung wir können unsere Zufallszahlengenerator verwenden. Eine Zelle wird als Tot inititialisiert wenn die 
+Zufallszahl kleiner als 0.5 ist, ansonsten als Lebendig.
 \end{document}

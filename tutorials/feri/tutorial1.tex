@@ -92,30 +92,28 @@
     {\endtcolorbox}
 %--------
 %\usepackage[magyar]{babel}
-\title{Zufallszahlgenerator}
+\title{Zufallszahlengenerator}
 \begin{document}
 \maketitle
-Zufällige nummer sind sehr wichtig für uns. In numerischen Physik wir verwenden Zufallszahlen ganz often. Zum Beispiel 
-in die einfachsten method für Integration von mehreren variablen Funkctions müssen wir Monte Carlo algorithm verwenden. Die
-enthalten Statements, die vom Werte der zufälligen Variablen abhängt. In dieser Aufgabe wir müssen eine Zufallszahlgenerator
-schreiben. Es gibt mehrere methode dazu, aber alle stammt aus linear Kongruenzen:
+Zuf\"allig generierte Zahlen sind ein wichtiges und m\"achtiges Werkzeug in der numerischen Physik. Zum Integrieren von Funktionen mit mehreren Variablen wird oft das Monte Carlo Verfahren angewendet.\\
+In dieser Aufgabe werden wir einen Zufallszahlengenerator schreiben. Hierzu gibt es mehrere Methoden, die alle aus der linear Kongruenzen stammen:
 \begin{equation}
 I_{j+1}=a I_{j} \left( \mathrm{mod} m\right).
 \label{basics}
 \end{equation}
-Diesen Instruktion macht eine neue Zufallszahl ($I_{j+1}$)  aus einem original ($I_j$). Der qualität der Zufallszahl generator
-hängt von dem Eingangsparameters $(a,m)$ ab. Eine gute Zufallszahlgenerator hat große Period, die Zeit zwischen den beiden gleichen
-Zufallszahlen muss sehr groß sein. Park und Miller hat die folgenden parameter für a und m gewählt:
+Diesen Instruktion erstellt eine neue Zufallszahl ($I_{j+1}$) aus der vorangegangenen Zahl ($I_j$). Die Qualität der Zufallszahlen 
+hängt von den Eingangsparametern $(a,m)$ ab. Ein guter Zufallszahlengenerator hat große Perioden, dass hei\ss{}t der Abstand zwischen zwei gleichen
+Zufallszahlen ist sehr groß. Park und Miller haben die folgenden Parameter für a und m gewählt:
 \begin{equation}
 a=16807, m=2^{31}-1=2147483647. 
 \end{equation}
-Leider direkte implementation der Zufallszahlgenerator mit deisen parameters ist nicht möglich in \texttt{C}. Der Grund ist
-dass wir nicht Zahlen größer als $m$ speichern können. Glücklicherweise gibt es eine Möglichkeit das Problem umzugehen. 
-Wir faktorizieren $m$:
+Leider ist die direkte Implementation dieses Zufallszahlengenerators mit diesen Parametern in \texttt{C} nicht möglich. Der Grund ist
+dass wir keine Zahlen größer als $m$ speichern können. Glücklicherweise gibt es eine Möglichkeit das Problem umzugehen. 
+Wir faktorisieren $m$:
 \begin{equation}
 m= aq + r; r= m \left(\mathrm{mod}a\right); q= \left[m/a\right]
 \end{equation}
-Damit können wir die Gleichung (\ref{basics}) auch bewerten mit ($q,r$):
+Damit können wir die Gleichung (\ref{basics}) auch mit ($q,r$) darstellen:
 \begin{equation}
 a I_j \left( \mathrm{mod} m\right)=  
 \left\{ \begin{array}{rc}
@@ -124,17 +122,16 @@ a\left(I_j \mathrm{mod} q\right) -r \left[I_j/q\right] + m & \mathrm{andernfalls
 \end{array}\right.
 \label{algo}
 \end{equation}
-wo $r=2836,q=127773$ ist. Implementieren Sie das Zufallszahlgenerator nach eq.\ref{algo}. Ändern Sie die Algorithm
-um die Zahlen zwischen 0 und 1 zu sein werden.
-Es ist wichtig zu test unser Ergebnis. Wir müssen kontrollieren die Verteilung (Distribution) der Zufallszahlgenerator.
-Wir möchten gleichmäßige Vertailung erreichen. Wir werden eine Histogramms machen aus dem Zufallszahlen. Wir teilen 
-das Interval in $n$ Teilen und zahlen wie oft die Zufallszahl in jedem Interval sinkt. Machen Sie ein Histogramm aus 
-den Verfügbaren daten und prüfen wie gleichmäßig der Verteilung ist!
+hierbei ist $r=2836,q=127773$. Implementieren Sie den Zufallszahlengenerator nach eq.\ref{algo}. Ändern Sie den Algorithmus, so dass er Zahlen zwischen 0 und 1 erstellt.
+Es ist wichtig unser Ergebnis zu testen. Wir müssen die Verteilung (Distribution) der Zufallszahlen testen.
+Wir möchten eine gleichmäßige Verteilung erreichen. Wir werden ein Histogramm aus den Zufallszahlen machen. Wir teilen 
+das Interval in $n$ Teile und z\"ahlen wie oft die Zufallszahl in jedem Interval sinkt. Erstellen Sie ein Histogramm aus 
+den verfügbaren Daten und prüfen Sie wie gleichmäßig die Verteilung ist!
 \\
-Beispiel für das Eingabe:
+Beispiel für die Eingabe:
 \begin{lstlisting}
 10000
 \end{lstlisting}
-Bespiel für das Ausgabe:\\
+Bespiel für die Ausgabe:\\
 \includegraphics[width=.8\linewidth]{dist1.pdf}
 \end{document}
