@@ -585,5 +585,181 @@ scanf("%d %lf",&ganzzahl, &dezimalzahl);
 $\Rightarrow$ \textbf{Tafelbild +} (\texttt{zeiger\_preview.c})
 \end{frame}
 
+\stepcounter{lecturecounter}
 
+\begin{frame}[fragile]{Fragen zu Vorlesung 2}{Vorlesung \arabic{lecturecounter}}
+  \begin{itemize}
+    \item{Platzhalter in \texttt{printf}}
+    \item{C-Programme als Funktionssammlungen}
+    \item{Funktionen: Kopf, Signatur, Aufruf, Deklaration, Definition, Rückgabewert, Rekursion}
+    \item{Debugger Mini-Mini-Intro}
+    \item{Statische Arrays}
+    \item{Texteingabe mit \texttt{scanf}}
+    \item{Preview: Zeiger}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Zeiger}{Vorlesung \arabic{lecturecounter}}
+  \includegraphics[width=\textwidth,page=1,trim=0 7cm 0 2cm,clip=true]{graphics/c_kurs_tafel}
+  \begin{block}{}
+    Zeiger sind Datentypen, welche die Adresse einer Variable oder, allgemein, eines Speicherbereichs darstellen.
+  \end{block}
+  $\Rightarrow$ (\texttt{zeiger\_demo.c}) und Tafelbild
+  \begin{block}{}
+    Ein \texttt{NULL}-pointer zeigt auf gar nichts.
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Arrays, Zeiger und einfache Zeigerarithmetik}{Vorlesung \arabic{lecturecounter}}
+  \begin{block}{}
+    Statische Arrays sind spezielle Speicherbereiche, für die der Compiler einen Standardzeiger setzt. Dieser Zeiger ist der Name des Arrays.
+  \end{block}
+\begin{lstlisting}
+int a[4];   /* 'a' hat Datentyp (int*) und zeigt  
+               auf ein Array des Typs (int) */
+int *b = a; /* 'b' hat auch den Datentyp (int*) und zeigt jetzt
+               auf den gleichen Speicherbereich wie 'a' */
+\end{lstlisting}
+\begin{block}{}
+  Strikt gesehen sind arrays und Zointer (\emph{pointer}) auf Daten des gleichen Datentyps aber nicht identisch!
+\end{block}
+ $\Rightarrow$ (\texttt{zeiger\_array\_demo.c}) und Tafelbild
+
+\end{frame}
+
+\begin{frame}[fragile]{Zeichenketten}{Vorlesung \arabic{lecturecounter}}
+  \begin{block}{}
+    \begin{itemize}
+      \item{Die Manipulation von Zeichenketten (auch \emph{strings}) ist in vielen Programmen von zentraler Bedeutung, z.B. um Dateinamen für Ausgabedateien zu setzen.}
+      \item{In C werden einfache strings in \texttt{char}-Arrays gespeichert. Da \texttt{char} nur 2B groß ist, stehen einem bloß 255 verschiedene Zeichen zur Verfügung.}
+      \item{Strings werden in C \emph{null-terminiert}: Am Ende eines Strings steht ein spezielles Zeichen, welches man auch selbst mit '\textbackslash 0' einfügen kann.}
+      \item{Ein C String ist also ein \texttt{char}-Array der Länge $n$ für maximal $n-1$ Zeichen.}
+    \end{itemize}
+  \end{block}
+  \begin{lstlisting}
+    // dies ist ein string
+    char begruessung[20] = "Hallo, Welt!\n";
+    printf("%s", begruessung);
+  \end{lstlisting}
+  $\Rightarrow$ (\verb|test_strings.c|)
+\end{frame}
+
+\begin{frame}[fragile]{Zeichenketten bearbeiten: \texttt{snprintf}}{Vorlesung \arabic{lecturecounter}}
+  \begin{block}{}
+    \begin{itemize}
+      \item{C enthlält viele Funktionen zur Manipulation von Zeichenketten. Fast alle sind unsicher.}
+      \item{Es gibt eine Ausnahme: \texttt{snprintf}}
+    \end{itemize}
+  \end{block}
+  (\verb|unsichere_Zeichenketten.c|)  und (\verb|test_snprintf.c|)
+\end{frame}
+
+\begin{frame}[fragile]{\emph{Pass-by-reference}: Zeiger an Funktionen übergeben}{Vorlesung \arabic{lecturecounter}}
+  \begin{block}{}
+    Wie wir gesehen haben, existieren Variablen in C -- sofern es sich nicht um globale Variablen handelt -- nur innerhalb eines Blocks. Aus Effizienzgründen ist es oft aber unratsam, Kopien großer Datenstrukturen hin- und herzuschieben.
+  \end{block}
+  \begin{lstlisting}
+int inkrement(int n){
+  x += n;
+}  
+int main(void){
+  int x = 22;
+  inkrement(4); // Fehler: inkrement kennt 'x' nicht!
+} 
+  \end{lstlisting}
+  \begin{block}{}
+    Mithilfe von Zeigern, können wir Funktionen direkt auf Daten anwenden, welche in einem anderen Block deklariert wurden. (wie bei \texttt{scanf} gemacht)
+  \end{block}
+  $\Rightarrow$ (\verb|sum_xn_by_reference.c|)
+\end{frame}
+
+\begin{frame}[fragile]{Kommandozeilenargumente}{Vorlesung \arabic{lecturecounter}}
+\begin{block}{}
+  In unseren Programmen haben wir bisher
+\end{block}
+\begin{lstlisting}
+  int main(void){ [...] } 
+\end{lstlisting}
+\begin{block}{}
+  geschrieben. \texttt{void} bedeutet leer oder auch ungültig. Wir haben damit darauf hingedeutet, dass unsere \texttt{main}-Funktion keine Argumente entgegennimmt.
+  \begin{itemize}
+    \item{Der \texttt{main}-Funktion werden aber vom Betriebssystem Argumente übergeben: die Kommandozeilenargumente}
+  \end{itemize}
+\begin{verbatim}
+$ ./programm arg0 arg1 arg2
+\end{verbatim}
+\begin{lstlisting}
+int main(int argc, char **argv){
+  [...]
+}
+\end{lstlisting}
+
+\end{block}
+$\Rightarrow$ (\texttt{test\_argc.c})
+\end{frame}
+
+\begin{frame}[fragile]{Kommandozeilenargumente auslesen}{Vorlesung \arabic{lecturecounter}}
+  \begin{block}{}
+    \begin{itemize}
+      \item{Bei \texttt{**argv} (oder auch \texttt{*argv[]}) handelt es sich um ein Array von Strings (ein Array von Arrays).}
+      \item{C bietet einige Funktionen, die es erlauben aus Strings andere Datentypen auszulesen.}
+      \item{\texttt{sscanf} ist eine mit \texttt{scanf} verwandte Funktion}
+      \item{Für Kommandozeilenargumente ist es oft praktischer einfachere Funktionen zu nutzen.}
+      \begin{itemize}
+        \item{\verb|atoi, atof, strtod, strtol, strtoul, strtoull|}
+      \end{itemize}
+    \end{itemize}
+  \end{block}
+  $\Rightarrow$ (\texttt{test\_read\_argv.c})
+\end{frame}
+
+% \stepcounter{lecturecounter}
+% \begin{frame}[fragile]{Fragen zu Vorlesung 3}{Vorlesung \arabic{lecturecounter}}
+% \end{frame}
+% 
+% \begin{frame}[fragile]{Modulare Programmierung}{Vorlesung \arabic{lecturecounter}}
+% \begin{block}{}
+%   \begin{itemize}
+%     \item{Einzelne Funktionen können in C in separaten Quelltextdateien stehen und unabhängig voneinander kompiliert werden.}
+%     \item{Wir können dies wieder anhand unserer Summenfunktion darstellen.}
+%   \end{itemize}
+% \begin{enumerate}
+%   \item{Funktionen in separate Dateien auslagern}
+%   \item{Einzelne Module kompilieren}
+%   \item{Module zu Programm verlinken}
+% \end{enumerate}
+% \end{block}
+% \begin{itemize}
+%   \item{ \textt{sum\_xn(...)} $\rightarrow$ \texttt{sum\_xn.c} }
+%   \item{
+% \end{itemize}
+% 
+% \end{frame}
+% 
+% \begin{frame}[fragile]{Compiler und Linker}{Vorlesung \arabic{lecturecounter}}
+% \end{frame}
+% 
+% \begin{frame}[fragile]{Der C-Präprozessor}{Vorlesung \arabic{lecturecounter}}
+% \begin{block}{}
+%   \begin{itemize}
+%     \item{Wir haben bisher einen Teil des Kompilierprozesses ausgelassen: den Präprozessor.}
+%     \item{Bevor der Compiler seinen Dienst verrichtet, wird der Quelltext vom Präprozessor bearbeitet.}
+%   \end{itemize}
+% \end{block}
+% \begin{block}{Präprozessorkonstanten und Makros}
+%   Makros sind Platzhalter für Codeblöcke, welche vom Präprozessor beim Durchlauf in den Quelltext eingefügt werden.
+% \end{block}
+% \end{frame}
+% 
+% \begin{frame}[fragile]{Header-Dateien}{Vorlesung \arabic{lecturecounter}}
+% Wir haben Header-Dateien
+% \begin{lstlisting}
+%   
+% \end{lstlisting}
+% \end{frame}
+% 
+% \begin{frame}[fragile]{Ein echtes modulares Programm}{Vorlesung \arabic{lecturecounter}}
+% 
+% \end{frame}
+% 
 \end{document}
