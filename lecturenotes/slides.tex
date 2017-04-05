@@ -50,7 +50,7 @@
   \item{Das Skript dient als Referenz und sollte zumindest während der Tutorien befragt werden!}
   \vspace{0.2cm}
   \item{Fundamentale Ungleichung der Programmierung (FUP!): \\ \textbf{Praxis $\mathbf{\gg}$ Vorlesungen} $\rightarrow$ besuchen Sie die Übungen, sonst bringt die Vorlesung nichts!}
-  \item{Folien und Übungszettel: \textcolor{blue}{\url{http://goo.gl/xhJN08}}}
+  \item{Folien, Übungszettel, Beispielprogramme: \textcolor{blue}{\url{http://goo.gl/xhJN08}}}
   \end{itemize}
 \end{frame}
 
@@ -65,7 +65,7 @@
   \item{Praktischer Einsatz des C-Compilers zur Übersetzung des Quelltextes in ausführbaren Maschinencode}
   \item{Erstellen eigener C-Programme in den Tutorien}
   \begin{itemize}
-    \item{einfache Beispielprogrammen $\rightarrow$ kompliziertere Programme aus merheren Quelltextdateien}
+    \item{einfache Beispielprogramme $\rightarrow$ kompliziertere Programme aus merheren Quelltextdateien}
     \item{Verwendung externer Bilbiotheken}
   \end{itemize}
   \vspace{0.3cm}
@@ -448,17 +448,10 @@ RUECKGABETYP FUNKTIONSNAME( ARGUMENT1_TYP ARG1, ARGUMENT2_TYP ARG2,
                             ARGUMENT3_TYP ARG3 );
 \end{lstlisting}
 \begin{block}{Signatur}
+  Dies nenn man auch die \emph{Signatur} der Funktion.
   {\footnotesize \verb| (FUNKTIONSNAME) ( ARGUMENT1_TYP, ARGUMENT2_TYP, ARGUMENT3_TYP ) | }
 \end{block}
-
-\begin{block}{}
-  Wichtig: Bei der Unterscheidung zweier Funktionen gleichen Namens, wird der Typ des Rückgabewerts \emph{nicht} berücksichtigt!
-\end{block}
-\begin{lstlisting}
-double teilen( double zaehler, double nenner ){ [...] }
-float  teilen( double zaehler, double nenner ){ [...] } // Fehler!
-float  teilen( float  zaehler, float  nenner ){ [...] } // OK
-\end{lstlisting}
+\textbf{Korrektur aus der Vorlesung:} Es darf nur eine Funktion mit dem Namen \texttt{FUNKTIONSNAME}.
 \end{frame}
 
 \begin{frame}[fragile]{Funktionen: Funktionsaufruf und Rückgabewert}{Vorlesung \arabic{lecturecounter}}
@@ -724,7 +717,7 @@ $\Rightarrow$ (\texttt{test\_argc.c})
 \begin{frame}[fragile]{Kommandozeilenargumente auslesen}{Vorlesung \arabic{lecturecounter}}
   \begin{block}{}
     \begin{itemize}
-      \item{Bei \texttt{**argv} (oder auch \texttt{*argv[]}) handelt es sich um ein Array von Strings (ein Array von Arrays).}
+      \item{Bei \texttt{**argv} (oder auch \texttt{*argv[]}) handelt es sich um ein Array von Strings (ein Array von \texttt{char}-Arrays).}
       \item{C bietet einige Funktionen, die es erlauben aus Strings andere Datentypen auszulesen.}
       \item{\texttt{sscanf} ist eine mit \texttt{scanf} verwandte Funktion}
       \item{Für Kommandozeilenargumente ist es oft praktischer einfachere Funktionen zu nutzen.}
