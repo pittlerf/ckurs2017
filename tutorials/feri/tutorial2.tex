@@ -118,7 +118,7 @@ Das zweidimensionale Gitter soll quadratisch sein und $L\times L$ Zellen $Z$ hab
 D.h., insgesamt gibt es Zellen
 \begin{equation}
   Z(x,y) = \begin{cases}
-    1 & \mathrm{Zelle~ist~Lebendig} \\0  & \mathrm{Zelle~ist~Tot} \\
+    1 & \mathrm{Zelle~ist~lebendig} \\0  & \mathrm{Zelle~ist~tot} \\
   \end{cases}
   \,,\quad (x\in[0,1,\ldots L-1], y\in[0,1,\ldots L-1])\,.
 \end{equation}
@@ -133,26 +133,26 @@ Jedes zweidimensionale Array kann durch folgende Abbildung $g$ auf ein eindimens
 Wir müssen noch sagen, wie wir am Rand des Gitters verfahren wollen.
 Hier werden wir periodische Randbedingungen annehmen, also
 \begin{equation}
-  Z(x,y)= Z(x+L,y)\,,\quad (x\in[0\cdots L-1], y\in[0,\cdots L-1])
+  Z(x+L,y)= Z(x,y)\,,\quad (x\in[0,1,\ldots L-1], y\in[0,1,\ldots L-1])
 \end{equation}
 und
 \begin{equation}
-  Z(x,y)= Z(x, y+L)\,,\quad (x\in[0\cdots L-1], y\in[0,\cdots L-1])\,.
+  Z(x,y+L)= Z(x, y)\,,\quad (x\in[0,1,\ldots L-1], y\in[0,1,\ldots L-1])\,.
 \end{equation}
 Eine Zelle $Z(x,y)$ hat acht Nachbarn:
 \begin{itemize}
-\item  $Zelle(x-1,y)$
-\item  $Zelle(x-1,y-1)$
-\item  $Zelle(x-1,y+1)$
-\item  $Zelle(x,y-1)$
-\item  $Zelle(x,y+1)$
-\item  $Zelle(x+1,y)$
-\item  $Zelle(x+1,y-1)$
-\item  $Zelle(x+1,y+1)$
+\item  $Z(x-1,y)$
+\item  $Z(x-1,y-1)$
+\item  $Z(x-1,y+1)$
+\item  $Z(x,y-1)$
+\item  $Z(x,y+1)$
+\item  $Z(x+1,y)$
+\item  $Z(x+1,y-1)$
+\item  $Z(x+1,y+1)$
 \end{itemize}
 Für die Implementation müssen wir (mindestens) drei verschiedenen Funktionen schreiben:
 \begin{enumerate}
-\item Entwicklung: Gibt ein neues Gitter zurück
+\item Entwicklung: Gibt ein neues Gitter zurück, nachdem es nach den obigen Regeln entwickelt wurde
 \item Ausgabe: Gibt das Gitter auf Monitor aus
 \item Spiel: Initialisiert die Zellen zufällig und \glqq spielt\grqq, bis alle Zellen den Zustand tot angenommen haben.
 \end{enumerate}
