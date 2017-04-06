@@ -130,7 +130,7 @@ Der entsprechende Pseudocode könnte wie folgt aussehen
   \State \textbf{return} $Z(\tau+1)$
   \EndProcedure
 \end{algorithmic}
-Aufgabe ist eine Programm zu schreiben, dass dieses Spiel implementiert.
+Aufgabe ist ein Programm zu schreiben, das dieses Spiel implementiert.
 Jede Zelle kann zwei Zustände haben, die wir auf $0$ (tot) und $1$ lebendig abbilden wollen.
 Es gilt also $z \in \{0,1\}\ \forall z\in Z$.
 Das zweidimensionale Gitter soll quadratisch sein und $L\times L$ Zellen $z$ haben.
@@ -177,8 +177,8 @@ Zum Beispiel
 \begin{lstlisting}
   const unsigned int L = 12;     // feste Groesse des Gitters
   unsigned int Z1[L*L], Z2[L*L]; // statische Speicheranforderung
-  int *Ztau = Z1;                // Zeiger fuer den Zugriff
-  int *Ztaup1 = Z2;
+  unsigned int *Ztau = Z1;                // Zeiger fuer den Zugriff
+  unsigned int *Ztaup1 = Z2;
 \end{lstlisting}
 Der Zugriff kann dann über die Zeiger \texttt{Z1} und \texttt{Z2} erfolgen.
 So kann man $Z(\tau)$ und $Z(\tau+1)$ vertauschen, ohne die gesamten Inhalte kopieren zu müssen.
