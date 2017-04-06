@@ -115,9 +115,10 @@ Park und Miller haben die folgenden Parameter für $a$ und $m$ gewählt:
 \begin{equation}
   a=16807\,,\quad m=2^{31}-1=2147483647\,. 
 \end{equation}
-Leider ist die direkte Implementation dieses Zufallszahlengenerators mit diesen Parametern in \texttt{C} nicht möglich. 
-Der Grund ist, dass wir keine Zahlen größer als $m$ speichern können. 
-Glücklicherweise gibt es eine Möglichkeit das Problem umzugehen. 
+Leider ist die direkte Implementation dieses Zufallszahlengenerators mit diesen Parametern in \texttt{C} mit dem Typ \texttt{int} nicht möglich. 
+Der Grund ist, dass wir keine Zahlen größer als $m$ in einem \texttt{int} speichern können. 
+(Mit Hilfe von \texttt{unsigned long int} kann man auf modernen Rechnern natürlich schon größere Zahlen darstellen, als $m$)
+Glücklicherweise gibt es eine Möglichkeit das Problem algorithmisch umzugehen. 
 Wir faktorisieren $m$ wie folgt:
 \begin{equation}
   m = aq + r\,;\quad r= m \left(\mathrm{mod}\ a\right)\,;\quad q= \left[m/a\right]\,.
