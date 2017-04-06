@@ -740,18 +740,48 @@ $\Rightarrow$ (\texttt{test\_argc.c})
     \item{Zeichenketten bearbeiten}
     \item{Kommandozeilenargumente}
   \end{itemize}
+  \vspace{0.5cm}
+  Heute gibt es ein physikalisches Beispiel! (yaaay).
 \end{frame}
+
+\begin{frame}[fragile]{Rückblick: Zeiger}{Vorlesung \arabic{lecturecounter}}
+\begin{block}{}
+Die Notation für Zeiger in C ist auf den ersten Blick (meiner Meinung nach) etwas unklar $\rightarrow$ Rückblick
+\end{block}
+\begin{lstlisting}
+  double x; double y; // zwei double Variablen deklarieren
+  double arr_y[10]; // und ein double Array mit 10 Elementen
+  
+  double *z_x, *z_y, w; /* zwei Zeiger auf double ('z_x' und 'z_y')
+                         * und ein double ('w') */
+   
+  z_x = &x; // 'z_x' zeigt jetzt auf 'x'
+  z_y = &y; // 'z_y' zeigt jetzt auf 'y'
+  
+  *z_y = 4.2; // 'z_y' derefernzieren und 'y' auf 4.2 setzen
+  
+  z_y = arr_y; // Zeiger 'z_y' zeigt jetzt auf 'arr_y'
+  
+  z_y[0] = 6.2; // erstes Element von 'arr_y' auf 6.2 setzen
+  
+  z_x = &w; // 'z_x' zeigt jetzt auf 'w'
+  
+  *z_x = 5.4; // 'w' wird auf 5.4 gesetzt
+\end{lstlisting}
+  
+\end{frame}
+
 
 \begin{frame}[fragile]{Modulare Programmierung}{Vorlesung \arabic{lecturecounter}}
 \includegraphics[width=\textwidth,page=2,trim=0 10cm 0 2cm,clip=true]{graphics/c_kurs_tafel}
 \begin{block}{}
   \begin{itemize}
-    \item{Einzelne Funktionen können in C in separaten Quelltextdateien stehen und unabhängig voneinander kompiliert werden.}
+    \item{Themenspezifische Funktionssammlungen können in C in separaten Quelltextdateien stehen und unabhängig voneinander kompiliert werden.}
   \end{itemize}
 \begin{enumerate}
   \item{Funktionen in separate Dateien auslagern}
-  \item{Einzelne Module kompilieren \texttt{gcc -c modulX.c}}
-  \item{Module zu Programm verlinken \texttt{gcc -o programm modul1.o modul2.o}}
+  \item{Einzelne Module kompilieren \\ \texttt{\$ gcc -c modulX.c}}
+  \item{Module zu Programm verlinken \\ \texttt{\$ gcc -o programm modul1.o modul2.o}}
 \end{enumerate}
 \end{block}
 \end{frame}
@@ -770,7 +800,7 @@ kinEnerg( double *x,
   return 0.5*m*v*v;
 }
     \end{lstlisting}
-    \\ \texttt{kinEnerg.c}
+    \texttt{kinEnerg.c}
     \vspace{0.1cm}
     \begin{lstlisting}
 double AblT( double *x, 
@@ -785,8 +815,9 @@ double AblT( double *x,
 double kinEnerg( double*, double,
                  unsigned int );
     \end{lstlisting}
-    \texttt{kinEnerg.h}
-    \vspace{2.4cm}
+    \texttt{kinEnerg.h} \\
+    \textcolor{red}{Hier sind die Funktionsdeklarationen.}
+    \vspace{2.0cm}
     \begin{lstlisting}
 double AblT( double*, 
              unsigned int );
@@ -829,7 +860,7 @@ kinEnerg( double *x,
   return 0.5*m*v*v;
 }
     \end{lstlisting}
-    \\ \texttt{kinEnerg.c}
+    \texttt{kinEnerg.c}
     \vspace{0.1cm}
     \begin{lstlisting}
 double AblT( double *x, 
@@ -854,9 +885,6 @@ double AblT( double*,
   \end{columns}
 \end{frame}
 
-\begin{frame}[fragile]{Zusammengesetzte Datenstrukturen}{Vorlesung \arabic{lecturecounter}}
-\end{frame}
-
 \begin{frame}[fragile]{Der C-Präprozessor}{Vorlesung \arabic{lecturecounter}}
 \begin{block}{}
   \begin{itemize}
@@ -877,5 +905,79 @@ double AblT( double*,
 \end{itemize}
 $\Rightarrow$ (\verb|test_makros.c|)
 \end{frame}
+
+\begin{frame}[fragile]{Include Guards}{Vorlesung \arabic{lecturecounter}}
+\begin{lstlisting}
+#include "xyz.h" // "xyz.h" wird eingebunden
+\end{lstlisting}
+\begin{block}{}
+  Wenn eine Header-datei in einem Program mehrfalls eingebunden wird, muss sichergestellt sein, dass die darin enthaltenen Definitionen und Deklaration nur einmal durchgeführt werden. $\rightarro$ \emph{include guards}
+\end{block}
+\begin{lstlisting}
+#ifndef ABLT_H
+#define ABLT_H
+double AblT( double*, 
+             unsigned int );
+#endif // um welches #if[n]def handelt es sich hier? ABLT_H!
+\end{lstlisting}
+\begin{block}{}
+  \begin{enumerate}
+    \item{\texttt{AblT.h} wird das erste Mal eingebunden: \verb|ABLT_H| ist nicht definiert.}
+    \begin{itemize}
+      \item{Definiere \verb|ABLT_H| und deklariere Funktion}
+    \end{itemize}
+    \item{\texttt{AblT.h} wird zum $(1+n)$-ten Mal eingebunden:}
+    \begin{itemize}
+      \item{\verb|ABLT_H| ist schon definiert $\rightarrow$ überspringe alles bis zu \texttt{\#endif}} 
+    \end{itemize}
+  \end{enumerate}
+\end{block}
+$\Rightarrow$ (\verb|test_include.c|)
+\end{frame}
+
+\begin{frame}[fragile]{Zusammengesetzte Datenstrukturen}{Vorlesung \arabic{lecturecounter}}
+\begin{block}{}
+Konzeptionell ist es oft ratsam, mehrere Variablen zu einem \emph{struct} zusammenzufassen.
+Die Position unseres Teilchens könnte in zwei Dimensionen z.B. mit folgender Datenstruktur dargestellt werden:
+\end{block}
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+struct Position_st {
+  double x;
+  double y;
+};  // Achtung: nach struct Deklaration -> Semikolon
+
+struct Position_st teilchen1;
+
+teilchen1.x = 1.2;  // Zugriff auf Elemente ueber '.' 
+teilchen1.y = 1.3;
+
+struct Position_st teilchen2[1000]; // Array von struct
+teilchen2[0].x = 8.3; // Zugriff auf struct-Elemente 
+teilchen2[0].y = 4.2; // im Array teilchen2
+
+struct Position_st *z_t; // Zeiger auf "struct Position_st"
+z_t = &teilchen1;
+z_t->x = 3.3; // Zugriff auf Elemente ueber Zeiger 'z_t' und '->'
+\end{lstlisting}
+$\Rightarrow$ (\verb|test_struct.c|)
+\end{frame}
+
+\stepcounter{lecturecounter}
+
+\begin{frame}[fragile]{Vorschau: Vorlesung \arabic{lecturecounter}}
+  \begin{itemize}
+    \item{Wünsche?}
+    \vspace{0.3cm}
+    \item{Mehrdimensionale Arrays}
+    \vspace{0.3cm}
+    \item{Dynamische Speicherverwaltung}
+    \begin{itemize}
+      \item{Sicherer Umgang mit Speicher!}
+    \end{itemize}
+    \vspace{0.3cm}
+    \item{Dynamische Arrays}
+  \end{itemize}
+\end{frame}
+
 
 \end{document}
