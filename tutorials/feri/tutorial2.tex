@@ -16,6 +16,7 @@
 \usepackage[usenames,dvipsnames]{pstricks}
 \usepackage{pstricks-add}
 \usepackage{epsfig}
+\usepackage{wasysym}
 \usepackage{pst-grad} % For gradients
 \usepackage{pst-plot} % For axes
 
@@ -110,9 +111,109 @@ Im Spiel entwickelt sich das Universum nach bestimmten Regelen in diskreten Zeit
 Der Satz von Regeln $R$ sieht wie folgt aus:
 \begin{enumerate}
 \item Eine lebendige Zelle stirbt, wenn sie weniger als zwei lebendige Nachbarzellen hat.
+\begin{center}
+\Huge
+\begin{tabular} { l c r }
+  \begin{tabular}{| l | c | r | }
+    \hline
+    {\color{blue}\frownie}   & {\color{blue}\frownie} & {\color{blue}\frownie} \\ \hline
+    {\color{blue}\frownie}   & {\color{red}\smiley}   & {\color{blue}\frownie} \\ \hline
+    {\color{black}\smiley}   & {\color{blue}\frownie} & {\color{blue}\frownie} \\ \hline
+  \end{tabular}
+
+& $\Longrightarrow$ &
+  \begin{tabular}{| l | c | r | }
+    \hline
+    {\color{blue}\frownie} & {\color{blue}\frownie} & {\color{blue}\frownie} \\ \hline
+    {\color{blue}\frownie} & {\color{red}\frownie}  & {\color{blue}\frownie} \\ \hline
+    {\color{black}\smiley} & {\color{blue}\frownie} & {\color{blue}\frownie} \\ \hline
+  \end{tabular}
+\\
+\end{tabular}
+\end{center}
 \item Eine lebendige Zelle mit zwei oder drei lebendigen Nachbarn lebt weiter.
+\begin{center}
+\Huge
+\begin{tabular} { l c r }
+  \begin{tabular}{| l | c | r | }
+    \hline
+    {\color{black}\smiley}   & {\color{blue}\frownie} & {\color{blue}\frownie} \\ \hline
+    {\color{blue}\frownie}   & {\color{red}\smiley}   & {\color{blue}\frownie} \\ \hline
+    {\color{black}\smiley}   & {\color{blue}\frownie} & {\color{blue}\frownie} \\ \hline
+  \end{tabular}
+
+& $\Longrightarrow$ &
+  \begin{tabular}{| l | c | r | }
+    \hline
+    {\color{black}\smiley} & {\color{blue}\frownie} & {\color{blue}\frownie} \\ \hline
+    {\color{blue}\frownie} & {\color{red}\smiley}   & {\color{blue}\frownie} \\ \hline
+    {\color{black}\smiley} & {\color{blue}\frownie} & {\color{blue}\frownie} \\ \hline
+  \end{tabular}
+\\
+\end{tabular}
+\end{center}
+\begin{center}
+\Huge
+\begin{tabular} { l c r }
+  \begin{tabular}{| l | c | r | }
+    \hline
+    {\color{black}\smiley}   & {\color{blue}\frownie} & {\color{black}\smiley} \\ \hline
+    {\color{blue}\frownie}   & {\color{red}\smiley}   & {\color{blue}\frownie} \\ \hline
+    {\color{black}\smiley}   & {\color{blue}\frownie} & {\color{blue}\frownie} \\ \hline
+  \end{tabular}
+
+& $\Longrightarrow$ &
+  \begin{tabular}{| l | c | r | }
+    \hline
+    {\color{black}\smiley} & {\color{blue}\frownie} & {\color{black}\smiley} \\ \hline
+    {\color{blue}\frownie} & {\color{red}\smiley}   & {\color{blue}\frownie} \\ \hline
+    {\color{black}\smiley} & {\color{blue}\frownie} & {\color{blue}\frownie} \\ \hline
+  \end{tabular}
+\\
+\end{tabular}
+\end{center}
 \item Eine lebendige Zelle mit mehr als drei lebenden Nachbarzellen stirbt im nächsten Zeitschritt.
+\begin{center}
+\Huge
+\begin{tabular} { l c r }
+  \begin{tabular}{| l | c | r | }
+    \hline
+    {\color{black}\smiley}   & {\color{blue}\frownie} & {\color{black}\smiley} \\ \hline
+    {\color{black}\smiley}   & {\color{red}\smiley}   & {\color{blue}\frownie} \\ \hline
+    {\color{black}\smiley}   & {\color{blue}\frownie} & {\color{blue}\frownie} \\ \hline
+  \end{tabular}
+
+& $\Longrightarrow$ &
+  \begin{tabular}{| l | c | r | }
+    \hline
+    {\color{black}\smiley} & {\color{blue}\frownie} & {\color{black}\smiley} \\ \hline
+    {\color{black}\smiley} & {\color{red}\frownie}   & {\color{blue}\frownie} \\ \hline
+    {\color{black}\smiley} & {\color{blue}\frownie} & {\color{blue}\frownie} \\ \hline
+  \end{tabular}
+\\
+\end{tabular}
+\end{center}
 \item Eine tote Zelle wird wiederbelebt, wenn sie genau drei lebende Nachbarzellen hat.
+\begin{center}
+\Huge
+\begin{tabular} { l c r }
+  \begin{tabular}{| l | c | r | }
+    \hline
+    {\color{blue}\frownie}   & {\color{black}\smiley} & {\color{blue}\frownie} \\ \hline
+    {\color{black}\smiley}   & {\color{red}\frownie}   & {\color{black}\smiley} \\ \hline
+    {\color{blue}\frownie}   & {\color{blue}\frownie} & {\color{blue}\frownie} \\ \hline
+  \end{tabular}
+
+& $\Longrightarrow$ &
+  \begin{tabular}{| l | c | r | }
+    \hline
+    {\color{blue}\frownie} & {\color{black}\smiley} & {\color{blue}\frownie} \\ \hline
+    {\color{black}\smiley} & {\color{red}\smiley}   & {\color{black}\smiley} \\ \hline
+    {\color{blue}\frownie} & {\color{blue}\frownie} & {\color{blue}\frownie} \\ \hline
+  \end{tabular}
+\\
+\end{tabular}
+\end{center}
 \end{enumerate}
 Dabei wird davon ausgegangen, dass diese Regeln auf alle Zellen gleichzeitig angwendet werden.
 Es gibt also einen Zustand des Universums $Z(\tau)$ zum Zeitpunkt $\tau$.
