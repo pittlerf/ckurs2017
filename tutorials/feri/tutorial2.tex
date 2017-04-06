@@ -4,6 +4,9 @@
 \usepackage[ngerman]{babel}
 \usepackage[dvipsnames]{xcolor}
 \usepackage{lipsum}
+\usepackage{algorithm}
+\usepackage{algorithmicx}
+\usepackage{algpseudocode}
 
 \usepackage{amsfonts}
 \usepackage[intlimits]{amsmath}
@@ -103,58 +106,99 @@ Jede Gitterzelle kann zwei Zuständen einnehmen:
 \item lebendig,
 \item tot.
 \end{itemize}
-Im Spiel entwickelt sich das Universum nach bestimmten Regelen.
-Diese sehen wie folgt aus:
+Im Spiel entwickelt sich das Universum nach bestimmten Regelen in diskreten Zeitschritten.
+Der Satz von Regeln $R$ sieht wie folgt aus:
 \begin{enumerate}
 \item Eine lebendige Zelle stirbt, wenn sie weniger als zwei lebendige Nachbarzellen hat.
 \item Eine lebendige Zelle mit zwei oder drei lebendigen Nachbarn lebt weiter.
 \item Eine lebendige Zelle mit mehr als drei lebenden Nachbarzellen stirbt im nächsten Zeitschritt.
 \item Eine tote Zelle wird wiederbelebt, wenn sie genau drei lebende Nachbarzellen hat.
 \end{enumerate}
-
+Dabei wird davon ausgegangen, dass diese Regeln auf alle Zellen gleichzeitig angwendet werden.
+Es gibt also einen Zustand des Universums $Z(\tau)$ zum Zeitpunkt $\tau$.
+Dann wird jede Zelle nach obigen Regeln weiterentwickelt basierend auf dem Zustand $Z(\tau)$.
+Wir können also auch schreiben, dass die Entwicklung nach den Regeln $R(Z(\tau))$ stattfindet. 
+Der neue Zustand ist dann $Z(\tau+1)$. 
+Der entsprechende Pseudocode könnte wie folgt aussehen
+\begin{algorithmic}[1]
+  \Procedure{Entwicklung}{$Z(\tau)$}
+  \State \textbf{input}: $Z(\tau)$
+  \State \textbf{output}: $Z(\tau+1)$
+  \For{$z_i\in Z(\tau)$}
+  \State $z_i(\tau+1)\ \stackrel{R(Z(\tau))}{\longleftarrow}\ z_i(\tau)$
+  \EndFor
+  \State \textbf{return} $Z(\tau+1)$
+  \EndProcedure
+\end{algorithmic}
 Aufgabe ist eine Programm zu schreiben, dass dieses Spiel implementiert.
 Jede Zelle kann zwei Zustände haben, die wir auf $0$ (tot) und $1$ lebendig abbilden wollen.
-Das zweidimensionale Gitter soll quadratisch sein und $L\times L$ Zellen $Z$ haben.
+Es gilt also $z \in \{0,1\}\ \forall z\in Z$.
+Das zweidimensionale Gitter soll quadratisch sein und $L\times L$ Zellen $z$ haben.
 D.h., insgesamt gibt es Zellen
 \begin{equation}
-  Z(x,y) = \begin{cases}
+  z(x,y; \tau) = \begin{cases}
     1 & \mathrm{Zelle~ist~lebendig} \\0  & \mathrm{Zelle~ist~tot} \\
   \end{cases}
   \,,\quad (x\in[0,1,\ldots L-1], y\in[0,1,\ldots L-1])\,.
 \end{equation}
-Es biete sich an, das Gitter im Programm als ein zweidimensionales Array darzustellen.
+Obiger Pseudocode sieht damit wie folgt aus
+\begin{algorithmic}[1]
+  \Procedure{Entwicklung}{$Z(\tau)$}
+  \State \textbf{input}: $Z(\tau)$
+  \State \textbf{output}: $Z(\tau+1)$
+  \For{$x\in 0,1,\ldots L-1$}
+  \For{$y\in 0,1,\ldots L-1$}
+  \State $z(x,y; \tau+1)\ \stackrel{R(Z(\tau))}{\longleftarrow}\ z(x,y; \tau)$
+  \EndFor
+  \EndFor
+  \State \textbf{return} $Z(\tau+1)$
+  \EndProcedure
+\end{algorithmic}
+Es bietet sich an, das Gitter im Programm als ein zweidimensionales Array darzustellen.
 Der Datentyp des Arrays sollte es erlauben, die zwei Zustände darzustellen.
 Die Größe des Arrays ist durch $L$ bestimmt.
 Wir haben zwar noch nicht über zweidimensionale Arrays gesprochen, trotzdem können wir diese Aufgabe erledigen. 
-Jedes zweidimensionale Array kann durch folgende Abbildung $g$ auf ein eindimensionales Array abgebildet werden:
+Wir beschränken uns auch zunächst auf \emph{statische} arrays.
+Ein zweidimensionale $L\times L$ Array kann durch folgende Abbildung $g$ auf ein eindimensionales Array der Größe $L^2$ abgebildet werden:
 \begin{equation}
   g(x,y)\ =\ xL + y\,,\qquad (x\in[0,1,\ldots L-1], y\in[0,1,\ldots L-1])\,.
 \end{equation}
 Wir müssen noch sagen, wie wir am Rand des Gitters verfahren wollen.
 Hier werden wir periodische Randbedingungen annehmen, also
 \begin{equation}
-  Z(x+L,y)= Z(x,y)\,,\quad (x\in[0,1,\ldots L-1], y\in[0,1,\ldots L-1])
+  z(x+L,y)= z(x,y)\,,\quad (x\in[0,1,\ldots L-1], y\in[0,1,\ldots L-1])
 \end{equation}
 und
 \begin{equation}
-  Z(x,y+L)= Z(x, y)\,,\quad (x\in[0,1,\ldots L-1], y\in[0,1,\ldots L-1])\,.
+  z(x,y+L)= z(x, y)\,,\quad (x\in[0,1,\ldots L-1], y\in[0,1,\ldots L-1])\,.
 \end{equation}
-Eine Zelle $Z(x,y)$ hat acht Nachbarn:
+Im Quelltext benötigt man entsprechend zwei Arrays gleicher Größe für Zeitschritte $\tau$ und $\tau+1$.
+Zum Beispiel
+\begin{lstlisting}
+  const unsigned int L = 12;     // feste Groesse des Gitters
+  unsigned int Z1[L*L], Z2[L*L]; // statische Speicheranforderung
+  int *Ztau = Z1;                // Zeiger fuer den Zugriff
+  int *Ztaup1 = Z2;
+\end{lstlisting}
+Der Zugriff kann dann über die Zeiger \texttt{Z1} und \texttt{Z2} erfolgen.
+So kann man $Z(\tau)$ und $Z(\tau+1)$ vertauschen, ohne die gesamten Inhalte kopieren zu müssen.
+
+In zwei Dimensionen hat eine Zelle $z(x,y)$ acht Nachbarn:
 \begin{itemize}
-\item  $Z(x-1,y)$
-\item  $Z(x-1,y-1)$
-\item  $Z(x-1,y+1)$
-\item  $Z(x,y-1)$
-\item  $Z(x,y+1)$
-\item  $Z(x+1,y)$
-\item  $Z(x+1,y-1)$
-\item  $Z(x+1,y+1)$
+\item  $z(x-1,y)$
+\item  $z(x-1,y-1)$
+\item  $z(x-1,y+1)$
+\item  $z(x,y-1)$
+\item  $z(x,y+1)$
+\item  $z(x+1,y)$
+\item  $z(x+1,y-1)$
+\item  $z(x+1,y+1)$
 \end{itemize}
 Für die Implementation müssen wir (mindestens) drei verschiedenen Funktionen schreiben:
 \begin{enumerate}
 \item Entwicklung: Gibt ein neues Gitter zurück, nachdem es nach den obigen Regeln entwickelt wurde
 \item Ausgabe: Gibt das Gitter auf Monitor aus
-\item Spiel: Initialisiert die Zellen zufällig und \glqq spielt\grqq, bis alle Zellen den Zustand tot angenommen haben.
+\item Spiel: Initialisiert die Zellen zufällig und \glqq spielt\grqq, bis alle Zellen den Zustand tot angenommen haben oder bis eine obere Schranke für die Zeit erreicht ist.
 \end{enumerate}
 Für die zufällige Initialisierung der Zellen könne wir den Zufallszahlengenerator aus der vorigen Aufgabe verwenden.
 Für jede Zelle erzeugt man einen Zufallszahl $u$.
