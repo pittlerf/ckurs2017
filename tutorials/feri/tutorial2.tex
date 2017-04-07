@@ -100,21 +100,24 @@
 \maketitle
 
 
-\noindent Betrachten wir ein \glqq Universum\grqq, dass aus einem zweidimenionalen Gitter besteht.
-Jede Gitterzelle kann zwei Zuständen einnehmen:
+\noindent Betrachten wir ein \glqq Universum\grqq, dass aus einem zweidimensionalen Gitter besteht.
+Jede Gitterzelle kann zwei Zustände einnehmen:
 \begin{itemize}
 \item lebendig,
 \item tot.
 \end{itemize}
-Im Spiel entwickelt sich das Universum nach bestimmten Regelen in diskreten Zeitschritten.
+Im Spiel entwickelt sich das Universum nach bestimmten Regeln in diskreten Zeitschritten.
 Der Satz von Regeln $R$ sieht wie folgt aus:
 \begin{enumerate}
-\item Eine lebendige Zelle stirbt, wenn sie weniger als zwei lebendige Nachbarzellen hat.
-\item Eine lebendige Zelle mit zwei oder drei lebendigen Nachbarn lebt weiter.
-\item Eine lebendige Zelle mit mehr als drei lebenden Nachbarzellen stirbt im nächsten Zeitschritt.
+\item Eine lebendige Zelle stirbt, wenn sie weniger als zwei lebendige
+  Nachbarzellen hat. (Einsamkeit)
+\item Eine lebendige Zelle mit zwei oder drei lebendigen Nachbarn lebt
+  weiter. 
+\item Eine lebendige Zelle mit mehr als drei lebenden Nachbarzellen
+  stirbt. (Überbevölkerung)
 \item Eine tote Zelle wird wiederbelebt, wenn sie genau drei lebende Nachbarzellen hat.
 \end{enumerate}
-Dabei wird davon ausgegangen, dass diese Regeln auf alle Zellen gleichzeitig angwendet werden.
+Dabei wird davon ausgegangen, dass diese Regeln auf alle Zellen gleichzeitig angewendet werden.
 Es gibt also einen Zustand des Universums $Z(\tau)$ zum Zeitpunkt $\tau$.
 Dann wird jede Zelle nach obigen Regeln weiterentwickelt basierend auf dem Zustand $Z(\tau)$.
 Wir können also auch schreiben, dass die Entwicklung nach den Regeln $R(Z(\tau))$ stattfindet. 
