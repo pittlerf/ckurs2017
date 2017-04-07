@@ -1003,7 +1003,7 @@ $\Rightarrow$ (\verb|test_struct.c|)
     \begin{itemize}
       \item{Header- und Quelldateien trennen Interface und Implementierung.}
       \item{Erlaubt iterative Entwicklung: Aufgabe in Algorithmen aufteilen, Interfaces überlegen, Verbindungen aufstellen, Schritt für Schritt implementieren.}
-      \item{Benötigte Datenstrukturen können auch in den themengebundenen Headerdateien getätigt werden.}
+      \item{Benötigte Datenstrukturen können auch in den themengebundenen Headerdateien deklariert werden.}
     \end{itemize}
   \end{block}
 \begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
@@ -1019,7 +1019,7 @@ struct zweiD_vektor_st AblT_zweiD( double dt, struct zweiD_vektor_st *pos,
 \end{lstlisting}
 \vspace{-0.2cm}
 \begin{block}{}
-  Alternativ könnte man die Deklaration des \verb|struct| auch in eine eigene Header-datei verschieben.
+  Alternativ könnte man die Deklaration des \verb|struct| auch in eine eigene Header-datei verschieben. (emfohlen)
 \end{block}
 \end{frame}
 
@@ -1172,12 +1172,18 @@ wobei $i_0 \in [ 0, N_0-1 ], i_1 \in [ 0, N_1-1 ], i_2 \in [ 0, N_2-1 ] \Rightar
 \begin{lstlisting}
 unsigned int N_0 = 27;
 unsigned int N_1 = 13;
-// Speicher für N_0 double-Zeiger
-double **Matrix = malloc( N_0*sizeof(double*) ); 
+// Speicher fuer N_0*N_1 double-Werte
+double *matrix_mem = malloc( N_0*N_1*sizeof(double) );
+// Speicher fuer N_0 double-Zeiger
+double **Matrix = malloc( N_0*sizeof(double*) );
+for( unsigned int z = 0; z < N_0; z++ ){
+  Matrix[z] = matrix_mem + N_1*z;
+  // oder auch
+  // Matrix[z] = &(matrix_mem[N_1*z]);
+}
+Matrix[2][1] = 2.2;
 \end{lstlisting}
-
+$\Rightarrow$ (\verb|lin_multidim_array.c|) und (\verb|dyn_multidim_array.c|)
 \end{frame}
-
-
 
 \end{document}
