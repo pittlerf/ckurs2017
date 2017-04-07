@@ -599,7 +599,7 @@ $\Rightarrow$ \textbf{Tafelbild +} (\texttt{zeiger\_preview.c})
   \end{block}
   $\Rightarrow$ (\texttt{zeiger\_demo.c}) und Tafelbild
   \begin{block}{}
-    Ein \texttt{NULL}-pointer zeigt auf gar nichts.
+    Ein \texttt{NULL}-pointer zeigt auf gar nichts. (Strikt gesehen falsch: zeigt auf Adresse '0', diese Adressee darf nicht derefernziert werden! [segmentation fault])
   \end{block}
 \end{frame}
 
@@ -724,10 +724,10 @@ $\Rightarrow$ (\texttt{test\_argc.c})
       \begin{itemize}
         \item{\verb|atoi, atof, strtod, strtol, strtoul, strtoull|}
       \end{itemize}
-      \item{Aber Vorsicht: \texttt{atoi} und \texttt{atof} prüfen nicht auf Fehler!\n}
+      \item{Aber Vorsicht: \verb|atoi| und \verb|atof| prüfen nicht auf Fehler!}
     \end{itemize}
   \end{block}
-  $\Rightarrow$ (\texttt{test\_read\_argv.c})
+  $\Rightarrow$ (\verb|test_read_argv.c|)
 \end{frame}
 
 \stepcounter{lecturecounter}
@@ -780,7 +780,7 @@ Die Notation für Zeiger in C ist auf den ersten Blick (meiner Meinung nach) etw
   \end{itemize}
 \begin{enumerate}
   \item{Funktionen in separate Dateien auslagern}
-  \item{Einzelne Module kompilieren \\ \texttt{\$ gcc -c modulX.c}}
+  \item{Einzelne Module kompilieren \\ \texttt{\$ gcc \textcolor{red}{-c} modulX.c} $\rightarrow$ \texttt{modulX.o}}
   \item{Module zu Programm verlinken \\ \texttt{\$ gcc -o programm modul1.o modul2.o}}
 \end{enumerate}
 \end{block}
@@ -911,7 +911,7 @@ $\Rightarrow$ (\verb|test_makros.c|)
 #include "xyz.h" // "xyz.h" wird eingebunden
 \end{lstlisting}
 \begin{block}{}
-  Wenn eine Header-datei in einem Program mehrfalls eingebunden wird, muss sichergestellt sein, dass die darin enthaltenen Definitionen und Deklaration nur einmal durchgeführt werden. $\rightarro$ \emph{include guards}
+  Wenn eine Header-datei in einem Program mehrfalls eingebunden wird, muss sichergestellt sein, dass die darin enthaltenen Definitionen und Deklaration nur einmal durchgeführt werden! $\rightarrow$ \emph{include guards}
 \end{block}
 \begin{lstlisting}
 #ifndef ABLT_H
@@ -946,6 +946,7 @@ struct Position_st {
   double y;
 };  // Achtung: nach struct Deklaration -> Semikolon
 
+// Variable "teilchen1" vom Typ "struct Position_st"
 struct Position_st teilchen1;
 
 teilchen1.x = 1.2;  // Zugriff auf Elemente ueber '.' 
@@ -959,12 +960,11 @@ struct Position_st *z_t; // Zeiger auf "struct Position_st"
 z_t = &teilchen1;
 z_t->x = 3.3; // Zugriff auf Elemente ueber Zeiger 'z_t' und '->'
 \end{lstlisting}
+\vspace{-0.1cm}
 $\Rightarrow$ (\verb|test_struct.c|)
 \end{frame}
 
-\stepcounter{lecturecounter}
-
-\begin{frame}[fragile]{Vorschau: Vorlesung \arabic{lecturecounter}}
+\begin{frame}[fragile]{Vorschau: Vorlesung 5}
   \begin{itemize}
     \item{Wünsche?}
     \vspace{0.3cm}
@@ -978,6 +978,206 @@ $\Rightarrow$ (\verb|test_struct.c|)
     \item{Dynamische Arrays}
   \end{itemize}
 \end{frame}
+
+\stepcounter{lecturecounter}
+
+\begin{frame}[fragile]{Fragen zu Vorlesung 4?}
+  \begin{itemize}
+    \item{Modulare Programmierung}
+    \item{Trennung: Interface / Implementation }
+    \begin{itemize}
+      \item[$\Rightarrow$]{\verb|04/test_include.c| enthält jetzt vollen Test für \emph{Include Guards}}
+      \item[$\Rightarrow$]{\verb|04/test_makros.c|: Eulersche Zahl in Header-datei mit Include Guards}
+    \end{itemize}
+    \vspace{0.3cm}
+    \item{Zusammengesetzte Datenstrukturen}
+    \begin{itemize}
+      \item{Addendum: ein \texttt{struct} darf natürlich Elemente verschiedener Datentypen enthalten!}
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Vervollständigung: Quell- und Headerdateien}{Vorlesung \arabic{lecturecounter}}
+  \begin{block}{}
+    \small
+    \begin{itemize}
+      \item{Header- und Quelldateien trennen Interface und Implementierung.}
+      \item{Erlaubt iterative Entwicklung: Aufgabe in Algorithmen aufteilen, Interfaces überlegen, Verbindungen aufstellen, Schritt für Schritt implementieren.}
+      \item{Benötigte Datenstrukturen können auch in den themengebundenen Headerdateien getätigt werden.}
+    \end{itemize}
+  \end{block}
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+#ifndef ZWEID_MECHANIK_H
+#define ZWEID_MECHANIK_H
+struct zweiD_vektor_st {
+  double x;
+  double y;
+};
+struct zweiD_vektor_st AblT_zweiD( double dt, struct zweiD_vektor_st *pos,
+                                   unsigned int t, unsigned int tmax );
+#endif // ifndef(ZWEID_MECHANIK_H)
+\end{lstlisting}
+\vspace{-0.2cm}
+\begin{block}{}
+  Alternativ könnte man die Deklaration des \verb|struct| auch in eine eigene Header-datei verschieben.
+\end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Vervollständigung: Zeiger auf lokale Variablen}{Vorlesung \arabic{lecturecounter}}
+  \begin{block}{}
+    Die Rückgabe von Zeigern auf lokale Variablen ist nicht zulässig.
+  \end{block}
+  \begin{lstlisting}
+double* test_ptr(void){
+  double v = 4.2; // v existiert nur innerhalb des Funktionsblocks!
+  return &v; // Compiler warnt, aber kein Fehler!
+}
+int main(void){
+  double *z_v = test_ptr(); // legale Zuweisung, kein Fehler!
+  printf("%lf\n", *z_v ); // Segmentation Fault bei Dereferenzierung!
+  return 0;
+}
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Zeigerarithmetik 1}{Vorlesung \arabic{lecturecounter}}
+\begin{block}{}
+  Wir hatten die Analogie zwischen Zeigern und Arraynamen schon mehrfach angedeutet. Die folgende Zeigerzuweisungen sind identisch.
+\end{block}
+\begin{lstlisting}
+int k[40]; // int Array mit 40 Elementen
+int *z1_k = k;     // Der Arrayname 'k'
+int *z2_k = &k[0]; // Die Adresse des ersten Elements von 'k[]'
+int *z3_k = z2_k;  // Der Wert des int-Zeigers 'z2_k'
+\end{lstlisting}
+\begin{block}{}
+  Ein Zeiger kann inkrementiert werden. Addition/Subtraktion mit ganzzahligen Konstanten oder Variablen ist ebenso möglich. 
+\end{block}
+\begin{lstlisting}
+z1_k++; z1_k++; // 'z1_k' wird zwei Mal inkrementiert
+z2_k = &k[2];   // Adresse des dritten Elements von 'k[]'
+int delta_k = 2;
+z3_k = z3_k + delta_k; // z3_k um '2' erhoehen
+\end{lstlisting}
+\begin{block}{}
+  Alle drei Zeiger zeigen auf das dritte Element des Arrays \texttt{k}.
+\end{block}
+$\Rightarrow$ (\verb|test_zeigerarithmetik.c|)
+\end{frame}
+
+\begin{frame}[fragile]{Zeigerarithmetik 2}{Vorlesung \arabic{lecturecounter}}
+\begin{block}{}
+  \texttt{k} ist ein \texttt{int}-Array mit $10$ Elementen, initialisiert mit $\lbrace 42, 55, 17, 34, 421, 17, 11, 9, 117, 629 \rbrace$. Wenn Sie jede Gleichheit verstehen, haben Sie Zeigerarithmetik verstanden.
+\end{block}
+\centering
+\includegraphics[page=3,width=0.8\textwidth,clip=true,trim=0 3cm 0 2cm]{graphics/c_kurs_tafel}
+\begin{block}{}
+  $\Rightarrow$ \verb|k[n]| ist ein praktisches Kürzel für \verb|*(k+n)|.
+\end{block}
+
+\end{frame}
+
+\begin{frame}[fragile]{Dynamische Speicherverwaltung}{Vorlesung \arabic{lecturecounter}}
+  \begin{block}{\texttt{malloc} und \texttt{free}}
+    \begin{itemize}
+      \item{Speicher wird in C mit \texttt{malloc} allokiert und mit \texttt{free} wieder freigegeben.}
+      \item{Man sollte immer überprüfen, ob einer Allokation erfolgreich war.}
+      \item{Wenn man den Speicher nicht mehr braucht, muss er freigegeben werden, sonst entstehen \emph{memory leaks}.}
+    \end{itemize} 
+  \end{block}
+\begin{lstlisting}
+  int n = 300;
+  // Platz fuer 300 'double'-Variablen allokieren
+  double *x = malloc( sizeof(double) * n );
+  if( x == NULL ){
+    printf("Speicherallokation fuer 'x' fehlgeschlagen!\n"); 
+    exit(32); // Rueckgabewert > 0 bedeutet Fehler
+  }
+  x[23] = 4.2; x[3] = 2.4; [...] // 'x' verwenden
+  free(x); /* Speicher 'x' wird nicht mehr gebraucht
+            * -> freigeben */
+  /* Programm geht weiter */
+\end{lstlisting}
+$\Rightarrow$ (\verb|test_malloc.c|)
+\end{frame}
+
+\begin{frame}[fragile]{Memory Leaks}{Vorlesung \arabic{lecturecounter}}
+\begin{block}{}
+  \begin{itemize}
+    \item{Wird ein Speicherbereich $a$ einem Zeiger zugewiesen und dann ein weiterer Speicherbereich, $b$, dem gleichen Zeiger zugewiesen, geht die Adresse von $a$ verloren. $\rightarrow$ Speicherleck (memory leak)}
+    \item{Der Speicher ist belegt und kann, bis das Programm beendet wird, nicht freigegeben werden.}
+    \item{Memory leaks sind Bugs, welche oft erst in den unangenehmsten Situationen auftauchen. Man sollte seine Programme überprüfen wenn möglich.}
+  \end{itemize}
+\end{block}
+\begin{lstlisting}
+// Platz fuer 100 'double'-Variablen allokieren
+double *x = malloc( sizeof(double) * 100 );
+/* x wird einem anderen Speicherbereich zugewiesen
+ *   -> Speicherleck */
+x = malloc( sizeof(double) * 55 );
+free(x); /* free'd nur "malloc( sizeof(double) * 55 )"
+          * verloren: "malloc( sizeof(double) * 100 )" */
+\end{lstlisting}
+$\Rightarrow$ (\verb|memory_leak.c|)
+\end{frame}
+
+\begin{frame}[fragile]{Mehrdimensionale Arrays}{Vorlesung \arabic{lecturecounter}}
+\begin{block}{Statische Mehrdimensionale Arrays}
+  Ein statisches mehrdimensionales Array hat in C eine relativ einleuchtende Notation.
+\end{block}
+\begin{lstlisting}
+double A[3][3];    // 3x3 double Matrix
+double B[2][5][7]; // 2x5x7 Tensor mit 3 Indices
+\end{lstlisting}
+\begin{block}{}
+  Ein statisches mehrdimensionales Array ist ein spezielles Objekt in C. Es liegt als ein linearer Datenblock im Speicher.  
+\end{block}
+\centering
+\includegraphics[page=4,width=0.8\textwidth,clip=true,trim=0 12cm 0 2cm]{graphics/c_kurs_tafel}
+\begin{block}{}
+  Dynamische mehrdimensionale Arrays werden genauso angelegt, um den Zugriff effizient zu machen.
+\end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Linearisierung Mehrdimensionaler Arrays}{Vorlesung \arabic{lecturecounter}}
+\begin{block}{}
+  Wir wollen eine $N \times N$ Matrix linear im Speicher ablegen, wie verfahren wir?
+\end{block}
+\begin{lstlisting}
+int N = 42;
+double *A = malloc( N*N*sizeof(double) ); // 42^2 doubles
+\end{lstlisting}
+Der Index \texttt{i} für den Zugriff auf $A_{zs}$, ergibt sich aus der Formel:
+\begin{equation*}
+  i = s + N \cdot z
+\end{equation*}
+Für ein Objekt mit $3$ Indizes, $T_{i_0 i_1 i_2}$ der Größe $N_0 \times N_1 \times N_2$, ergibt sich:
+\begin{align*}
+  i = & i_2 + N_2 \cdot ( i_1 + ( N_1 \cdot i_0 ) ) \\
+    = & i_2 + N_2 \cdot i_1 + N_2 \cdot N_1 \cdot i_0 \, ,
+\end{align*}
+wobei $i_0 \in [ 0, N_0-1 ], i_1 \in [ 0, N_1-1 ], i_2 \in [ 0, N_2-1 ] \Rightarrow i \in [ 0, N_0 \cdot N_1 \cdot N_2 - 1 ]$
+\begin{block}{}
+  Für unsere Matrix $A$ haben wir also:
+\end{block}
+\begin{lstlisting}
+  A[ 1 + N*2 ] // A_{21}
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Dynamische Mehrdimensionale Arrays}{Vorlesung \arabic{lecturecounter}}
+\begin{block}{}
+  Wir wollen eine $N_0 \times N_1$ Matrix erstellen, aber nicht als statisches Array. Wir wollen es uns aber auch erlauben, darauf mit \texttt{[][]} zuzugreifen. Wie gehen wir vor?
+\end{block}
+\begin{lstlisting}
+unsigned int N_0 = 27;
+unsigned int N_1 = 13;
+// Speicher für N_0 double-Zeiger
+double **Matrix = malloc( N_0*sizeof(double*) ); 
+\end{lstlisting}
+
+\end{frame}
+
 
 
 \end{document}
