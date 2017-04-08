@@ -50,7 +50,7 @@
   \item{Das Skript dient als Referenz und sollte zumindest während der Tutorien befragt werden!}
   \vspace{0.2cm}
   \item{Fundamentale Ungleichung der Programmierung (FUP!): \\ \textbf{Praxis $\mathbf{\gg}$ Vorlesungen} $\rightarrow$ besuchen Sie die Übungen, sonst bringt die Vorlesung nichts!}
-  \item{Folien und Übungszettel: \textcolor{blue}{\url{http://goo.gl/xhJN08}}}
+  \item{Folien, Übungszettel, Beispielprogramme: \textcolor{blue}{\url{http://goo.gl/xhJN08}}}
   \end{itemize}
 \end{frame}
 
@@ -65,7 +65,7 @@
   \item{Praktischer Einsatz des C-Compilers zur Übersetzung des Quelltextes in ausführbaren Maschinencode}
   \item{Erstellen eigener C-Programme in den Tutorien}
   \begin{itemize}
-    \item{einfache Beispielprogrammen $\rightarrow$ kompliziertere Programme aus merheren Quelltextdateien}
+    \item{einfache Beispielprogramme $\rightarrow$ kompliziertere Programme aus merheren Quelltextdateien}
     \item{Verwendung externer Bilbiotheken}
   \end{itemize}
   \vspace{0.3cm}
@@ -448,17 +448,10 @@ RUECKGABETYP FUNKTIONSNAME( ARGUMENT1_TYP ARG1, ARGUMENT2_TYP ARG2,
                             ARGUMENT3_TYP ARG3 );
 \end{lstlisting}
 \begin{block}{Signatur}
+  Dies nenn man auch die \emph{Signatur} der Funktion.
   {\footnotesize \verb| (FUNKTIONSNAME) ( ARGUMENT1_TYP, ARGUMENT2_TYP, ARGUMENT3_TYP ) | }
 \end{block}
-
-\begin{block}{}
-  Wichtig: Bei der Unterscheidung zweier Funktionen gleichen Namens, wird der Typ des Rückgabewerts \emph{nicht} berücksichtigt!
-\end{block}
-\begin{lstlisting}
-double teilen( double zaehler, double nenner ){ [...] }
-float  teilen( double zaehler, double nenner ){ [...] } // Fehler!
-float  teilen( float  zaehler, float  nenner ){ [...] } // OK
-\end{lstlisting}
+\textbf{Korrektur aus der Vorlesung:} Es darf nur eine Funktion mit dem Namen \texttt{FUNKTIONSNAME}.
 \end{frame}
 
 \begin{frame}[fragile]{Funktionen: Funktionsaufruf und Rückgabewert}{Vorlesung \arabic{lecturecounter}}
@@ -585,5 +578,612 @@ scanf("%d %lf",&ganzzahl, &dezimalzahl);
 $\Rightarrow$ \textbf{Tafelbild +} (\texttt{zeiger\_preview.c})
 \end{frame}
 
+\stepcounter{lecturecounter}
+
+\begin{frame}[fragile]{Fragen zu Vorlesung 2}{Vorlesung \arabic{lecturecounter}}
+  \begin{itemize}
+    \item{Platzhalter in \texttt{printf}}
+    \item{C-Programme als Funktionssammlungen}
+    \item{Funktionen: Kopf, Signatur, Aufruf, Deklaration, Definition, Rückgabewert, Rekursion}
+    \item{Debugger Mini-Mini-Intro}
+    \item{Statische Arrays}
+    \item{Texteingabe mit \texttt{scanf}}
+    \item{Preview: Zeiger}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Zeiger}{Vorlesung \arabic{lecturecounter}}
+  \includegraphics[width=\textwidth,page=1,trim=0 7cm 0 2cm,clip=true]{graphics/c_kurs_tafel}
+  \begin{block}{}
+    Zeiger sind Datentypen, welche die Adresse einer Variable oder, allgemein, eines Speicherbereichs darstellen.
+  \end{block}
+  $\Rightarrow$ (\texttt{zeiger\_demo.c}) und Tafelbild
+  \begin{block}{}
+    Ein \texttt{NULL}-pointer zeigt auf gar nichts. (Strikt gesehen falsch: zeigt auf Adresse '0', diese Adressee darf nicht derefernziert werden! [segmentation fault])
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Arrays, Zeiger und einfache Zeigerarithmetik}{Vorlesung \arabic{lecturecounter}}
+  \begin{block}{}
+    Statische Arrays sind spezielle Speicherbereiche, für die der Compiler einen Standardzeiger setzt. Dieser Zeiger ist der Name des Arrays.
+  \end{block}
+\begin{lstlisting}
+int a[4];   /* 'a' hat Datentyp (int*) und zeigt  
+               auf ein Array des Typs (int) */
+int *b = a; /* 'b' hat auch den Datentyp (int*) und zeigt jetzt
+               auf den gleichen Speicherbereich wie 'a' */
+\end{lstlisting}
+\begin{block}{}
+  Strikt gesehen sind arrays und Zeiger (\emph{pointer}) auf Daten des gleichen Datentyps aber nicht identisch!
+\end{block}
+ $\Rightarrow$ (\texttt{zeiger\_array\_demo.c}) und Tafelbild
+
+\end{frame}
+
+\begin{frame}[fragile]{Zeichenketten}{Vorlesung \arabic{lecturecounter}}
+  \begin{block}{}
+    \begin{itemize}
+      \item{Die Manipulation von Zeichenketten (auch \emph{strings}) ist in vielen Programmen von zentraler Bedeutung, z.B. um Dateinamen für Ausgabedateien zu setzen.}
+      \item{In C werden einfache strings in \texttt{char}-Arrays gespeichert. Da \texttt{char} nur 1B groß ist, stehen einem bloß 255 verschiedene Zeichen zur Verfügung.}
+      \item{Strings werden in C \emph{null-terminiert}: Am Ende eines Strings steht ein spezielles Zeichen, welches man auch selbst mit '\textbackslash 0' einfügen kann.}
+      \item{Ein C String ist also ein \texttt{char}-Array der Länge $n$ für maximal $n-1$ Zeichen.}
+    \end{itemize}
+  \end{block}
+  \begin{lstlisting}
+    // dies ist ein string
+    char begruessung[20] = "Hallo, Welt!\n";
+    printf("%s", begruessung);
+  \end{lstlisting}
+  $\Rightarrow$ (\verb|test_strings.c|)
+\end{frame}
+
+\begin{frame}[fragile]{Zeichenketten bearbeiten: \texttt{snprintf}}{Vorlesung \arabic{lecturecounter}}
+  \begin{block}{}
+    \begin{itemize}
+      \item{C enthlält viele Funktionen zur Manipulation von Zeichenketten. Fast alle sind unsicher.}
+      \item{Es gibt eine Ausnahme: \texttt{snprintf}}
+    \end{itemize}
+  \end{block}
+  (\verb|unsichere_Zeichenketten.c|)  und (\verb|test_snprintf.c|)
+\end{frame}
+
+\begin{frame}[fragile]{\emph{Pass-by-reference}: Zeiger an Funktionen übergeben}{Vorlesung \arabic{lecturecounter}}
+  \begin{block}{}
+    Wie wir gesehen haben, existieren Variablen in C -- sofern es sich nicht um globale Variablen handelt -- nur innerhalb eines Blocks. Aus Effizienzgründen ist es oft aber unratsam, Kopien großer Datenstrukturen hin- und herzuschieben.
+  \end{block}
+  Wir können aus der Funktion \texttt{inkrement}, nicht einfach so auf \texttt{x} aus der Funktion \texttt{main} zugreifen.
+  \begin{lstlisting}
+int inkrement(int n){
+  x += n; // Fehler: 'inkrement' kennt 'x' nicht!
+}  
+int main(void){
+  int x = 22;
+  inkrement(4); // Fehler: 'inkrement' kennt 'x' nicht!
+  return 0;
+} 
+\end{lstlisting}
+\vspace{-0.4cm}
+  \begin{block}{}
+    Mithilfe von Zeigern, können wir Funktionen direkt auf Daten anwenden, welche in einem anderen Block deklariert wurden. (wie bei \texttt{scanf} gemacht)
+  \end{block}
+  $\Rightarrow$  nächste Folie
+\end{frame}
+
+\begin{frame}[fragile]{\emph{Pass-by-reference}: Zeiger an Funktionen übergeben}{Vorlesung \arabic{lecturecounter}}
+  \begin{block}{}
+    Übergeben wir die Adresse von \texttt{x} an die Funktion, hat diese direkten Zugriff auf die Variable \texttt{x} aus der \texttt{main}-Funktion.
+  \end{block}
+  \begin{lstlisting}
+int inkrement(int *z_x, int n){
+  *z_x += n;
+}  
+int main(void){
+  int x = 22;
+  inkrement(&x, 4); // x wird von 'inkrement' um 4 inkrementiert
+}
+\end{lstlisting}
+\vspace{-0.4cm}
+  \begin{block}{}
+    Das können wir auch anhand unserer Summenfunktion zeigen:
+  \end{block}
+  $\Rightarrow$ (\verb|sum_xn_by_reference.c|)
+\end{frame}
+
+\begin{frame}[fragile]{Kommandozeilenargumente}{Vorlesung \arabic{lecturecounter}}
+\begin{block}{}
+  In unseren Programmen haben wir bisher
+\end{block}
+\begin{lstlisting}
+  int main(void){ [...] } 
+\end{lstlisting}
+\begin{block}{}
+  geschrieben. \texttt{void} bedeutet leer oder auch ungültig. Wir haben damit darauf hingedeutet, dass unsere \texttt{main}-Funktion keine Argumente entgegennimmt.
+  \begin{itemize}
+    \item{Der \texttt{main}-Funktion werden aber vom Betriebssystem Argumente übergeben: die Kommandozeilenargumente}
+  \end{itemize}
+\begin{verbatim}
+$ ./programm arg0 arg1 arg2
+\end{verbatim}
+\begin{lstlisting}
+int main(int argc, char **argv){
+  [...]
+}
+\end{lstlisting}
+
+\end{block}
+$\Rightarrow$ (\texttt{test\_argc.c})
+\end{frame}
+
+\begin{frame}[fragile]{Kommandozeilenargumente auslesen}{Vorlesung \arabic{lecturecounter}}
+  \begin{block}{}
+    \begin{itemize}
+      \item{Bei \texttt{**argv} (oder auch \texttt{*argv[]}) handelt es sich um ein Array von Strings (ein Array von \texttt{char}-Arrays).}
+      \item{C bietet einige Funktionen, die es erlauben aus Strings andere Datentypen auszulesen.}
+      \item{\texttt{sscanf} ist eine mit \texttt{scanf} verwandte Funktion zum Auslesen einzelner Elementer aus formatierten Texten in Variablen}
+      \item{Für Kommandozeilenargumente ist es oft praktischer einfachere Funktionen zu nutzen.}
+      \begin{itemize}
+        \item{\verb|atoi, atof, strtod, strtol, strtoul, strtoull|}
+      \end{itemize}
+      \item{Aber Vorsicht: \verb|atoi| und \verb|atof| prüfen nicht auf Fehler!}
+    \end{itemize}
+  \end{block}
+  $\Rightarrow$ (\verb|test_read_argv.c|)
+\end{frame}
+
+\stepcounter{lecturecounter}
+
+\begin{frame}[fragile]{Fragen zu Vorlesung 3?}{Vorlesung \arabic{lecturecounter}}
+  \begin{itemize}
+    \item{Zeiger auf Variablen verschiedener Typen}
+    \item{Arrays und Zeiger}
+    \item{Zeichenketten}
+    \item{Zeichenketten bearbeiten}
+    \item{Kommandozeilenargumente}
+  \end{itemize}
+  \vspace{0.5cm}
+  Heute gibt es ein physikalisches Beispiel! (yaaay).
+\end{frame}
+
+\begin{frame}[fragile]{Rückblick: Zeiger}{Vorlesung \arabic{lecturecounter}}
+\begin{block}{}
+Die Notation für Zeiger in C ist auf den ersten Blick (meiner Meinung nach) etwas unklar $\rightarrow$ Rückblick
+\end{block}
+\begin{lstlisting}
+  double x; double y; // zwei double Variablen deklarieren
+  double arr_y[10]; // und ein double Array mit 10 Elementen
+  
+  double *z_x, *z_y, w; /* zwei Zeiger auf double ('z_x' und 'z_y')
+                         * und ein double ('w') */
+   
+  z_x = &x; // 'z_x' zeigt jetzt auf 'x'
+  z_y = &y; // 'z_y' zeigt jetzt auf 'y'
+  
+  *z_y = 4.2; // 'z_y' derefernzieren und 'y' auf 4.2 setzen
+  
+  z_y = arr_y; // Zeiger 'z_y' zeigt jetzt auf 'arr_y'
+  
+  z_y[0] = 6.2; // erstes Element von 'arr_y' auf 6.2 setzen
+  
+  z_x = &w; // 'z_x' zeigt jetzt auf 'w'
+  
+  *z_x = 5.4; // 'w' wird auf 5.4 gesetzt
+\end{lstlisting}
+  
+\end{frame}
+
+
+\begin{frame}[fragile]{Modulare Programmierung}{Vorlesung \arabic{lecturecounter}}
+\includegraphics[width=\textwidth,page=2,trim=0 10cm 0 2cm,clip=true]{graphics/c_kurs_tafel}
+\begin{block}{}
+  \begin{itemize}
+    \item{Themenspezifische Funktionssammlungen können in C in separaten Quelltextdateien stehen und unabhängig voneinander kompiliert werden.}
+  \end{itemize}
+\begin{enumerate}
+  \item{Funktionen in separate Dateien auslagern}
+  \item{Einzelne Module kompilieren \\ \texttt{\$ gcc \textcolor{red}{-c} modulX.c} $\rightarrow$ \texttt{modulX.o}}
+  \item{Module zu Programm verlinken \\ \texttt{\$ gcc -o programm modul1.o modul2.o}}
+\end{enumerate}
+\end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Modulare Programmierung: Quell- und \emph{Header}-dateien}{Vorlesung \arabic{lecturecounter}}
+\small $x$ sei ein Array, welches die $1D$ Position eines Teilchens zur Zeit $t$ enthält. Wir wollen die kinetische Energie berechnen. Die einzelnen \texttt{x[i]} liegen im Abstand von $dt=0.01$.
+\begin{columns}[T]
+  \column{0.49\textwidth}
+    \begin{lstlisting}
+#include "AblT.h"
+double 
+kinEnerg( double *x, 
+          double m, 
+          unsigned int t ) {
+  double v = AblT( x, t );
+  return 0.5*m*v*v;
+}
+    \end{lstlisting}
+    \texttt{kinEnerg.c}
+    \vspace{0.1cm}
+    \begin{lstlisting}
+double AblT( double *x, 
+             unsigned int t ){
+  double dt = 0.01;
+  return (x[t+1]-x[t])/dt;
+}
+    \end{lstlisting}
+    \texttt{AblT.c}
+  \column{0.49\textwidth}
+    \begin{lstlisting}
+double kinEnerg( double*, double,
+                 unsigned int );
+    \end{lstlisting}
+    \texttt{kinEnerg.h} \\
+    \textcolor{red}{Hier sind die Funktionsdeklarationen.}
+    \vspace{2.0cm}
+    \begin{lstlisting}
+double AblT( double*, 
+             unsigned int );
+    \end{lstlisting}
+    \texttt{AblT.h}  
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Compiler und Linker}{Vorlesung \arabic{lecturecounter}}
+  Die Kompilerung und das \emph{Linken} sind unabhängige Schritte bei der Erstellung eines ausführbaren Programms.
+\begin{block}{Kompilierung}
+  \begin{verbatim}
+    # erstellt kinErg.o Objketdatei
+$ gcc -c kinEnerg.c
+
+    # erstellt AblT.o   Objektdatei
+$ gcc -c AblT.c       
+
+    # erstellt teilchen.o   Objektdatei
+$ gcc -c teilchen.c       
+
+    # erstellt ausführbares Programm
+$ gcc -o teilchen teilchen.o AblT.o kinEnerg.o 
+  \end{verbatim}
+\end{block}
+$\Rightarrow$ ( \verb|teilchen/kinErg.c teilchen/AblT.c teilchen/teilchen.c|)
+\end{frame}
+
+\begin{frame}[fragile]{Modulare Programmierung: Interface und Implementierung}{Vorlesung \arabic{lecturecounter}}
+Trennung Interface/Implementierung $\rightarrow$ Implementierung austauschbar!
+\begin{columns}[T]
+  \column{0.49\textwidth}
+    \begin{lstlisting}
+#include "AblT.h"
+double 
+kinEnerg( double *x, 
+          double m, 
+          unsigned int t ) {
+  double v = AblT( x, t );
+  return 0.5*m*v*v;
+}
+    \end{lstlisting}
+    \texttt{kinEnerg.c}
+    \vspace{0.1cm}
+    \begin{lstlisting}
+double AblT( double *x, 
+             unsigned int t ){
+  double dt = 0.01;
+  return @(x[t+1]-x[t-1])/(2*dt)@;
+}
+    \end{lstlisting}
+    \texttt{AblT\_symmetrisch.c}
+  \column{0.49\textwidth}
+    \begin{lstlisting}
+double kinEnerg( double*, double,
+                 unsigned int );
+    \end{lstlisting}
+    \texttt{kinEnerg.h}
+    \vspace{2.4cm}
+    \begin{lstlisting}
+double AblT( double*, 
+             unsigned int );
+    \end{lstlisting}
+    \texttt{AblT.h}  
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Der C-Präprozessor}{Vorlesung \arabic{lecturecounter}}
+\begin{block}{}
+  \begin{itemize}
+    \item{Wir haben bisher einen Teil des Kompilierprozesses ausgelassen: den Präprozessor.}
+    \item{Bevor der Compiler seinen Dienst verrichtet, wird der Quelltext vom Präprozessor bearbeitet.}
+  \end{itemize}
+\end{block}
+\begin{block}{Präprozessorkonstanten und Makros}
+  Ein Makro ist ein Stück Code mit einem Namen, welches vom Präprozessor beim Durchlauf in den Quelltext eingefügt wird.
+\end{block}
+\begin{lstlisting}
+// MY_PI wird der Wert des Textes bis zum Ende der Zeile zugewiesen
+#define MY_PI 3.1415
+\end{lstlisting}
+\begin{itemize}
+  \item{Schreiben wir jetzt in unserem Programm \verb|MY_PI|, ersetzt der Präprozessor, bevor die Datei kompiliert wird, \verb|MY_PI| durch \texttt{3.1415}}
+  \item{Mit den Präprozessorkommandos \verb|#ifdef| und \verb|#ifndef| kann man im Präprozessor die Existenz eines Makros überpüfen}
+\end{itemize}
+$\Rightarrow$ (\verb|test_makros.c|)
+\end{frame}
+
+\begin{frame}[fragile]{Include Guards}{Vorlesung \arabic{lecturecounter}}
+\begin{lstlisting}
+#include "xyz.h" // "xyz.h" wird eingebunden
+\end{lstlisting}
+\begin{block}{}
+  Wenn eine Header-datei in einem Program mehrfalls eingebunden wird, muss sichergestellt sein, dass die darin enthaltenen Definitionen und Deklaration nur einmal durchgeführt werden! $\rightarrow$ \emph{include guards}
+\end{block}
+\begin{lstlisting}
+#ifndef ABLT_H
+#define ABLT_H
+double AblT( double*, 
+             unsigned int );
+#endif // um welches #if[n]def handelt es sich hier? ABLT_H!
+\end{lstlisting}
+\begin{block}{}
+  \begin{enumerate}
+    \item{\texttt{AblT.h} wird das erste Mal eingebunden: \verb|ABLT_H| ist nicht definiert.}
+    \begin{itemize}
+      \item{Definiere \verb|ABLT_H| und deklariere Funktion}
+    \end{itemize}
+    \item{\texttt{AblT.h} wird zum $(1+n)$-ten Mal eingebunden:}
+    \begin{itemize}
+      \item{\verb|ABLT_H| ist schon definiert $\rightarrow$ überspringe alles bis zu \texttt{\#endif}} 
+    \end{itemize}
+  \end{enumerate}
+\end{block}
+$\Rightarrow$ (\verb|test_include.c|)
+\end{frame}
+
+\begin{frame}[fragile]{Zusammengesetzte Datenstrukturen}{Vorlesung \arabic{lecturecounter}}
+\begin{block}{}
+Konzeptionell ist es oft ratsam, mehrere Variablen zu einem \emph{struct} zusammenzufassen.
+Die Position unseres Teilchens könnte in zwei Dimensionen z.B. mit folgender Datenstruktur dargestellt werden:
+\end{block}
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+struct Position_st {
+  double x;
+  double y;
+};  // Achtung: nach struct Deklaration -> Semikolon
+
+// Variable "teilchen1" vom Typ "struct Position_st"
+struct Position_st teilchen1;
+
+teilchen1.x = 1.2;  // Zugriff auf Elemente ueber '.' 
+teilchen1.y = 1.3;
+
+struct Position_st teilchen2[1000]; // Array von struct
+teilchen2[0].x = 8.3; // Zugriff auf struct-Elemente 
+teilchen2[0].y = 4.2; // im Array teilchen2
+
+struct Position_st *z_t; // Zeiger auf "struct Position_st"
+z_t = &teilchen1;
+z_t->x = 3.3; // Zugriff auf Elemente ueber Zeiger 'z_t' und '->'
+\end{lstlisting}
+\vspace{-0.1cm}
+$\Rightarrow$ (\verb|test_struct.c|)
+\end{frame}
+
+\begin{frame}[fragile]{Vorschau: Vorlesung 5}
+  \begin{itemize}
+    \item{Wünsche?}
+    \vspace{0.3cm}
+    \item{Mehrdimensionale Arrays}
+    \vspace{0.3cm}
+    \item{Dynamische Speicherverwaltung}
+    \begin{itemize}
+      \item{Sicherer Umgang mit Speicher!}
+    \end{itemize}
+    \vspace{0.3cm}
+    \item{Dynamische Arrays}
+  \end{itemize}
+\end{frame}
+
+\stepcounter{lecturecounter}
+
+\begin{frame}[fragile]{Fragen zu Vorlesung 4?}
+  \begin{itemize}
+    \item{Modulare Programmierung}
+    \item{Trennung: Interface / Implementation }
+    \begin{itemize}
+      \item[$\Rightarrow$]{\verb|04/test_include.c| enthält jetzt vollen Test für \emph{Include Guards}}
+      \item[$\Rightarrow$]{\verb|04/test_makros.c|: Eulersche Zahl in Header-datei mit Include Guards}
+    \end{itemize}
+    \vspace{0.3cm}
+    \item{Zusammengesetzte Datenstrukturen}
+    \begin{itemize}
+      \item{Addendum: ein \texttt{struct} darf natürlich Elemente verschiedener Datentypen enthalten!}
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Vervollständigung: Quell- und Headerdateien}{Vorlesung \arabic{lecturecounter}}
+  \begin{block}{}
+    \small
+    \begin{itemize}
+      \item{Header- und Quelldateien trennen Interface und Implementierung.}
+      \item{Erlaubt iterative Entwicklung: Aufgabe in Algorithmen aufteilen, Interfaces überlegen, Verbindungen aufstellen, Schritt für Schritt implementieren.}
+      \item{Benötigte Datenstrukturen können auch in den themengebundenen Headerdateien deklariert werden.}
+    \end{itemize}
+  \end{block}
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+#ifndef ZWEID_MECHANIK_H
+#define ZWEID_MECHANIK_H
+struct zweiD_vektor_st {
+  double x;
+  double y;
+};
+struct zweiD_vektor_st AblT_zweiD( double dt, struct zweiD_vektor_st *pos,
+                                   unsigned int t, unsigned int tmax );
+#endif // ifndef(ZWEID_MECHANIK_H)
+\end{lstlisting}
+\vspace{-0.2cm}
+\begin{block}{}
+  Alternativ könnte man die Deklaration des \verb|struct| auch in eine eigene Header-datei verschieben. (emfohlen)
+\end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Vervollständigung: Zeiger auf lokale Variablen}{Vorlesung \arabic{lecturecounter}}
+  \begin{block}{}
+    Die Rückgabe von Zeigern auf lokale Variablen ist nicht zulässig.
+  \end{block}
+  \begin{lstlisting}
+double* test_ptr(void){
+  double v = 4.2; // v existiert nur innerhalb des Funktionsblocks!
+  return &v; // Compiler warnt, aber kein Fehler!
+}
+int main(void){
+  double *z_v = test_ptr(); // legale Zuweisung, kein Fehler!
+  printf("%lf\n", *z_v ); // Segmentation Fault bei Dereferenzierung!
+  return 0;
+}
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Zeigerarithmetik 1}{Vorlesung \arabic{lecturecounter}}
+\begin{block}{}
+  Wir hatten die Analogie zwischen Zeigern und Arraynamen schon mehrfach angedeutet. Die folgende Zeigerzuweisungen sind identisch.
+\end{block}
+\begin{lstlisting}
+int k[40]; // int Array mit 40 Elementen
+int *z1_k = k;     // Der Arrayname 'k'
+int *z2_k = &k[0]; // Die Adresse des ersten Elements von 'k[]'
+int *z3_k = z2_k;  // Der Wert des int-Zeigers 'z2_k'
+\end{lstlisting}
+\begin{block}{}
+  Ein Zeiger kann inkrementiert werden. Addition/Subtraktion mit ganzzahligen Konstanten oder Variablen ist ebenso möglich. 
+\end{block}
+\begin{lstlisting}
+z1_k++; z1_k++; // 'z1_k' wird zwei Mal inkrementiert
+z2_k = &k[2];   // Adresse des dritten Elements von 'k[]'
+int delta_k = 2;
+z3_k = z3_k + delta_k; // z3_k um '2' erhoehen
+\end{lstlisting}
+\begin{block}{}
+  Alle drei Zeiger zeigen auf das dritte Element des Arrays \texttt{k}.
+\end{block}
+$\Rightarrow$ (\verb|test_zeigerarithmetik.c|)
+\end{frame}
+
+\begin{frame}[fragile]{Zeigerarithmetik 2}{Vorlesung \arabic{lecturecounter}}
+\begin{block}{}
+  \texttt{k} ist ein \texttt{int}-Array mit $10$ Elementen, initialisiert mit $\lbrace 42, 55, 17, 34, 421, 17, 11, 9, 117, 629 \rbrace$. Wenn Sie jede Gleichheit verstehen, haben Sie Zeigerarithmetik verstanden.
+\end{block}
+\centering
+\includegraphics[page=3,width=0.8\textwidth,clip=true,trim=0 3cm 0 2cm]{graphics/c_kurs_tafel}
+\begin{block}{}
+  $\Rightarrow$ \verb|k[n]| ist ein praktisches Kürzel für \verb|*(k+n)|.
+\end{block}
+
+\end{frame}
+
+\begin{frame}[fragile]{Dynamische Speicherverwaltung}{Vorlesung \arabic{lecturecounter}}
+  \begin{block}{\texttt{malloc} und \texttt{free}}
+    \begin{itemize}
+      \item{Speicher wird in C mit \texttt{malloc} allokiert und mit \texttt{free} wieder freigegeben.}
+      \item{Man sollte immer überprüfen, ob einer Allokation erfolgreich war.}
+      \item{Wenn man den Speicher nicht mehr braucht, muss er freigegeben werden, sonst entstehen \emph{memory leaks}.}
+    \end{itemize} 
+  \end{block}
+\begin{lstlisting}
+  int n = 300;
+  // Platz fuer 300 'double'-Variablen allokieren
+  double *x = malloc( sizeof(double) * n );
+  if( x == NULL ){
+    printf("Speicherallokation fuer 'x' fehlgeschlagen!\n"); 
+    exit(32); // Rueckgabewert > 0 bedeutet Fehler
+  }
+  x[23] = 4.2; x[3] = 2.4; [...] // 'x' verwenden
+  free(x); /* Speicher 'x' wird nicht mehr gebraucht
+            * -> freigeben */
+  /* Programm geht weiter */
+\end{lstlisting}
+$\Rightarrow$ (\verb|test_malloc.c|)
+\end{frame}
+
+\begin{frame}[fragile]{Memory Leaks}{Vorlesung \arabic{lecturecounter}}
+\begin{block}{}
+  \begin{itemize}
+    \item{Wird ein Speicherbereich $a$ einem Zeiger zugewiesen und dann ein weiterer Speicherbereich, $b$, dem gleichen Zeiger zugewiesen, geht die Adresse von $a$ verloren. $\rightarrow$ Speicherleck (memory leak)}
+    \item{Der Speicher ist belegt und kann, bis das Programm beendet wird, nicht freigegeben werden.}
+    \item{Memory leaks sind Bugs, welche oft erst in den unangenehmsten Situationen auftauchen. Man sollte seine Programme überprüfen wenn möglich.}
+  \end{itemize}
+\end{block}
+\begin{lstlisting}
+// Platz fuer 100 'double'-Variablen allokieren
+double *x = malloc( sizeof(double) * 100 );
+/* x wird einem anderen Speicherbereich zugewiesen
+ *   -> Speicherleck */
+x = malloc( sizeof(double) * 55 );
+free(x); /* free'd nur "malloc( sizeof(double) * 55 )"
+          * verloren: "malloc( sizeof(double) * 100 )" */
+\end{lstlisting}
+$\Rightarrow$ (\verb|memory_leak.c|)
+\end{frame}
+
+\begin{frame}[fragile]{Mehrdimensionale Arrays}{Vorlesung \arabic{lecturecounter}}
+\begin{block}{Statische Mehrdimensionale Arrays}
+  Ein statisches mehrdimensionales Array hat in C eine relativ einleuchtende Notation.
+\end{block}
+\begin{lstlisting}
+double A[3][3];    // 3x3 double Matrix
+double B[2][5][7]; // 2x5x7 Tensor mit 3 Indices
+\end{lstlisting}
+\begin{block}{}
+  Ein statisches mehrdimensionales Array ist ein spezielles Objekt in C. Es liegt als ein linearer Datenblock im Speicher.  
+\end{block}
+\centering
+\includegraphics[page=4,width=0.8\textwidth,clip=true,trim=0 12cm 0 2cm]{graphics/c_kurs_tafel}
+\begin{block}{}
+  Dynamische mehrdimensionale Arrays werden genauso angelegt, um den Zugriff effizient zu machen.
+\end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Linearisierung Mehrdimensionaler Arrays}{Vorlesung \arabic{lecturecounter}}
+\begin{block}{}
+  Wir wollen eine $N \times N$ Matrix linear im Speicher ablegen, wie verfahren wir?
+\end{block}
+\begin{lstlisting}
+int N = 42;
+double *A = malloc( N*N*sizeof(double) ); // 42^2 doubles
+\end{lstlisting}
+Der Index \texttt{i} für den Zugriff auf $A_{zs}$, ergibt sich aus der Formel:
+\begin{equation*}
+  i = s + N \cdot z
+\end{equation*}
+Für ein Objekt mit $3$ Indizes, $T_{i_0 i_1 i_2}$ der Größe $N_0 \times N_1 \times N_2$, ergibt sich:
+\begin{align*}
+  i = & i_2 + N_2 \cdot ( i_1 + ( N_1 \cdot i_0 ) ) \\
+    = & i_2 + N_2 \cdot i_1 + N_2 \cdot N_1 \cdot i_0 \, ,
+\end{align*}
+wobei $i_0 \in [ 0, N_0-1 ], i_1 \in [ 0, N_1-1 ], i_2 \in [ 0, N_2-1 ] \Rightarrow i \in [ 0, N_0 \cdot N_1 \cdot N_2 - 1 ]$
+\begin{block}{}
+  Für unsere Matrix $A$ haben wir also:
+\end{block}
+\begin{lstlisting}
+  A[ 1 + N*2 ] // A_{21}
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Dynamische Mehrdimensionale Arrays}{Vorlesung \arabic{lecturecounter}}
+\begin{block}{}
+  Wir wollen eine $N_0 \times N_1$ Matrix erstellen, aber nicht als statisches Array. Wir wollen es uns aber auch erlauben, darauf mit \texttt{[][]} zuzugreifen. Wie gehen wir vor?
+\end{block}
+\begin{lstlisting}
+unsigned int N_0 = 27;
+unsigned int N_1 = 13;
+// Speicher fuer N_0*N_1 double-Werte
+double *matrix_mem = malloc( N_0*N_1*sizeof(double) );
+// Speicher fuer N_0 double-Zeiger
+double **Matrix = malloc( N_0*sizeof(double*) );
+for( unsigned int z = 0; z < N_0; z++ ){
+  Matrix[z] = matrix_mem + N_1*z;
+  // oder auch
+  // Matrix[z] = &(matrix_mem[N_1*z]);
+}
+Matrix[2][1] = 2.2;
+\end{lstlisting}
+$\Rightarrow$ (\verb|lin_multidim_array.c|) und (\verb|dyn_multidim_array.c|)
+\end{frame}
 
 \end{document}

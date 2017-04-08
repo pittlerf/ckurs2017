@@ -4,6 +4,9 @@
 \usepackage[ngerman]{babel}
 \usepackage[dvipsnames]{xcolor}
 \usepackage{lipsum}
+\usepackage{algorithm}
+\usepackage{algorithmicx}
+\usepackage{algpseudocode}
 
 \usepackage{amsfonts}
 \usepackage[intlimits]{amsmath}
@@ -13,6 +16,7 @@
 \usepackage[usenames,dvipsnames]{pstricks}
 \usepackage{pstricks-add}
 \usepackage{epsfig}
+\usepackage{wasysym}
 \usepackage{pst-grad} % For gradients
 \usepackage{pst-plot} % For axes
 
@@ -92,80 +96,227 @@
     {\endtcolorbox}
 %--------
 %\usepackage[magyar]{babel}
-\title{Conway Spiel des Lebens}
+\title{Conway's Spiel des Lebens}
 \begin{document}
 \maketitle
-Wir haben ein Universum, dass durch eine zweidimensionale Gitter dargestellt ist. Jede Gitterzelle kann 
-zwei Zustand einnehmen:
-\begin{itemize}
-\item Lebendig
-\item Tot
-\end{itemize}
-In dem Spiel wir entwickeln dieses Universum und folgen die Zuständen der Gitterzellen.
-Wir haben die folgenden Prinipen für die Entwicklung:
-\begin{enumerate}
-\item Wenn eine lebendige Zelle zu viel lebendige Nachbarn hat, sie wird getötet. Überbevölkerung. Beispielweise, es gibt keine
-Platz mehr für Sie auf dem Markt.
-\item Wenn eine lebendige Zelle zu wenig lebendige Nachbarn hat, sie wird getötet. Unterbevölkerung. Beispielweise, es gibt keine Markten, 
-zu denen Sie ihre Produkten verkaufen kann.
-\item Wenn eine Tote Zelle genug lebendige Nachbarn hat, sie wird wiederbelebt. Beispielweise, es lohnt sich zu wieder öffnen ein Geschäft, wenn 
-es genug Käufer gibt. 
-\end{enumerate}
-In der Entwicklung wir gehen durch die ganze Gitter und ändern die Zuständen der Zellen nach den folgenden Regeln;
-\begin{enumerate}
-\item Eine lebendige Zelle stirbt, wenn sie weniger als zwei lebendige Nachbarzellen hat.
-\item Eine lebendige Zelle mit zwei oder drei lebendigen Nachbarn lebt weiter.
-\item Eine lebendige Zelle mit mehr als drei lebenden Nachbarzellen stirbt im nächsten Zeitschritt.
-\item Eine tote Zelle wird wiederbelebt, wenn sie genau drei lebende Nachbarzellen hat.
-\end{enumerate}
-In dieser Aufgabe wir werden die obenen Regeln implementieren. In dem Spiel am Anfang haben wir ein zweidimensionale Gitter. In jedem Knoten wir haben
-ein system der zwei verschiedene Zustände haben kann:
-\begin{equation}
-Zelle(x,y) = \left\{\begin{array}{rc} 1 & \mathrm{Zelle~ist~Lebende} \\0  & \mathrm{Zelle~ist~Tot} \\
-\end{array}\right. (x\in[0\cdots L-1], y\in[0,\cdots L-1])
-\end{equation}
-Im Computer die zweidimensionale Universe ist als ein zweidimensionale Array
-dargestellt. In diesem Array werden wir die zustände der Zellen speichern. Die Größe dieses Arrays ist von der Anzahl der Zellen bestimmt. 
-Wir haben schon nicht über zweidimensionale Arrays gesprochen, trotzdem können wir diese Aufgabe erledigen. Jede zweidimensionale Array
-kann durch die Folgenden zu einem eindimensional Array transformiert werden:
-\begin{equation}
-array2d(x,y)= array1d(x+L*y)
-\end{equation}
-Hier L ist die Größe des Gitters. In der Entwicklung die Regeln müssen auf jede Gitterzelle im Simulationsbereich angewendet werden.
-Wir haben in sowohl in $x$ als auxh in $y$ Richtungen periodische Randbedingungen:
-\begin{equation}
-Zelle(x,y)= Zelle(x+L,y) (x\in[0\cdots L-1], y\in[0,\cdots L-1])
-\end{equation}
-\begin{equation}
-Zelle(x,y)= Zelle(x, y+L) (x\in[0\cdots L-1], y\in[0,\cdots L-1])
-\end{equation}
-Eine Zelle ($(x,y)$) hat acht Nachbarn:
-\begin{itemize}
-\item  $Zelle(x-1,y)$
-\item  $Zelle(x-1,y-1)$
-\item  $Zelle(x-1,y+1)$
-\item  $Zelle(x,y-1)$
-\item  $Zelle(x,y+1)$
-\item  $Zelle(x+1,y)$
-\item  $Zelle(x+1,y-1)$
-\item  $Zelle(x+1,y+1)$
-\end{itemize}
-Wir müssen drei verschieden Funktionen implementieren:
-\begin{itemize}
-\item Entwicklung: Gibt ein neues Gitter zurück
-\item Ausdrücken: Drückt das Gitter auf Monitor
-\item Spiel: Initializiert und mach eine undendliche Schleife
-\end{itemize}
-Beim Entwicklung wir müssen achten, dass wir die Origninale Gitter nicht im Prozess von der Entwicklung ändern darf. Ansonst unser Ergebnis wird falsch sein.
 
-Beim Ausdrücken wir können die Folgenden Steuerzeichen als Argument vom \texttt{printf()} verwenden:
+
+\noindent Betrachten wir ein \glqq Universum\grqq, dass aus einem zweidimensionalen Gitter besteht.
+Jede Gitterzelle kann zwei Zustände einnehmen:
+\begin{itemize}
+\item lebendig,
+\item tot.
+\end{itemize}
+Im Spiel entwickelt sich das Universum nach bestimmten Regeln in diskreten Zeitschritten.
+Der Satz von Regeln $R$ sieht wie folgt aus:
 \begin{enumerate}
-\item \textbackslash$e[1;1H$\textbackslash$e[2J$: Löschen den Bildschirm
-\item \textbackslash$033[H$: Positionierung des Kurzors auf die links obene Ecke
-\item \textbackslash$033[E$; Beginn ein neue Zeile
-\item \textbackslash$033[107m$\textbackslash$033[34m$: Hintergrund im Weiß, zeichen im Blau
-\item \textbackslash$033[m$: Zurück zum Standard
+\item Eine lebendige Zelle stirbt, wenn sie weniger als zwei lebendige
+  Nachbarzellen hat. (Einsamkeit)
+  \begin{center}
+\Huge
+\begin{tabular} { l c r }
+  \begin{tabular}{| l | c | r | }
+    \hline
+    {\color{blue}\frownie}   & {\color{blue}\frownie} & {\color{blue}\frownie} \\ \hline
+    {\color{blue}\frownie}   & {\color{red}\smiley}   & {\color{blue}\frownie} \\ \hline
+    {\color{black}\smiley}   & {\color{blue}\frownie} & {\color{blue}\frownie} \\ \hline
+  \end{tabular}
+
+& $\Longrightarrow$ &
+  \begin{tabular}{| l | c | r | }
+    \hline
+    {\color{blue}\frownie} & {\color{blue}\frownie} & {\color{blue}\frownie} \\ \hline
+    {\color{blue}\frownie} & {\color{red}\frownie}  & {\color{blue}\frownie} \\ \hline
+    {\color{black}\smiley} & {\color{blue}\frownie} & {\color{blue}\frownie} \\ \hline
+  \end{tabular}
+\\
+\end{tabular}
+\end{center}
+\item Eine lebendige Zelle mit zwei oder drei lebendigen Nachbarn lebt
+  weiter. 
+  \begin{center}
+\Huge
+\begin{tabular} { l c r }
+  \begin{tabular}{| l | c | r | }
+    \hline
+    {\color{black}\smiley}   & {\color{blue}\frownie} & {\color{blue}\frownie} \\ \hline
+    {\color{blue}\frownie}   & {\color{red}\smiley}   & {\color{blue}\frownie} \\ \hline
+    {\color{black}\smiley}   & {\color{blue}\frownie} & {\color{blue}\frownie} \\ \hline
+  \end{tabular}
+
+& $\Longrightarrow$ &
+  \begin{tabular}{| l | c | r | }
+    \hline
+    {\color{black}\smiley} & {\color{blue}\frownie} & {\color{blue}\frownie} \\ \hline
+    {\color{blue}\frownie} & {\color{red}\smiley}   & {\color{blue}\frownie} \\ \hline
+    {\color{black}\smiley} & {\color{blue}\frownie} & {\color{blue}\frownie} \\ \hline
+  \end{tabular}
+\\
+\end{tabular}
+\end{center}
+\begin{center}
+\Huge
+\begin{tabular} { l c r }
+  \begin{tabular}{| l | c | r | }
+    \hline
+    {\color{black}\smiley}   & {\color{blue}\frownie} & {\color{black}\smiley} \\ \hline
+    {\color{blue}\frownie}   & {\color{red}\smiley}   & {\color{blue}\frownie} \\ \hline
+    {\color{black}\smiley}   & {\color{blue}\frownie} & {\color{blue}\frownie} \\ \hline
+  \end{tabular}
+
+& $\Longrightarrow$ &
+  \begin{tabular}{| l | c | r | }
+    \hline
+    {\color{black}\smiley} & {\color{blue}\frownie} & {\color{black}\smiley} \\ \hline
+    {\color{blue}\frownie} & {\color{red}\smiley}   & {\color{blue}\frownie} \\ \hline
+    {\color{black}\smiley} & {\color{blue}\frownie} & {\color{blue}\frownie} \\ \hline
+  \end{tabular}
+\\
+\end{tabular}
+\end{center}
+\item Eine lebendige Zelle mit mehr als drei lebenden Nachbarzellen
+  stirbt. (Überbevölkerung)
+  \begin{center}
+\Huge
+\begin{tabular} { l c r }
+  \begin{tabular}{| l | c | r | }
+    \hline
+    {\color{black}\smiley}   & {\color{blue}\frownie} & {\color{black}\smiley} \\ \hline
+    {\color{black}\smiley}   & {\color{red}\smiley}   & {\color{blue}\frownie} \\ \hline
+    {\color{black}\smiley}   & {\color{blue}\frownie} & {\color{blue}\frownie} \\ \hline
+  \end{tabular}
+
+& $\Longrightarrow$ &
+  \begin{tabular}{| l | c | r | }
+    \hline
+    {\color{black}\smiley} & {\color{blue}\frownie} & {\color{black}\smiley} \\ \hline
+    {\color{black}\smiley} & {\color{red}\frownie}   & {\color{blue}\frownie} \\ \hline
+    {\color{black}\smiley} & {\color{blue}\frownie} & {\color{blue}\frownie} \\ \hline
+  \end{tabular}
+\\
+\end{tabular}
+\end{center}
+\item Eine tote Zelle wird wiederbelebt, wenn sie genau drei lebende Nachbarzellen hat.
+\begin{center}
+\Huge
+\begin{tabular} { l c r }
+  \begin{tabular}{| l | c | r | }
+    \hline
+    {\color{blue}\frownie}   & {\color{black}\smiley} & {\color{blue}\frownie} \\ \hline
+    {\color{black}\smiley}   & {\color{red}\frownie}   & {\color{black}\smiley} \\ \hline
+    {\color{blue}\frownie}   & {\color{blue}\frownie} & {\color{blue}\frownie} \\ \hline
+  \end{tabular}
+
+& $\Longrightarrow$ &
+  \begin{tabular}{| l | c | r | }
+    \hline
+    {\color{blue}\frownie} & {\color{black}\smiley} & {\color{blue}\frownie} \\ \hline
+    {\color{black}\smiley} & {\color{red}\smiley}   & {\color{black}\smiley} \\ \hline
+    {\color{blue}\frownie} & {\color{blue}\frownie} & {\color{blue}\frownie} \\ \hline
+  \end{tabular}
+\\
+\end{tabular}
+\end{center}
 \end{enumerate}
-Zur Initializierung wir können unsere Zufallszahlgenerator verwenden. Beispielweise wenn den
-Zufallszahl kleiner als 0.5 ist, die Zelle wird Tot sein, anderfalls es wird Lebendig sein.
+Dabei wird davon ausgegangen, dass diese Regeln auf alle Zellen gleichzeitig angewendet werden.
+Es gibt also einen Zustand des Universums $Z(\tau)$ zum Zeitpunkt $\tau$.
+Dann wird jede Zelle nach obigen Regeln weiterentwickelt basierend auf dem Zustand $Z(\tau)$.
+Wir können also auch schreiben, dass die Entwicklung nach den Regeln $R(Z(\tau))$ stattfindet. 
+Der neue Zustand ist dann $Z(\tau+1)$. 
+Der entsprechende Pseudocode könnte wie folgt aussehen
+\begin{algorithmic}[1]
+  \Procedure{Entwicklung}{$Z(\tau)$}
+  \State \textbf{input}: $Z(\tau)$
+  \State \textbf{output}: $Z(\tau+1)$
+  \For{$z_i\in Z(\tau)$}
+  \State $z_i(\tau+1)\ \stackrel{R(Z(\tau))}{\longleftarrow}\ z_i(\tau)$
+  \EndFor
+  \State \textbf{return} $Z(\tau+1)$
+  \EndProcedure
+\end{algorithmic}
+Aufgabe ist ein Programm zu schreiben, das dieses Spiel implementiert.
+Jede Zelle kann zwei Zustände haben, die wir auf $0$ (tot) und $1$ lebendig abbilden wollen.
+Es gilt also $z \in \{0,1\}\ \forall z\in Z$.
+Das zweidimensionale Gitter soll quadratisch sein und $L\times L$ Zellen $z$ haben.
+D.h., insgesamt gibt es Zellen
+\begin{equation}
+  z(x,y; \tau) = \begin{cases}
+    1 & \mathrm{Zelle~ist~lebendig} \\0  & \mathrm{Zelle~ist~tot} \\
+  \end{cases}
+  \,,\quad (x\in[0,1,\ldots L-1], y\in[0,1,\ldots L-1])\,.
+\end{equation}
+Obiger Pseudocode sieht damit wie folgt aus
+\begin{algorithmic}[1]
+  \Procedure{Entwicklung}{$Z(\tau)$}
+  \State \textbf{input}: $Z(\tau)$
+  \State \textbf{output}: $Z(\tau+1)$
+  \For{$x\in 0,1,\ldots L-1$}
+  \For{$y\in 0,1,\ldots L-1$}
+  \State $z(x,y; \tau+1)\ \stackrel{R(Z(\tau))}{\longleftarrow}\ z(x,y; \tau)$
+  \EndFor
+  \EndFor
+  \State \textbf{return} $Z(\tau+1)$
+  \EndProcedure
+\end{algorithmic}
+Es bietet sich an, das Gitter im Programm als ein zweidimensionales Array darzustellen.
+Der Datentyp des Arrays sollte es erlauben, die zwei Zustände darzustellen.
+Die Größe des Arrays ist durch $L$ bestimmt.
+Wir haben zwar noch nicht über zweidimensionale Arrays gesprochen, trotzdem können wir diese Aufgabe erledigen. 
+Wir beschränken uns auch zunächst auf \emph{statische} arrays.
+Ein zweidimensionale $L\times L$ Array kann durch folgende Abbildung $g$ auf ein eindimensionales Array der Größe $L^2$ abgebildet werden:
+\begin{equation}
+  g(x,y)\ =\ xL + y\,,\qquad (x\in[0,1,\ldots L-1], y\in[0,1,\ldots L-1])\,.
+\end{equation}
+Wir müssen noch sagen, wie wir am Rand des Gitters verfahren wollen.
+Hier werden wir periodische Randbedingungen annehmen, also
+\begin{equation}
+  z(x+L,y)= z(x,y)\,,\quad (x\in[0,1,\ldots L-1], y\in[0,1,\ldots L-1])
+\end{equation}
+und
+\begin{equation}
+  z(x,y+L)= z(x, y)\,,\quad (x\in[0,1,\ldots L-1], y\in[0,1,\ldots L-1])\,.
+\end{equation}
+Im Quelltext benötigt man entsprechend zwei Arrays gleicher Größe für Zeitschritte $\tau$ und $\tau+1$.
+Zum Beispiel
+\begin{lstlisting}
+  const unsigned int L = 12;     // feste Groesse des Gitters
+  unsigned int Z1[L*L], Z2[L*L]; // statische Speicheranforderung
+  unsigned int *Ztau = Z1;                // Zeiger fuer den Zugriff
+  unsigned int *Ztaup1 = Z2;
+\end{lstlisting}
+Der Zugriff kann dann über die Zeiger \texttt{Z1} und \texttt{Z2} erfolgen.
+So kann man $Z(\tau)$ und $Z(\tau+1)$ vertauschen, ohne die gesamten Inhalte kopieren zu müssen.
+
+In zwei Dimensionen hat eine Zelle $z(x,y)$ acht Nachbarn:
+\begin{itemize}
+\item  $z(x-1,y)$
+\item  $z(x-1,y-1)$
+\item  $z(x-1,y+1)$
+\item  $z(x,y-1)$
+\item  $z(x,y+1)$
+\item  $z(x+1,y)$
+\item  $z(x+1,y-1)$
+\item  $z(x+1,y+1)$
+\end{itemize}
+Für die Implementation müssen wir (mindestens) drei verschiedenen Funktionen schreiben:
+\begin{enumerate}
+\item Entwicklung: Gibt ein neues Gitter zurück, nachdem es nach den obigen Regeln entwickelt wurde
+\item Ausgabe: Gibt das Gitter auf Monitor aus
+\item Spiel: Initialisiert die Zellen zufällig und \glqq spielt\grqq, bis alle Zellen den Zustand tot angenommen haben oder bis eine obere Schranke für die Zeit erreicht ist.
+\end{enumerate}
+Für die zufällige Initialisierung der Zellen könne wir den Zufallszahlengenerator aus der vorigen Aufgabe verwenden.
+Für jede Zelle erzeugt man einen Zufallszahl $u$.
+Falls $u<\gamma$, wird die Zelle als tot initialisiert, sonst als lebendig.
+Wählen Sie zu Beginn $\gamma=0,5$. 
+Später können Sie untersuchen, wie die Überlebensrate der Population vom Wert von $\gamma$ abhängt.
+
+%Beim Ausdrücken wir können die Folgenden Steuerzeichen als Argument vom \texttt{printf()} verwenden:
+%\begin{enumerate}
+%\item \textbackslash$e[1;1H$\textbackslash$e[2J$: Löschen den Bildschirm
+%\item \textbackslash$033[H$: Positionierung des Cursers auf die links obene Ecke
+%\item \textbackslash$033[E$; Beginn ein neue Zeile
+%\item \textbackslash$033[107m$\textbackslash$033[34m$: Hintergrund Weiß, Zeichen in Blau
+%\item \textbackslash$033[m$: Zurück zum Standard
+%\end{enumerate}
+
 \end{document}

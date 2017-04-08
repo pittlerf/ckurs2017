@@ -13,5 +13,5 @@ $(basename $(SOURCES)): % : %.c Makefile
 
 .PHONY: clean
 clean:
-	rm $(basename $(SOURCES))
+	rm -f $(basename $(SOURCES))
 	rm verrueckter_funktionsbaum*

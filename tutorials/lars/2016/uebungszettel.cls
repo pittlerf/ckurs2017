@@ -44,7 +44,7 @@
 %\rohead{\includegraphics[height=25px]{aware_sw}}
 %\lofoot{http://www.ah-effect.net/ \quad C-Kurs von Lars}
 %\cofoot{}
-\cofoot{ Übungszettel von Lars Wallenborn: \url{http://www.ah-effekt.net} \\ \url{https://github.com/ThorProgKurs/uebungen} }
+\cofoot{ Übungszettel von Lars Wallenborn }
 \setheadsepline{.5pt} % Linie unter dem Head
 %\setfootsepline{3pt} % Ganzunten
 %---------------------------------------------

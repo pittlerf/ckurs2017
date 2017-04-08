@@ -92,49 +92,69 @@
     {\endtcolorbox}
 %--------
 %\usepackage[magyar]{babel}
-\title{Zufallszahlgenerator}
+\title{Zufallszahlengenerator}
 \begin{document}
 \maketitle
-Zufällige nummer sind sehr wichtig für uns. In numerischen Physik wir verwenden Zufallszahlen ganz often. Zum Beispiel 
-in die einfachsten method für Integration von mehreren variablen Funkctions müssen wir Monte Carlo algorithm verwenden. Die
-enthalten Statements, die vom Werte der zufälligen Variablen abhängt. In dieser Aufgabe wir müssen eine Zufallszahlgenerator
-schreiben. Es gibt mehrere methode dazu, aber alle stammt aus linear Kongruenzen:
+\noindent Zufällig generierte Zahlen sind ein wichtiges und mächtiges Werkzeug in der numerischen Physik. 
+Sie finden beispielsweise zum Integrieren von Funktionen mit mehreren Variablen mit sogenannten Monte Carlo Verfahren Anwendung.
+
+Allerdings sind die am Computer genutzten Zufallszahlen nicht tatsächlich zufällig, sondern sie werden durch einen deterministischen Algorithmus erzeugt. 
+Deshalb spricht man von Pseudozufallszahlen.
+In dieser Aufgabe werden wir einen Pseudozufallszahlengenerator schreiben. 
+Dabei wird eine Reihe von Pseudozufallszahlen $I_0, I_1, I_2, \ldots$ erzeugt, die dann möglichst ähnlich zu einer Reihe echter Zufallszahlen ist.
+Die Reihe wird beispielsweise mit folgender Iteration erzeugt:
 \begin{equation}
-I_{j+1}=a I_{j} \left( \mathrm{mod} m\right).
-\label{basics}
+  I_{j+1}=a I_{j} \left( \mathrm{mod}\ m\right)\,,\quad j=0,1,2,\ldots\,.
+  \label{basics}
 \end{equation}
-Diesen Instruktion macht eine neue Zufallszahl ($I_{j+1}$)  aus einem original ($I_j$). Der qualität der Zufallszahl generator
-hängt von dem Eingangsparameters $(a,m)$ ab. Eine gute Zufallszahlgenerator hat große Period, die Zeit zwischen den beiden gleichen
-Zufallszahlen muss sehr groß sein. Park und Miller hat die folgenden parameter für a und m gewählt:
+Diesen Instruktion erstellt eine neue Zufallszahl ($I_{j+1}$) aus der vorangegangenen Zahl ($I_j$). Die Qualität der Zufallszahlen 
+hängt von den Eingangsparametern $(a,m)$ ab. 
+Ein guter Zufallszahlengenerator hat große Perioden, dass hei\ss{}t, es braucht sehr viele Iterationen in $j$ bis eine Zufallszahl $I_k$ erneut auftritt.
+Die Periode ist deswegen so wichtig, weil sich die Reihe von da an exakt wiederholt.
+Park und Miller haben die folgenden Parameter für $a$ und $m$ gewählt:
 \begin{equation}
-a=16807, m=2^{31}-1=2147483647. 
+  a=16807\,,\quad m=2^{31}-1=2147483647\,. 
 \end{equation}
-Leider direkte implementation der Zufallszahlgenerator mit deisen parameters ist nicht möglich in \texttt{C}. Der Grund ist
-dass wir nicht Zahlen größer als $m$ speichern können. Glücklicherweise gibt es eine Möglichkeit das Problem umzugehen. 
-Wir faktorizieren $m$:
+Leider ist die direkte Implementation dieses Zufallszahlengenerators mit diesen Parametern in \texttt{C} mit dem Typ \texttt{int} nicht möglich. 
+Der Grund ist, dass wir keine Zahlen größer als $m$ in einem \texttt{int} speichern können. 
+(Mit Hilfe von \texttt{unsigned long int} kann man auf modernen Rechnern natürlich schon größere Zahlen darstellen, als $m$)
+Glücklicherweise gibt es eine Möglichkeit das Problem algorithmisch umzugehen. 
+Wir faktorisieren $m$ wie folgt:
 \begin{equation}
-m= aq + r; r= m \left(\mathrm{mod}a\right); q= \left[m/a\right]
+  m = aq + r\,;\quad r= m \left(\mathrm{mod}\ a\right)\,;\quad q= \left[m/a\right]\,.
 \end{equation}
-Damit können wir die Gleichung (\ref{basics}) auch bewerten mit ($q,r$):
+Damit können wir die Gleichung (\ref{basics}) auch mit ($q,r$) darstellen:
 \begin{equation}
-a I_j \left( \mathrm{mod} m\right)=  
-\left\{ \begin{array}{rc}
-a\left(I_j \mathrm{mod} q\right) -r \left[I_j/q\right] & \mathrm{wenn~es~}>0~\mathrm{ist} \\ 
-a\left(I_j \mathrm{mod} q\right) -r \left[I_j/q\right] + m & \mathrm{andernfalls} \\ 
-\end{array}\right.
-\label{algo}
+  \begin{split}
+    a I_j \left( \mathrm{mod}\ m\right)&=  
+    (a\left(I_j \mathrm{mod}\ q\right) -r \left[I_j/q\right] + m)\ (\mathrm{mod}\ m)\\
+    &=  \begin{cases}
+      a\left(I_j \mathrm{mod}\ q\right) -r \left[I_j/q\right] & \mathrm{falls~}>0\,, \\ 
+      a\left(I_j \mathrm{mod}\ q\right) -r \left[I_j/q\right] + m & \mathrm{sonst}\,. \\ 
+    \end{cases}
+  \end{split}
+  \label{algo}
 \end{equation}
-wo $r=2836,q=127773$ ist. Implementieren Sie das Zufallszahlgenerator nach eq.\ref{algo}. Ändern Sie die Algorithm
-um die Zahlen zwischen 0 und 1 zu sein werden.
-Es ist wichtig zu test unser Ergebnis. Wir müssen kontrollieren die Verteilung (Distribution) der Zufallszahlgenerator.
-Wir möchten gleichmäßige Vertailung erreichen. Wir werden eine Histogramms machen aus dem Zufallszahlen. Wir teilen 
-das Interval in $n$ Teilen und zahlen wie oft die Zufallszahl in jedem Interval sinkt. Machen Sie ein Histogramm aus 
-den Verfügbaren daten und prüfen wie gleichmäßig der Verteilung ist!
-\\
-Beispiel für das Eingabe:
-\begin{lstlisting}
-10000
-\end{lstlisting}
-Bespiel für das Ausgabe:\\
-\includegraphics[width=.8\linewidth]{dist1.pdf}
+Hierbei ist $r=2836$ und $q=127773$. 
+
+Implementieren Sie den Zufallszahlengenerator nach Gleichung~\ref{algo}. 
+Ändern Sie den Algorithmus so ab, dass er gleichverteilte Fließkommazahlen $u_j$ zwischen 0 und 1 erzeugt.
+Um das Programm auf Korrektheit zu überprüfen, können wir beispielsweise die Verteilung der Zufallszahlen testen.
+Da der Algorithmus gleichverteilte Zufallszahlen erzeugen soll, muss im Mittel jede reelle Zahl zwischen 0 und 1 gleichoft vorkommen.
+Um das zu überprüfen, kann man ein Histogramm der erzeugten Zufallszahlen erzeugen.
+Dafür unterteilt man das Interval $[0,1]$ in $n$ Abschnitte der Länge $\Delta=1/n$. 
+Dann zählt man, wir viele Zufallszahlen $C_i$ im Interval $[x_i,x_i+\Delta]$ liegen, mit $x_i=i\Delta$ und $i=0,\ldots,n-1$.
+Schließlich trägt man die Dichte $\rho(x_i)=C_i/N$ gegen $x_i$ auf, wobei $N$ die Gesamtzahl der gezogenen Zufallszahlen ist. 
+
+Bespielsweise könnte man das Ergebnis graphisch wie folgt darstellen:
+\begin{center}
+  \includegraphics[width=.8\linewidth]{dist1.pdf}
+\end{center}
+Welchen Wert erwarten Sie für den Mittelwert 
+\[
+\bar x = \frac{1}{N}\sum_j u_j
+\]
+Ihrer Zufallszahlen?
+Passt Ihre Erwartung zu Ihrer Implementation?
+
 \end{document}

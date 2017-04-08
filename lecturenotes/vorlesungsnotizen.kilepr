@@ -112,10 +112,10 @@ order=5
 
 [item:Vorlesungsnotizen.tex]
 archive=true
-column=18
+column=0
 encoding=UTF-8
 highlight=LaTeX
-line=32
+line=33
 mode=LaTeX
 open=true
 order=0
@@ -152,20 +152,20 @@ order=5
 
 [item:slides.tex]
 archive=true
-column=192
+column=51
 encoding=UTF-8
 highlight=LaTeX
-line=567
+line=942
 mode=LaTeX
 open=true
 order=1
 
 [item:slidespreamble.tex]
 archive=true
-column=18
+column=38
 encoding=UTF-8
 highlight=LaTeX
-line=8
+line=65
 mode=LaTeX
 open=true
 order=2
@@ -247,8 +247,8 @@ JumpList=
 ViMarks=.,0,0,[,0,0,],-1,-1
 
 [view-settings,view=0,item:Vorlesungsnotizen.tex]
-CursorColumn=18
-CursorLine=32
+CursorColumn=0
+CursorLine=33
 JumpList=
 ViMarks=.,32,17,[,32,17,],32,17
 
@@ -265,16 +265,16 @@ JumpList=
 ViMarks=.,43,2,[,43,2,],43,2
 
 [view-settings,view=0,item:slides.tex]
-CursorColumn=192
-CursorLine=567
+CursorColumn=51
+CursorLine=942
 JumpList=
-ViMarks=.,567,191,[,567,191,],567,191
+ViMarks=.,930,93,[,930,93,],930,93
 
 [view-settings,view=0,item:slidespreamble.tex]
-CursorColumn=18
-CursorLine=8
+CursorColumn=38
+CursorLine=65
 JumpList=
-ViMarks=.,8,17,[,8,17,],8,17
+ViMarks=.,65,2,[,65,0,],65,37
 
 [view-settings,view=0,item:vorlesung1.tex]
 CursorColumn=3
