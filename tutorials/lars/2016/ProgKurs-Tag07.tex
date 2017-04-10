@@ -1,7 +1,7 @@
 \documentclass{uebungszettel}
 \begin{document}
 \begin{aufg} 
-Lese noch einmal im Skript die Sektion 7.5 und implementiere doppelt verkettete Listen, die \verb|double|-Variablen speichern.
+Schau dir die Folien zu Vorlesung 7 nochmal an und implementiere doppelt verkettete Listen, die \verb|double|-Variablen speichern.
 
 \medskip\begin{codelisting}
 \begin{lstlisting}[numbers=left,numberstyle=\tiny,frame=tlrb]
@@ -37,30 +37,22 @@ void list_free(LIST *L);
 \end{aufg}
 
 \newpage
+\begin{aufg} Implementiere eine Funktion die zu einem gegebenen Funktionenpointer $f:\R \rightarrow \R$, einen Dateinamen, einer Schrittweite $s \in \R$, einer Startstelle $x_1$ und einer Endstelle $x_2$ die Wertetabelle der Funktion zwischen $x_1$ und $x_2$ zur Schrittweite $s$ speichert. Dabei sollen $x$ und $f(x)$ durch einen Tabulator getrennt werden und jedes Paar $(x, f(x))$ in einer eigenen Zeile stehen.
+\end{aufg}
+
 \begin{aufg}
-~\begin{enumerate}
-\item
-Implementiere die Addition, Multiplikation, Potenzen und Division komplexer Zahlen. Verwende dazu folgende Header-Datei:
+In dieser Aufgabe geht es um numerische Integration.
+\begin{enumerate}
+\item Implementiere eine Integrationsfunktion, die das Intervall $[a, b]$ in $n$ gleich große Teile aufteilt, für diese jeweils die Trapezsumme (aus der Vorlesung) berechnet und diese aufsummiert:
+
 \begin{codelisting}
 \begin{lstlisting}[numbers=left,numberstyle=\tiny,frame=tlrb]
-#ifndef _COMPLEX__H
-#define _COMPLEX__H
-
-typedef struct _COMPLEX {
-	double real;
-	double imag;
-} COMPLEX;
-
-COMPLEX cplx_add(COMPLEX a, COMPLEX b);
-COMPLEX cplx_mul(COMPLEX a, COMPLEX b);
-COMPLEX cplx_pow(COMPLEX a, unsigned long n);
-COMPLEX cplx_div(COMPLEX a, COMPLEX b);
-
-#endif
+double integrate(double a, double b, 
+  double (*f)(double), unsigned int n); 
 \end{lstlisting}
 \end{codelisting}
-\item Implementiere die Addition, Multiplikation und Division sowie das Kürzen rationaler Zahlen. Schreibe dazu erst 
-die Header-Datei. Überlege dir dazu zuerst, wie du die Funktionen aufrufen möchtest.
+
+\item Schreibe nun eine Funktion, die nicht die Anzahl der Teilintervalle erhält, sondern eine ``Fehlertoleranz'' $e$. Die Funktion die Aufteilung solange verfeinern, bis sich der approximierte Wert für das Integral durch eine Verfeinerung nur noch um weniger als $e$ ändern würde. 
 \end{enumerate}
 \end{aufg}
 
