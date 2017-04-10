@@ -1200,6 +1200,17 @@ $\Rightarrow$ (\verb|lin_multidim_array.c|) und (\verb|dyn_multidim_array.c|)
   \end{itemize}
 \end{frame}
 
+\begin{frame}{Visualisierung: Dynamischer Matrixspeicher}{Vorlesung \arabic{lecturecounter}}
+\begin{block}{}
+  Freitag: Vorschlag für alternative Visualisierung der Matrixdatenstruktur aus Vorlesung 5.
+\end{block}
+\includegraphics[width=0.9\textwidth,page=6,trim=0 4cm 0 2cm,clip=true]{graphics/c_kurs_tafel}
+\begin{block}{}
+  Vorsicht: Spaltendimension nicht automatisch beschränkt! \\
+  $\Rightarrow$ \texttt{M[0][3] == M[1][0]}
+\end{block}
+\end{frame}
+
 \begin{frame}[fragile]{Vervollständigung: Speichermanagement}{Vorlesung \arabic{lecturecounter}}
 \begin{lstlisting}
 void* memmove(void *dest, void *src, unsigned int n);
@@ -1265,7 +1276,7 @@ Modus ist ein \texttt{string}, anhand dessen entschieden wird, welche Dateiopera
     \hline
   \end{tabular}
 \begin{block}{}
-  Der Rückgabewert von \texttt{fopen} ist ein \emph{Dateizeiger} auf einen \emph{Stream} bei Erfolg, ansonsten ein Nullpointer. $\rightarrow$ auf \texttt{NULL} prüfen!
+  Der Rückgabewert von \texttt{fopen} ist bei Erfolg ein \emph{Dateizeiger} auf einen \emph{Stream}, ansonsten ein Nullpointer. $\rightarrow$ auf \texttt{NULL} prüfen!
 \end{block}
 
 \end{frame}
