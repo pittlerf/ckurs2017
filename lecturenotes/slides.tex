@@ -1186,4 +1186,202 @@ Matrix[2][1] = 2.2;
 $\Rightarrow$ (\verb|lin_multidim_array.c|) und (\verb|dyn_multidim_array.c|)
 \end{frame}
 
+\stepcounter{lecturecounter}
+
+\begin{frame}[fragile]{Fragen zu Vorlesung 5?}
+  \begin{itemize}
+    \item{Zeigerarithmetik}
+    \vspace{0.2cm}
+    \item{Dynamische Speicherverwaltung}
+    \vspace{0.2cm}
+    \item{Mehrdimensionale Arrays}
+    \vspace{0.2cm}
+    \item{Dynamische mehrdimensionale Arrays}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Vervollständigung: Speichermanagement}{Vorlesung \arabic{lecturecounter}}
+\begin{lstlisting}
+void* memmove(void *dest, void *src, unsigned int n);
+\end{lstlisting}
+  \begin{block}{}
+    Mit \texttt{memmove} werden \texttt{n} Bytes von \texttt{src} nach \texttt{dest} kopiert.
+  \end{block}
+
+\begin{lstlisting}
+void*  memset(void *dest, int b, unsigned int n);
+\end{lstlisting}
+  \begin{block}{}
+    Mit \texttt{memset} werden \texttt{n} Bytes ab Speicherstelle \verb|dest| auf den Bytewert \verb|b| gesetzt. Oft hat man \verb|b=0|.
+  \end{block}
+  $\Rightarrow$ (\verb|test_memmove_memset.c|)
+\end{frame}
+
+\begin{frame}[fragile]{Vervollständigung: Speichermanagement}{Vorlesung \arabic{lecturecounter}}
+\begin{block}{}
+  Einen allokierten Speicherbereich der Größe \verb|n_old|, kann man nachträglich mit \verb|realloc| vergrößern oder verkleinern.
+\end{block}
+\begin{lstlisting}
+void* realloc(void *ptr, unsigned int n_new);
+\end{lstlisting}
+\begin{itemize}
+  \item{Der Rückgabewert und \verb|ptr| müssen nicht übereinstimmen!}
+  \begin{itemize}
+    \item{Schlägt \verb|realloc| fehl, ist der Rückgabewert \verb|NULL|, \verb|ptr| bleibt aber weiterhin allokiert.}
+    \item{Wenn nach \verb|ptr+n_old| kein zusammenhängender Speicherberich der Größe \verb|n_new-n_old| verfügbar ist, wird ein neuer Speicherbereich der Größe \verb|n_old| allokiert, die Daten aus \verb|ptr| werden dorthin kopiert, \verb|ptr| freigegeben und ein Zeiger auf den neuen Speicherbereich zurückgegeben.}
+  \end{itemize}
+  \item{Ist \verb|n_new < n_old|, bleibt der Anfang von \verb|ptr| bis \verb|n_new| unverändert.}
+\end{itemize}
+\begin{lstlisting}
+dt* temp = realloc( ptr, n_new );
+if( temp != NULL ){ ptr = temp; }
+// ptr verwenden
+\end{lstlisting}
+  
+  $\Rightarrow$ (\verb|test_realloc.c|)
+\end{frame}
+
+\begin{frame}[fragile]{Eingabe und Ausgabe: \texttt{fopen}}{Vorlesung \arabic{lecturecounter}}
+  \begin{block}{}
+    C bietet eine Zahl von Funktionen zur Eingabe und Ausgabe, zunächst muss eine Datei jedoch immer geöffnet werden.
+  \end{block}
+\begin{lstlisting}
+FILE* fopen(char *pfad, char *modus);   
+\end{lstlisting}
+\begin{block}{}
+Modus ist ein \texttt{string}, anhand dessen entschieden wird, welche Dateioperationen durchgeführt werden.
+\end{block}
+\centering
+\small
+  \begin{tabular}{lr}
+    \hline
+    \texttt{modus}  & Bedeutung                           \\\hline
+    \verb|"w"|      & (erstellen) (über-)schreiben        \\
+    \verb|"r"|      & lesen                               \\
+    \verb|"a"|      & erstellen oder hinzufügen           \\
+    \verb|"w+"|     & erstellen oder hinzufügen + lesen   \\
+    \verb|"r+"|     & lesen + schreiben (nicht erstellen) \\
+    \verb|"a+"|     & wie \verb|"a"| + lesen              \\
+    \hline
+  \end{tabular}
+\begin{block}{}
+  Der Rückgabewert von \texttt{fopen} ist ein \emph{Dateizeiger} auf einen \emph{Stream} bei Erfolg, ansonsten ein Nullpointer. $\rightarrow$ auf \texttt{NULL} prüfen!
+\end{block}
+
+\end{frame}
+
+\begin{frame}[fragile]{Eingabe und Ausgabe: \texttt{fopen}}{Vorlesung \arabic{lecturecounter}}
+\begin{lstlisting}
+FILE* ausgabedatei = fopen("/pfad/zu/den/daten/daten.txt", "r");
+if( ausgabedetail != NULL ){
+  // Datei bereit, ausgelesen zu werden
+} else {
+  // Datei existiert nicht oder sonstiger Fehler!
+}
+\end{lstlisting}
+\vspace{-0.2cm}
+\begin{block}{}
+  \footnotesize
+  \verb|pfad| kann hierbei absolut sein:
+  \begin{itemize}
+    \item{UNIX:    \verb|/home/user/pfad/zu/den/daten/daten.txt|}
+    \item{Windows: \verb|C:\Eigene Dateien\Dokumente\daten.txt|}
+  \end{itemize}
+  oder relativ zum Verzeichnis, in dem das Programm ausgeführt wurde:
+  \begin{itemize}
+    \item{UNIX:    \verb|pfad/zu/den/daten/daten.txt|}
+    \item{Window:  \verb|pfad\zu\den\daten\daten.txt|}
+  \end{itemize}
+  Im zweiten Fall wird der Pfad des momentanen Verzeichnisses vorgestellt.
+\end{block}
+\begin{block}{}
+  \footnotesize
+  Erst, nachdem die Datei geschlossen wurde, kann sichergestelllt sein, dass auch alles geschrieben wurde. $\rightarrow$ \texttt{fclose}
+\end{block}
+$\Rightarrow$ (\verb|test_fopen_fclose.c|)
+\end{frame}
+
+\begin{frame}[fragile]{Mit \texttt{fprintf} Textdateien schreiben}{Vorlesung \arabic{lecturecounter}}
+\begin{lstlisting}
+int fprintf(FILE *fp, char *format, ...);
+\end{lstlisting}
+\begin{block}{}
+  \texttt{fprintf} funktioniert wie \texttt{printf}, mit dem Unterschied, dass ein Dateizeiger übergeben werden muss. Um genau zu steuern, wie die Ausgabe auszusehen hat können die Platzhalter durch Parameter gesteuert werden.
+\end{block}
+\begin{lstlisting}
+  % + - 0 @BREITE@ . @PRAEZISION@ ll/l/h [d,u,s,c,p,g,e,f]  
+\end{lstlisting}
+\begin{columns}
+\column{0.3\textwidth}
+\texttt{format}, \texttt{argument} 
+\begin{lstlisting}
+%.2f, 2.3453
+%5d, 32
+%05d, 32
+%05d, 999932
+%+05d, 32
+%-5d, 32, 1
+%8.3f, 42.3453
+\end{lstlisting}
+\column{0.69\textwidth}
+Ausgabe
+\begin{lstlisting}
+2.35
+   32
+00032
+999932
++0032
+32   1
+  42.345
+\end{lstlisting}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Formatierte Textdateien lesen mit \texttt{fscanf}}
+\begin{block}{}
+  \texttt{(s)scanf} hatten wir kurz erwähnt, als es um Kommandozeilenargumente und das Einlesen von Daten aus der Konsole ging. \verb|fscanf| ist eine ähnliche Funktion für Dateistreams.
+\end{block}
+\begin{lstlisting}
+int fscanf(FILE *stream, const char *format, ...);
+\end{lstlisting}
+$\Rightarrow$ (\verb|test_fscanf.c|)
+\end{frame}
+
+\begin{frame}[fragile]{Mit \texttt{fwrite / fread} Binärdateien schreiben und lesen}{Vorlesung \arabic{lecturecounter}}
+\begin{block}{}
+  Datenstrukturen in C können direkt blockweise ausgeschrieben und eingelesen werden, solange man einen enstprechenden Speicherbereich allokiert hat.
+\end{block}
+\begin{lstlisting}
+unsigned int fwrite(void* data, unsigned int blockgroesse, unsigned int anzahl, FILE* fp);
+unsigned int fread(void* data, unsigned int blockgroesse, unsigned int anzahl, FILE* fp);
+\end{lstlisting}
+\begin{block}{}
+  Um zu prüfen, ob das Ende der Datei erreicht wurde oder ein Fehler aufgetreten ist, werden \texttt{feof} und \texttt{ferror} genutzt.
+\end{block}
+\begin{lstlisting}
+int feof(FILE* fp);
+int ferror(FILE* fp);
+\end{lstlisting}
+$\Rightarrow$ (\verb|test_fwrite_fread.c|) 
+\end{frame}
+
+\begin{frame}[fragile]{Den Dateicursor bewegen mit \texttt{fseek}}
+\begin{block}{}
+  Jede Lese- und Schreiboperation bewegt den Dateicursor des Streams. Um diesen Dateicursor selbst zu bewegen, wird \verb|fseek| genutzt.
+\end{block}
+\begin{lstlisting}
+int fseek(FILE *stream, long offset, int origin);
+\end{lstlisting}
+\includegraphics[width=\textwidth,page=5,trim=0 13cm 0 2cm,clip=true]{graphics/c_kurs_tafel}
+\begin{block}{}
+  Um herauszufinden, wo der Dateicursor sich gerade befindent, kann man \verb|ftell| benutzen.
+\end{block}
+\begin{lstlisting}
+long ftell(FILE *stream);
+\end{lstlisting}
+$\Rightarrow$ (\verb|test_fseek.c|)
+\end{frame}
+
+
+
 \end{document}

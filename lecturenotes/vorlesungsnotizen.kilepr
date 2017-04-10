@@ -117,7 +117,7 @@ encoding=UTF-8
 highlight=LaTeX
 line=33
 mode=LaTeX
-open=true
+open=false
 order=0
 
 [item:algos/einfuegensortieren.tex]
@@ -128,7 +128,7 @@ highlight=LaTeX
 line=3
 mode=LaTeX
 open=true
-order=6
+order=5
 
 [item:bibliography.bib]
 archive=true
@@ -148,17 +148,17 @@ highlight=LaTeX
 line=43
 mode=LaTeX
 open=true
-order=5
+order=4
 
 [item:slides.tex]
 archive=true
-column=51
+column=22
 encoding=UTF-8
 highlight=LaTeX
-line=942
+line=1282
 mode=LaTeX
 open=true
-order=1
+order=0
 
 [item:slidespreamble.tex]
 archive=true
@@ -168,7 +168,7 @@ highlight=LaTeX
 line=65
 mode=LaTeX
 open=true
-order=2
+order=1
 
 [item:vorlesung1.tex]
 archive=true
@@ -178,7 +178,7 @@ highlight=LaTeX
 line=503
 mode=LaTeX
 open=true
-order=3
+order=2
 
 [item:vorlesung2.tex]
 archive=true
@@ -188,7 +188,7 @@ highlight=LaTeX
 line=59
 mode=LaTeX
 open=true
-order=4
+order=3
 
 [item:vorlesung3.tex]
 archive=true
@@ -198,7 +198,7 @@ highlight=LaTeX
 line=58
 mode=LaTeX
 open=true
-order=7
+order=6
 
 [item:vorlesung4.tex]
 archive=true
@@ -208,7 +208,7 @@ highlight=LaTeX
 line=4
 mode=LaTeX
 open=true
-order=8
+order=7
 
 [item:vorlesung5.tex]
 archive=true
@@ -218,7 +218,7 @@ highlight=LaTeX
 line=15
 mode=LaTeX
 open=true
-order=9
+order=8
 
 [item:vorlesung8.tex]
 archive=true
@@ -228,7 +228,7 @@ highlight=LaTeX
 line=0
 mode=LaTeX
 open=true
-order=10
+order=9
 
 [item:vorlesungsnotizen.kilepr]
 archive=true
@@ -265,10 +265,10 @@ JumpList=
 ViMarks=.,43,2,[,43,2,],43,2
 
 [view-settings,view=0,item:slides.tex]
-CursorColumn=51
-CursorLine=942
+CursorColumn=22
+CursorLine=1282
 JumpList=
-ViMarks=.,930,93,[,930,93,],930,93
+ViMarks=.,1282,31,[,1282,31,],1282,31
 
 [view-settings,view=0,item:slidespreamble.tex]
 CursorColumn=38
