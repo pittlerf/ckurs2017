@@ -1206,8 +1206,7 @@ $\Rightarrow$ (\verb|lin_multidim_array.c|) und (\verb|dyn_multidim_array.c|)
 \end{block}
 \includegraphics[width=0.9\textwidth,page=6,trim=0 4cm 0 2cm,clip=true]{graphics/c_kurs_tafel}
 \begin{block}{}
-  Vorsicht: Spaltendimension nicht automatisch beschränkt! \\
-  $\Rightarrow$ \texttt{M[0][3] == M[1][0]}
+  Vorsicht: Spaltendimension nicht automatisch beschränkt, da es sich bei \texttt{M[z][s]} um ein Alias für \texttt{m + 3*z + s} handelt $\Rightarrow$ \texttt{M[0][3] == M[1][0]}
 \end{block}
 \end{frame}
 
@@ -1270,7 +1269,7 @@ Modus ist ein \texttt{string}, anhand dessen entschieden wird, welche Dateiopera
     \verb|"w"|      & (erstellen) (über-)schreiben        \\
     \verb|"r"|      & lesen                               \\
     \verb|"a"|      & erstellen oder hinzufügen           \\
-    \verb|"w+"|     & erstellen oder hinzufügen + lesen   \\
+    \verb|"w+"|     & erstellen oder überschreiben + lesen\\
     \verb|"r+"|     & lesen + schreiben (nicht erstellen) \\
     \verb|"a+"|     & wie \verb|"a"| + lesen              \\
     \hline
@@ -1378,7 +1377,9 @@ $\Rightarrow$ (\verb|test_fwrite_fread.c|)
 
 \begin{frame}[fragile]{Den Dateicursor bewegen mit \texttt{fseek}}
 \begin{block}{}
-  Jede Lese- und Schreiboperation bewegt den Dateicursor des Streams. Um diesen Dateicursor selbst zu bewegen, wird \verb|fseek| genutzt.
+  Jede Lese- und Schreiboperation bewegt den Dateicursor des Streams. Um diesen Dateicursor selbst zu bewegen, wird \verb|fseek| genutzt. 
+  
+  Der Cursor bewegt sich \texttt{offset} Bytes ab Position: \texttt{origin} $\in \lbrace$ \verb|SEEK_SET, SEEK_CUR, SEEK_END| $\rbrace$.
 \end{block}
 \begin{lstlisting}
 int fseek(FILE *stream, long offset, int origin);
@@ -1393,6 +1394,185 @@ long ftell(FILE *stream);
 $\Rightarrow$ (\verb|test_fseek.c|)
 \end{frame}
 
+\stepcounter{lecturecounter}
+
+\begin{frame}[fragile]{Eigene Typen anlegen: \texttt{typedef}}{Vorlesung \arabic{lecturecounter}}
+\begin{block}{}
+  Hatten in Vorlesung 4 Datenstrukturen kennengelernt. Mit \texttt{typedef} können wir ein Kürzel für einen komplexen Datentyp erstellen.
+\end{block}
+\begin{lstlisting}
+typedef double gleitzahl;
+gleitzahl x = 4.2;
+
+typedef struct teilchen_2d_t {
+  double x;
+  double y;
+  double v_x;
+  double v_y;
+  double m;
+  int ladung;
+} teilchen_2d_t;
+
+teilchen_2d_t *gasarray = malloc( 10000*sizeof(teilchen_2d_t) );
+void zeitschritt_gas( teilchen_2d_t* gas ){ ... }
+\end{lstlisting}
+\begin{block}{}
+  Oft hebt man selbst definierte Datentypen durch ein \texttt{\_t} im Quelltext hervor.
+\end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Anwendung: Doppelt verkettete Liste}{Vorlesung \arabic{lecturecounter}}
+\begin{block}{}
+  \textbf{Daten in ein Array einzufügen oder daraus zu entfernen ist teuer.}
+  \begin{itemize}
+    \item{\textcolor{red}{(einfügen)} Array um $n$ Elemente wachsen lassen (\verb|realloc| ohne Datenverlust aber eventuell mit Kopie)}
+    \item{\hspace{1.5cm} Index finden, wo die neuen Element eingefügt, bzw. entfernt werden müssen.}
+    \item{\hspace{1.5cm} Existierende Daten ab diesem Index nach vorne \textcolor{red}{(einfügen)} bzw. nach hinten \textcolor{red}{(entfernen)} kopieren.}
+    \item{\textcolor{red}{(einfügen)} Daten einfügen.}
+    \item{\textcolor{red}{(entfernen)} Array verkleinern.}
+  \end{itemize}
+\end{block}
+\centering
+\includegraphics[width=0.9\textwidth,page=7,trim=0 8.2cm 0 7cm,clip=true]{graphics/c_kurs_tafel}
+\begin{block}{}
+  Mit einer doppelt verketteten Liste, müssen nur jeweils zwei Zeiger gesetzt werden.
+\end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Doppelt verkettete Liste: Listenelemente}{Vorlesung \arabic{lecturecounter}}
+\begin{block}{}
+  Als Listenelement dient eine Datenstruktur mit zwei Zeigern und Speicherplatz für die eigentlichen Daten.
+\end{block}
+\includegraphics[width=0.9\textwidth,page=7,trim=0cm 16cm 0cm 2cm,clip=true]{graphics/c_kurs_tafel}
+\begin{columns}
+\column{0.5\textwidth}
+\texttt{dll.h}
+\begin{lstlisting}
+#ifndef DLL_H
+#define DLL_H
+typedef struct dll_node_t {
+  struct dll_node_t *next;
+  struct dll_node_t *prev;
+  double            data;
+} dll_node_t;
+
+typedef struct dll_t {
+  dll_node_t *first;
+  dll_node_t *last;
+} dll_t;
+\end{lstlisting}
+\column{0.5\textwidth}
+\begin{lstlisting}
+dll_t *dll_create();
+
+void  dll_free(dll_t *list);
+
+dll_node_t* 
+dll_insert( dll_t *list, 
+            dll_node_t *cursor, 
+            double data );
+
+void 
+dll_delete( dll_t *list, 
+            dll_node_t *delnode);
+
+#endif // ifdef(DLL_H)
+\end{lstlisting}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Doppelt verkettete Liste durchlaufen}{Vorlesung \arabic{lecturecounter}}
+\begin{block}{}
+  In Übung 7 werden Sie eine doppelt verkettete Liste implementieren. Um eine solche Liste zu durchlaufen, kann man folgendes Konstrukt nutzen.
+\end{block}
+\begin{lstlisting}
+dll_t* list = dll_create(); /* erstellen und dann fuellen ... */
+/* vorwaerts oder rueckwaerts durchlaufen */
+for( dll_node_t *ptr = list->first; ptr != NULL; ptr = ptr->next ){}
+for( dll_node_t *ptr = list->last; ptr != NULL; ptr = ptr->prev ){}
+\end{lstlisting}
+\begin{block}{}
+  Es gibt viele weitere Datenstrukturen die vom Prinzip her der ähnlich sind.
+  \begin{itemize}
+    \item{Einfach verkettete Listen/Ringe: kann nur in eine Richtung durchlaufen werden.}
+    \item{Drei- und $n$-fach verkettete Listen: für Baumstrukturen und Graphen}
+  \end{itemize}
+\end{block}
+\end{frame}
+
+
+\begin{frame}[fragile]{Funktionenpointer}{Vorlesung \arabic{lecturecounter}}
+  Ein Ziel ist es, möglichst generisch zu programmieren: eine Funktion soll viele Zwecke erfüllen können.
+\begin{block}{Beispiel}
+  Wir haben eine Funktion \verb|ableitung_cos|, welche eine Annäherung an die Ableitung des Cosinus berechnet.
+\end{block}
+\begin{lstlisting}
+double ableitung_cos(const double x, const double delta){
+  return (cos(x+delta)-cos(x))/delta;
+}
+\end{lstlisting}
+Müssen wir hunderte praktisch identischer Funktionen für alle möglichen Ableitungen implementieren? 
+\begin{block}{}
+  Ein Funktionenpointer ist ein Zeiger auf eine Funktion, ein Datentyp also, der für die komplette Signatur der Funktion einstehen kann.
+\end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Funktionenpointer}{Vorlesung \arabic{lecturecounter}}
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+unser_struct_t erste_funktion(double, int, int, char, double);
+unser_struct_t zweite_funktion(double, int, int, char, double);
+unser_struct_t @(*@fp@)@(double, int, int, char, double);
+
+double void_funktion(void);
+double (*void_fp)(void);
+
+unser_struct_t ergebnis, ergebnis2;
+
+fp = erste_funktion;
+ergebnis = (*fp)( arg0, arg1, arg2, arg3, arg4 ); // ruft erste_funktion auf
+
+fp = zweite_funktion;
+ergebnis2 = (*fp)( arg0, arg1, arg2, arg3, arg4 ); // ruft zweite_funktion auf
+
+fp = void_funktion; // Warnung, aber kein Fehler...
+
+void_fp = void_funktion;
+double x = (*void_fp)();
+\end{lstlisting}
+\begin{block}{}
+  Der Funktionenpointer erlaubt es, den Aufruf einer Funktion situationsabhängig zu machen. Achtung: Funktionenpointer sind tükisch und fehleranfällig...
+\end{block}
+$\Rightarrow$ (\verb|23_void_fpointer.c|)
+\end{frame}
+
+\begin{frame}[fragile]{Funktionenpointer: Anwendung}{Vorlesung \arabic{lecturecounter}}
+\begin{block}{}
+  Wir können jetzt die Ableitungsfunktion verallgemeinern.
+\end{block}
+\begin{lstlisting}
+double ableitung(const double x, const double delta, double (*fp)(double) ){
+  return ((*fp)(x+delta)-(*fp)(x))/delta;
+}
+
+double abl_wert = ableitung( 1.2, 0.0001, cos );
+\end{lstlisting}
+\begin{block}{}
+  Funktionenpointer können auch auf Gleichheit geprüft werden, insbesondere könnte man überprüfen, ob ein Funktionspointer auf eine bestimmte Funktion zeigt.
+\end{block}
+\begin{lstlisting}
+double ableitung(const double x, const double delta, double (*fp)(double) ){
+  if( fp == tan ){
+    /* ohje, das wird schwierig... */
+  }
+  return ((*fp)(x+delta)-(*fp)(x))/delta;
+}
+\end{lstlisting}
+
+\end{frame}
+
+% \begin{frame}[fragile]{Komplexe Zahlen}{Vorlesung \arabic{lecturecounter}}
+% ff
+% \end{frame}
 
 
 \end{document}
