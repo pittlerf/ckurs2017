@@ -311,6 +311,7 @@ Für ganze Zahlen könnte man das Versickern mit Hilfe eines Arrays wie folgt re
 %      }
 %      else i = m;
 %    } // Heapbedingung wieder erfuellt
+%    return;
 %  }
 %\end{lstlisting}
 Sobald wir also eine Folge mit Heapbedingung haben, können wir durch wiederholtes Anwenden dieses Verfahrens die Folge sortieren.
@@ -323,7 +324,7 @@ Eine mögliche Implementierung könnte wie folgt aussehen:
   \State \textbf{Input} $a,N$
   \State \textbf{Output} $a$
   \For{$i = N/2-1, N/2-2, \ldots, 0$}
-  \State \textsc{versickere}$(a, i, N-2)$
+  \State \textsc{versickere}$(a, i, N-1)$
   \EndFor
   \For{$i=N-1, N-2, \ldots, 1$}
   \State $a[i]\leftrightarrow a[0]$
@@ -332,10 +333,10 @@ Eine mögliche Implementierung könnte wie folgt aussehen:
   \EndProcedure
 \end{algorithmic}
 %\begin{lstlisting}
-%  void HeapSort(int a[]) {
+%  void HeapSort(int a[], const int N) {
 %    // erzeuge Heap
 %    for(int i = (N/2) - 1; i >= 0; i--) {
-%      versickere(a, i, N-2);
+%      versickere(a, i, N-1);
 %    }
 %    // Sortiere durch versickern
 %    for(int i = N-1; i > 0; i--) {
