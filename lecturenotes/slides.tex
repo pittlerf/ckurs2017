@@ -1557,22 +1557,64 @@ double ableitung(const double x, const double delta, double (*fp)(double) ){
 double abl_wert = ableitung( 1.2, 0.0001, cos );
 \end{lstlisting}
 \begin{block}{}
-  Funktionenpointer können auch auf Gleichheit geprüft werden, insbesondere könnte man überprüfen, ob ein Funktionspointer auf eine bestimmte Funktion zeigt.
+  Funktionenpointer können auch auf Gleichheit geprüft werden. Insbesondere könnte man überprüfen, ob ein Funktionspointer auf eine bestimmte Funktion zeigt.
 \end{block}
 \begin{lstlisting}
-double ableitung(const double x, const double delta, double (*fp)(double) ){
+double ableitung(const double x, const double epsilon, 
+                 double (*fp)(double) ){
   if( fp == tan ){
     /* ohje, das wird schwierig... */
   }
-  return ((*fp)(x+delta)-(*fp)(x))/delta;
+  return ((*fp)(x+epsilon)-(*fp)(x))/epsilon;
 }
 \end{lstlisting}
-
 \end{frame}
 
-% \begin{frame}[fragile]{Komplexe Zahlen}{Vorlesung \arabic{lecturecounter}}
-% ff
-% \end{frame}
+\begin{frame}[fragile]{Komplexe Zahlen}{Vorlesung \arabic{lecturecounter}}
+\begin{block}{}
+  Seit C99 gibt es in C einen Datentypen für komplexe Zahlen. Es gibt davon mehrere Ausführungen mit unterschiedlicher Fließkommagenauigkeit.
+\end{block}
+\begin{lstlisting}
+#include <complex.h>
+double _Complex z = 3.0 + 2.1*I;
+float  _Complex w = 4.2 + 4.5*I;
+\end{lstlisting}
+\begin{block}{}
+Das Symbol \texttt{I} entspricht hier $\sqrt{-1}$.  
+\end{block}
+\begin{lstlisting}
+double _Complex x = z * w;  
+\end{lstlisting}
+\begin{block}{}
+  Arithmetische Operationen sind auf dem \texttt{\_Complex} Datentyp wie gewohnt definiert.
+\end{block}
+\end{frame}
 
+\begin{frame}[fragile]{Komplexe Zahlen}{Vorlesung \arabic{lecturecounter}}
+\begin{block}{}
+  Zugriff auf Real- und Imaginärteil sowie Betrag und Argument erfolgen über die Funktionen:
+\end{block}
+\begin{lstlisting}
+double creal(const _Complex double); // Realteil
+double cimag(const _Complex double); // Imaginaerteil
+double cabs(const _Complex double); // Betrag
+double carg(const _Complex double); // Argument (Bogenmass)
+_Complex double conj(const _Complex double); // Konjugierte
+\end{lstlisting}
+\begin{block}{}
+Ausgabe mit \texttt{[s,f]printf} erfolgt also in zwei Teilen:
+\end{block}
+\begin{lstlisting}
+printf("z = %lf + i %lf\n", creal(z), cimag(z));
+\end{lstlisting}
+\begin{block}{}
+  Weitere Funktionen: 
+  \begin{itemize}
+    \item{\verb|cexp, clog, csqrt, cpow|}
+    \item{\verb|csin, ccos, ctan, casin, cacos, catan|}
+    \item{\verb|csinh, ccosh, ctanh, casinh, cacosh, catanh|}
+  \end{itemize}
+\end{block}
+\end{frame}
 
 \end{document}
