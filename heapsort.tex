@@ -280,17 +280,22 @@ Für ganze Zahlen könnte man das Versickern mit Hilfe eines Arrays wie folgt re
   \State \textbf{input} array $a$, integer $i,m$
   \State \textbf{output} heap $a$
   \While{$2i+1 \leq m$}
+  \Comment $a[i]$ hat linken Nachfolger
   \State $j=2i+1$
+  \Comment $a[j]$ ist linker Nachfolger
   \If{$j < m$}
   \If{$a[j] < a[j+1]$}
   \State $j\leftarrow j+1$
+  \Comment $a[j]$ ist jetzt groesster Nachfolger
   \EndIf
   \EndIf
   \If{$a[i] < a[j]$}
+  \Comment Vertausche mit groesserem Nachfolger
   \State $a[j]\leftrightarrow\ a[i]$
   \State $i = j$
   \Else
   \State $i = m$
+  \Comment Heapbedingung wieder erfuellt
   \EndIf
   \EndWhile
   \EndProcedure
