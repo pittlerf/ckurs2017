@@ -1,0 +1,494 @@
+\documentclass[tikz,12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[ngerman]{babel}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{lipsum}
+\usepackage{algorithm}
+\usepackage{algorithmicx}
+\usepackage{algpseudocode}
+\usepackage{tikz}
+\usepackage{pgfplots}
+
+\usepackage{amsfonts}
+\usepackage[intlimits]{amsmath}
+\usepackage{cite}
+\usepackage{epsfig}
+
+\usepackage[usenames,dvipsnames]{pstricks}
+\usepackage{pstricks-add}
+\usepackage{epsfig}
+\usepackage{wasysym}
+\usepackage{pst-grad} % For gradients
+\usepackage{pst-plot} % For axes
+
+\addtolength{\hoffset}{-1.5cm}
+\addtolength{\textwidth}{3cm}
+\usepackage{listings}
+\usepackage{color}
+\definecolor{mygreen}{rgb}{0,0.6,0}
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\definecolor{mymauve}{rgb}{0.58,0,0.82}
+\PassOptionsToPackage{svgnames}{xcolor}
+\usepackage{tcolorbox}
+\usepackage{lipsum}
+\tcbuselibrary{skins,breakable}
+\usetikzlibrary{shadings,shadows,graphs,shapes.geometric,arrows,fit,matrix,positioning}
+
+\tikzset
+{
+    treenode/.style = {circle, draw=black, align=center, minimum
+      size=1cm},
+%    subtree/.style  = {isosceles triangle, draw=black, align=center,
+%      minimum height=0.5cm, minimum width=1cm, shape border rotate=90,
+%      anchor=north}
+}
+
+\usepackage{siunitx}
+\lstset{ %
+  backgroundcolor=\color{white},   % choose the background color; you must add \usepackage{color} or \usepackage{xcolor}; should come as last argument
+  basicstyle=\footnotesize,        % the size of the fonts that are used for the code
+  breakatwhitespace=false,         % sets if automatic breaks should only happen at whitespace
+  breaklines=true,                 % sets automatic line breaking
+  captionpos=b,                    % sets the caption-position to bottom
+  commentstyle=\color{mygreen},    % comment style
+  deletekeywords={...},            % if you want to delete keywords from the given language
+  escapeinside={\%*}{*)},          % if you want to add LaTeX within your code
+  extendedchars=true,              % lets you use non-ASCII characters; for 8-bits encodings only, does not work with UTF-8
+  frame=single,                    % adds a frame around the code
+  keepspaces=true,                 % keeps spaces in text, useful for keeping indentation of code (possibly needs columns=flexible)
+  keywordstyle=\color{blue},       % keyword style
+  language=C,                      % the language of the code
+  morekeywords={*,...},            % if you want to add more keywords to the set
+  numbers=left,                    % where to put the line-numbers; possible values are (none, left, right)
+  numbersep=5pt,                   % how far the line-numbers are from the code
+  numberstyle=\tiny\color{mygray}, % the style that is used for the line-numbers
+  rulecolor=\color{black},         % if not set, the frame-color may be changed on line-breaks within not-black text (e.g. comments (green here))
+  showspaces=false,                % show spaces everywhere adding particular underscores; it overrides 'showstringspaces'
+  showstringspaces=false,          % underline spaces within strings only
+  showtabs=false,                  % show tabs within strings adding particular underscores
+  stepnumber=1,                    % the step between two line-numbers. If it's 1, each line will be numbered
+  stringstyle=\color{mymauve},     % string literal style
+  tabsize=2,                       % sets default tabsize to 2 spaces
+  title=\lstname                   % show the filename of files included with \lstinputlisting; also try caption instead of title
+}
+\newenvironment{myexampleblock}[1]{%
+    \tcolorbox[beamer,%
+    noparskip,breakable,
+    colback=White,colframe=ForestGreen,%
+    colbacklower=LimeGreen!75!White,%
+    title=#1]}%
+    {\endtcolorbox}
+
+\newenvironment{myalertblock}[1]{%
+    \tcolorbox[beamer,%
+    noparskip,breakable,
+    colback=White,colframe=Bittersweet,%
+    colbacklower=Peach!75!White,%
+    title=#1]}%
+    {\endtcolorbox}
+
+\newenvironment{myblock}[1]{%
+    \tcolorbox[beamer,%
+    noparskip,breakable,
+    colback=White,colframe=RoyalBlue,%
+    colbacklower=TealBlue!75!White,%
+    title=#1]}%
+    {\endtcolorbox}
+
+\newenvironment{myexampleprogram}[1]{%
+    \tcolorbox[beamer,%
+    noparskip,breakable,
+    colback=White,colframe=Goldenrod,%
+    colbacklower=Yellow!75!White,%
+    title=#1]}%
+    {\endtcolorbox}
+
+\usepackage{amssymb}
+
+
+\begin{document}
+
+\section{Heap-Sort}
+
+Während der Vorlesung wurde eine Verfahren eingeführt, um Zahlenreihen der Länge $N$ zu sortieren, das sogenannte Sortieren durch Einfügen.
+Wir hatten auch gesehen, dass dieses Verfahren im schlechtesten Fall $\mathcal{O}(N^2)$ Vergleichs- und Vertauschungs-Operationen benötigt.
+Wir werden nun ein Verfahren einführen, dass im schlechtesten Fall $\mathcal{O}(N\log(N))$ Vergleichs- und Vertauschungs-Operationen benötigt.
+Es wird \emph{Heap-Sort} genannt, weil es auf einer Datenstruktur basiert, die man Halde oder \emph{Heap} nennt. 
+
+Definieren wir zunächst, was man einen Heap nennt.
+Eine Folge von Schlüsseln $F = k_1, k_2, \ldots, k_{N}$ nennt man einen Heap, wenn
+\[
+k_i \ \leq\ k_{\lfloor i/2 \rfloor}\,,\qquad 1\leq i \leq N\,.
+\]
+Anders ausgedrückt bedeutet dies $k_i \geq k_{2i}$ und $k_i\geq k_{2i+1}$, sofern $2i\leq N$ bzw. $2i+1\leq N$. 
+Die Schlüssel $k_{2i}$ und $k_{2i+1}$ nennt man Nachfolger von $k_i$. 
+Wichtig ist, dass zwar $k_i \geq k_{2i}$ und $k_i\geq k_{2i+1}$, aber der Heap keine Relation zwischen $k_{2i}$ und $k_{2i+1}$ impliziert. 
+Per Definition eines Heaps ist natürlich $k_1 \geq k_i$ für alle $1 < i \leq N$. 
+
+Unter den Schlüsseln $k_1, \ldots, k_N$ können Sie sich zunächst einfach ganze Zahlen vorstellen.
+Aber im Prinzip können es allgemeine Daten sein, für die die Operation $\leq$ definiert ist.
+Beispielsweise ist $F=8,6,7,3,4,5,2,1$ ein Heap mit $N=8$ im Sinne obiger Definition, wie man leicht verifiziert. 
+Man stellt einen Heap am einfachsten mit Hilfe eines sogenannten balancierten, binären Baumes dar. 
+Man nennt einen solchen binären Baum balanciert, wenn seine Höhe minimal ist für die Anzahl $N$ an Elementen.
+Für das Beispiel sieht der binäre Baum wie folgt aus:
+\begin{center}
+  \begin{tikzpicture}[->,>=stealth',level/.style={sibling distance =
+        5cm/#1,
+        level distance = 2.5cm},scale=.8, transform shape]
+    \node [treenode] {$k_1$:\\ Wert $8$}
+    child
+    {
+      node [treenode] {$k_2$:\\ Wert $6$}
+      child
+      {
+        node [treenode] {$k_4$:\\ Wert $3$}
+        child
+        {
+          node [treenode] {$k_8$:\\ Wert $1$}
+        }
+      }
+      child
+      {
+        node [treenode] {$k_5$:\\ Wert $4$}
+      }
+    }
+    child
+    {
+      node [treenode] {$k_3$:\\ Wert $7$}
+      child
+      {
+        node [treenode] {$k_6$:\\ Wert $5$}
+      }
+      child
+      {
+        node [treenode] {$k_7$:\\ Wert $2$}
+      }
+    };
+  \end{tikzpicture}
+\end{center}
+Wir werden für balancierte, binäre Bäume der Konvention folgen, dass immer von links aufgefüllt wird.
+Falls also ein Vertex keinen linken Nachfolger hat, so hat der Vertex auch keinen rechten Nachfolger.
+
+Man sieht in diesem Beispiel auch sofort, dass jeder Unterbaum eines Heaps auch selbst wieder ein Heap ist. 
+In unserem Beispiel bleiben beispielsweise nach Entfernen des ersten Elements zwei Teilheaps zurück, als $F_1 = 6,3,4,1$ und $F_2 = 7,5,2$.
+Zum Sortieren entfernen wir das erste Element, also $k_1$ aus dem Heap.
+Dann ersetzen wir es durch das Element mit dem größten Index, im Beispiel also $k_8$. 
+Damit erhalten wir einen neuen Binärbaum, der allerdings die Heap Eigenschaften nicht erfüllt, denn $1$ is nicht größer als $6$ und $7$. 
+\begin{center}
+  \begin{tikzpicture}[->,>=stealth',level/.style={sibling distance =
+        5cm/#1,
+        level distance = 2.5cm},scale=.8, transform shape]
+    \node [treenode] {$k_1$:\\ Wert $1$}
+    child
+    {
+      node [treenode] {$k_2$:\\ Wert $6$}
+      child
+      {
+        node [treenode] {$k_4$:\\ Wert $3$}
+      }
+      child
+      {
+        node [treenode] {$k_5$:\\ Wert $4$}
+      }
+    }
+    child
+    {
+      node [treenode] {$k_3$:\\ Wert $7$}
+      child
+      {
+        node [treenode] {$k_6$:\\ Wert $5$}
+      }
+      child
+      {
+        node [treenode] {$k_7$:\\ Wert $2$}
+      }
+    };
+  \end{tikzpicture}
+\end{center}
+Der neue Binärbaum wird wieder zu einem Heap, indem man den neuen Schlüssel $k_1$ \emph{versickern} lassen.
+Dies geschieht, indem wir ihn immer wieder mit dem größeren seiner beiden Nachfolger vertauschen.
+Im Beispiel erhält man also nach dem ersten Versickerungsschritt
+\begin{center}
+  \begin{tikzpicture}[->,>=stealth',level/.style={sibling distance =
+        5cm/#1,
+        level distance = 2.5cm},scale=.8, transform shape]
+    \node [treenode] {$k_1$:\\ Wert $7$}
+    child
+    {
+      node [treenode] {$k_2$:\\ Wert $6$}
+      child
+      {
+        node [treenode] {$k_4$:\\ Wert $3$}
+      }
+      child
+      {
+        node [treenode] {$k_5$:\\ Wert $4$}
+      }
+    }
+    child
+    {
+      node [treenode] {$k_3$:\\ Wert $1$}
+      child
+      {
+        node [treenode] {$k_6$:\\ Wert $5$}
+      }
+      child
+      {
+        node [treenode] {$k_7$:\\ Wert $2$}
+      }
+    };
+  \end{tikzpicture}
+\end{center}
+und nach dem zweiten
+\begin{center}
+  \begin{tikzpicture}[->,>=stealth',level/.style={sibling distance =
+        5cm/#1,
+        level distance = 2.5cm},scale=.8, transform shape]
+    \node [treenode] {$k_1$:\\ Wert $7$}
+    child
+    {
+      node [treenode] {$k_2$:\\ Wert $6$}
+      child
+      {
+        node [treenode] {$k_4$:\\ Wert $3$}
+      }
+      child
+      {
+        node [treenode] {$k_5$:\\ Wert $4$}
+      }
+    }
+    child
+    {
+      node [treenode] {$k_3$:\\ Wert $5$}
+      child
+      {
+        node [treenode] {$k_6$:\\ Wert $1$}
+      }
+      child
+      {
+        node [treenode] {$k_7$:\\ Wert $2$}
+      }
+    };
+  \end{tikzpicture}
+\end{center}
+nach dem die Heapeigenschaft wieder hergestellt ist.
+Diese Schritte wiederholt man, bis der Heap keine Schlüssel mehr enthält. 
+Für ganze Zahlen könnte man das Versickern mit Hilfe eines Arrays wie folgt realisieren:
+\begin{algorithmic}[1]
+  \Procedure{versickere}{$a, i, m$}
+  \State \textbf{input} array $a$, integer $i,m$
+  \State \textbf{output} heap $a$
+  \While{$2i+1 \leq m$}
+  \If{$j < m$}
+  \If{$a[j] < a[j+1]$}
+  \State $j\leftarrow j+1$
+  \EndIf
+  \EndIf
+  \If{$a[i] < a[j]$}
+  \State $a[j]\leftrightarrow\ a[i]$
+  \State $i = j$
+  \Else
+  \State $i = m$
+  \EndIf
+  \EndWhile
+  \EndProcedure
+\end{algorithmic}
+%\begin{lstlisting}
+%  // versickere a[i] bis hoechstens a[m]
+%  void versickere(int a[], int i, const int m) {
+%    while(2*i+1 <= m) { // a[i] hat linken Nachfolger
+%      int j = 2*i+1;    // a[j] ist linker Nachfolger
+%      if(j < m) {
+%        if(a[j] < a[j+1]) j++;
+%        // a[j] ist jetzt groesster Nachfolger
+%      }
+%      if(a[i] < a[j]) { // Vertausche mit groesserem Nachfolger
+%        int t = a[i];
+%        a[i] = a[j];
+%        a[j] = t;
+%        i = j;
+%      }
+%      else i = m;
+%    } // Heapbedingung wieder erfuellt
+%  }
+%\end{lstlisting}
+Sobald wir also eine Folge mit Heapbedingung haben, können wir durch wiederholtes Anwenden dieses Verfahrens die Folge sortieren.
+Allerdings müssen wir die Folge dafür erstmal in einen Heap verwanden. 
+Dies kann man erreichen, indem man die Schlüssel $k_{\lfloor N/2\rfloor}$ bis $k_1$ versickern. 
+Dadurch werden schrittweise immer größere Heaps aufgebaut, bis am Ende schließlich der Ausgangsheap vorliegt. 
+Eine mögliche Implementierung könnte wie folgt aussehen:
+\begin{algorithmic}[1]
+  \Procedure{Heapsort}{$a, N$}
+  \State \textbf{Input} $a,N$
+  \State \textbf{Output} $a$
+  \For{$i = N/2-1, N/2-2, \ldots, 0$}
+  \State \textsc{versickere}$(a, i, N-2)$
+  \EndFor
+  \For{$i=N-1, N-2, \ldots, 1$}
+  \State $a[i]\leftrightarrow a[0]$
+  \State \textsc{versickere}$(a, 0, i-1)$
+  \EndFor
+  \EndProcedure
+\end{algorithmic}
+%\begin{lstlisting}
+%  void HeapSort(int a[]) {
+%    // erzeuge Heap
+%    for(int i = (N/2) - 1; i >= 0; i--) {
+%      versickere(a, i, N-2);
+%    }
+%    // Sortiere durch versickern
+%    for(int i = N-1; i > 0; i--) {
+%      int t = a[i];
+%      a[i] = a[0];
+%      a[0] = t;
+%      versickere(a, 0, i-1);
+%    }
+%    return;
+%  }
+%\end{lstlisting}
+Implementieren Sie den Heap-Sort Algorithmus für eine Folge reeller Zahlen variabler Länge.
+
+\textbf{Bemerkung}: Das Verfahren Heap-Sort sortiert eine Folge im schlechtesten Fall in $\mathcal{O}(N\log N)$ Schritten.
+Das $\log N$ kommt aus der Höhe des Baumes.
+
+Wir werden nun anstelle des Arrays eine spezielle Art sogenannter verketteter Listen verwenden.
+Der Vorteil dieser verketteten Liste ist, dass keine Daten mehr kopiert werden müssen, sondern lediglich Zeiger auf solche Daten.
+Das kann man zwar für Heapsort auch mit Indexarrays erreichen, aber als Übung betrachten wir nun verkettete Listen.
+Betrachtet man einen Vertex in einem binären Baum, so ist er gekennzeichnet durch einen oder keinen Vorgängervertex, keinen, einen oder zwei Nachfolgervertizes und ein Datum.
+Folgender Datentyp 
+\begin{lstlisting}
+typedef struct element
+{
+  int datum;
+  struct element *left;   // Zeiger auf linken Nachfolger
+  struct element *right;  // Zeiger auf rechten Nachfolger
+  struct element *parent; // Zeiger auf den Vorgaenger
+} element;
+\end{lstlisting}
+implementiert diese Eigenschaften.
+Wir werden den \texttt{NULL}-Zeiger verwenden, um keinen Vorgänger oder Nachfolger zu kennzeichnen.
+Dementsprechend wird für die Wurzel des Baumes \texttt{parent = NULL;} gesetzt.
+Blätter des Baumes mit nur einem oder keinem Nachfolger haben \texttt{left = NULL} und/oder \texttt{right = NULL}.
+\texttt{Datum} kann ein beliebiger Datentyp sein, für den eine Vergleichsoperation $\leq$ definiert ist.
+
+Im Prinzip können wir nun oben vorgestellten Algorithmus auf diesen Datentyp umstellen.
+Dafür brauchen wir zunächst eine Funktion, die den Vergleich durchführt. 
+In Pseudo-Code wäre das das folgende
+\begin{algorithmic}[1]
+  \Procedure{compare}{$e1, e2$}
+  \State\textbf{input} Elemente $e1, e2$ vom Typ \texttt{element}
+  \State \textbf{output} $0$ oder $1$
+  \If{\texttt{e1.datum} $\leq$ \texttt{e2.datum}} 
+  \State \textbf{return 1}
+  \Else
+  \State \textbf{return 0}
+  \EndIf
+  \EndProcedure
+\end{algorithmic}
+Für das Versickern lassen brauchen wir außer der Vergleichsoperation noch das Vertauschen von zwei Elementen. 
+Betrachten wir nocheinmal folgenden Baum, der die Heapeigenschaft nicht erfüllt
+\begin{center}
+  \begin{tikzpicture}[->,>=stealth',level/.style={sibling distance =
+        5cm/#1,
+        level distance = 2.5cm},scale=.8, transform shape]
+    \node [treenode] {$k_1$:\\ Wert $1$}
+    child
+    {
+      node [treenode] {$k_2$:\\ Wert $6$}
+      child
+      {
+        node [treenode] {$k_4$:\\ Wert $3$}
+      }
+      child
+      {
+        node [treenode] {$k_5$:\\ Wert $4$}
+      }
+    }
+    child
+    {
+      node [treenode] {$k_3$:\\ Wert $7$}
+      child
+      {
+        node [treenode] {$k_6$:\\ Wert $5$}
+      }
+      child
+      {
+        node [treenode] {$k_7$:\\ Wert $2$}
+      }
+    };
+  \end{tikzpicture}
+\end{center}
+Um $k_1$ mit $k_3$ zu vertauschen, muss der linke Nachfolger von $k_3$ auf $k_2$, der rechte auf $k_1$ und der Vorgänger auf \texttt{NULL} gesetzt werden.
+Genauso muss der Vorgänger von $k_1$ auf $k_3$, und der linke bzw. rechte Nachfolger auf $k_6$ bzw. $k_7$. 
+Im Pseudo-Code sähe das wie folgt aus
+\begin{algorithmic}[1]
+  \Procedure{swap}{\texttt{parent}, \texttt{child}}
+  \State\textbf{InOutput}: \texttt{parent}, \texttt{child} vom Typ \texttt{element}
+  \State \texttt{child.parent} $=$ \texttt{parent.parent}
+  \State \texttt{parent.parent} $=$ \texttt{child}
+  \If{\texttt{child} $==$ \texttt{parent.left}}
+  \State \texttt{child.left} $=$ \texttt{parent}
+  \State \texttt{child.right} $=$ \texttt{parent.right}
+  \Else
+  \State \texttt{child.right} $=$ \texttt{parent}
+  \State \texttt{child.left} $=$ \texttt{parent.left}
+  \EndIf
+%  \State \texttt{child} $\leftrightarrow$ \texttt{parent}
+  \EndProcedure
+\end{algorithmic}
+Hierbei ist es wichtig, das bekannt ist, welches Element der Vorgänger und welches der Nachfolger ist. 
+Man beachte, dass all diese Operationen lediglich Operationen auf Zeigern sind. 
+Es werden also keine Daten kopiert, wenn man die Parameter \texttt{parent} und \texttt{child} als Zeiger übergibt.
+Das gilt für alle nun folgenden Funktionen: Sie sollten \emph{call-by-reference} verwenden.
+Damit kann man das Versickern implementieren.
+Erstellen Sie zunächst Pseudo-Code für das Versickern mit dem Datentyp \texttt{element}.
+Eine solche \textsc{versickern}-Funktion bekommt nur noch das Wurzelelement des (Unter-)Baumes übergeben, keine weiteren Parameter.
+
+Etwas schwieriger als mit Arrays ist es, den anfänglichen Heap zu erzeugen.
+Zunächst erzeugt man dafür einen balancierten binären Baum mit $N$ Elementen.
+Schreiben Sie eine Funktion, die einen solchen zufälligen balancierten binären Baum mit $N$ Elementen erzeugt.
+
+Nehmen wir an, das Wurzelelement dieses zufälligen, balancierten binären Baumes ist \texttt{root}.
+Diesen binären Baum kann man zu einem Heap machen, indem man rekursiv die Funktion \textsc{versickern} anwendet.
+Das Vorgehen ist dabei sehr ähnlich wie beim Heapsort mit Arrays.
+Man definiert folgende Funktion
+\begin{algorithmic}[1]
+  \Procedure{heapify}{\texttt{root}}
+  \State\textbf{Input} \texttt{root}
+  \If{\texttt{root.left}$==$\texttt{NULL}}
+  \State\textbf{return}
+  \Comment \texttt{root} hat keine Nachfolger
+  \Else
+  \State\textsc{heapify}(\textsc{root.left})
+  \Comment \texttt{root} hat einen linken Nachfolger
+  \EndIf
+  \If{\texttt{root.right}$!=$\texttt{NULL}}
+  \State\textsc{heapify}(\textsc{root.right})
+  \Comment \texttt{root} hat einen rechten Nachfolger
+  \EndIf
+  \State\textsc{versickern}(\texttt{root})
+  \EndProcedure
+\end{algorithmic}
+Wie man sieht, handelt es sich um eine rekursive Funktion.
+Sie ruft sich selbst wieder auf, bis ein Vertex ohne Nachfolger erreicht wird.
+Wird die Funktion \textsc{heapify} mit dem Wurzelelement \texttt{root} des zufälligen, balancierten binären Baumes aufgerufen, so wird \textsc{heapify} so lange wieder aufgerufen, bis kein linker Nachfolger mehr existiert.
+Dann wird eine Ebene darüber \textsc{versichern} aufgerufen.
+So wird sukzessive von den Blättern des Baumes an für jede Ebene mit der Funktion \textsc{versickern} die Heapeigenschaft hergestellt. 
+Implementieren Sie die Funktion \textsc{versickern} und die Funktion \textsc{heapify} in \texttt{C}.
+
+Nun fehlen nur noch Kleinigkeiten für den kompletten Heapsort Algorithmus.
+\begin{enumerate}
+\item Wir benötigen eine Funktion \textsc{findlast}, die das letzte Element im Baum findet. 
+  Dabei sollte man verwenden, dass der Baum balanciert ist.
+\item Weiterhin brauchen wir eine Funktion \textsc{remove}, die ein Element aus dem Baum entfernt.
+  Es dürfen dabei nur Elemente entfernt werden, die keine Nachfolger haben.
+
+  Sinnvollerweise kombiniert man \textsc{findlast} und \textsc{remove}. 
+  Man schreibt also \textsc{remove} so, dass nur Elemente entfernt werden dürfen, wenn das Element keine Nachfolger hat und nach dem Entfernen der binäre Baum noch balanciert ist.
+\item Und wir benötigen eine Funktion \textsc{replaceroot}, die das Wurzelelement durch ein anderes Element ersetzt.
+\end{enumerate}
+Diese drei, bzw. zwei Funktionen sollten ohne große Schwierigkeiten implementierbar sein.
+Entwerfen Sie Pseudo-Code für die Funktionen und implementieren Sie sie anschließend in \texttt{C}.
+
+\end{document}
