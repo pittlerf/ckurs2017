@@ -280,6 +280,7 @@ Für ganze Zahlen könnte man das Versickern mit Hilfe eines Arrays wie folgt re
   \State \textbf{input} array $a$, integer $i,m$
   \State \textbf{output} heap $a$
   \While{$2i+1 \leq m$}
+  \State $j=2i+1$
   \If{$j < m$}
   \If{$a[j] < a[j+1]$}
   \State $j\leftarrow j+1$
@@ -314,6 +315,7 @@ Für ganze Zahlen könnte man das Versickern mit Hilfe eines Arrays wie folgt re
 %    return;
 %  }
 %\end{lstlisting}
+Hierbei ist $m$ die Länge des Arrays und $i$ der Index des Elements, vom dem das Versickern starten soll.
 Sobald wir also eine Folge mit Heapbedingung haben, können wir durch wiederholtes Anwenden dieses Verfahrens die Folge sortieren.
 Allerdings müssen wir die Folge dafür erstmal in einen Heap verwanden. 
 Dies kann man erreichen, indem man die Schlüssel $k_{\lfloor N/2\rfloor}$ bis $k_1$ versickern. 
@@ -361,13 +363,14 @@ Folgender Datentyp
 \begin{lstlisting}
 typedef struct element
 {
-  int datum;
+  Datum datum;            // die eigentlichen Daten
   struct element *left;   // Zeiger auf linken Nachfolger
   struct element *right;  // Zeiger auf rechten Nachfolger
   struct element *parent; // Zeiger auf den Vorgaenger
 } element;
 \end{lstlisting}
 implementiert diese Eigenschaften.
+Die eigentlichen Daten sind in \texttt{datum} vom Typ \texttt{Datum} gespeichert.
 Wir werden den \texttt{NULL}-Zeiger verwenden, um keinen Vorgänger oder Nachfolger zu kennzeichnen.
 Dementsprechend wird für die Wurzel des Baumes \texttt{parent = NULL;} gesetzt.
 Blätter des Baumes mit nur einem oder keinem Nachfolger haben \texttt{left = NULL} und/oder \texttt{right = NULL}.
@@ -429,11 +432,13 @@ Im Pseudo-Code sähe das wie folgt aus
   \State \texttt{child.parent} $=$ \texttt{parent.parent}
   \State \texttt{parent.parent} $=$ \texttt{child}
   \If{\texttt{child} $==$ \texttt{parent.left}}
+  \State \texttt{parent.left} $=$ \texttt{child.left}
   \State \texttt{child.left} $=$ \texttt{parent}
-  \State \texttt{child.right} $=$ \texttt{parent.right}
+  \State \texttt{child.right} $\leftrightarrow$ \texttt{parent.right}
   \Else
+  \State \texttt{parent.right} $=$ \texttt{child.right}
   \State \texttt{child.right} $=$ \texttt{parent}
-  \State \texttt{child.left} $=$ \texttt{parent.left}
+  \State \texttt{child.left} $\leftrightarrow$ \texttt{parent.left}
   \EndIf
 %  \State \texttt{child} $\leftrightarrow$ \texttt{parent}
   \EndProcedure
