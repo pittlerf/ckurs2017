@@ -8,6 +8,9 @@ programmierkurs_fpcu.pdf: $(all_tex) Makefile
 	dvips programmierkurs_fpcu.dvi
 	ps2pdf programmierkurs_fpcu.ps
 
+heapsort.pdf: heapsort.tex
+	latexmk -bibtex -pdf -pdflatex="pdflatex -interaction=nonstopmode" -use-make $<
+
 all_aux := $(all_tex:%.tex=%.aux)
 scrap_aux := $(filter $(wildcard *.aux), $(all_aux))
 scrap_main := $(filter $(wildcard programmierkurs_fpcu.*), $(addprefix programmierkurs_fpcu., dvi log pdf ps toc))
