@@ -331,9 +331,11 @@ Eine mögliche Implementierung könnte wie folgt aussehen:
   \State \textbf{Input} $a,N$
   \State \textbf{Output} $a$
   \For{$i = N/2-1, N/2-2, \ldots, 0$}
+  \Comment Erzeuge initialen Heap
   \State \textsc{versickere}$(a, i, N-1)$
   \EndFor
   \For{$i=N-1, N-2, \ldots, 1$}
+  \Comment Sortieren durch Versickern
   \State $a[i]\leftrightarrow a[0]$
   \State \textsc{versickere}$(a, 0, i-1)$
   \EndFor
