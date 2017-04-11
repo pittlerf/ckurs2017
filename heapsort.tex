@@ -460,11 +460,11 @@ Man definiert folgende Funktion
   \State\textbf{return}
   \Comment \texttt{root} hat keine Nachfolger
   \Else
-  \State\textsc{heapify}(\textsc{root.left})
+  \State\textsc{heapify}(\texttt{root.left})
   \Comment \texttt{root} hat einen linken Nachfolger
   \EndIf
   \If{\texttt{root.right}$!=$\texttt{NULL}}
-  \State\textsc{heapify}(\textsc{root.right})
+  \State\textsc{heapify}(\texttt{root.right})
   \Comment \texttt{root} hat einen rechten Nachfolger
   \EndIf
   \State\textsc{versickern}(\texttt{root})
