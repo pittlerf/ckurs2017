@@ -21,7 +21,9 @@ clean:
 	rm Vorlesungsnotizen-student.tex
 	rm slides.nav slides.snm slides.vrb
 
-publish: slides.pdf
+publish: publish/c-kurs-2017-Folien.pdf 
+
+publish/c-kurs-2017-Folien.pdf: slides.pdf
 	mkdir -p publish
 	cp slides.pdf publish/c-kurs-2017-Folien.pdf
 

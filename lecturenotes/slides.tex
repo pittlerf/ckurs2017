@@ -1758,6 +1758,7 @@ clean:
 \begin{itemize}
   \item{\verb|make| führt, wenn es ohne Kommandozeilenargumente aufgerufen wird, die erste Regel aus. Das ist hier \verb|all|. Es werden also alle Programme erzeugt, deren C-Dateien sich in der Variable \verb|$(SOURCES)| wiederfinden.}
 \end{itemize}
+$\Rightarrow$ (\verb|makefiles/beispiel3|)
 \end{frame}
 
 \begin{frame}[fragile]{Makefiles: Einfache Substitutionen}{Vorlesung \arabic{lecturecounter}}
@@ -1837,7 +1838,7 @@ HEADERS := $(wildcard *.h)
 MODULES := $(patsubst %.c, %.o, $(SOURCES))
 PROGRAMS := teilchen
 MODULES := $(filter-out $(addsuffix .o, $(PROGRAMS)), $(MODULES))
-LIBS := -lm -lgsl
+LIBS := -lm -lgsl -lgslcblas
 
 all: $(PROGRAMS)
 
