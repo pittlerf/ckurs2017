@@ -21,10 +21,15 @@ clean:
 	rm Vorlesungsnotizen-student.tex
 	rm slides.nav slides.snm slides.vrb
 
-publish: publish/c-kurs-2017-Folien.pdf 
+publish: publish/c-kurs-2017-Folien.pdf tutorials
+	
+tutorials: $(wildcard ../tutorials/selected-tutorials/*.pdf )
+	echo $^
+	cp $^ publish/
+
 
 publish/c-kurs-2017-Folien.pdf: slides.pdf
 	mkdir -p publish
 	cp slides.pdf publish/c-kurs-2017-Folien.pdf
 
-.PHONY: clean
+.PHONY: clean tutorials
