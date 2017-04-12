@@ -152,10 +152,10 @@ order=4
 
 [item:slides.tex]
 archive=true
-column=11
+column=272
 encoding=UTF-8
 highlight=LaTeX
-line=1617
+line=1643
 mode=LaTeX
 open=true
 order=0
@@ -265,10 +265,10 @@ JumpList=
 ViMarks=.,43,2,[,43,2,],43,2
 
 [view-settings,view=0,item:slides.tex]
-CursorColumn=11
-CursorLine=1617
+CursorColumn=272
+CursorLine=1643
 JumpList=
-ViMarks=.,1617,11,[,1617,11,],1617,11
+ViMarks=.,1653,16,[,1653,16,],1653,16
 
 [view-settings,view=0,item:slidespreamble.tex]
 CursorColumn=38

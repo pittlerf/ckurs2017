@@ -14,7 +14,7 @@ Vorlesungsnotizen-student.pdf: Vorlesungsnotizen-student.tex $(COMMONDEPS) $(LEC
 	latexmk -bibtex -pdf -pdflatex="pdflatex -interaction=nonstopmode" -use-make Vorlesungsnotizen-student.tex
 
 slides.pdf: slides.tex $(COMMONDEPS) $(SLIDEDEPS)
-	latexmk -pdf -pdflatex="pdflatex -interaction=nonstopmode" -use-make slides.tex
+	latexmk -f -pdf -pdflatex="pdflatex -interaction=nonstopmode" -use-make slides.tex
 
 clean:
 	latexmk -CA

@@ -866,7 +866,7 @@ kinEnerg( double *x,
 double AblT( double *x, 
              unsigned int t ){
   double dt = 0.01;
-  return @(x[t+1]-x[t-1])/(2*dt)@;
+  return !@(x[t+1]-x[t-1])/(2*dt)!@;
 }
     \end{lstlisting}
     \texttt{AblT\_symmetrisch.c}
@@ -1319,7 +1319,7 @@ int fprintf(FILE *fp, char *format, ...);
   \texttt{fprintf} funktioniert wie \texttt{printf}, mit dem Unterschied, dass ein Dateizeiger übergeben werden muss. Um genau zu steuern, wie die Ausgabe auszusehen hat können die Platzhalter durch Parameter gesteuert werden.
 \end{block}
 \begin{lstlisting}
-  % + - 0 @BREITE@ . @PRAEZISION@ ll/l/h [d,u,s,c,p,g,e,f]  
+  % + - 0 !@BREITE!@ . !@PRAEZISION!@ ll/l/h [d,u,s,c,p,g,e,f]  
 \end{lstlisting}
 \begin{columns}
 \column{0.3\textwidth}
@@ -1521,7 +1521,7 @@ Müssen wir hunderte praktisch identischer Funktionen für alle möglichen Ablei
 \begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
 unser_struct_t erste_funktion(double, int, int, char, double);
 unser_struct_t zweite_funktion(double, int, int, char, double);
-unser_struct_t @(*@fp@)@(double, int, int, char, double);
+unser_struct_t !@(*!@fp!@)!@(double, int, int, char, double);
 
 double void_funktion(void);
 double (*void_fp)(void);
@@ -1615,6 +1615,302 @@ printf("z = %lf + i %lf\n", creal(z), cimag(z));
     \item{\verb|csinh, ccosh, ctanh, casinh, cacosh, catanh|}
   \end{itemize}
 \end{block}
+\end{frame}
+
+\stepcounter{lecturecounter}
+
+\begin{frame}[fragile]{Uebungen Mittwoch und Donnerstag}{Vorlesung \arabic{lecturecounter}}
+\begin{block}{}
+  Morgen, Donnerstag den 13.04, keine Vorlesung sondern Übung. Es wird um die Implementation einer größeren Datenstruktur und eines Sortieralgorithmus gehen, anhand dessen die Eigenschaften dieser Datenstruktur dargestellt werden.
+\end{block}
+\includegraphics[width=\textwidth,page=8,trim=0 9cm 0 2cm,clip=true]{graphics/c_kurs_tafel}
+\begin{block}{}
+  Heute: Verwendung externer Bibliotheken, kompilieren mithilfe von \verb|make|, vertrauenswürdige Zeitmessung, gute Zufallszahlen, Abbruchbedingungen.
+\end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Externe Bibliotheken}{Vorlesung \arabic{lecturecounter}}
+\begin{block}{Einbinden und Kompilieren}
+  Eine ``externe'' Bibliothek hatten wir schon kurz kennengelernt und genutzt: \verb|math.h|. 
+\end{block}
+\begin{lstlisting}
+#include <math.h>
+\end{lstlisting}
+\begin{block}{}
+Um auf die Funktionen aus der Bibliothek dann auch Zugriff zu erhalten, muss diese auch eingelinkt werden:
+\begin{verbatim}
+gcc -o programm main.o modul1.o modul2.o -lm 
+\end{verbatim}
+Das Kürzel \verb|-l| bedeutet: suche in den Systembibliothekspfaden nach einer Bibliothek Namens \verb|m|. Oftmals müssen auch weitere Bibliothekspfade angegeben werden. Dies wird mit \verb|-Lpfad| erreicht, wobei \verb|pfad| durch den den zu verwendenden Pfad ersetzt wird.
+\end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Zufallszahlen mit GSL}{Vorlesung \arabic{lecturecounter}}
+\begin{block}{}
+  In Übung 5 wurde ein Pseudozufallszahlengenerator entwickelt und mit Conway's Game of Life getestet. Den Standardgenerator in C sollte man nicht benutzen. Gute Alternativen finden sich in der GNU Scientific Library (GSL).
+\end{block}
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+#include <stdio.h>
+#include <gsl/gsl_rng.h>
+int main (void) {
+  const gsl_rng_type * generator_type;
+  gsl_rng * r;
+  gsl_rng_env_setup();
+  generator_type = gsl_rng_ranlxd2;
+  r = gsl_rng_alloc(generator_type);
+  double u = gsl_rng_uniform(r);
+  for(int i = 0; i < n; i++) {
+      u = gsl_rng_uniform (r);
+      printf ("%.5f\n", u);
+  }
+  gsl_rng_free(r);
+  return 0;
+}
+\end{lstlisting}
+Probieren wir gleich, erstmal sollten wir jedoch ein wenig mehr über Kompilierung lernen.
+\end{frame}
+
+\begin{frame}[fragile]{Einfache Makefiles}{Vorlesung \arabic{lecturecounter}}
+\begin{block}{}
+Ein Makefile ist eine Datei in der die Regeln zum Kompilieren eines Programms beschrieben sind. Die genaue Struktur ist dabei relativ offen, da es sich nur um Regeln zur Erstellung von Dateien und deren Abhängigkeiten handelt.
+\end{block}
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+!@regel:!@ abhaenkigkeit1 abhaengigkeit2 abhaengikeit3
+        kommando1
+        kommando2
+\end{lstlisting}
+\begin{itemize}
+  \item{Um \verb|regel| (auch target oder Ziel genannt) zu erstellen, überprüft \verb|make| zunächst ob die Abhängigkeiten existieren. Wenn ja, werden die Kommandos ausgeführt. Wenn nicht, wird versucht Regeln zu finden um die Abhängigkeiten zu erstellen.}
+  \item{Ist eine Abhängigkeit, oder eine Abhängigkeit einer Abhängigkeit (z.B. der C-Quelltext zu einem Modul) neuer als das momentan vorhandene Ziel, wird das Ziel erneut kompiliert.}
+  \item{Target und Abhängigkeiten sind durch einen Doppelpunkt getrennt. In der nächsten Zeile ist ein Tabulator (wichtig, keine einfachen Leerzeichen!)}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Makefiles: Beispiel 1}{Vorlesung \arabic{lecturecounter}}
+\begin{block}{}
+  Variablen werden in Makefiles mit dem Dollarzeichen referenziert. Es gibt einige spezielle Variablen, aber man kann auch welche selbst definieren.
+\end{block}
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+test_printf: test_printf.c
+        gcc -std=c99 -Wall -Wpedantic -o !@$@ $<!@
+\end{lstlisting}
+\begin{block}{}
+\begin{itemize}
+  \item{\verb|$@| ist ein Platzahlter für den Namen des Targets. (hier \verb|test_printf|)}
+  \item{\verb|$<| steht für die erste Abhängigkeit von links. (hier \verb|test_printf.c|)}
+\end{itemize}
+Kompiliert wird jetzt mit:
+\begin{verbatim}
+ $ make
+\end{verbatim}
+\verb|make| wird das kommando
+\begin{verbatim}
+gcc -std=c99 -Wall -Wpedantic -o test_printf test_printf.c
+\end{verbatim}
+aufrufen und die ausführbare Datei \verb|test_printf| wird dadurch erzeugt werden.
+\end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Makefiles: Beispiel 2}{Vorlesung \arabic{lecturecounter}}
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+# Regeln fuer main-Objektdateien
+programm1.o: programm1.c modul1.h modul2.h
+        gcc -std=c99 -Wall -Wpedantic -c $<
+
+programm2.o: programm2.c modul2.h modul3.h
+        gcc -std=c99 -Wall -Wpedantic -c $<        
+
+# Regel fuer die Module
+%.o : %.c %.h    
+         gcc -std=c99 -Wall -Wpedantic -c $<
+
+programm1: programm1.o modul1.o modul2.o
+        gcc -std=c99 -Wall -Wpedantic -o $@ !@$^!@
+
+programm2: programm2.o modul2.o modul3.o
+        gcc -std=c99 -Wall -Wpedantic -o $@ !@$^!@        
+\end{lstlisting}
+\begin{block}{}
+\verb|$^| ist ein Kürzel für alle Abhängigkeiten. Das Kommando:
+\begin{verbatim}
+ $ make programm1
+\end{verbatim}
+wird erst \verb|modul1.o, modul2.o| und \verb|programm1.o| kompilieren und dann den Linker aufrufen.
+\end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Makefiles: Beispiel 3}{Vorlesung \arabic{lecturecounter}}
+\begin{block}{}
+  Für die ganzen Beispielprogramme, die in der Regel aus einer Datei bestehen, habe ich folgendes Makefile genutzt.
+\end{block}
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+SOURCES := $(wildcard *.c)                                                                                                                                  
+
+!@all: $(basename $(SOURCES)) !@
+
+$(basename $(SOURCES)): % : %.c Makefile
+        gcc -g -ggdb -Wall -Wpedantic -std=c99 -o $@  $<
+
+.PHONY: clean
+clean:
+        rm $(basename $(SOURCES))
+\end{lstlisting}
+\begin{itemize}
+  \item{\verb|make| führt, wenn es ohne Kommandozeilenargumente aufgerufen wird, die erste Regel aus. Das ist hier \verb|all|. Es werden also alle Programme erzeugt, deren C-Dateien sich in der Variable \verb|$(SOURCES)| wiederfinden.}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Makefiles: Einfache Substitutionen}{Vorlesung \arabic{lecturecounter}}
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+SOURCES := !@$(wildcard *.c)!@                                                                                                                                   
+
+all: !@$(basename $(SOURCES))!@
+
+!@$(basename $(SOURCES))!@: % : %.c Makefile
+        gcc -g -ggdb -Wall -Wpedantic -std=c99 -o $@ $<
+
+.PHONY: clean
+clean:
+        rm !@$(basename $(SOURCES))!@
+\end{lstlisting}
+\begin{block}{}
+\begin{itemize}
+  \item{Mit ``\verb|VARIABELNAME :=|'' werden eigene Variablen definiert.}
+  \item{\verb|$(wildcard *.c)| sucht im momentanen Verzeichnis nach allen C-Dateien. Die Dateinamen werden in der Variable \verb|$(SOURCES)| abgelegt.}
+  \item{\verb|$(basename $(SOURCES))| entfernt alle Dateiendungen der Dateinamen in der Variable \verb|$(SOURCES)|, hier \verb|.c|}
+\end{itemize}
+\end{block}
+\begin{verbatim}
+$(basename programm1.c programm2.c) -> programm1 programm2
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]{Makefiles: Das Prozentzeichen}{Vorlesung \arabic{lecturecounter}}
+Das Prozentzeichen erlaubt es, Regeln zu automatisieren oder zu verketten.
+\begin{block}{}
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+!@%!@.o : !@%!@.c !@%!@.h
+         gcc -std=c99 -Wall -Wpedantic -c $<
+\end{lstlisting}
+Für jede Datei des Typs ``\verb|name.o|'' wird eine Abhängigkeit von \verb|name.c| und \verb|name.h| aufgestellt. \verb|name.o| wird dann mit der Regel
+\begin{verbatim}
+gcc -std=c99 -Wall -Wpedantic -c $<
+\end{verbatim}
+kompiliert.
+\end{block}
+\begin{block}{}
+\begin{lstlisting}
+$(basename $(SOURCES)): !@%!@ : !@%!@.c Makefile
+        gcc -g -ggdb -Wall -Wpedantic -std=c99 -o $@ $<
+\end{lstlisting}
+\begin{itemize}
+  \item{Für jedes Objekt in \verb|$(basename $(SOURCES))| wird eine neue Regel erstellt (erstes \%)}
+  \item{Für diese neuen Regeln werden Abhängigkeiten der Form \verb|name.c| erstellt und das Kompilierkommando entsprechend ausgeführt.}
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Makefiles: \emph{phony} targets und aufräumen}{Vorlesung \arabic{lecturecounter}}
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+!@.PHONY: clean!@
+!@clean:!@
+        rm $(basename $(SOURCES))
+\end{lstlisting}
+\begin{block}{}
+  \begin{itemize}
+    \item{Ein \emph{phony} target wird immer ausgeführt.}
+    \item{Es ist konventionell, ein solches target mit dem Namen \verb|clean| zu haben, welches alle generierten Dateien aufräumt.}
+  \end{itemize}
+\end{block}
+\begin{block}{}
+  Um ein komplexeres Projekt aus mehreren Modulen mit Einbindung von Bilbiotheken und, unter Umständen, mehreren ausführbaren Programmen zu kompilieren, kann uns dieses Beispiel dienen.
+\end{block}
+$\Rightarrow$ nächste Folie
+\end{frame}
+
+\begin{frame}[fragile]{Makefiles: Beispiel 4}{Vorlesung \arabic{lecturecounter}}
+\begin{lstlisting}[basicstyle=\ttfamily\tiny]
+CC=gcc -std=c99 -Wall -Wpedantic
+LD=gcc -std=c99 -Wall -Wpedantic
+SOURCES := $(wildcard *.c)
+HEADERS := $(wildcard *.h)
+MODULES := $(patsubst %.c, %.o, $(SOURCES))
+PROGRAMS := teilchen
+MODULES := $(filter-out $(addsuffix .o, $(PROGRAMS)), $(MODULES))
+LIBS := -lm -lgsl
+
+all: $(PROGRAMS)
+
+$(addsuffix .o, $(PROGRAMS)): % : $(addsuffix .c, $(PROGRAMS)) $(HEADERS) Makefile
+        $(CC) -c $(patsubst %.o, %.c, $@)
+
+%.o: %.c %.h Makefile
+        $(CC) -c $<
+
+$(PROGRAMS): % : %.o $(MODULES) Makefile
+        $(LD) -o $@ $< $(MODULES) $(LIBS)
+
+.PHONY: clean
+clean:
+        rm -f $(MODULES) $(PROGRAMS) $(addsuffix .o, $(PROGRAMS))
+\end{lstlisting}
+$\Rightarrow$ (\verb|makefiles/beispiel4|) hat ausführliche Kommentare, die jede Zeile nochmal erläutern.
+\end{frame}
+
+\begin{frame}[fragile]{Zuverlässige Zeitmessung mit \texttt{gettimeofday}}{Vorlesung \arabic{lecturecounter}}
+\begin{block}{}
+Zeitmessung mit \verb|clock()| ist sehr unzuverlässig. \verb|gettimeofday| wird nicht von anderen Programmen beinflusst und hat eine Präzision von $\mu s$.
+\end{block}
+\begin{lstlisting}
+#include <sys/time.h>
+struct timeval anfang, ende;
+gettimeofday(&anfang, NULL);
+/* Zeit vergeht durch schwierige Rechnungen */
+gettimeofday(&ende, NULL);
+double sec = (double)(ende.tv_sec-anfang.tv_sec);
+double usec = (double)(ende.tv_usec-anfang.tv_usec);
+printf("Es sind %lf Sekunden vergangen\n", sec+1.0e-6*usec);
+\end{lstlisting}
+$\Rightarrow$ (\verb|test_gettimeofday.c|)
+\begin{block}{}
+  Das \verb|struct timeval| ist wie folgt definiert:
+\end{block}
+\begin{lstlisting}
+struct timeval {
+  time_t      tv_sec;     /* seconds */
+  suseconds_t tv_usec;    /* microseconds */
+};
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Abbruchbedingungen mit \emph{assertions}}{Vorlesung \arabic{lecturecounter}}
+\begin{block}{}
+  \begin{itemize}
+    \item{Assertions (Zusicherungen, Sicherstellungen) sind ein Konstrukt, welches es erlaubt, gut lesbare Abbruchkriterien für Ausnahmesituationen zu definieren.} 
+    \item{Wenn eine Bedingung nicht gegeben ist, an dieser Stelle im Code aber auf jeden Fall gegeben sein sollte (nicht-\veb|NULL| Argumente in einer Funktion, z.B.), kann man \verb|assert| nutzen, um das Programm dort abzubrechen.}
+  \end{itemize}
+\end{block}
+\begin{lstlisting}
+#include <assert.h>
+int func(FILE* fp){
+  assert( fp != NULL );
+  /* ... */
+  return 0;
+}
+int main(void){
+  FILE* fp = fopen("gibtbesnicht.txt","r");
+  func(fp);
+}  
+\end{lstlisting}
+$\Rightarrow$ (\verb|test_assert.c|)
+\end{frame}
+
+\begin{frame}[fragile]{}{Vorlesung \arabic{lecturecounter}}
+
+\begin{minipage}{\textwidth}
+  \centering
+  \Huge That's all folks!
+\end{minipage}
 \end{frame}
 
 \end{document}
