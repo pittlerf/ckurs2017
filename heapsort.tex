@@ -323,7 +323,7 @@ Für ganze Zahlen könnte man das Versickern mit Hilfe eines Arrays wie folgt re
 Hierbei ist $m$ die Länge des Arrays und $i$ der Index des Elements, vom dem das Versickern starten soll.
 Sobald wir also eine Folge mit Heapbedingung haben, können wir durch wiederholtes Anwenden dieses Verfahrens die Folge sortieren.
 Allerdings müssen wir die Folge dafür erstmal in einen Heap verwandeln. 
-Dies kann man erreichen, indem man die Schlüssel $k_{\lfloor N/2\rfloor}$ bis $k_1$ versickern. 
+Dies kann man erreichen, indem man die Schlüssel $k_{\lfloor N/2\rfloor}$ bis $k_1$ versickern lässt. 
 Dadurch werden schrittweise immer größere Heaps aufgebaut, bis am Ende schließlich der Ausgangsheap vorliegt. 
 Eine mögliche Implementierung könnte wie folgt aussehen:
 \begin{algorithmic}[1]
