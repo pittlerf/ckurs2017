@@ -441,10 +441,14 @@ Im Pseudo-Code sähe das wie folgt aus
   \If{\texttt{child} $==$ \texttt{parent.left}}
   \State \texttt{parent.left} $=$ \texttt{child.left}
   \State \texttt{child.left} $=$ \texttt{parent}
+  \State \texttt{child.right.parent} $=$ \texttt{parent}
+  \State \texttt{parent.right.parent} $=$ \texttt{child}
   \State \texttt{child.right} $\leftrightarrow$ \texttt{parent.right}
   \Else
   \State \texttt{parent.right} $=$ \texttt{child.right}
   \State \texttt{child.right} $=$ \texttt{parent}
+  \State \texttt{child.left.parent} $=$ \texttt{parent}
+  \State \texttt{parent.left.parent} $=$ \texttt{child}
   \State \texttt{child.left} $\leftrightarrow$ \texttt{parent.left}
   \EndIf
 %  \State \texttt{child} $\leftrightarrow$ \texttt{parent}

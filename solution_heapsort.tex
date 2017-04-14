@@ -1,0 +1,480 @@
+\documentclass{article}[12pt]
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[ngerman]{babel}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{lipsum}
+
+\usepackage{amsfonts}
+\usepackage[intlimits]{amsmath}
+\usepackage{cite}
+\usepackage{epsfig}
+
+\usepackage[usenames,dvipsnames]{pstricks}
+\usepackage{pstricks-add}
+\usepackage{epsfig}
+\usepackage{pst-grad} % For gradients
+\usepackage{pst-plot} % For axes
+
+\addtolength{\hoffset}{-1.5cm}
+\addtolength{\textwidth}{3cm}
+\usepackage{listings}
+\usepackage{color}
+\definecolor{mygreen}{rgb}{0,0.6,0}
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\definecolor{mymauve}{rgb}{0.58,0,0.82}
+\PassOptionsToPackage{svgnames}{xcolor}
+\usepackage{tcolorbox}
+\usepackage{lipsum}
+\tcbuselibrary{skins,breakable}
+\usetikzlibrary{shadings,shadows}
+\usepackage{siunitx}
+\lstset{ %
+  backgroundcolor=\color{white},   % choose the background color; you must add \usepackage{color} or \usepackage{xcolor}; should come as last argument
+  basicstyle=\footnotesize,        % the size of the fonts that are used for the code
+  breakatwhitespace=false,         % sets if automatic breaks should only happen at whitespace
+  breaklines=true,                 % sets automatic line breaking
+  captionpos=b,                    % sets the caption-position to bottom
+  commentstyle=\color{mygreen},    % comment style
+  deletekeywords={...},            % if you want to delete keywords from the given language
+  escapeinside={\%*}{*)},          % if you want to add LaTeX within your code
+  extendedchars=true,              % lets you use non-ASCII characters; for 8-bits encodings only, does not work with UTF-8
+  frame=single,                    % adds a frame around the code
+  keepspaces=true,                 % keeps spaces in text, useful for keeping indentation of code (possibly needs columns=flexible)
+  keywordstyle=\color{blue},       % keyword style
+  language=C,                      % the language of the code
+  morekeywords={*,...},            % if you want to add more keywords to the set
+  numbers=left,                    % where to put the line-numbers; possible values are (none, left, right)
+  numbersep=5pt,                   % how far the line-numbers are from the code
+  numberstyle=\tiny\color{mygray}, % the style that is used for the line-numbers
+  rulecolor=\color{black},         % if not set, the frame-color may be changed on line-breaks within not-black text (e.g. comments (green here))
+  showspaces=false,                % show spaces everywhere adding particular underscores; it overrides 'showstringspaces'
+  showstringspaces=false,          % underline spaces within strings only
+  showtabs=false,                  % show tabs within strings adding particular underscores
+  stepnumber=1,                    % the step between two line-numbers. If it's 1, each line will be numbered
+  stringstyle=\color{mymauve},     % string literal style
+  tabsize=2,                       % sets default tabsize to 2 spaces
+  title=\lstname                   % show the filename of files included with \lstinputlisting; also try caption instead of title
+}
+
+\usepackage{amssymb}
+
+\newenvironment{codelisting}{\fontfamily{pcr}\selectfont%
+\lstset{commentstyle=\textit}\lstset{language=c}}{\fontfamily{ptm}\selectfont}
+
+
+\usepackage{algorithm,algorithmic}
+
+\floatname{algorithm}{Algorithmus}
+\newcommand{\SET}{\textbf{set}\ }
+\newcommand{\CHOOSE}{\textbf{choose}\ }
+\newcommand{\GOTO}{\textbf{goto}\ }
+\renewcommand{\algorithmicrequire}{\textbf{Input:}}
+\renewcommand{\algorithmicensure}{\textbf{Output:}}
+\renewcommand{\listalgorithmname}{Algorithms}
+\renewcommand{\algorithmiccomment}[1]{\\/* #1 */}
+
+\newenvironment{myexampleblock}[1]{%
+    \tcolorbox[beamer,%
+    noparskip,breakable,
+    colback=White,colframe=ForestGreen,%
+    colbacklower=LimeGreen!75!White,%
+    title=#1]}%
+    {\endtcolorbox}
+
+\newenvironment{myalertblock}[1]{%
+    \tcolorbox[beamer,%
+    noparskip,breakable,
+    colback=White,colframe=Bittersweet,%
+    colbacklower=Peach!75!White,%
+    title=#1]}%
+    {\endtcolorbox}
+
+\newenvironment{myblock}[1]{%
+    \tcolorbox[beamer,%
+    noparskip,breakable,
+    colback=White,colframe=RoyalBlue,%
+    colbacklower=TealBlue!75!White,%
+    title=#1]}%
+    {\endtcolorbox}
+
+\newenvironment{myexampleprogram}[1]{%
+    \tcolorbox[beamer,%
+    noparskip,breakable,
+    colback=White,colframe=Goldenrod,%
+    colbacklower=Yellow!75!White,%
+    title=#1]}%
+    {\endtcolorbox}
+%--------
+%\usepackage[magyar]{babel}
+\title{Solutions to Heapsort with pointers}
+\author{Ferenc Pittler}
+\begin{document}
+\maketitle
+We implement the heap sort algorithm using a balanced binary tree.
+Every heap node has three pointers:
+\begin{enumerate}
+\item \texttt{parent}: points to the node's parent
+\item \texttt{left}: points to it's right child
+\item \texttt{right}: points to its left child
+\end{enumerate}
+The definition of the heap is actually quite simple (the realization 
+is not as simple as it sounds): it is a balanced binary tree
+with the a relationship between a child and it's parent. 
+For example if the nodes contains some numerical value,
+the relationship can be, that the value from the parents
+is always larger as the value from its child.
+
+Actually this implementation of the binary tree is quite similar to 
+that of the double linked list. Therefore here we also use a specific 
+typ, that points to the first and the last element of our binary tree.
+To summarize the types we are using are the followings in \texttt{c}:
+\begin{lstlisting}
+typedef struct heapnode {
+   int element;
+   struct heapnode *left;
+   struct heapnode *right;
+   struct heapnode *parent;
+} heapnode;
+typedef struct binaryheap {
+   struct heapnode *last;
+   struct heapnode *first;
+} binaryheap;
+\end{lstlisting}
+First we have to create an empty tree.
+For this we have to allocate memoryspace for a binaryheap.
+Then set its first and last pointers to \texttt{NULL}. This
+will be actually an empty binary tree.
+\begin{lstlisting}
+binaryheap *createleertree(void){
+   //erzeugt ein neues binaere Baum
+   binaryheap *ret=(binaryheap *)malloc(sizeof(binaryheap));
+   if (ret == NULL){
+     printf("Memory reservierung fuer leer binary heap war nicht erfolgreich\n");
+     exit(1);
+   }
+   //Unsere leere Baum
+   ret->last=NULL;
+   ret->first=NULL;
+   return ret;
+}
+\end{lstlisting}
+Having created a binary tree, we can start to fill it with nodes.
+The way we fill it actually is using a two dimensional array of heapnodes
+as helpers. We have now seen explicitely how a heap can be implemented by arrays, so we put the elements
+in arrays and set the connection between them  (the parent, left, right)
+pointers with the help of the array index. For example
+the left of the node with arrayindex \texttt{i} has to be the node
+with  arrayindex \texttt{2i+1}. We have to be careful, that for even
+number of elements the last parent does not have a right child!
+
+\begin{lstlisting}
+void createheapnode(binaryheap **tree, heapnode **root, int *list, int n){
+   int i;
+//Zeiger array fuer die heap elements
+   heapnode **array=(heapnode **)malloc(sizeof(heapnode*)*n);
+   if (array == NULL){
+     printf("Memory reservierung fuer Zeigers auf heap elements war nicht erfolgreich\n");
+     exit(1);
+   }
+   for (i=0; i<n; ++i){
+     array[i]=(heapnode *)malloc(sizeof(heapnode));
+     if (array[i] == NULL){
+       printf("Nicht genug speicher fuer die %d element im heap\n", i);
+       exit(1);
+     }
+   }
+//erfuellt alle elementen mit den Werten
+   for (i=0; i<n; ++i){
+     array[i]->element=list[i];
+     array[i]->left=NULL;
+     array[i]->right=NULL;
+     array[i]->parent=NULL;
+   }
+//machen die eltern kind beziehungen
+//linkes Kind fuer i wird 2*i+1 sein
+//rechtes kind fuer i wird 2*i+2 sein
+//achten wenn n ist gerade wir haben am
+//ende ein linkes Kind
+   for (i=0; i<n/2;++i){
+     array[i]->left=array[2*i+1];
+     array[2*i+1]->parent=array[i];
+     if (2*i+2 != n){
+       array[i]->right=array[2*i+2];
+       array[2*i+2]->parent=array[i];
+     }
+   }
+   *root=array[0];
+   (*tree)->first=array[0];
+   (*tree)->last=array[n-1];
+   free(array);
+}
+\end{lstlisting}
+In this way we only have filled it with random elements, so our
+we are not able to call our binary tree as a binary heap.
+We must restore the heap property.
+\begin{lstlisting}
+void versickern(binaryheap **b, heapnode **q){
+   int temp1;
+   int temp2;
+   int orig;
+//wenn sie kein Kind hat wir sind fertig
+   if ((*q)->left == NULL){
+      return;
+   }
+//wenn sie ein Kind hat es muss link sein
+//uberprufen wir die heapnode eigenschaft
+//wenn es notig, tauschen wir die Wert
+//mit dem linken Kind
+   if ((*q)->right == NULL){
+      if ( (*q)->element < (*q)->left->element ){
+         swap(b,q,*q, (*q)->left);
+      }
+      return;
+   }
+//wenn es zwei Kinder hat
+//wir mussen auch das heapnode eigenschaft uberpruefen
+   temp1=(*q)->left->element;
+   temp2=(*q)->right->element;
+   orig=(*q)->element;
+//wenn das root ist die groesste wir sind fertig
+   if ((orig > temp1 ) && (orig > temp2))
+     return;
+//wenn nicht wir suchen fuer die groesste
+//von rechten und linken Kind und tauschen
+//aber wir sind nicht fertig, wir muessen
+//auch fuer die rechtes beziehungseise
+//der linkes Kind auch uberpruefen
+   if ( temp1 > temp2) {
+     swap(b,q,*q, (*q)->left);
+     versickern(b,&((*q)->left));
+     return;
+   }
+   swap(b,q,*q, (*q)->right);
+   versickern(b,&((*q)->right));
+   return;
+}
+const int MAX=100;
+void heapify(binaryheap **b,heapnode **q){
+   if ((*q)->left == NULL)
+     return;
+   else
+     heapify(b,&((*q)->left));
+   if ((*q)->right != NULL){
+     heapify(b,&((*q)->right));
+   }
+   versickern(b,q);
+}
+
+void heapify(binaryheap **b,heapnode **q){
+   if ((*q)->left == NULL)
+     return;
+   else
+     heapify(b,&((*q)->left));
+   if ((*q)->right != NULL){
+     heapify(b,&((*q)->right));
+   }
+   versickern(b,q);
+}
+\end{lstlisting}
+Here the most important routine is the swap, which
+actually swap a parent with its child in the tree.
+We have to set the following pointers (Figure FIXME).
+\begin{lstlisting}
+void swap(binaryheap **b,heapnode **root, heapnode * const parent, heapnode * const child) {
+  heapnode *p = parent;
+  heapnode *c = child;
+  if (child == parent->left) {
+     c->parent=p->parent;
+     p->parent=c;
+     p->left=c->left;
+     c->left=p;
+     if (p->right!=NULL){
+      p->right->parent=c;
+     }
+     if (c->right!=NULL){
+      c->right->parent=p;
+     }
+     swap_elem(&(p->right),&(c->right));
+  }
+  else if (child == parent->right) {
+     c->parent=p->parent;
+     p->parent=c;
+     p->right=c->right;
+     c->right=p;
+     if (p->left!=NULL){
+      p->left->parent=c;
+     }
+     if (c->left!=NULL){
+      c->left->parent=p;
+     }
+     swap_elem(&(p->left),&(c->left));
+  }
+  else {
+    printf("Cannot swap elements which are not direct reletives\n");
+    abort();
+  }
+  if (parent == *root) {
+    *root = child;
+  }
+  if ((*b)->first == parent){
+    (*b)->first=child;
+  }
+  if ((*b)->last == child ){
+    (*b)->last = parent;
+  }
+}
+\end{lstlisting}
+\section{Remove the first from the tree}
+Here we free the first pointer and change the pointers in such a way that
+the last element will be a new root of the tree. Of course, this will 
+ruin the heap property, which we have to restore with  \texttt{versickern}. 
+In this part we need a code to find actually the new last element of the tree. 
+In order to get the new last element we implement the following trick:
+\begin{enumerate}
+\item If the original last element is a right child then it is easy.
+The left child of its parent will be the new last element. 
+\item If it is a left child we make the following trick.
+We go up and store the actual path. In order to go to the new last element
+we follow exactly the opposite path in the opposite order from the root till the 
+left child of the actual node is not equal to zero.
+\end{enumerate}
+\begin{lstlisting}
+void removelast(binaryheap **b,heapnode **q){
+   heapnode *lastelem=(*b)->last;
+   heapnode *firstelem=(*b)->first;
+   if ( (*b)->first == NULL ){
+     printf("Fehler es gibt kein element im Baum\n");
+     exit(1);
+   }
+   if (firstelem == lastelem ){
+    //nur ein element
+    printf("%d\n", lastelem->element);
+    //wir geben es frei
+    free(lastelem);
+    (*q)=NULL;
+    (*b)->last = NULL;
+    (*b)->first= NULL;
+    return;
+   }
+   if (firstelem->left == lastelem){
+    //gubt es nur zwei element
+    printf("%d\n", firstelem->element);
+    free(firstelem);
+    //last elem parent zeiger to NULL
+    lastelem->parent=NULL;
+    (*b)->first=lastelem;
+    (*q)=lastelem;
+    return;
+   }
+   if (firstelem->right == lastelem){
+    //nur drei element
+    //nachdem tauschen wir ueberpruefen 
+    //das heap eigenschaft
+    printf("%d\n", firstelem->element);
+    lastelem->left=firstelem->left;
+    free(firstelem);
+    lastelem->parent=NULL;
+    (*b)->first=lastelem;
+    (*b)->last=lastelem->left;
+    lastelem->left->parent=lastelem;
+    (*q)=lastelem;
+    versickern(b,q);
+    return;
+   }
+   if (lastelem->parent->left == lastelem){
+      //spaicher das Weg zum root
+      int *path=(int *)malloc(sizeof(int)*100);
+      heapnode *temp2=lastelem->parent;
+      printf("%d\n",firstelem->element);
+      heapnode *temp=lastelem;
+      heapnode *temp3;
+      int i=0,j=0;
+      if (path == NULL){
+        printf("Memory allocation error in path\n");
+        exit(1);
+      }
+      for (i=0; i<100; ++i)
+        path[i]=0;
+      i=0;
+      while(temp->parent != NULL){
+        temp3=temp->parent;
+        if (temp3->right == temp){
+          path[i]=1;
+        }
+        else{
+          path[i]=0;
+        }
+        temp=temp3;
+        i++;
+      }
+      //wir machen das gegenteil
+      //vom Weg in der andere richtungs
+      for(j=0; j<i;++j){
+        if (path[i-j-1]==0){
+          temp3=temp->right;
+          if (temp3 == NULL)
+            break;
+          temp=temp3;
+          }
+         else{
+          temp3=temp->left;
+          if (temp3 == NULL)
+           break;
+          temp=temp3;
+         }
+      }
+      lastelem->right=firstelem->right;
+      lastelem->left=firstelem->left;
+      firstelem->left->parent=lastelem;
+      firstelem->right->parent=lastelem;
+      free(firstelem);
+      temp2->left=NULL;
+      lastelem->parent=NULL;
+      (*q)=lastelem;
+      (*b)->first=lastelem;
+      (*b)->last=temp;
+      //wir muessen das heap eigenschaft ueberpruefen
+      versickern(b,q);
+      return;
+   }
+   else{
+      printf("%d\n",firstelem->element);
+      heapnode *temp2=lastelem->parent;
+      heapnode *temp=lastelem->parent->left;
+      lastelem->right=firstelem->right;
+      lastelem->left=firstelem->left;
+      firstelem->left->parent=lastelem;
+      firstelem->right->parent=lastelem;
+      free(firstelem);
+      temp2->right=NULL;
+      lastelem->parent=NULL;
+      (*q)=lastelem;
+      (*b)->first=lastelem;
+      (*b)->last=temp;
+      versickern(b,q);
+   }
+
+}
+\end{lstlisting}
+\section{main}
+\begin{lstlisting}
+int main(int argc, char *argv[]){
+   int list[]={2,3,4,8,5,6,1,7};
+   heapnode *Q;
+   binaryheap *B;
+   B=createleertree();
+   createheapnode(&B,&Q,list,8);
+
+   heapify(&B,&Q);
+   removelast(&B,&Q);
+   removelast(&B,&Q);
+   removelast(&B,&Q);
+   removelast(&B,&Q);
+   removelast(&B,&Q);
+   removelast(&B,&Q);
+   removelast(&B,&Q);
+   removelast(&B,&Q);
+
+\end{lstlisting}
+\end{document}
