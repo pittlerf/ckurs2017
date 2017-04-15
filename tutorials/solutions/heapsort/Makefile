@@ -31,7 +31,7 @@ echo:
 $(addsuffix .o, $(PROGRAMS)): % : $(addsuffix .c, $(PROGRAMS)) $(HEADERS) Makefile
 	$(CC) -c $(patsubst %.o, %.c, $@)
 
-%.o: %.c Makefile
+%.o: %.c %.h Makefile
 	$(CC) $(DEFS) -c $<
 
 $(PROGRAMS): % : %.o $(MODULES) $(HEADERS) Makefile
