@@ -17,7 +17,7 @@ standartbibliothek.aux
 stapelspeicher.aux
 variablen.aux
 .formatter.cpp
-
+*.o
 tutorials/**/ProgKurs-Tag??.aux
 tutorials/**/ProgKurs-Tag??.fdb_latexmk
 tutorials/**/ProgKurs-Tag??.fls
