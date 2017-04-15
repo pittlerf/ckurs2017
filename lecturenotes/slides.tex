@@ -1819,7 +1819,7 @@ $(basename $(SOURCES)): !@%!@ : !@%!@.c Makefile
 \end{lstlisting}
 \begin{block}{}
   \begin{itemize}
-    \item{Ein \emph{phony} target wird immer ausgeführt.}
+    \item{Ein \emph{phony} target kann immer ausgeführt werden, es wird nicht überprüft ob die Datei \texttt{clean} schon existiert.}
     \item{Es ist konventionell, ein solches target mit dem Namen \verb|clean| zu haben, welches alle generierten Dateien aufräumt.}
   \end{itemize}
 \end{block}
