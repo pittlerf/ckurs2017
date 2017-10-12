@@ -28,3 +28,4 @@ tutorials/**/tutorial*.fdb_latexmk
 tutorials/**/tutorial*.fls
 tutorials/**/tutorial*.log
 tutorials/**/tutorial*.pdf
+*.swp
