@@ -20,6 +20,8 @@ PROGRAMS := teilchen
 # sie müssen also aus der $(MODULES)-Variable rausgefiltert werden
 # dazu nutzen wir filter-out
 # die Syntax ist: $(filter-out "zu filternde Objekte", "Objekte aus denen gefiltert werden soll")
+# um teilchen.o aus der Liste rauszufiltern, nehmen wir uns $(PROGRAMS) und packen mit
+# 'addsuffix' ein .o an jeden Programmnamen
 MODULES := $(filter-out $(addsuffix .o, $(PROGRAMS)), $(MODULES))
 
 # benötigte Bibliotheken

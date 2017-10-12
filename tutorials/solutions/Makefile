@@ -7,3 +7,6 @@ all: $(SOURCES:tex=pdf)
 
 clean:
 	latexmk -CA
+
+dist:
+	latexmk -c
